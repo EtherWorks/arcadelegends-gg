@@ -13,12 +13,16 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
  * Created by Dr. Gavrel on 16.02.2017.
  */
 public class TestScreen implements Screen, InputProcessor {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(TestScreen.class);
 
     private final Game game;
     private SpriteBatch batch;
@@ -39,6 +43,7 @@ public class TestScreen implements Screen, InputProcessor {
 
     @Override
     public void show() {
+        LOGGER.debug("showing TestScreen");
         if (batch == null)
             batch = new SpriteBatch();
         if (stage == null)

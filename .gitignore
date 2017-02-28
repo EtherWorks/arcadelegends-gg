@@ -70,3 +70,5 @@ build/
 Thumbs.db
 /config/
 /artifact/
+/logs/
+/log/
