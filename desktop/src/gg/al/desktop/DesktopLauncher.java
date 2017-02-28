@@ -1,0 +1,47 @@
+package gg.al.desktop;
+
+import com.badlogic.gdx.Files;
+import com.badlogic.gdx.Preferences;
+import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
+import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
+import gg.al.ArcadeScreenTest;
+
+import java.util.HashMap;
+import java.util.Map;
+
+public class DesktopLauncher {
+    public static void main(String[] arg) {
+        LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
+        config.preferencesFileType = Files.FileType.Local;
+        config.preferencesDirectory = "config";
+        config.width = ScreenSizes.DEFAULT.getWidth();
+        config.height = ScreenSizes.DEFAULT.getHeight();
+        config.resizable = true;
+        LwjglApplication application = new LwjglApplication(new ArcadeScreenTest(), config);
+
+        Preferences pref = application.getPreferences("video");
+        Map<String, Object> defaults = new HashMap<>();
+        defaults.put("foregroundFPS", 140);
+        defaults.put("backgroundFPS", 15);
+        defaults.put("vsync", false);
+        defaults.put("height", ScreenSizes.DEFAULT.getHeight());
+        defaults.put("width", ScreenSizes.DEFAULT.getWidth());
+        defaults.put("fullscreen", true);
+        config.foregroundFPS = pref.getInteger("foregroundFPS", (int) defaults.get("foregroundFPS"));
+        config.backgroundFPS = pref.getInteger("backgroundFPS", (int) defaults.get("backgroundFPS"));
+        application.postRunnable(() -> {
+            if (pref.getBoolean("fullscreen", (boolean) defaults.get("fullscreen")))
+                application.getGraphics().setFullscreenMode(application.getGraphics().getDisplayMode());
+            else
+                application.getGraphics().setWindowedMode(
+                        pref.getInteger("width", (int) defaults.get("width")),
+                        pref.getInteger("height", (int) defaults.get("height")));
+            application.getGraphics().setVSync(pref.getBoolean("vsync", (boolean) defaults.get("vsync")));
+        });
+        if (!pref.contains("vsync")) {
+            pref.put(defaults);
+            pref.flush();
+        }
+
+    }
+}
