@@ -12,6 +12,8 @@ import java.util.Map;
 public class DesktopLauncher {
     public static void main(String[] arg) {
         LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
+        config.addIcon("assets/sprites/logo32.png", Files.FileType.Local);
+        config.addIcon("assets/sprites/logo16.png", Files.FileType.Local);
         config.preferencesFileType = Files.FileType.Local;
         config.preferencesDirectory = "config";
         config.width = ScreenSizes.DEFAULT.getWidth();
