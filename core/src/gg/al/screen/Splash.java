@@ -1,9 +1,9 @@
 package gg.al.screen;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.GL20;
@@ -12,7 +12,11 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import gg.al.ArcadeLegends;
 import gg.al.anim.ScaleAnimation;
+
+import java.util.HashMap;
+import java.util.Map;
 
 
 /**
@@ -20,7 +24,17 @@ import gg.al.anim.ScaleAnimation;
  */
 public class Splash implements Screen, InputProcessor {
 
-    private final Game game;
+    public static final Map<String, Class> ASSETS;
+
+    static {
+        ASSETS = new HashMap<>();
+        ASSETS.put("assets/sprites/splash/splash.png", Texture.class);
+        ASSETS.put("assets/sprites/splash/background.jpg", Texture.class);
+        ASSETS.put("assets/audio/bitrush.mp3", Music.class);
+    }
+
+    private final ArcadeLegends game;
+    private final AssetManager manager;
     private Screen nextScreen;
     private Texture splash;
     private Texture background;
@@ -31,14 +45,16 @@ public class Splash implements Screen, InputProcessor {
     private Music music;
     private float time;
 
-    public Splash(Game game, Screen nextScreen) {
+    public Splash(final ArcadeLegends game, Screen nextScreen) {
         this.game = game;
+        this.manager = game.getAssetManager();
         this.nextScreen = nextScreen;
         time = 0;
     }
 
-    public Splash(Game game) {
+    public Splash(final ArcadeLegends game) {
         this.game = game;
+        this.manager = game.getAssetManager();
         time = 0;
     }
 
@@ -49,13 +65,13 @@ public class Splash implements Screen, InputProcessor {
     @Override
     public void show() {
         if (splash == null)
-            splash = new Texture("assets/sprites/splash/splash.png");
+            splash = manager.get("assets/sprites/splash/splash.png", Texture.class);
         if (background == null)
-            background = new Texture("assets/sprites/splash/background.jpg");
+            background = manager.get("assets/sprites/splash/background.jpg", Texture.class);
         if (batch == null)
             batch = new SpriteBatch();
         if (music == null)
-            music = Gdx.audio.newMusic(Gdx.files.internal("assets/audio/bitrush.mp3"));
+            music = manager.get("assets/audio/bitrush.mp3", Music.class);
         music.setLooping(true);
         music.play();
         animation = new ScaleAnimation(splash, .5f, ScaleAnimation.ScaleMode.SMOOTH, 1, 1.5f, 1.6f, 1.5f);

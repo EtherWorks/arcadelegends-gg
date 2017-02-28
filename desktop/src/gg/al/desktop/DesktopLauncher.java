@@ -4,7 +4,7 @@ import com.badlogic.gdx.Files;
 import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
-import gg.al.ArcadeScreenTest;
+import gg.al.ArcadeLegends;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -19,7 +19,7 @@ public class DesktopLauncher {
         config.width = ScreenSizes.DEFAULT.getWidth();
         config.height = ScreenSizes.DEFAULT.getHeight();
         config.resizable = true;
-        LwjglApplication application = new LwjglApplication(new ArcadeScreenTest(), config);
+        LwjglApplication application = new LwjglApplication(new ArcadeLegends(), config);
 
         Preferences pref = application.getPreferences("video");
         Map<String, Object> defaults = new HashMap<>();

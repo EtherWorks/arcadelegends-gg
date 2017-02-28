@@ -3,3 +3,20 @@ CHECK
     -VISUI
     -LWJGL3
     -ASHLEY oder ARTEMIS-ODB
+    -JAVA 9
+
+LEARN
+    https://github.com/libgdx/libgdx/wiki/Managing-your-assets
+    https://github.com/libgdx/libgdx/wiki/Networking
+    https://github.com/libgdx/libgdx/wiki/Memory-management
+    https://github.com/libgdx/libgdx/wiki/Texture-packer#textureatlas
+    https://github.com/libgdx/libgdx/wiki/Tile-maps
+    https://github.com/libgdx/libgdx/wiki/Box2d
+    https://github.com/libgdx/libgdx/wiki/Profiling
+    https://github.com/libgdx/libgdx/wiki/Memory-management
+    https://github.com/libgdx/libgdx/wiki/Querying
+    https://github.com/libgdx/libgdx/wiki/2D-ParticleEffects
+    https://github.com/libgdx/libgdx/wiki/Internationalization-and-Localization
+    https://github.com/libgdx/libgdx/wiki/Reading-%26-writing-JSON
+    https://github.com/libgdx/libgdx/wiki/Collections
+    https://github.com/libgdx/libgdx/wiki/Path-interface-%26-Splines
