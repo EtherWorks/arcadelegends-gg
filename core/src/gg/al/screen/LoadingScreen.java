@@ -34,6 +34,7 @@ public class LoadingScreen implements Screen {
     private Animation<TextureRegion> waitAnim;
     private BitmapFont percFont;
 
+
     public LoadingScreen(final ArcadeLegends game, Map<String, Class> toLoad, Screen nextScreen) {
         this.game = game;
         this.manager = game.getAssetManager();
@@ -95,12 +96,13 @@ public class LoadingScreen implements Screen {
         batch.setProjectionMatrix(camera.combined);
         batch.begin();
         batch.draw(waitAnim.getKeyFrame(time), 0, 0, 128, 128);
-        percFont.draw(batch, (int) (manager.getProgress() * 100) + "%", 1880, 20);
+        percFont.draw(batch, (int) (manager.getProgress() * 100) + "%", viewport.getWorldWidth() - 40, 20);
         batch.end();
     }
 
     @Override
     public void resize(int width, int height) {
+
         viewport.update(width, height, true);
     }
 
@@ -122,7 +124,6 @@ public class LoadingScreen implements Screen {
     public void dispose() {
         batch.dispose();
         manager.unload("assets/sprites/ez_idle.png");
-        manager.unload("percFont");
     }
 
     public void nextScreen() {

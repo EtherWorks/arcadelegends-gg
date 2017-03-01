@@ -2,7 +2,7 @@ CHECK
     -VISEditor
     -VISUI
     -LWJGL3
-    -ASHLEY oder ARTEMIS-ODB
+    -ARTEMIS-ODB
     -JAVA 9
 
 LEARN

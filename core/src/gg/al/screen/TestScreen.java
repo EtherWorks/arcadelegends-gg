@@ -1,11 +1,18 @@
 package gg.al.screen;
 
 import com.badlogic.gdx.*;
+import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
 import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.g3d.utils.CameraInputController;
+import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.maps.tiled.TmxMapLoader;
+import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -27,17 +34,30 @@ public class TestScreen implements Screen, InputProcessor {
     private final Game game;
     private SpriteBatch batch;
     private Texture ezidle;
+    private Texture lawbringeridle;
+    private Texture lawbringer32;
     private Stage stage;
     private Skin skin;
     private BitmapFont bfont;
     private BitmapFont font;
     private OrthographicCamera camera;
+    private OrthographicCamera mapCamera;
     private Viewport viewport;
     private Animation<TextureRegion> ez;
+    private Animation<TextureRegion> lawbringer;
+    private TiledMap map;
     private float time;
+    private float unitScale = 1 / 32f;
+    private OrthogonalTiledMapRenderer renderer;
+    private Vector2 pos;
+    private Vector2 lawbringerpos;
+    private Vector2 lastTouch = new Vector2();
+    private boolean drag = false;
 
     public TestScreen(Game game) {
         this.game = game;
+        pos = new Vector2();
+        lawbringerpos = new Vector2();
         time = 0;
     }
 
@@ -54,6 +74,14 @@ public class TestScreen implements Screen, InputProcessor {
             font = new BitmapFont();
         if (ezidle == null)
             ezidle = new Texture("assets/sprites/ez_idle.png");
+        if (lawbringer32 == null)
+            lawbringer32 = new Texture("assets/sprites/lawbringer32.png");
+        if (lawbringeridle == null)
+            lawbringeridle = new Texture("assets/sprites/lawbringer.png");
+        if (map == null)
+            map = new TmxMapLoader(new InternalFileHandleResolver()).load("assets/map/test.tmx");
+        if (renderer == null)
+            renderer = new OrthogonalTiledMapRenderer(map);
         if (ez == null) {
             TextureRegion[][] tmp = TextureRegion.split(ezidle, ezidle.getWidth() / 4, ezidle.getHeight());
             TextureRegion[] frames = new TextureRegion[4 * 1];
@@ -66,10 +94,27 @@ public class TestScreen implements Screen, InputProcessor {
             ez = new Animation<>(.3f, frames);
             ez.setPlayMode(Animation.PlayMode.LOOP);
         }
+        if (lawbringer == null) {
+            TextureRegion[][] tmp = TextureRegion.split(lawbringeridle, lawbringeridle.getWidth() / 3, lawbringeridle.getHeight());
+            TextureRegion[] frames = new TextureRegion[3 * 1];
+            int ind = 0;
+            for (int i = 0; i < 1; i++) {
+                for (int j = 0; j < 3; j++) {
+                    frames[ind++] = tmp[i][j];
+                }
+            }
+            lawbringer = new Animation<>(.5f, frames);
+            lawbringer.setPlayMode(Animation.PlayMode.LOOP);
+        }
         camera = new OrthographicCamera();
+        mapCamera = new OrthographicCamera();
+        mapCamera.position.set(0, 0, 100);
+        mapCamera.lookAt(0, 0, 0);
+        mapCamera.update();
         viewport = new ScreenViewport(camera);
-
-        Gdx.input.setInputProcessor(new InputMultiplexer(stage, this));
+        mapCamera.setToOrtho(false, 1920 / 2, 1080 / 2);
+        //Gdx.input.setInputProcessor(/*new InputMultiplexer(stage, this)*/this);
+        Gdx.input.setInputProcessor(new CameraInputController(mapCamera));
 
         if (bfont == null)
             bfont = new BitmapFont();
@@ -117,14 +162,22 @@ public class TestScreen implements Screen, InputProcessor {
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         time += Gdx.graphics.getDeltaTime();
-        stage.act(Math.min(Gdx.graphics.getDeltaTime(), 1 / 30f));
-        stage.draw();
-        batch.setProjectionMatrix(camera.combined);
-        batch.begin();
-        font.draw(batch, Gdx.graphics.getFramesPerSecond() + "", 0, viewport.getWorldHeight());
-        batch.draw(ez.getKeyFrame(time), 100, 100, 128, 128);
-        batch.end();
+        mapCamera.update();
+        camera.update();
+        renderer.setView(mapCamera);
+        renderer.render();
+        //stage.act(Math.min(Gdx.graphics.getDeltaTime(), 1 / 30f));
+        //stage.draw();
 
+        batch.setProjectionMatrix(mapCamera.combined);
+        batch.begin();
+        //batch.setProjectionMatrix(mapCamera.combined);
+        batch.draw(ez.getKeyFrame(time), pos.x, pos.y, 32, 32);
+        batch.draw(lawbringer.getKeyFrame(time), lawbringerpos.x, lawbringerpos.y, 32, 32);
+        batch.draw(lawbringer32, 128, 128, 32, 32);
+        batch.setProjectionMatrix(camera.combined);
+        font.draw(batch, Gdx.graphics.getFramesPerSecond() + "", 0, viewport.getWorldHeight());
+        batch.end();
     }
 
     @Override
@@ -154,10 +207,44 @@ public class TestScreen implements Screen, InputProcessor {
         skin.dispose();
         bfont.dispose();
         font.dispose();
+        map.dispose();
     }
 
     @Override
     public boolean keyDown(int keycode) {
+        switch (keycode) {
+            case Input.Keys.A:
+                lawbringerpos.x -= 32;
+                break;
+            case Input.Keys.LEFT:
+                mapCamera.translate(-32, 0);
+                break;
+            case Input.Keys.D:
+                lawbringerpos.x += 32;
+                break;
+            case Input.Keys.RIGHT:
+                mapCamera.translate(32, 0);
+                break;
+            case Input.Keys.W:
+                lawbringerpos.y += 32;
+                break;
+            case Input.Keys.UP:
+                mapCamera.translate(0, 32);
+                break;
+            case Input.Keys.S:
+                lawbringerpos.y -= 32;
+                break;
+            case Input.Keys.DOWN:
+                mapCamera.translate(0, -32);
+                break;
+            case Input.Keys.G:
+                mapCamera.zoom += 1;
+                break;
+            case Input.Keys.H:
+                mapCamera.zoom -= 1;
+                break;
+        }
+
         return false;
     }
 
@@ -187,16 +274,33 @@ public class TestScreen implements Screen, InputProcessor {
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+        if (button == Input.Buttons.LEFT) {
+            Vector3 clickCoordinates = new Vector3(screenX, screenY, 0);
+            Vector3 position = mapCamera.unproject(clickCoordinates);
+            pos.set(position.x - position.x % 32, position.y - position.y % 32);
+        } else {
+            drag = true;
+            lastTouch.set(screenX, screenY);
+        }
         return false;
     }
 
     @Override
     public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+        mapCamera.position.set(mapCamera.position.x - mapCamera.position.x % 32, mapCamera.position.y - mapCamera.position.y % 32, mapCamera.position.z);
+        drag = false;
         return false;
     }
 
     @Override
     public boolean touchDragged(int screenX, int screenY, int pointer) {
+        if (!drag) return false;
+        Vector2 newTouch = new Vector2(screenX, screenY);
+        // delta will now hold the difference between the last and the current touch positions
+        // delta.x > 0 means the touch moved to the right, delta.x < 0 means a move to the left
+        Vector2 delta = newTouch.cpy().sub(lastTouch);
+        lastTouch = newTouch;
+        mapCamera.translate(-delta.x, delta.y, 0);
         return false;
     }
 
@@ -207,6 +311,7 @@ public class TestScreen implements Screen, InputProcessor {
 
     @Override
     public boolean scrolled(int amount) {
+        mapCamera.zoom += amount;
         return false;
     }
 }
