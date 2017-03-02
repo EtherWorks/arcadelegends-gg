@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g3d.utils.CameraInputController;
+import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
@@ -53,6 +54,7 @@ public class TestScreen implements Screen, InputProcessor {
     private Vector2 lawbringerpos;
     private Vector2 lastTouch = new Vector2();
     private boolean drag = false;
+    private FrameBuffer buffer;
 
     public TestScreen(Game game) {
         this.game = game;
@@ -80,6 +82,8 @@ public class TestScreen implements Screen, InputProcessor {
             lawbringeridle = new Texture("assets/sprites/lawbringer.png");
         if (map == null)
             map = new TmxMapLoader(new InternalFileHandleResolver()).load("assets/map/test.tmx");
+        if (buffer == null)
+            buffer = new FrameBuffer(Pixmap.Format.RGBA8888, map.getProperties().get("width", Integer.class), map.getProperties().get("height", Integer.class), true);
         if (renderer == null)
             renderer = new OrthogonalTiledMapRenderer(map);
         if (ez == null) {
@@ -109,6 +113,8 @@ public class TestScreen implements Screen, InputProcessor {
         camera = new OrthographicCamera();
         mapCamera = new OrthographicCamera();
         mapCamera.position.set(0, 0, 100);
+        mapCamera.near = 0;
+        mapCamera.far = 1000;
         mapCamera.lookAt(0, 0, 0);
         mapCamera.update();
         viewport = new ScreenViewport(camera);
@@ -172,6 +178,7 @@ public class TestScreen implements Screen, InputProcessor {
         batch.setProjectionMatrix(mapCamera.combined);
         batch.begin();
         //batch.setProjectionMatrix(mapCamera.combined);
+        batch.draw(buffer.getColorBufferTexture(), 0, 0);
         batch.draw(ez.getKeyFrame(time), pos.x, pos.y, 32, 32);
         batch.draw(lawbringer.getKeyFrame(time), lawbringerpos.x, lawbringerpos.y, 32, 32);
         batch.draw(lawbringer32, 128, 128, 32, 32);
@@ -208,6 +215,7 @@ public class TestScreen implements Screen, InputProcessor {
         bfont.dispose();
         font.dispose();
         map.dispose();
+        buffer.dispose();
     }
 
     @Override
