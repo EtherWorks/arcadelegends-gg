@@ -3,7 +3,7 @@ package gg.al;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.assets.AssetManager;
 import gg.al.manager.SceneManager;
-import gg.al.screen.MapTestScreen;
+import gg.al.screen.MapTestScreen2;
 
 public class ArcadeLegends extends Game {
 
@@ -14,7 +14,7 @@ public class ArcadeLegends extends Game {
     public void create() {
         assetManager = new AssetManager();
         sceneManager = new SceneManager();
-        setScreen(new MapTestScreen());
+        setScreen(new MapTestScreen2());
     }
 
     public AssetManager getAssetManager() {
