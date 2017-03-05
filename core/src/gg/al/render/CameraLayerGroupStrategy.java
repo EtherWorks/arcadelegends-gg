@@ -36,9 +36,7 @@ public class CameraLayerGroupStrategy implements GroupStrategy, Disposable {
         this(camera, new Comparator<Decal>() {
             @Override
             public int compare(Decal o1, Decal o2) {
-                float dist1 = camera.position.dst(o1.getPosition());
-                float dist2 = camera.position.dst(o2.getPosition());
-                return (int) Math.signum(dist2 - dist1);
+                return ((OrderedDecal) o1).getLayer() - ((OrderedDecal) o2).getLayer();
             }
         });
     }
@@ -67,7 +65,7 @@ public class CameraLayerGroupStrategy implements GroupStrategy, Disposable {
     public void beforeGroup(int group, Array<Decal> contents) {
         if (group == GROUP_BLEND) {
             Gdx.gl.glEnable(GL20.GL_BLEND);
-            contents.sort(cameraSorter.reversed());
+            contents.sort(cameraSorter);
             Gdx.gl.glDisable(GL20.GL_DEPTH_TEST);
         } else {
             for (int i = 0, n = contents.size; i < n; i++) {

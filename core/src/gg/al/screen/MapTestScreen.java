@@ -8,7 +8,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g3d.decals.Decal;
 import com.badlogic.gdx.graphics.g3d.decals.DecalBatch;
-import com.badlogic.gdx.graphics.g3d.utils.CameraInputController;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
@@ -18,6 +17,7 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import gg.al.render.CameraLayerGroupStrategy;
+import gg.al.render.OrderedDecal;
 
 /**
  * Created by Thomas on 02.03.2017.
@@ -31,6 +31,9 @@ public class MapTestScreen implements Screen, InputProcessor {
     private SpriteBatch batch;
     private SpriteBatch bufferBatch;
     private Texture texture;
+    private Texture towerbase;
+    private Texture towertop;
+    private Texture towerfull;
     private TiledMap map;
     private OrthogonalTiledMapRenderer mapRenderer;
     private TextureRegion region;
@@ -38,20 +41,28 @@ public class MapTestScreen implements Screen, InputProcessor {
     private Viewport viewport;
     private Viewport viewportPers;
     private PerspectiveCamera perspectiveCamera;
+    private PerspectiveCamera testCamera;
     private Vector3 pos;
     private Decal ez;
+    private Decal test;
     private DecalBatch decbatch;
     private Decal mapDec;
     private Decal mapDecUpper;
     private float rot;
     private Vector3 ezPos;
     private float rel;
-
+    private Decal towerDecal;
+    private Decal towerbaseDecal;
+    private Decal towertopDecal;
+    private Vector3 testpos;
     @Override
     public void show() {
         batch = new SpriteBatch();
         bufferBatch = new SpriteBatch();
         texture = new Texture("assets/sprites/ezreal.png");
+        towerbase = new Texture("assets/sprites/tower.png");
+        towerfull = new Texture("assets/sprites/towerfull.png");
+        towertop = new Texture("assets/sprites/towertop.png");
         map = new TmxMapLoader(new InternalFileHandleResolver()).load("assets/map/test.tmx");
         buffer = new FrameBuffer(Pixmap.Format.RGB888, map.getProperties().get("width", Integer.class) * 32, map.getProperties().get("height", Integer.class) * 32, false);
         buffer2 = new FrameBuffer(Pixmap.Format.RGBA8888, map.getProperties().get("width", Integer.class) * 32, map.getProperties().get("height", Integer.class) * 32, false);
@@ -63,25 +74,37 @@ public class MapTestScreen implements Screen, InputProcessor {
         viewport.update(map.getProperties().get("width", Integer.class) * 32, map.getProperties().get("height", Integer.class) * 32, true);
         System.out.println(viewport.getWorldWidth() + " " + viewport.getScreenWidth());
         perspectiveCamera = new PerspectiveCamera();
-        perspectiveCamera.position.set(-50, -50, 50);
-        perspectiveCamera.viewportWidth = 1920;
-        perspectiveCamera.viewportHeight = 1080;
-        perspectiveCamera.fieldOfView = 45;
-        perspectiveCamera.far = 1000;
+        perspectiveCamera.position.set(-45, -45, 40);
+        perspectiveCamera.viewportWidth = 960;
+        perspectiveCamera.viewportHeight = 540;
+        perspectiveCamera.fieldOfView = 25;
+        perspectiveCamera.far = 40;
         perspectiveCamera.near = 1;
-        perspectiveCamera.lookAt(-50, -50, 0);
+        testCamera = new PerspectiveCamera();
+        testCamera.position.set(-45, -45, 40);
+        testCamera.viewportWidth = 960;
+        testCamera.viewportHeight = 540;
+        testCamera.fieldOfView = 25;
+        testCamera.far = 40;
+        testCamera.near = 1;
+        testCamera.update();
         //perspectiveCamera.rotateAround(Vector3.Zero, Vector3.X, 5);
         perspectiveCamera.update();
         pos = new Vector3(-50f, -50f, 0);
         ezPos = new Vector3(-50f, -50f, 0);
-        Gdx.input.setInputProcessor(new InputMultiplexer(this, new CameraInputController(perspectiveCamera)));
+        Gdx.input.setInputProcessor(new InputMultiplexer(this/*, new CameraInputController(perspectiveCamera)*/));
         decbatch = new DecalBatch(new CameraLayerGroupStrategy(perspectiveCamera));
 
-        ez = Decal.newDecal(1, 1, new TextureRegion(texture), true);
+        ez = OrderedDecal.newOrderedDecal(2, 1, 1, new TextureRegion(texture), true);
+        test = OrderedDecal.newOrderedDecal(2, 1, 1, new TextureRegion(texture), true);
+        towerDecal = OrderedDecal.newOrderedDecal(3, 1, 2, new TextureRegion(towerfull), true);
+        towerbaseDecal = OrderedDecal.newOrderedDecal(2, 1, 1, new TextureRegion(towerbase), true);
+        towertopDecal = OrderedDecal.newOrderedDecal(3, 1, 1, new TextureRegion(towertop), true);
+        testpos = new Vector3(-50, -50, 0);
         rot = 15;
         rel = 10;
-        mapDec = Decal.newDecal(map.getProperties().get("width", Integer.class), map.getProperties().get("height", Integer.class), new TextureRegion(), false);
-        mapDecUpper = Decal.newDecal(map.getProperties().get("width", Integer.class), map.getProperties().get("height", Integer.class), new TextureRegion(), true);
+        mapDec = OrderedDecal.newOrderedDecal(1, map.getProperties().get("width", Integer.class), map.getProperties().get("height", Integer.class), new TextureRegion(), false);
+        mapDecUpper = OrderedDecal.newOrderedDecal(3, map.getProperties().get("width", Integer.class), map.getProperties().get("height", Integer.class), new TextureRegion(), true);
         mapDec.setPosition(/*mapDec.getWidth() / 2, mapDec.getHeight() / 2,*/0, 0, 0);
         mapDec.setRotationX(-rot);
         mapDecUpper.setPosition(0, 0, 0);
@@ -110,11 +133,21 @@ public class MapTestScreen implements Screen, InputProcessor {
         Matrix3 ma = new Matrix3();
         ma.setToRotation(Vector3.X, rot);
         Vector3 ve = new Vector3(ezPos).mul(ma);
+
+        //System.out.println(ve);
+        //System.out.println(ve);
         ez.setPosition(ve.x + 0.5f, ve.y + 0.5f, ve.z);
-        ve = new Vector3(pos).mul(ma);
-//        perspectiveCamera.position.set(ve.x + 0.5f, ve.y + 0.5f, ve.z + rel);
-//        perspectiveCamera.update();
+        ve = new Vector3(-48, -46, 0).mul(ma);
+        towerDecal.setPosition(ve.x + 0.5f, ve.y + 1f, ve.z);
+        ve = new Vector3(-46, -46, 0).mul(ma);
+        towerbaseDecal.setPosition(ve.x + 0.5f, ve.y + 0.5f, ve.z);
+        towertopDecal.setPosition(ve.x + 0.5f, ve.y + 1.5f, ve.z);
         decbatch.add(mapDec);
+        decbatch.add(towerDecal);
+        decbatch.add(towertopDecal);
+        decbatch.add(towerbaseDecal);
+        test.setPosition(testpos);
+        //decbatch.add(test);
         decbatch.add(ez);
 
         buffer2.begin();
@@ -167,10 +200,15 @@ public class MapTestScreen implements Screen, InputProcessor {
                 pos.x += 1;
                 break;
             case Input.Keys.W:
-                pos.y += 1;
+                perspectiveCamera.fieldOfView++;
+
+                System.out.println(perspectiveCamera.fieldOfView);
+                perspectiveCamera.update();
                 break;
             case Input.Keys.S:
-                pos.y -= 1;
+                perspectiveCamera.fieldOfView--;
+                System.out.println(perspectiveCamera.fieldOfView);
+                perspectiveCamera.update();
                 break;
             case Input.Keys.LEFT:
                 ezPos.x -= 1;
@@ -200,6 +238,27 @@ public class MapTestScreen implements Screen, InputProcessor {
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+        testCamera.far = testCamera.position.z - 12.937864f;
+        testCamera.update();
+        Vector3 vec = testCamera.unproject(new Vector3(screenX, screenY, 1f));
+        //-45.358875
+        System.out.println(vec);
+        System.out.println(vec.y * Math.tan(Math.toRadians(rot)));
+        testpos.x = vec.x;
+        testpos.y = vec.y;
+        Matrix3 ma = new Matrix3();
+        ma.setToRotation(Vector3.X, -rot);
+        Vector3 c = new Vector3(vec).mul(ma);
+        ezPos.x = c.x - 0.5f;
+        ezPos.y = c.y - 0.5f;
+//        System.out.println(vec);
+//        Vector3 pos = new Vector3(vec.x, vec.y,(float) (vec.y / Math.tan(Math.toRadians(rot))));
+//        Matrix3 ma = new Matrix3();
+//        ma.setToRotation(Vector3.X, -rot);
+//        pos.mul(ma);
+//        System.out.println(pos);
+//        ezPos.x = pos.x;
+//        ezPos.y = pos.y;
         return false;
     }
 
@@ -220,7 +279,7 @@ public class MapTestScreen implements Screen, InputProcessor {
 
     @Override
     public boolean scrolled(int amount) {
-        rel += amount * 0.1f;
+        rel += amount;
         return false;
     }
 }
