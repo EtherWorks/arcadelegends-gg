@@ -9,7 +9,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g3d.decals.Decal;
 import com.badlogic.gdx.graphics.g3d.decals.DecalBatch;
-import com.badlogic.gdx.graphics.g3d.utils.CameraInputController;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
@@ -108,7 +107,7 @@ public class MapTestScreen2 implements Screen, InputProcessor {
         perspectiveCamera.update();
         pos = new Vector3(-50f, -50f, 0);
         ezPos = new Vector3(-50f, -50f, 0);
-        Gdx.input.setInputProcessor(new InputMultiplexer(this, new CameraInputController(perspectiveCamera)));
+        Gdx.input.setInputProcessor(new InputMultiplexer(this));
         decbatch = new DecalBatch(new CameraLayerGroupStrategy(perspectiveCamera));
 
         ez = OrderedDecal.newOrderedDecal(2, 1, 1, new TextureRegion(texture), true);
