@@ -7,9 +7,15 @@ CHECK
     -LIBRARIES //http://blog.jevsejev.io/2017/02/19/java-libraries-you-cannot-miss-in-2017/
         +GUAVA
         +https://deeplearning4j.org/
+        +https://github.com/deeplearning4j/rl4j
         +http://www.cfg4j.org
         +http://www.javaslang.io
         +JUnit
+        +https://github.com/lorenzoongithub/nudge4j
+        +https://immutables.github.io/
+        +https://github.com/real-logic
+        +https://github.com/benalexau/rpc-bench
+        +https://github.com/AsyncHttpClient/async-http-client/
     -NETWORKLIBRARY //https://github.com/EsotericSoftware/kryonet oder https://netty.io/
 
 LEARN
@@ -27,10 +33,3 @@ LEARN
     https://github.com/libgdx/libgdx/wiki/Reading-%26-writing-JSON
     https://github.com/libgdx/libgdx/wiki/Collections
     https://github.com/libgdx/libgdx/wiki/Path-interface-%26-Splines
-
-FORUM
-    -TileMapRendering
-        -http://www.badlogicgames.com/forum/viewtopic.php?f=11&t=25902
-
-PROBLEM
-    -FBO NOT PIXEL PERFEKT
