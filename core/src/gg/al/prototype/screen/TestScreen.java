@@ -1,4 +1,4 @@
-package gg.al.screen;
+package gg.al.prototype.screen;
 
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
@@ -75,13 +75,13 @@ public class TestScreen implements Screen, InputProcessor {
         if (font == null)
             font = new BitmapFont();
         if (ezidle == null)
-            ezidle = new Texture("assets/sprites/ez_idle.png");
+            ezidle = new Texture("assets/prototype/sprites/ez_idle.png");
         if (lawbringer32 == null)
-            lawbringer32 = new Texture("assets/sprites/lawbringer32.png");
+            lawbringer32 = new Texture("assets/prototype/sprites/lawbringer32.png");
         if (lawbringeridle == null)
-            lawbringeridle = new Texture("assets/sprites/lawbringer.png");
+            lawbringeridle = new Texture("assets/prototype/sprites/lawbringer.png");
         if (map == null)
-            map = new TmxMapLoader(new InternalFileHandleResolver()).load("assets/map/test.tmx");
+            map = new TmxMapLoader(new InternalFileHandleResolver()).load("assets/prototype/map/test.tmx");
         if (buffer == null)
             buffer = new FrameBuffer(Pixmap.Format.RGBA8888, map.getProperties().get("width", Integer.class), map.getProperties().get("height", Integer.class), true);
         if (renderer == null)

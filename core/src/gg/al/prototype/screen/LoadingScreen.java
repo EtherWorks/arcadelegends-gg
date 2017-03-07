@@ -1,4 +1,4 @@
-package gg.al.screen;
+package gg.al.prototype.screen;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -13,7 +13,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import gg.al.ArcadeLegends;
+import gg.al.prototype.ArcadeLegends;
 
 import java.util.Map;
 
@@ -56,15 +56,15 @@ public class LoadingScreen implements Screen {
 
     @Override
     public void show() {
-        if (!manager.isLoaded("assets/sprites/ez_idle.png")) {
-            manager.load("assets/sprites/ez_idle.png", Texture.class);
-            manager.finishLoadingAsset("assets/sprites/ez_idle.png");
+        if (!manager.isLoaded("assets/prototype/sprites/ez_idle.png")) {
+            manager.load("assets/prototype/sprites/ez_idle.png", Texture.class);
+            manager.finishLoadingAsset("assets/prototype/sprites/ez_idle.png");
         }
         if (percFont == null) {
             percFont = new BitmapFont();
         }
         if (waitAnim == null) {
-            Texture ezidle = manager.get("assets/sprites/ez_idle.png", Texture.class);
+            Texture ezidle = manager.get("assets/prototype/sprites/ez_idle.png", Texture.class);
             TextureRegion[][] tmp = TextureRegion.split(ezidle, ezidle.getWidth() / 4, ezidle.getHeight());
             TextureRegion[] frames = new TextureRegion[4 * 1];
             int ind = 0;

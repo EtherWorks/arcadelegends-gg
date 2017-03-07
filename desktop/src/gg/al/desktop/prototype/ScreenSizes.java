@@ -1,4 +1,4 @@
-package gg.al.desktop;
+package gg.al.desktop.prototype;
 
 public enum ScreenSizes {
 

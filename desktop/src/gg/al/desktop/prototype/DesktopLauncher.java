@@ -1,10 +1,10 @@
-package gg.al.desktop;
+package gg.al.desktop.prototype;
 
 import com.badlogic.gdx.Files;
 import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
-import gg.al.ArcadeLegends;
+import gg.al.prototype.ArcadeLegends;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -12,8 +12,8 @@ import java.util.Map;
 public class DesktopLauncher {
     public static void main(String[] arg) {
         LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
-        config.addIcon("assets/sprites/logo32.png", Files.FileType.Local);
-        config.addIcon("assets/sprites/logo16.png", Files.FileType.Local);
+        config.addIcon("assets/prototype/sprites/logo32.png", Files.FileType.Local);
+        config.addIcon("assets/prototype/sprites/logo16.png", Files.FileType.Local);
         config.preferencesFileType = Files.FileType.Local;
         config.preferencesDirectory = "config";
         config.width = ScreenSizes.DEFAULT.getWidth();

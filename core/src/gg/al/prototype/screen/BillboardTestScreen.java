@@ -1,4 +1,4 @@
-package gg.al.screen;
+package gg.al.prototype.screen;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -31,7 +31,7 @@ public class BillboardTestScreen implements Screen {
     @Override
     public void show() {
 
-        texture = new Texture("assets/sprites/ezreal.png");
+        texture = new Texture("assets/prototype/sprites/ezreal.png");
         region = new TextureRegion();
         perspectiveCamera = new PerspectiveCamera(45, 960, 540);
         perspectiveCamera.position.set(0, 0, 5);

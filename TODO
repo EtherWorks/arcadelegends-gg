@@ -1,9 +1,7 @@
 CHECK
     -VISEditor
     -VISUI
-    -LWJGL3 //Nicht gebraucht
     -ARTEMIS-ODB
-    -JAVA 9 //Kommt erst Juli
     -LIBRARIES //http://blog.jevsejev.io/2017/02/19/java-libraries-you-cannot-miss-in-2017/
         +GUAVA
         +https://deeplearning4j.org/
@@ -15,8 +13,13 @@ CHECK
         +https://immutables.github.io/
         +https://github.com/real-logic
         +https://github.com/benalexau/rpc-bench
-        +https://github.com/AsyncHttpClient/async-http-client/
     -NETWORKLIBRARY //https://github.com/EsotericSoftware/kryonet oder https://netty.io/
+
+CHECKED
+    -JAVA 9
+        //Kommt erst Juli
+    -LWJGL3
+        //Nicht gebraucht / inkomplett
 
 LEARN
     https://github.com/libgdx/libgdx/wiki/Managing-your-assets

@@ -1,4 +1,4 @@
-package gg.al.render;
+package gg.al.prototype.render;
 
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;

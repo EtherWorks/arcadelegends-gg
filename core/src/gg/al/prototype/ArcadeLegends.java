@@ -1,9 +1,9 @@
-package gg.al;
+package gg.al.prototype;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.assets.AssetManager;
-import gg.al.manager.SceneManager;
-import gg.al.screen.MapTestScreen2;
+import gg.al.prototype.manager.SceneManager;
+import gg.al.prototype.screen.MapTestScreen2;
 
 public class ArcadeLegends extends Game {
 

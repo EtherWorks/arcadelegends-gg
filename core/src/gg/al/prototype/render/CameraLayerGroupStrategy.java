@@ -1,4 +1,4 @@
-package gg.al.render;
+package gg.al.prototype.render;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Camera;

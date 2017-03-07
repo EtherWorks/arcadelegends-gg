@@ -1,4 +1,4 @@
-package gg.al.screen;
+package gg.al.prototype.screen;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
@@ -12,8 +12,8 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import gg.al.ArcadeLegends;
-import gg.al.anim.ScaleAnimation;
+import gg.al.prototype.ArcadeLegends;
+import gg.al.prototype.anim.ScaleAnimation;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -65,13 +65,13 @@ public class Splash implements Screen, InputProcessor {
     @Override
     public void show() {
         if (splash == null)
-            splash = manager.get("assets/sprites/splash/splash.png", Texture.class);
+            splash = manager.get("assets/prototype/sprites/splash/splash.png", Texture.class);
         if (background == null)
-            background = manager.get("assets/sprites/splash/background.jpg", Texture.class);
+            background = manager.get("assets/prototype/sprites/splash/background.jpg", Texture.class);
         if (batch == null)
             batch = new SpriteBatch();
         if (music == null)
-            music = manager.get("assets/audio/bitrush.mp3", Music.class);
+            music = manager.get("assets/prototype/audio/bitrush.mp3", Music.class);
         music.setLooping(true);
         music.play();
         animation = new ScaleAnimation(splash, .5f, ScaleAnimation.ScaleMode.SMOOTH, 1, 1.5f, 1.6f, 1.5f);

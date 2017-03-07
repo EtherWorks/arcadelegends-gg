@@ -1,4 +1,4 @@
-package gg.al.manager;
+package gg.al.prototype.manager;
 
 import com.badlogic.gdx.utils.Disposable;
 
