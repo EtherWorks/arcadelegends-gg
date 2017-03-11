@@ -23,9 +23,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import gg.al.prototype.render.CameraLayerGroupStrategy;
 import gg.al.prototype.render.OrderedDecal;
 
-/**
- * Created by Thomas on 02.03.2017.
- */
+
 public class MapTestScreen2 implements Screen, InputProcessor {
 
     private static final int[] UNDERLAYERS = new int[]{0};
@@ -66,8 +64,6 @@ public class MapTestScreen2 implements Screen, InputProcessor {
 
     @Override
     public void show() {
-
-
         batch = new SpriteBatch();
         bufferBatch = new SpriteBatch();
         texture = new Texture("assets/prototype/sprites/ezreal.png");
@@ -142,6 +138,7 @@ public class MapTestScreen2 implements Screen, InputProcessor {
     public void render(float delta) {
         Gdx.graphics.getGL20().glClearColor(0, 0, .5f, 1);
         Gdx.graphics.getGL20().glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
+
 
         buffer.begin();
         Gdx.gl.glClearColor(0, 0, 0, 1);
