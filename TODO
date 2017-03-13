@@ -1,19 +1,5 @@
 CHECK
-    -VISEditor
-    -VISUI
-    -ARTEMIS-ODB
     -LIBRARIES //http://blog.jevsejev.io/2017/02/19/java-libraries-you-cannot-miss-in-2017/
-        +GUAVA
-        +https://deeplearning4j.org/
-        +https://github.com/deeplearning4j/rl4j
-        +http://www.cfg4j.org
-        +http://www.javaslang.io
-        +JUnit
-        +https://github.com/lorenzoongithub/nudge4j
-        +https://immutables.github.io/
-        +https://github.com/real-logic
-        +https://github.com/benalexau/rpc-bench
-    -NETWORKLIBRARY //https://github.com/EsotericSoftware/kryonet oder https://netty.io/
 
 CHECKED
     -JAVA 9
@@ -37,3 +23,34 @@ LEARN
     https://github.com/libgdx/libgdx/wiki/Collections
     https://github.com/libgdx/libgdx/wiki/Path-interface-%26-Splines
     https://github.com/junkdog/artemis-odb/wiki/Introduction-to-Entity-Systems
+
+LIBRARIES //NOW
+
+    +https://github.com/junkdog/artemis-odb
+
+    +https://github.com/google/guava
+    +http://www.javaslang.io/
+    +https://github.com/qos-ch/slf4j | logback
+    +https://github.com/rzwitserloot/lombok
+
+LIBRARIES //FUTURE
+    +https://deeplearning4j.org/
+    +https://github.com/deeplearning4j/rl4j
+    +https://github.com/EsotericSoftware/kryonet
+    +https://netty.io/
+    +https://github.com/real-logic | +https://github.com/benalexau/rpc-bench
+    +http://www.cfg4j.org //Vielleicht
+    +https://github.com/kotcrab/vis-editor
+    +https://www.jetbrains.com/help/idea/2016.3/configuring-testing-libraries.html
+
+LIBRARIES //MAYBE
+    +https://immutables.github.io/
+    +https://github.com/google/guice
+    +https://github.com/jdeferred/jdeferred
+    +https://github.com/bennidi/mbassador
+    +https://github.com/ReactiveX/RxJava
+    +http://pragmatists.github.io/JUnitParams/
+    +http://site.mockito.org/
+    +https://github.com/ArcBees/Jukito
+    +https://github.com/awaitility/awaitility
+    +javaslang - module

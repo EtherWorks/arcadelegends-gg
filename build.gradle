@@ -19,10 +19,13 @@ allprojects {
         gdxVersion = '1.9.5'
         roboVMVersion = '2.3.0'
         box2DLightsVersion = '1.4'
-        ashleyVersion = '1.7.0'
         artemisVersion = '2.1.0'
         aiVersion = '1.8.0'
         logbackVersion = '1.2.1'
+        guavaVersion = '21.0'
+        lomborkVersion = '1.16.14'
+        javaslangVersion = '2.1.0-alpha'
+        slf4jVersion = '1.7.24'
     }
 
     repositories {
@@ -39,6 +42,8 @@ project(":desktop") {
 
     dependencies {
         compile project(":core")
+
+        //Game-Dependencies
         compile "com.badlogicgames.gdx:gdx-backend-lwjgl:$gdxVersion"
         //compile "com.badlogicgames.gdx:gdx-backend-lwjgl3:$gdxVersion"
         compile "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
@@ -47,6 +52,9 @@ project(":desktop") {
         compile "com.badlogicgames.gdx:gdx-tools:$gdxVersion"
         compile "com.badlogicgames.gdx:gdx-controllers-desktop:$gdxVersion"
         compile "com.badlogicgames.gdx:gdx-controllers-platform:$gdxVersion:natives-desktop"
+        compile "net.onedaybeard.artemis:artemis-odb:$artemisVersion"
+
+
     }
 
     compileJava {
@@ -67,10 +75,15 @@ project(":core") {
         compile "com.badlogicgames.gdx:gdx-ai:$aiVersion"
         compile "net.onedaybeard.artemis:artemis-odb:$artemisVersion"
         compile "com.badlogicgames.box2dlights:box2dlights:$box2DLightsVersion"
-        //compile "com.badlogicgames.ashley:ashley:$ashleyVersion"
         compile "net.dermetfan.libgdx-utils:libgdx-utils-box2d:0.13.3"
         compile "net.dermetfan.libgdx-utils:libgdx-utils:0.13.3"
+
+        //Code-Dependencies
+        compile "com.google.guava:guava:$guavaVersion"
         compile "ch.qos.logback:logback-classic:$logbackVersion"
+        compile "org.projectlombok:lombok:$lomborkVersion"
+        compile "io.javaslang:javaslang:$javaslangVersion"
+        //compile "org.slf4j:slf4j-api:$slf4jVersion"
     }
 
     compileJava {
