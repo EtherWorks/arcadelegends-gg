@@ -12,9 +12,9 @@ import java.io.IOException;
 public class DesktopConfigEditor extends ConfigEditor {
 
     @Override
-    public void flush() {
+    protected void write() {
         try {
-            properties.store(new FileOutputStream(new File(DesktopConfigUtil.getCurrentConfigPath())), null);
+            properties.store(new FileOutputStream(new File(DesktopConfigUtil.getCurrentConfigPath())), "Only edit if you know what you are doing");
         } catch (IOException e) {
             e.printStackTrace();
         }

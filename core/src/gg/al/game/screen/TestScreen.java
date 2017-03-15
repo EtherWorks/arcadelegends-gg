@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.utils.TimeUtils;
 import gg.al.config.IVideoConfig;
 import gg.al.game.ArcadeLegendsGame;
 import lombok.extern.slf4j.Slf4j;
@@ -16,18 +17,25 @@ public class TestScreen implements Screen, InputProcessor {
 
     private final ArcadeLegendsGame game;
 
+    private long time;
+
     public TestScreen(ArcadeLegendsGame game) {
         this.game = game;
     }
 
     @Override
     public void show() {
+        time = TimeUtils.millis();
         Gdx.input.setInputProcessor(this);
     }
 
+
     @Override
     public void render(float delta) {
-        log.debug("FPS: {}", Gdx.graphics.getFramesPerSecond());
+        if (TimeUtils.timeSinceMillis(time) > 1000) {
+            log.debug("FPS: {}", Gdx.graphics.getFramesPerSecond());
+            time = TimeUtils.millis();
+        }
     }
 
     @Override
@@ -60,6 +68,14 @@ public class TestScreen implements Screen, InputProcessor {
         switch (keycode) {
             case Input.Keys.F11:
                 game.config.editor.setValue(IVideoConfig.VideoKeyNames.FULLSCREEN, !game.config.video.fullscreen());
+                game.config.editor.flush();
+                break;
+            case Input.Keys.F6:
+                game.config.editor.setValue(IVideoConfig.VideoKeyNames.VSYNC, !game.config.video.vsyncEnabled());
+                game.config.editor.flush();
+                break;
+            case Input.Keys.F5:
+                game.config.editor.setValue(IVideoConfig.VideoKeyNames.FOREGRFPS, game.config.video.foregroundFPS() + 10);
                 game.config.editor.flush();
                 break;
         }

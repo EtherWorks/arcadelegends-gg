@@ -13,6 +13,7 @@ public class Config {
     public final IAudioConfig audio;
     public final IGameplayConfig gameplay;
     public final IInputConfig input;
+    public final IMiscellaneousConfig miscellaneous;
 
     public final ConfigEditor editor;
     private final ConfigurationProvider provider;
@@ -25,6 +26,7 @@ public class Config {
         this.audio = provider.bind(IAudioConfig.PREFIX, IAudioConfig.class);
         this.gameplay = provider.bind(IGameplayConfig.PREFIX, IGameplayConfig.class);
         this.input = provider.bind(IInputConfig.PREFIX, IInputConfig.class);
+        this.miscellaneous = provider.bind(IMiscellaneousConfig.PREFIX, IMiscellaneousConfig.class);
     }
 
     public Properties asProperties() {

@@ -6,5 +6,5 @@ package gg.al.config;
  */
 @FunctionalInterface
 public interface IConfigValueChangedListener {
-    void valueChanged(String key, Object value);
+    void valueChanged(String key, String value);
 }

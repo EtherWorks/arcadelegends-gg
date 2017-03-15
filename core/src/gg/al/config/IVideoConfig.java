@@ -15,10 +15,16 @@ public interface IVideoConfig {
 
     boolean fullscreen();
 
+    int width();
+
+    int height();
+
     interface VideoKeyNames {
         String VSYNC = PREFIX + ".vsyncEnabled";
         String BACKGRFPS = PREFIX + ".backgroundFPS";
-        String FOREGRFPS = PREFIX + ".backgroundFPS";
+        String FOREGRFPS = PREFIX + ".foregroundFPS";
         String FULLSCREEN = PREFIX + ".fullscreen";
+        String WIDTH = PREFIX + ".WIDTH";
+        String HEIGHT = PREFIX + ".HEIGHT";
     }
 }

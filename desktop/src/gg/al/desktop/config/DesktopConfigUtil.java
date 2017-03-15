@@ -1,19 +1,28 @@
 package gg.al.desktop.config;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
+import com.github.drapostolos.typeparser.TypeParser;
+import com.google.common.io.Files;
 import gg.al.config.Config;
+import gg.al.config.IVideoConfig;
+import lombok.extern.slf4j.Slf4j;
 import org.cfg4j.provider.ConfigurationProvider;
 import org.cfg4j.provider.ConfigurationProviderBuilder;
 import org.cfg4j.source.ConfigurationSource;
 import org.cfg4j.source.files.FilesConfigurationSource;
 
 import java.io.File;
+import java.io.IOException;
+import java.net.URISyntaxException;
 import java.nio.file.Paths;
 import java.util.Arrays;
 
 /**
  * Created by Thomas Neumann on 15.03.2017.
  */
+@Slf4j
 public class DesktopConfigUtil {
 
     public static final String CONFIGFILELOCATION = "config/config.properties";
@@ -23,6 +32,17 @@ public class DesktopConfigUtil {
     }
 
     public static ConfigurationProvider buildConfigProvider() {
+        File file = new File(getCurrentConfigPath());
+        if (!file.exists()) {
+            try {
+                File defaultConfig = new File(DesktopConfigUtil.class.getResource("/config.properties").toURI());
+                Files.copy(defaultConfig, file);
+            } catch (URISyntaxException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
         ConfigurationSource s = new FilesConfigurationSource(() -> Arrays.asList(Paths.get(getCurrentConfigPath())));
         ConfigurationProvider p = new ConfigurationProviderBuilder().withConfigurationSource(s).build();
         return p;
@@ -41,5 +61,23 @@ public class DesktopConfigUtil {
         config.backgroundFPS = cfg.video.backgroundFPS();
         config.fullscreen = cfg.video.fullscreen();
         config.vSyncEnabled = cfg.video.vsyncEnabled();
+        config.width = cfg.video.width();
+        config.height = cfg.video.height();
+    }
+
+    public static void registerStandardListeners(DesktopConfigEditor editor, Config cfg, LwjglApplicationConfiguration config, LwjglApplication application) {
+        TypeParser parser = TypeParser.newBuilder().build();
+        if (cfg.miscellaneous.logConfigEvents())
+            editor.addConfigValueChangedListener((key, value) -> log.debug("Config value changed: {}={}", key, value));
+        editor.addConfigValueChangedListener(IVideoConfig.VideoKeyNames.FULLSCREEN, (key, value) -> {
+            boolean fullscreen = parser.parse(value, Boolean.class);
+            if (fullscreen)
+                Gdx.app.postRunnable(() -> Gdx.graphics.setFullscreenMode(Gdx.graphics.getDisplayMode()));
+            else
+                Gdx.app.postRunnable(() -> Gdx.graphics.setWindowedMode(cfg.video.width(), cfg.video.height()));
+        });
+        editor.addConfigValueChangedListener(IVideoConfig.VideoKeyNames.BACKGRFPS, (key, value) -> config.backgroundFPS = parser.parse(value, Integer.class));
+        editor.addConfigValueChangedListener(IVideoConfig.VideoKeyNames.FOREGRFPS, (key, value) -> config.foregroundFPS = parser.parse(value, Integer.class));
+        editor.addConfigValueChangedListener(IVideoConfig.VideoKeyNames.VSYNC, (key, value) -> application.getGraphics().setVSync(parser.parse(value, Boolean.class)));
     }
 }
