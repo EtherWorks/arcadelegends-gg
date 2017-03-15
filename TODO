@@ -32,6 +32,7 @@ LIBRARIES //NOW
     +http://www.javaslang.io/
     +https://github.com/qos-ch/slf4j | logback
     +https://github.com/rzwitserloot/lombok
+    +http://www.cfg4j.org
 
 LIBRARIES //FUTURE
     +https://deeplearning4j.org/
@@ -39,7 +40,6 @@ LIBRARIES //FUTURE
     +https://github.com/EsotericSoftware/kryonet
     +https://netty.io/
     +https://github.com/real-logic | +https://github.com/benalexau/rpc-bench
-    +http://www.cfg4j.org //Vielleicht
     +https://github.com/kotcrab/vis-editor
     +https://www.jetbrains.com/help/idea/2016.3/configuring-testing-libraries.html
 
