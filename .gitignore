@@ -70,5 +70,6 @@ build/
 Thumbs.db
 /config/
 /artifact/
+/artifacts/
 /logs/
 /log/
