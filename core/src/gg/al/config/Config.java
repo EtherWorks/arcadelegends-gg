@@ -20,6 +20,7 @@ public class Config {
     public Config(ConfigurationProvider provider, ConfigEditor editor) {
         this.editor = editor;
         this.provider = provider;
+        this.editor.setEditing(this.provider.allConfigurationAsProperties());
         this.video = provider.bind(IVideoConfig.PREFIX, IVideoConfig.class);
         this.audio = provider.bind(IAudioConfig.PREFIX, IAudioConfig.class);
         this.gameplay = provider.bind(IGameplayConfig.PREFIX, IGameplayConfig.class);

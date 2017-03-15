@@ -3,6 +3,7 @@ package gg.al.config;
 import com.google.common.collect.LinkedListMultimap;
 import com.google.common.collect.ListMultimap;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
@@ -12,15 +13,26 @@ import java.util.Properties;
 public abstract class ConfigEditor {
 
     protected final ListMultimap<String, IConfigValueChangedListener> listeners;
+    protected final List<IConfigValueChangedListener> allValueListeners;
     protected final Properties properties;
 
     public ConfigEditor() {
         this.properties = new Properties();
         this.listeners = LinkedListMultimap.create();
+        allValueListeners = new ArrayList<>();
+    }
+
+
+    public void addConfigValueChangedListener(IConfigValueChangedListener listener) {
+        allValueListeners.add(listener);
     }
 
     public void addConfigValueChangedListener(String key, IConfigValueChangedListener listener) {
         listeners.put(key, listener);
+    }
+
+    public void removeConfigValueChangedListener(IConfigValueChangedListener listener) {
+        allValueListeners.remove(listener);
     }
 
     public void removeConfigValueChangedListener(String key, IConfigValueChangedListener listener) {
@@ -48,6 +60,9 @@ public abstract class ConfigEditor {
     }
 
     protected void fireConfigValueChanged(String key, Object value) {
+        for (IConfigValueChangedListener listener : allValueListeners) {
+            listener.valueChanged(key, value);
+        }
 
         for (IConfigValueChangedListener listener : listeners.get(key)) {
             listener.valueChanged(key, value);

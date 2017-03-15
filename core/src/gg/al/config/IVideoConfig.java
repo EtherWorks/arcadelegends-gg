@@ -13,9 +13,12 @@ public interface IVideoConfig {
 
     int backgroundFPS();
 
+    boolean fullscreen();
+
     interface VideoKeyNames {
         String VSYNC = PREFIX + ".vsyncEnabled";
         String BACKGRFPS = PREFIX + ".backgroundFPS";
         String FOREGRFPS = PREFIX + ".backgroundFPS";
+        String FULLSCREEN = PREFIX + ".fullscreen";
     }
 }
