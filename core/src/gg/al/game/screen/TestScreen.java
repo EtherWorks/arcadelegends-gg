@@ -21,7 +21,6 @@ public class TestScreen implements Screen {
 
     @Override
     public void render(float delta) {
-        System.out.println(game.config.video.vsyncEnabled());
     }
 
     @Override

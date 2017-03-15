@@ -2,6 +2,8 @@ package gg.al.config;
 
 import org.cfg4j.provider.ConfigurationProvider;
 
+import java.util.Properties;
+
 /**
  * Created by Thomas Neumann on 15.03.2017.
  */
@@ -12,7 +14,7 @@ public class Config {
     public final IGameplayConfig gameplay;
     public final IInputConfig input;
 
-    private final ConfigEditor editor;
+    public final ConfigEditor editor;
     private final ConfigurationProvider provider;
 
     public Config(ConfigurationProvider provider, ConfigEditor editor) {
@@ -24,10 +26,12 @@ public class Config {
         this.input = provider.bind(IInputConfig.PREFIX, IInputConfig.class);
     }
 
-    public ConfigEditor buildEditor() {
-        editor.setEditing(provider.allConfigurationAsProperties());
-        return editor;
+    public Properties asProperties() {
+        return provider.allConfigurationAsProperties();
     }
 
+    public void resetEditor() {
+        editor.setEditing(asProperties());
+    }
 
 }

@@ -2,7 +2,6 @@ package gg.al.game;
 
 import com.badlogic.gdx.Game;
 import gg.al.config.Config;
-import gg.al.config.ConfigEditor;
 import gg.al.config.IVideoConfig;
 import gg.al.game.screen.TestScreen;
 
@@ -18,9 +17,11 @@ public class ArcadeLegendsGame extends Game {
 
     @Override
     public void create() {
-        ConfigEditor edit = config.buildEditor();
-        edit.setValue(IVideoConfig.VideoKeyNames.VSYNC, true);
-        edit.flush();
+        config.editor.addConfigValueChangedListener(IVideoConfig.VideoKeyNames.VSYNC, (key, value) -> System.out.println(value));
+        config.resetEditor();
+        config.editor.setValue(IVideoConfig.VideoKeyNames.VSYNC, true);
+        config.editor.flush();
+
         setScreen(new TestScreen(this));
     }
 
