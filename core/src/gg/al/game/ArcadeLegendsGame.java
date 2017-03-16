@@ -2,8 +2,7 @@ package gg.al.game;
 
 import com.badlogic.gdx.Game;
 import gg.al.config.Config;
-import gg.al.game.screen.TestScreen;
-import gg.al.game.screen.UITestScreen;
+import gg.al.game.screen.MainMenuScreen;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -19,7 +18,7 @@ public class ArcadeLegendsGame extends Game {
 
     @Override
     public void create() {
-        setScreen(new UITestScreen(this));
+        setScreen(new MainMenuScreen(this));
     }
 
 

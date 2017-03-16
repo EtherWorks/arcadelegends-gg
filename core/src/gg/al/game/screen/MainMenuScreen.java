@@ -26,7 +26,7 @@ import java.awt.event.WindowListener;
  * Created by Patrick Windegger on 16.03.2017.
  */
 @Slf4j
-public class UITestScreen extends ArcadeScreen {
+public class MainMenuScreen extends ArcadeScreen {
 
     private Stage stage;
     private Skin skin;
@@ -35,7 +35,7 @@ public class UITestScreen extends ArcadeScreen {
     private int x;
     private int y;
 
-    public UITestScreen(ArcadeLegendsGame game) {
+    public MainMenuScreen(ArcadeLegendsGame game) {
         super(game);
     }
 
@@ -67,6 +67,14 @@ public class UITestScreen extends ArcadeScreen {
         btSettings.setWidth(200);
         btSettings.setHeight(50);
         btSettings.setPosition(x/2-100, y/5 + y/3);
+        btSettings.addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                super.clicked(event, x, y);
+
+            }
+        });
+
 
         TextButton btExit = new TextButton("Exit Game", skin, "default");
         btExit.setWidth(200);
