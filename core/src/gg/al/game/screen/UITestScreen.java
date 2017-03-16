@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
@@ -27,11 +28,12 @@ import java.awt.event.WindowListener;
 @Slf4j
 public class UITestScreen extends ArcadeScreen {
 
-    private Skin skin;
     private Stage stage;
-
-    private Skin skin2;
+    private Skin skin;
     private Viewport viewport;
+
+    private int x;
+    private int y;
 
     public UITestScreen(ArcadeLegendsGame game) {
         super(game);
@@ -39,30 +41,19 @@ public class UITestScreen extends ArcadeScreen {
 
     @Override
     public void show() {
-        BitmapFont bmfont = new BitmapFont();
-        skin = new Skin();
-        skin.add("default", bmfont);
+        // Inits:
         stage = new Stage(new ScreenViewport());
+        skin = new Skin(Gdx.files.internal("assets/prototype/styles/buttonfont/textbuttonstyles.json"));
+        x = Gdx.graphics.getWidth();
+        y = Gdx.graphics.getHeight();
 
-        Pixmap map = new Pixmap(1, 1, Pixmap.Format.RGB888);
-        map.setColor(Color.WHITE);
-        map.fill();
-        skin.add("default", new Texture(map));
+        // Buttons:
+        TextButton btPlay = new TextButton("Play", skin, "default");
+        btPlay.setWidth(200);
+        btPlay.setHeight(50);
+        btPlay.setPosition(x / 2 - 100, y / 5 + y / 2);
 
-
-        TextButton.TextButtonStyle textButtonStyle = new TextButton.TextButtonStyle();
-        textButtonStyle.up = skin.newDrawable("default", Color.DARK_GRAY);
-        textButtonStyle.checked = skin.newDrawable("default", Color.DARK_GRAY);
-        textButtonStyle.over = skin.newDrawable("default", Color.LIGHT_GRAY);
-        textButtonStyle.font = skin.getFont("default");
-
-        skin2 = new Skin(Gdx.files.internal("assets/prototype/styles/buttonfont/textbuttonstyles.json"));
-
-        TextButton button = new TextButton("Click me", skin2, "default");
-        button.setWidth(200);
-        button.setHeight(50);
-        button.setPosition(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2);
-
+        /*
         button.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -70,12 +61,27 @@ public class UITestScreen extends ArcadeScreen {
 
             }
         });
-        stage.addActor(button);
+        */
+
+        TextButton btSettings = new TextButton("Settings", skin, "default");
+        btSettings.setWidth(200);
+        btSettings.setHeight(50);
+        btSettings.setPosition(x/2-100, y/5 + y/3);
+
+        TextButton btExit = new TextButton("Exit Game", skin, "default");
+        btExit.setWidth(200);
+        btExit.setHeight(50);
+        btExit.setPosition(x/2-100, y/5 + y/6);
+
+        stage.addActor(btPlay);
+        stage.addActor(btSettings);
+        stage.addActor(btExit);
+
+
 
         OrthographicCamera cam = new OrthographicCamera();
         viewport = new ScreenViewport(cam);
         stage.setViewport(viewport);
-
 
         Gdx.input.setInputProcessor(stage);
     }
@@ -115,10 +121,9 @@ public class UITestScreen extends ArcadeScreen {
 
     }
 
-    private void changeSize()
-    {
-        game.config.editor.setValue(IVideoConfig.VideoKeyNames.HEIGHT, game.config.video.height()+10);
-        game.config.editor.setValue(IVideoConfig.VideoKeyNames.WIDTH, game.config.video.width()+10);
+    private void changeSize() {
+        game.config.editor.setValue(IVideoConfig.VideoKeyNames.HEIGHT, game.config.video.height() + 10);
+        game.config.editor.setValue(IVideoConfig.VideoKeyNames.WIDTH, game.config.video.width() + 10);
         game.config.editor.flush();
     }
 }
