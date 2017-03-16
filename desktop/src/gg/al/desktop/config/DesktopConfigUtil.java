@@ -78,5 +78,6 @@ public class DesktopConfigUtil {
         editor.addConfigValueChangedListener(IVideoConfig.VideoKeyNames.BACKGRFPS, (key, value) -> config.backgroundFPS = parser.parse(value, Integer.class));
         editor.addConfigValueChangedListener(IVideoConfig.VideoKeyNames.FOREGRFPS, (key, value) -> config.foregroundFPS = parser.parse(value, Integer.class));
         editor.addConfigValueChangedListener(IVideoConfig.VideoKeyNames.VSYNC, (key, value) -> application.postRunnable(() -> application.getGraphics().setVSync(parser.parse(value, Boolean.class))));
+        editor.addConfigValueChangedListener(IVideoConfig.VideoKeyNames.WIDTH, (key, value) -> application.postRunnable(() -> application.getGraphics().setWindowedMode(cfg.video.width(), cfg.video.height())), true);
     }
 }

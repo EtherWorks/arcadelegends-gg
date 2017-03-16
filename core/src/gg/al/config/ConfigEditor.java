@@ -3,10 +3,7 @@ package gg.al.config;
 import com.google.common.collect.LinkedListMultimap;
 import com.google.common.collect.ListMultimap;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
+import java.util.*;
 
 /**
  * Created by Thomas Neumann on 15.03.2017.
@@ -15,6 +12,8 @@ public abstract class ConfigEditor {
 
     protected final ListMultimap<String, IConfigValueChangedListener> listeners;
     protected final List<IConfigValueChangedListener> allValueListeners;
+    protected final ListMultimap<String, IConfigValueChangedListener> listenersAfter;
+    protected final List<IConfigValueChangedListener> allValueListenersAfter;
     protected final Properties properties;
     protected final Properties before;
 
@@ -22,24 +21,54 @@ public abstract class ConfigEditor {
         this.properties = new Properties();
         this.before = new Properties();
         this.listeners = LinkedListMultimap.create();
-        allValueListeners = new ArrayList<>();
+        this.allValueListeners = new ArrayList<>();
+        this.listenersAfter = LinkedListMultimap.create();
+        this.allValueListenersAfter = new ArrayList<>();
     }
 
 
+    public void addConfigValueChangedListener(IConfigValueChangedListener listener, boolean afterFlush) {
+        if (afterFlush)
+            allValueListenersAfter.add(listener);
+        else
+            allValueListeners.add(listener);
+    }
+
+    public void addConfigValueChangedListener(String key, IConfigValueChangedListener listener, boolean afterFlush) {
+        if (afterFlush)
+            listenersAfter.put(key, listener);
+        else
+            listeners.put(key, listener);
+    }
+
+    public void removeConfigValueChangedListener(IConfigValueChangedListener listener, boolean afterFlush) {
+        if (afterFlush)
+            allValueListenersAfter.remove(listener);
+        else
+            allValueListeners.remove(listener);
+    }
+
+    public void removeConfigValueChangedListener(String key, IConfigValueChangedListener listener, boolean afterFlush) {
+        if (afterFlush)
+            listenersAfter.remove(key, listener);
+        else
+            listeners.remove(key, listener);
+    }
+
     public void addConfigValueChangedListener(IConfigValueChangedListener listener) {
-        allValueListeners.add(listener);
+        addConfigValueChangedListener(listener, false);
     }
 
     public void addConfigValueChangedListener(String key, IConfigValueChangedListener listener) {
-        listeners.put(key, listener);
+        addConfigValueChangedListener(key, listener, false);
     }
 
     public void removeConfigValueChangedListener(IConfigValueChangedListener listener) {
-        allValueListeners.remove(listener);
+        removeConfigValueChangedListener(listener, false);
     }
 
     public void removeConfigValueChangedListener(String key, IConfigValueChangedListener listener) {
-        listeners.remove(key, listener);
+        removeConfigValueChangedListener(key, listener, false);
     }
 
     public void setEditing(Properties properties) {
@@ -72,13 +101,29 @@ public abstract class ConfigEditor {
         }
     }
 
+    protected void fireConfigValueChangedAfter(String key, String value) {
+        for (IConfigValueChangedListener listener : allValueListenersAfter) {
+            listener.valueChanged(key, value);
+        }
+
+        for (IConfigValueChangedListener listener : listenersAfter.get(key)) {
+            listener.valueChanged(key, value);
+        }
+    }
+
     public void flush() {
+        List<Map.Entry<Object, Object>> toFire = new LinkedList<>();
         for (Map.Entry<Object, Object> entry : properties.entrySet()) {
-            if (!entry.getValue().equals(before.getProperty(entry.getKey().toString())))
+            if (!entry.getValue().equals(before.getProperty(entry.getKey().toString()))) {
                 fireConfigValueChanged(entry.getKey().toString(), entry.getValue().toString());
+                toFire.add(entry);
+            }
         }
         write();
         setEditing((Properties) properties.clone());
+        for (Map.Entry<Object, Object> entry:toFire) {
+            fireConfigValueChangedAfter(entry.getKey().toString(), entry.getValue().toString());
+        }
     }
 
     protected abstract void write();

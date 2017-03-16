@@ -24,7 +24,7 @@ public interface IVideoConfig {
         String BACKGRFPS = PREFIX + ".backgroundFPS";
         String FOREGRFPS = PREFIX + ".foregroundFPS";
         String FULLSCREEN = PREFIX + ".fullscreen";
-        String WIDTH = PREFIX + ".WIDTH";
-        String HEIGHT = PREFIX + ".HEIGHT";
+        String WIDTH = PREFIX + ".width";
+        String HEIGHT = PREFIX + ".height";
     }
 }

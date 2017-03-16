@@ -78,6 +78,11 @@ public class TestScreen implements Screen, InputProcessor {
                 game.config.editor.setValue(IVideoConfig.VideoKeyNames.FOREGRFPS, game.config.video.foregroundFPS() + 10);
                 game.config.editor.flush();
                 break;
+            case Input.Keys.F3:
+                game.config.editor.setValue(IVideoConfig.VideoKeyNames.WIDTH, 1920);
+                game.config.editor.setValue(IVideoConfig.VideoKeyNames.HEIGHT, 1080);
+                game.config.editor.flush();
+                break;
         }
         return false;
     }
