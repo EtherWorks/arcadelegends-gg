@@ -1,6 +1,5 @@
 package gg.al.desktop.config;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import com.github.drapostolos.typeparser.TypeParser;
@@ -72,12 +71,12 @@ public class DesktopConfigUtil {
         editor.addConfigValueChangedListener(IVideoConfig.VideoKeyNames.FULLSCREEN, (key, value) -> {
             boolean fullscreen = parser.parse(value, Boolean.class);
             if (fullscreen)
-                Gdx.app.postRunnable(() -> Gdx.graphics.setFullscreenMode(Gdx.graphics.getDisplayMode()));
+                application.postRunnable(() -> application.getGraphics().setFullscreenMode(application.getGraphics().getDisplayMode()));
             else
-                Gdx.app.postRunnable(() -> Gdx.graphics.setWindowedMode(cfg.video.width(), cfg.video.height()));
+                application.postRunnable(() -> application.getGraphics().setWindowedMode(cfg.video.width(), cfg.video.height()));
         });
         editor.addConfigValueChangedListener(IVideoConfig.VideoKeyNames.BACKGRFPS, (key, value) -> config.backgroundFPS = parser.parse(value, Integer.class));
         editor.addConfigValueChangedListener(IVideoConfig.VideoKeyNames.FOREGRFPS, (key, value) -> config.foregroundFPS = parser.parse(value, Integer.class));
-        editor.addConfigValueChangedListener(IVideoConfig.VideoKeyNames.VSYNC, (key, value) -> application.getGraphics().setVSync(parser.parse(value, Boolean.class)));
+        editor.addConfigValueChangedListener(IVideoConfig.VideoKeyNames.VSYNC, (key, value) -> application.postRunnable(() -> application.getGraphics().setVSync(parser.parse(value, Boolean.class))));
     }
 }
