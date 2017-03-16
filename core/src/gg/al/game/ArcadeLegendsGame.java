@@ -3,6 +3,7 @@ package gg.al.game;
 import com.badlogic.gdx.Game;
 import gg.al.config.Config;
 import gg.al.game.screen.TestScreen;
+import gg.al.game.screen.UITestScreen;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -18,7 +19,7 @@ public class ArcadeLegendsGame extends Game {
 
     @Override
     public void create() {
-        setScreen(new TestScreen(this));
+        setScreen(new UITestScreen(this));
     }
 
 
