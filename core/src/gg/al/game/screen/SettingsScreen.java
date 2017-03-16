@@ -1,13 +1,11 @@
 package gg.al.game.screen;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.*;
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
@@ -16,17 +14,11 @@ import gg.al.config.IVideoConfig;
 import gg.al.game.ArcadeLegendsGame;
 import lombok.extern.slf4j.Slf4j;
 
-import java.awt.*;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
-
-
+@Slf4j
 /**
  * Created by Patrick Windegger on 16.03.2017.
  */
-@Slf4j
-public class MainMenuScreen extends ArcadeScreen {
+public class SettingsScreen extends ArcadeScreen {
 
     private Stage stage;
     private Skin skin;
@@ -35,55 +27,42 @@ public class MainMenuScreen extends ArcadeScreen {
     private int x;
     private int y;
 
-    public MainMenuScreen(ArcadeLegendsGame game) {
+    private TextButton btVsync;
+
+
+    public SettingsScreen(ArcadeLegendsGame game) {
         super(game);
     }
 
     @Override
     public void show() {
-        // Inits:
         OrthographicCamera cam = new OrthographicCamera();
         viewport = new ScreenViewport(cam);
         stage = new Stage(viewport);
         stage.setViewport(viewport);
         skin = new Skin(Gdx.files.internal("assets/prototype/styles/buttonfont/textbuttonstyles.json"));
+        Gdx.input.setInputProcessor(stage);
         x = Gdx.graphics.getWidth();
         y = Gdx.graphics.getHeight();
 
-        // Buttons:
-        TextButton btPlay = new TextButton("Play", skin, "default");
-        btPlay.setWidth(200);
-        btPlay.setHeight(50);
-        btPlay.setPosition(x / 2 - 100, y / 5 + y / 2);
-
-        TextButton btSettings = new TextButton("Settings", skin, "default");
-        btSettings.setWidth(200);
-        btSettings.setHeight(50);
-        btSettings.setPosition(x/2-100, y/5 + y/3);
-        btSettings.addListener(new ClickListener(){
+        String vsyncText = game.config.video.vsyncEnabled() == true ? "Vsync on":"Vsync off";
+        btVsync = new TextButton(vsyncText, skin, "default");
+        btVsync.setWidth(200);
+        btVsync.setHeight(50);
+        btVsync.setPosition(x/2-100, y/2-25);
+        btVsync.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 super.clicked(event, x, y);
-                game.setScreen(new SettingsScreen(game));
-
+                vsyncOnOff();
             }
         });
 
-
-        TextButton btExit = new TextButton("Exit Game", skin, "default");
-        btExit.setWidth(200);
-        btExit.setHeight(50);
-        btExit.setPosition(x/2-100, y/5 + y/6);
-
-        stage.addActor(btPlay);
-        stage.addActor(btSettings);
-        stage.addActor(btExit);
+        stage.addActor(btVsync);
 
 
 
 
-
-        Gdx.input.setInputProcessor(stage);
     }
 
     @Override
@@ -96,7 +75,7 @@ public class MainMenuScreen extends ArcadeScreen {
 
     @Override
     public void resize(int width, int height) {
-        viewport.update(width, height, true);
+
     }
 
     @Override
@@ -111,11 +90,7 @@ public class MainMenuScreen extends ArcadeScreen {
 
     @Override
     public void hide() {
-       // game.config.editor.setValue(IVideoConfig.VideoKeyNames.HEIGHT, 500);
-        //game.config.editor.setValue(IVideoConfig.VideoKeyNames.WIDTH, 500);
-        //game.config.editor.flush();
         Gdx.input.setInputProcessor(null);
-
     }
 
     @Override
@@ -123,11 +98,11 @@ public class MainMenuScreen extends ArcadeScreen {
 
     }
 
-    private void changeSize() {
-        game.config.editor.setValue(IVideoConfig.VideoKeyNames.HEIGHT, game.config.video.height() + 10);
-        game.config.editor.setValue(IVideoConfig.VideoKeyNames.WIDTH, game.config.video.width() + 10);
+    private void vsyncOnOff()
+    {
+        game.config.editor.setValue(IVideoConfig.VideoKeyNames.VSYNC, !game.config.video.vsyncEnabled());
         game.config.editor.flush();
+        btVsync.setText(game.config.video.vsyncEnabled() == true ? "Vsync on":"Vsync off");
+        log.debug(game.config.video.vsyncEnabled()+"");
     }
-
-
 }
