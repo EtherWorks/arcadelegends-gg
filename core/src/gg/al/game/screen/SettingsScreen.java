@@ -28,6 +28,7 @@ public class SettingsScreen extends ArcadeScreen {
     private int y;
 
     private TextButton btVsync;
+    private TextButton btFullScreen;
 
 
     public SettingsScreen(ArcadeLegendsGame game) {
@@ -58,7 +59,22 @@ public class SettingsScreen extends ArcadeScreen {
             }
         });
 
+        String fullscreenText = game.config.video.fullscreen() == true ? "FULLSCREEN on" : "FULLSCREEN off";
+        log.debug(fullscreenText);
+        btFullScreen = new TextButton(fullscreenText, skin, "default");
+        btFullScreen.setWidth(300);
+        btFullScreen.setHeight(50);
+        btFullScreen.setPosition(x/2-100, y/3-25);
+        btFullScreen.addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                super.clicked(event, x, y);
+                fullscreenOnOff();
+            }
+        });
+
         stage.addActor(btVsync);
+        stage.addActor(btFullScreen);
 
 
 
@@ -75,7 +91,10 @@ public class SettingsScreen extends ArcadeScreen {
 
     @Override
     public void resize(int width, int height) {
-
+        viewport.update(width, height, true);
+        btVsync.setPosition(x/2-100, y/2-25);
+        btFullScreen.setPosition(x/2-100, y/3-25);
+        log.debug("in resize");
     }
 
     @Override
@@ -104,5 +123,13 @@ public class SettingsScreen extends ArcadeScreen {
         game.config.editor.flush();
         btVsync.setText(game.config.video.vsyncEnabled() == true ? "Vsync on":"Vsync off");
         log.debug(game.config.video.vsyncEnabled()+"");
+    }
+
+    private void fullscreenOnOff()
+    {
+        game.config.editor.setValue(IVideoConfig.VideoKeyNames.FULLSCREEN, !game.config.video.fullscreen());
+        game.config.editor.flush();
+        btFullScreen.setText(game.config.video.fullscreen() == true ? "FULLSCREEN on" : "FULLSCREEN off");
+        log.debug(game.config.video.fullscreen()+"");
     }
 }
