@@ -91,9 +91,13 @@ public class SettingsScreen extends ArcadeScreen {
 
     @Override
     public void resize(int width, int height) {
+
         viewport.update(width, height, true);
+        x = Gdx.graphics.getWidth();
+        y = Gdx.graphics.getHeight();
         btVsync.setPosition(x/2-100, y/2-25);
         btFullScreen.setPosition(x/2-100, y/3-25);
+
         log.debug("in resize");
     }
 
