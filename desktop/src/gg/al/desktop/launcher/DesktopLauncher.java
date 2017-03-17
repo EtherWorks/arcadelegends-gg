@@ -23,6 +23,7 @@ public class DesktopLauncher {
             DesktopConfigUtil.setupLwjglConfig(config, cfg);
             LwjglApplication application = new LwjglApplication(new ArcadeLegendsGame(cfg), config);
             DesktopConfigUtil.registerStandardListeners(editor, cfg, config, application);
+            // hallo test
         } catch (Exception ex) {
             log.error(MarkerFactory.getMarker("ERROR"), "Error loading config", ex);
             System.exit(0);
