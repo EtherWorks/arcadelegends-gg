@@ -1,13 +1,11 @@
 package gg.al.game.screen;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.*;
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
@@ -15,11 +13,6 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import gg.al.config.IVideoConfig;
 import gg.al.game.ArcadeLegendsGame;
 import lombok.extern.slf4j.Slf4j;
-
-import java.awt.*;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
 
 
 /**
@@ -31,9 +24,6 @@ public class MainMenuScreen extends ArcadeScreen {
     private Stage stage;
     private Skin skin;
     private Viewport viewport;
-
-    private int x;
-    private int y;
 
     public MainMenuScreen(ArcadeLegendsGame game) {
         super(game);
@@ -47,8 +37,8 @@ public class MainMenuScreen extends ArcadeScreen {
         stage = new Stage(viewport);
         stage.setViewport(viewport);
         skin = new Skin(Gdx.files.internal("assets/prototype/styles/buttonfont/textbuttonstyles.json"));
-        x = Gdx.graphics.getWidth();
-        y = Gdx.graphics.getHeight();
+        int x = Gdx.graphics.getWidth();
+        int y = Gdx.graphics.getHeight();
 
         // Buttons:
         TextButton btPlay = new TextButton("Play", skin, "default");

@@ -24,9 +24,6 @@ public class SettingsScreen extends ArcadeScreen {
     private Skin skin;
     private Viewport viewport;
 
-    private int x;
-    private int y;
-
     private TextButton btVsync;
     private TextButton btFullScreen;
 
@@ -43,15 +40,13 @@ public class SettingsScreen extends ArcadeScreen {
         stage.setViewport(viewport);
         skin = new Skin(Gdx.files.internal("assets/prototype/styles/buttonfont/textbuttonstyles.json"));
         Gdx.input.setInputProcessor(stage);
-        x = Gdx.graphics.getWidth();
-        y = Gdx.graphics.getHeight();
 
-        String vsyncText = game.config.video.vsyncEnabled() == true ? "Vsync on":"Vsync off";
+        String vsyncText = game.config.video.vsyncEnabled() == true ? "Vsync on" : "Vsync off";
         btVsync = new TextButton(vsyncText, skin, "default");
         btVsync.setWidth(200);
         btVsync.setHeight(50);
-        btVsync.setPosition(x/2-100, y/2-25);
-        btVsync.addListener(new ClickListener(){
+        btVsync.setPosition(Gdx.graphics.getWidth() / 2 - 100, Gdx.graphics.getHeight() / 2 - 25);
+        btVsync.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 super.clicked(event, x, y);
@@ -64,8 +59,8 @@ public class SettingsScreen extends ArcadeScreen {
         btFullScreen = new TextButton(fullscreenText, skin, "default");
         btFullScreen.setWidth(300);
         btFullScreen.setHeight(50);
-        btFullScreen.setPosition(x/2-100, y/3-25);
-        btFullScreen.addListener(new ClickListener(){
+        btFullScreen.setPosition(Gdx.graphics.getWidth() / 2 - 100, Gdx.graphics.getHeight() / 3 - 25);
+        btFullScreen.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 super.clicked(event, x, y);
@@ -75,8 +70,6 @@ public class SettingsScreen extends ArcadeScreen {
 
         stage.addActor(btVsync);
         stage.addActor(btFullScreen);
-
-
 
 
     }
@@ -93,10 +86,8 @@ public class SettingsScreen extends ArcadeScreen {
     public void resize(int width, int height) {
 
         viewport.update(width, height, true);
-        x = Gdx.graphics.getWidth();
-        y = Gdx.graphics.getHeight();
-        btVsync.setPosition(x/2-100, y/2-25);
-        btFullScreen.setPosition(x/2-100, y/3-25);
+        btVsync.setPosition(Gdx.graphics.getWidth() / 2 - 100, Gdx.graphics.getHeight() / 2 - 25);
+        btFullScreen.setPosition(Gdx.graphics.getWidth() / 2 - 100, Gdx.graphics.getHeight() / 3 - 25);
 
         log.debug("in resize");
     }
@@ -121,19 +112,17 @@ public class SettingsScreen extends ArcadeScreen {
 
     }
 
-    private void vsyncOnOff()
-    {
+    private void vsyncOnOff() {
         game.config.editor.setValue(IVideoConfig.VideoKeyNames.VSYNC, !game.config.video.vsyncEnabled());
         game.config.editor.flush();
-        btVsync.setText(game.config.video.vsyncEnabled() == true ? "Vsync on":"Vsync off");
-        log.debug(game.config.video.vsyncEnabled()+"");
+        btVsync.setText(game.config.video.vsyncEnabled() == true ? "Vsync on" : "Vsync off");
+        log.debug(game.config.video.vsyncEnabled() + "");
     }
 
-    private void fullscreenOnOff()
-    {
+    private void fullscreenOnOff() {
         game.config.editor.setValue(IVideoConfig.VideoKeyNames.FULLSCREEN, !game.config.video.fullscreen());
         game.config.editor.flush();
         btFullScreen.setText(game.config.video.fullscreen() == true ? "FULLSCREEN on" : "FULLSCREEN off");
-        log.debug(game.config.video.fullscreen()+"");
+        log.debug(game.config.video.fullscreen() + "");
     }
 }
