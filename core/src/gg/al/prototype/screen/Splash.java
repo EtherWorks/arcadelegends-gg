@@ -20,7 +20,7 @@ import java.util.Map;
 
 
 /**
- * Created by Dr. Gavrel on 16.02.2017.
+ * Created by Thomas Neumann on 16.02.2017.
  */
 public class Splash implements Screen, InputProcessor {
 

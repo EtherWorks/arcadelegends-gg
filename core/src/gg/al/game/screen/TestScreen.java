@@ -6,7 +6,7 @@ import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.utils.TimeUtils;
 import gg.al.config.IVideoConfig;
-import gg.al.game.ArcadeLegendsGame;
+import gg.al.game.AL;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -15,18 +15,12 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class TestScreen implements Screen, InputProcessor {
 
-    private final ArcadeLegendsGame game;
-
     private long time;
-
-    public TestScreen(ArcadeLegendsGame game) {
-        this.game = game;
-    }
 
     @Override
     public void show() {
         time = TimeUtils.millis();
-        Gdx.input.setInputProcessor(this);
+        AL.input.setInputProcessor(this);
     }
 
 
@@ -67,21 +61,21 @@ public class TestScreen implements Screen, InputProcessor {
     public boolean keyDown(int keycode) {
         switch (keycode) {
             case Input.Keys.F11:
-                game.config.editor.setValue(IVideoConfig.VideoKeys.FULLSCREEN, !game.config.video.fullscreen());
-                game.config.editor.flush();
+                AL.cedit.setValue(IVideoConfig.VideoKeys.FULLSCREEN, !AL.cvideo.fullscreen());
+                AL.cedit.flush();
                 break;
             case Input.Keys.F6:
-                game.config.editor.setValue(IVideoConfig.VideoKeys.VSYNC, !game.config.video.vsyncEnabled());
-                game.config.editor.flush();
+                AL.cedit.setValue(IVideoConfig.VideoKeys.VSYNC, !AL.cvideo.vsyncEnabled());
+                AL.cedit.flush();
                 break;
             case Input.Keys.F5:
-                game.config.editor.setValue(IVideoConfig.VideoKeys.FOREGROUNDFPS, game.config.video.foregroundFPS() + 10);
-                game.config.editor.flush();
+                AL.cedit.setValue(IVideoConfig.VideoKeys.FOREGROUNDFPS, AL.cvideo.foregroundFPS() + 10);
+                AL.cedit.flush();
                 break;
             case Input.Keys.F3:
-                game.config.editor.setValue(IVideoConfig.VideoKeys.WIDTH, 1920);
-                game.config.editor.setValue(IVideoConfig.VideoKeys.HEIGHT, 1080);
-                game.config.editor.flush();
+                AL.cedit.setValue(IVideoConfig.VideoKeys.WIDTH, 1920);
+                AL.cedit.setValue(IVideoConfig.VideoKeys.HEIGHT, 1080);
+                AL.cedit.flush();
                 break;
         }
         return false;

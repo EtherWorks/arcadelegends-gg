@@ -121,7 +121,7 @@ public abstract class ConfigEditor {
         }
         write();
         setEditing((Properties) properties.clone());
-        for (Map.Entry<Object, Object> entry:toFire) {
+        for (Map.Entry<Object, Object> entry : toFire) {
             fireConfigValueChangedAfter(entry.getKey().toString(), entry.getValue().toString());
         }
     }

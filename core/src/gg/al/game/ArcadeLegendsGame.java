@@ -18,7 +18,16 @@ public class ArcadeLegendsGame extends Game {
 
     @Override
     public void create() {
-        setScreen(new MainMenuScreen(this));
+        AL.game = this;
+        AL.config = config;
+        AL.cedit = config.editor;
+        AL.caudio = config.audio;
+        AL.cgameplay = config.gameplay;
+        AL.cinput = config.input;
+        AL.cmisc = config.miscellaneous;
+        AL.cvideo = config.video;
+
+        setScreen(new MainMenuScreen());
     }
 
 

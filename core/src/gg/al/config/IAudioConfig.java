@@ -11,7 +11,7 @@ public interface IAudioConfig {
         ;
         private final String key;
 
-        AudioKeys(java.lang.String key) {
+        AudioKeys(String key) {
             this.key = key;
         }
 

@@ -10,7 +10,7 @@ public interface IGameplayConfig {
         ;
         private final String key;
 
-        GameplayKeys(java.lang.String key) {
+        GameplayKeys(String key) {
             this.key = key;
         }
 

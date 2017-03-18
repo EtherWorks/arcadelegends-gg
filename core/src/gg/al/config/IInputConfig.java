@@ -10,7 +10,7 @@ public interface IInputConfig {
         ;
         private final String key;
 
-        InputKeys(java.lang.String key) {
+        InputKeys(String key) {
             this.key = key;
         }
 

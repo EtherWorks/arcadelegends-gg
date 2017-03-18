@@ -30,7 +30,7 @@ public interface IVideoConfig {
 
         private final String key;
 
-        VideoKeys(java.lang.String key) {
+        VideoKeys(String key) {
             this.key = key;
         }
 

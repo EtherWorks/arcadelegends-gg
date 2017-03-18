@@ -1,6 +1,7 @@
 package gg.al.game.screen;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -11,14 +12,14 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import gg.al.config.IVideoConfig;
-import gg.al.game.ArcadeLegendsGame;
+import gg.al.game.AL;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 /**
  * Created by Patrick Windegger on 16.03.2017.
  */
-public class SettingsScreen extends ArcadeScreen {
+public class SettingsScreen implements Screen {
 
     private Stage stage;
     private Skin skin;
@@ -28,10 +29,6 @@ public class SettingsScreen extends ArcadeScreen {
     private TextButton btFullScreen;
 
 
-    public SettingsScreen(ArcadeLegendsGame game) {
-        super(game);
-    }
-
     @Override
     public void show() {
         OrthographicCamera cam = new OrthographicCamera();
@@ -39,9 +36,9 @@ public class SettingsScreen extends ArcadeScreen {
         stage = new Stage(viewport);
         stage.setViewport(viewport);
         skin = new Skin(Gdx.files.internal("assets/prototype/styles/buttonfont/textbuttonstyles.json"));
-        Gdx.input.setInputProcessor(stage);
+        AL.input.setInputProcessor(stage);
 
-        String vsyncText = game.config.video.vsyncEnabled() == true ? "Vsync on" : "Vsync off";
+        String vsyncText = AL.cvideo.vsyncEnabled() == true ? "Vsync on" : "Vsync off";
         btVsync = new TextButton(vsyncText, skin, "default");
         btVsync.setWidth(200);
         btVsync.setHeight(50);
@@ -54,7 +51,7 @@ public class SettingsScreen extends ArcadeScreen {
             }
         });
 
-        String fullscreenText = game.config.video.fullscreen() == true ? "FULLSCREEN on" : "FULLSCREEN off";
+        String fullscreenText = AL.cvideo.fullscreen() == true ? "FULLSCREEN on" : "FULLSCREEN off";
         log.debug(fullscreenText);
         btFullScreen = new TextButton(fullscreenText, skin, "default");
         btFullScreen.setWidth(300);
@@ -76,8 +73,8 @@ public class SettingsScreen extends ArcadeScreen {
 
     @Override
     public void render(float delta) {
-        Gdx.gl.glClearColor(0, 0, 0, 1);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        AL.gl.glClearColor(0, 0, 0, 1);
+        AL.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         stage.act(Gdx.graphics.getDeltaTime());
         stage.draw();
     }
@@ -113,16 +110,16 @@ public class SettingsScreen extends ArcadeScreen {
     }
 
     private void vsyncOnOff() {
-        game.config.editor.setValue(IVideoConfig.VideoKeys.VSYNC, !game.config.video.vsyncEnabled());
-        game.config.editor.flush();
-        btVsync.setText(game.config.video.vsyncEnabled() == true ? "Vsync on" : "Vsync off");
-        log.debug(game.config.video.vsyncEnabled() + "");
+        AL.cedit.setValue(IVideoConfig.VideoKeys.VSYNC, !AL.cvideo.vsyncEnabled());
+        AL.cedit.flush();
+        btVsync.setText(AL.cvideo.vsyncEnabled() == true ? "Vsync on" : "Vsync off");
+        log.debug(AL.cvideo.vsyncEnabled() + "");
     }
 
     private void fullscreenOnOff() {
-        game.config.editor.setValue(IVideoConfig.VideoKeys.FULLSCREEN, !game.config.video.fullscreen());
-        game.config.editor.flush();
-        btFullScreen.setText(game.config.video.fullscreen() == true ? "FULLSCREEN on" : "FULLSCREEN off");
-        log.debug(game.config.video.fullscreen() + "");
+        AL.cedit.setValue(IVideoConfig.VideoKeys.FULLSCREEN, !AL.cvideo.fullscreen());
+        AL.cedit.flush();
+        btFullScreen.setText(AL.cvideo.fullscreen() == true ? "FULLSCREEN on" : "FULLSCREEN off");
+        log.debug(AL.cvideo.fullscreen() + "");
     }
 }

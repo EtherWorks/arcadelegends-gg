@@ -15,7 +15,7 @@ import com.badlogic.gdx.utils.Pool;
 import java.util.Comparator;
 
 /**
- * Created by Dr. Gavrel on 03.03.2017.
+ * Created by Thomas Neumann on 03.03.2017.
  */
 public class CameraLayerGroupStrategy implements GroupStrategy, Disposable {
     private static final int GROUP_OPAQUE = 0;

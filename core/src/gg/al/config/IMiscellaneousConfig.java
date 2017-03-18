@@ -1,7 +1,7 @@
 package gg.al.config;
 
 /**
- * Created by Dr. Gavrel on 15.03.2017.
+ * Created by Thomas Neumann on 15.03.2017.
  */
 public interface IMiscellaneousConfig {
     String PREFIX = "miscellaneous";
@@ -13,7 +13,7 @@ public interface IMiscellaneousConfig {
 
         private final String key;
 
-        MiscellaneousKeys(java.lang.String key) {
+        MiscellaneousKeys(String key) {
             this.key = key;
         }
 
