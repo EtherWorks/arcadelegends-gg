@@ -19,12 +19,29 @@ public interface IVideoConfig {
 
     int height();
 
-    interface VideoKeyNames {
-        String VSYNC = PREFIX + ".vsyncEnabled";
-        String BACKGRFPS = PREFIX + ".backgroundFPS";
-        String FOREGRFPS = PREFIX + ".foregroundFPS";
-        String FULLSCREEN = PREFIX + ".fullscreen";
-        String WIDTH = PREFIX + ".width";
-        String HEIGHT = PREFIX + ".height";
+
+    enum VideoKeys implements IConfigKey {
+        VSYNC("vsyncEnabled"),
+        BACKGROUNDFPS("backgroundFPS"),
+        FOREGROUNDFPS("foregroundFPS"),
+        FULLSCREEN("fullscreen"),
+        WIDTH("width"),
+        HEIGHT("height");
+
+        private final String key;
+
+        VideoKeys(java.lang.String key) {
+            this.key = key;
+        }
+
+        @Override
+        public String getKeyName() {
+            return key;
+        }
+
+        @Override
+        public String getPrefix() {
+            return PREFIX;
+        }
     }
 }

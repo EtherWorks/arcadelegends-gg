@@ -112,8 +112,8 @@ public class MainMenuScreen extends ArcadeScreen {
     }
 
     private void changeSize() {
-        game.config.editor.setValue(IVideoConfig.VideoKeyNames.HEIGHT, game.config.video.height() + 10);
-        game.config.editor.setValue(IVideoConfig.VideoKeyNames.WIDTH, game.config.video.width() + 10);
+        game.config.editor.setValue(IVideoConfig.VideoKeys.HEIGHT, game.config.video.height() + 10);
+        game.config.editor.setValue(IVideoConfig.VideoKeys.WIDTH, game.config.video.width() + 10);
         game.config.editor.flush();
     }
 

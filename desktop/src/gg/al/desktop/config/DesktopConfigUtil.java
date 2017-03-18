@@ -68,16 +68,16 @@ public class DesktopConfigUtil {
         TypeParser parser = TypeParser.newBuilder().build();
         if (cfg.miscellaneous.logConfigEvents())
             editor.addConfigValueChangedListener((key, value) -> log.debug("Config value changed: {}={}", key, value));
-        editor.addConfigValueChangedListener(IVideoConfig.VideoKeyNames.FULLSCREEN, (key, value) -> {
+        editor.addConfigValueChangedListener(IVideoConfig.VideoKeys.FULLSCREEN, (key, value) -> {
             boolean fullscreen = parser.parse(value, Boolean.class);
             if (fullscreen)
                 application.postRunnable(() -> application.getGraphics().setFullscreenMode(application.getGraphics().getDisplayMode()));
             else
                 application.postRunnable(() -> application.getGraphics().setWindowedMode(cfg.video.width(), cfg.video.height()));
         });
-        editor.addConfigValueChangedListener(IVideoConfig.VideoKeyNames.BACKGRFPS, (key, value) -> config.backgroundFPS = parser.parse(value, Integer.class));
-        editor.addConfigValueChangedListener(IVideoConfig.VideoKeyNames.FOREGRFPS, (key, value) -> config.foregroundFPS = parser.parse(value, Integer.class));
-        editor.addConfigValueChangedListener(IVideoConfig.VideoKeyNames.VSYNC, (key, value) -> application.postRunnable(() -> application.getGraphics().setVSync(parser.parse(value, Boolean.class))));
-        editor.addConfigValueChangedListener(IVideoConfig.VideoKeyNames.WIDTH, (key, value) -> application.postRunnable(() -> application.getGraphics().setWindowedMode(cfg.video.width(), cfg.video.height())), true);
+        editor.addConfigValueChangedListener(IVideoConfig.VideoKeys.BACKGROUNDFPS, (key, value) -> config.backgroundFPS = parser.parse(value, Integer.class));
+        editor.addConfigValueChangedListener(IVideoConfig.VideoKeys.FOREGROUNDFPS, (key, value) -> config.foregroundFPS = parser.parse(value, Integer.class));
+        editor.addConfigValueChangedListener(IVideoConfig.VideoKeys.VSYNC, (key, value) -> application.postRunnable(() -> application.getGraphics().setVSync(parser.parse(value, Boolean.class))));
+        editor.addConfigValueChangedListener(IVideoConfig.VideoKeys.WIDTH, (key, value) -> application.postRunnable(() -> application.getGraphics().setWindowedMode(cfg.video.width(), cfg.video.height())), true);
     }
 }

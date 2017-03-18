@@ -34,11 +34,11 @@ public abstract class ConfigEditor {
             allValueListeners.add(listener);
     }
 
-    public void addConfigValueChangedListener(String key, IConfigValueChangedListener listener, boolean afterFlush) {
+    public void addConfigValueChangedListener(IConfigKey key, IConfigValueChangedListener listener, boolean afterFlush) {
         if (afterFlush)
-            listenersAfter.put(key, listener);
+            listenersAfter.put(key.getKey(), listener);
         else
-            listeners.put(key, listener);
+            listeners.put(key.getKey(), listener);
     }
 
     public void removeConfigValueChangedListener(IConfigValueChangedListener listener, boolean afterFlush) {
@@ -48,18 +48,18 @@ public abstract class ConfigEditor {
             allValueListeners.remove(listener);
     }
 
-    public void removeConfigValueChangedListener(String key, IConfigValueChangedListener listener, boolean afterFlush) {
+    public void removeConfigValueChangedListener(IConfigKey key, IConfigValueChangedListener listener, boolean afterFlush) {
         if (afterFlush)
-            listenersAfter.remove(key, listener);
+            listenersAfter.remove(key.getKey(), listener);
         else
-            listeners.remove(key, listener);
+            listeners.remove(key.getKey(), listener);
     }
 
     public void addConfigValueChangedListener(IConfigValueChangedListener listener) {
         addConfigValueChangedListener(listener, false);
     }
 
-    public void addConfigValueChangedListener(String key, IConfigValueChangedListener listener) {
+    public void addConfigValueChangedListener(IConfigKey key, IConfigValueChangedListener listener) {
         addConfigValueChangedListener(key, listener, false);
     }
 
@@ -67,7 +67,7 @@ public abstract class ConfigEditor {
         removeConfigValueChangedListener(listener, false);
     }
 
-    public void removeConfigValueChangedListener(String key, IConfigValueChangedListener listener) {
+    public void removeConfigValueChangedListener(IConfigKey key, IConfigValueChangedListener listener) {
         removeConfigValueChangedListener(key, listener, false);
     }
 
@@ -78,17 +78,17 @@ public abstract class ConfigEditor {
         this.before.putAll(properties);
     }
 
-    public void setValue(String key, Object value) {
-        properties.setProperty(key, value.toString());
+    public void setValue(IConfigKey key, Object value) {
+        properties.setProperty(key.getKey(), value.toString());
     }
 
-    public void setValue(String key, List<?> value) {
+    public void setValue(IConfigKey key, List<?> value) {
         StringBuilder builder = new StringBuilder();
         for (int i = 0; i < value.size() - 1; i++) {
             builder.append(value.get(i).toString()).append(", ");
         }
         builder.append(value.get(value.size() - 1));
-        properties.setProperty(key, builder.toString());
+        properties.setProperty(key.getKey(), builder.toString());
     }
 
     protected void fireConfigValueChanged(String key, String value) {

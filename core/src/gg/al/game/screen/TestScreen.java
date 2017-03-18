@@ -67,20 +67,20 @@ public class TestScreen implements Screen, InputProcessor {
     public boolean keyDown(int keycode) {
         switch (keycode) {
             case Input.Keys.F11:
-                game.config.editor.setValue(IVideoConfig.VideoKeyNames.FULLSCREEN, !game.config.video.fullscreen());
+                game.config.editor.setValue(IVideoConfig.VideoKeys.FULLSCREEN, !game.config.video.fullscreen());
                 game.config.editor.flush();
                 break;
             case Input.Keys.F6:
-                game.config.editor.setValue(IVideoConfig.VideoKeyNames.VSYNC, !game.config.video.vsyncEnabled());
+                game.config.editor.setValue(IVideoConfig.VideoKeys.VSYNC, !game.config.video.vsyncEnabled());
                 game.config.editor.flush();
                 break;
             case Input.Keys.F5:
-                game.config.editor.setValue(IVideoConfig.VideoKeyNames.FOREGRFPS, game.config.video.foregroundFPS() + 10);
+                game.config.editor.setValue(IVideoConfig.VideoKeys.FOREGROUNDFPS, game.config.video.foregroundFPS() + 10);
                 game.config.editor.flush();
                 break;
             case Input.Keys.F3:
-                game.config.editor.setValue(IVideoConfig.VideoKeyNames.WIDTH, 1920);
-                game.config.editor.setValue(IVideoConfig.VideoKeyNames.HEIGHT, 1080);
+                game.config.editor.setValue(IVideoConfig.VideoKeys.WIDTH, 1920);
+                game.config.editor.setValue(IVideoConfig.VideoKeys.HEIGHT, 1080);
                 game.config.editor.flush();
                 break;
         }

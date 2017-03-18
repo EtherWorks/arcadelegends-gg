@@ -113,14 +113,14 @@ public class SettingsScreen extends ArcadeScreen {
     }
 
     private void vsyncOnOff() {
-        game.config.editor.setValue(IVideoConfig.VideoKeyNames.VSYNC, !game.config.video.vsyncEnabled());
+        game.config.editor.setValue(IVideoConfig.VideoKeys.VSYNC, !game.config.video.vsyncEnabled());
         game.config.editor.flush();
         btVsync.setText(game.config.video.vsyncEnabled() == true ? "Vsync on" : "Vsync off");
         log.debug(game.config.video.vsyncEnabled() + "");
     }
 
     private void fullscreenOnOff() {
-        game.config.editor.setValue(IVideoConfig.VideoKeyNames.FULLSCREEN, !game.config.video.fullscreen());
+        game.config.editor.setValue(IVideoConfig.VideoKeys.FULLSCREEN, !game.config.video.fullscreen());
         game.config.editor.flush();
         btFullScreen.setText(game.config.video.fullscreen() == true ? "FULLSCREEN on" : "FULLSCREEN off");
         log.debug(game.config.video.fullscreen() + "");
