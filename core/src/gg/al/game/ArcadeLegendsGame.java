@@ -1,6 +1,8 @@
 package gg.al.game;
 
 import com.badlogic.gdx.Game;
+import com.badlogic.gdx.assets.AssetDescriptor;
+import com.badlogic.gdx.assets.AssetLoaderParameters;
 import com.badlogic.gdx.assets.AssetManager;
 import gg.al.config.Config;
 import gg.al.game.screen.MainMenuScreen;
@@ -41,5 +43,20 @@ public class ArcadeLegendsGame extends Game {
     public void dispose() {
         super.dispose();
         assetManager.dispose();
+    }
+
+    public <T> void load(String fileName, Class<T> type) {
+        if (!assetManager.isLoaded(fileName))
+            assetManager.load(fileName, type);
+    }
+
+    public <T> void load(String fileName, Class<T> type, AssetLoaderParameters<T> parameter) {
+        if (!assetManager.isLoaded(fileName))
+            assetManager.load(fileName, type, parameter);
+    }
+
+    public void load(AssetDescriptor desc) {
+        if (!assetManager.isLoaded(desc.fileName))
+            assetManager.load(desc);
     }
 }
