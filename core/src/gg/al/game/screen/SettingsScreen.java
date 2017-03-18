@@ -106,7 +106,7 @@ public class SettingsScreen implements Screen {
 
     @Override
     public void dispose() {
-
+        stage.dispose();
     }
 
     private void vsyncOnOff() {

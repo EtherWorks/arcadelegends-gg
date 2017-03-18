@@ -110,6 +110,4 @@ public class MainMenuScreen implements Screen {
         AL.cedit.setValue(IVideoConfig.VideoKeys.WIDTH, AL.cvideo.width() + 10);
         AL.cedit.flush();
     }
-
-
 }

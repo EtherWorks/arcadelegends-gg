@@ -1,6 +1,7 @@
 package gg.al.game;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.assets.AssetManager;
 import gg.al.config.*;
 
 /**
@@ -12,12 +13,13 @@ import gg.al.config.*;
  */
 public class AL extends Gdx {
     public static ArcadeLegendsGame game;
+
     public static Config config;
     public static ConfigEditor cedit;
-
     public static IVideoConfig cvideo;
     public static IAudioConfig caudio;
     public static IMiscellaneousConfig cmisc;
     public static IGameplayConfig cgameplay;
     public static IInputConfig cinput;
+    public static AssetManager asset;
 }
