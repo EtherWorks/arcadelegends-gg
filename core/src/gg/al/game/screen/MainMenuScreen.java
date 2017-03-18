@@ -1,7 +1,7 @@
 package gg.al.game.screen;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.assets.AssetDescriptor;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -13,14 +13,18 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import gg.al.config.IVideoConfig;
 import gg.al.game.AL;
+import gg.al.util.Assets;
 import lombok.extern.slf4j.Slf4j;
+
+import java.util.Arrays;
+import java.util.List;
 
 
 /**
  * Created by Patrick Windegger on 16.03.2017.
  */
 @Slf4j
-public class MainMenuScreen implements Screen {
+public class MainMenuScreen implements AssetScreen {
 
     private Stage stage;
     private Skin skin;
@@ -33,7 +37,8 @@ public class MainMenuScreen implements Screen {
         viewport = new ScreenViewport(cam);
         stage = new Stage(viewport);
         stage.setViewport(viewport);
-        skin = new Skin(Gdx.files.internal("assets/prototype/styles/buttonfont/textbuttonstyles.json"));
+        //skin = new Skin(Gdx.files.internal("assets/prototype/styles/buttonfont/textbuttonstyles.json"));
+        skin = AL.asset.get(Assets.TEXTBUTTONSTYLES);
         int x = Gdx.graphics.getWidth();
         int y = Gdx.graphics.getHeight();
 
@@ -93,21 +98,29 @@ public class MainMenuScreen implements Screen {
 
     @Override
     public void hide() {
-        // game.config.editor.setValue(IVideoConfig.VideoKeyNames.HEIGHT, 500);
+        //game.config.editor.setValue(IVideoConfig.VideoKeyNames.HEIGHT, 500);
         //game.config.editor.setValue(IVideoConfig.VideoKeyNames.WIDTH, 500);
         //game.config.editor.flush();
         AL.input.setInputProcessor(null);
 
+        AL.asset.unload(Assets.TEXTBUTTONSTYLES.fileName);
+        stage.dispose();
     }
 
     @Override
     public void dispose() {
-
+        //AL.asset.unload(Assets.TEXTBUTTONSTYLES.fileName);
+        //stage.dispose();
     }
 
     private void changeSize() {
         AL.cedit.setValue(IVideoConfig.VideoKeys.HEIGHT, AL.cvideo.height() + 10);
         AL.cedit.setValue(IVideoConfig.VideoKeys.WIDTH, AL.cvideo.width() + 10);
         AL.cedit.flush();
+    }
+
+    @Override
+    public List<AssetDescriptor> assets() {
+        return Arrays.asList(Assets.TEXTBUTTONSTYLES);
     }
 }

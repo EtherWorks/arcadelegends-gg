@@ -1,11 +1,12 @@
 package gg.al.game;
 
 import com.badlogic.gdx.Game;
-import com.badlogic.gdx.assets.AssetDescriptor;
-import com.badlogic.gdx.assets.AssetLoaderParameters;
 import com.badlogic.gdx.assets.AssetManager;
 import gg.al.config.Config;
+import gg.al.game.screen.AssetScreen;
+import gg.al.game.screen.LoadingScreen;
 import gg.al.game.screen.MainMenuScreen;
+import gg.al.util.ScreenManager;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
@@ -17,11 +18,16 @@ public class ArcadeLegendsGame extends Game {
     @Getter
     private final Config config;
 
+    @Getter
     private final AssetManager assetManager;
+
+    @Getter
+    private final ScreenManager screenManager;
 
     public ArcadeLegendsGame(Config config) {
         this.config = config;
         this.assetManager = new AssetManager();
+        this.screenManager = new ScreenManager();
     }
 
     @Override
@@ -35,6 +41,8 @@ public class ArcadeLegendsGame extends Game {
         AL.cinput = config.input;
         AL.cmisc = config.miscellaneous;
         AL.cvideo = config.video;
+        AL.screen = screenManager;
+        AL.screen.put(new LoadingScreen(), LoadingScreen.class);
 
         setScreen(new MainMenuScreen());
     }
@@ -45,18 +53,7 @@ public class ArcadeLegendsGame extends Game {
         assetManager.dispose();
     }
 
-    public <T> void load(String fileName, Class<T> type) {
-        if (!assetManager.isLoaded(fileName))
-            assetManager.load(fileName, type);
-    }
-
-    public <T> void load(String fileName, Class<T> type, AssetLoaderParameters<T> parameter) {
-        if (!assetManager.isLoaded(fileName))
-            assetManager.load(fileName, type, parameter);
-    }
-
-    public void load(AssetDescriptor desc) {
-        if (!assetManager.isLoaded(desc.fileName))
-            assetManager.load(desc);
+    public void setScreen(AssetScreen screen) {
+        this.setScreen(AL.screen.get(LoadingScreen.class).withAssetScreen(screen));
     }
 }

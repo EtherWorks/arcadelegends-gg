@@ -3,6 +3,7 @@ package gg.al.game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import gg.al.config.*;
+import gg.al.util.ScreenManager;
 
 /**
  * Created by Thomas Neumann on 18.03.2017.
@@ -22,4 +23,5 @@ public class AL extends Gdx {
     public static IGameplayConfig cgameplay;
     public static IInputConfig cinput;
     public static AssetManager asset;
+    public static ScreenManager screen;
 }

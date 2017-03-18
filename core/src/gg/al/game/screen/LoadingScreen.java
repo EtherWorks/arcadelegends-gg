@@ -6,8 +6,11 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import gg.al.game.AL;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -19,6 +22,9 @@ public class LoadingScreen implements Screen {
     private boolean init;
     private BitmapFont font;
     private SpriteBatch batch;
+
+    @Getter
+    @Setter
     private Screen next;
 
     public LoadingScreen() {
@@ -28,6 +34,25 @@ public class LoadingScreen implements Screen {
     public LoadingScreen(Screen next) {
         this();
         this.next = next;
+    }
+
+    public Screen withAssetScreen(AssetScreen screen) {
+        toLoad.clear();
+        toLoad.addAll(screen.assets());
+        next = screen;
+        return this;
+    }
+
+    public boolean addToLoad(Collection<? extends AssetDescriptor> collection) {
+        return toLoad.addAll(collection);
+    }
+
+    public boolean addToLoad(AssetDescriptor assetDescriptor) {
+        return toLoad.add(assetDescriptor);
+    }
+
+    public void resetToLoad() {
+        toLoad.clear();
     }
 
     @Override

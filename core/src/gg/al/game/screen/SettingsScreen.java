@@ -1,7 +1,7 @@
 package gg.al.game.screen;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.assets.AssetDescriptor;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -13,13 +13,17 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import gg.al.config.IVideoConfig;
 import gg.al.game.AL;
+import gg.al.util.Assets;
 import lombok.extern.slf4j.Slf4j;
+
+import java.util.Arrays;
+import java.util.List;
 
 @Slf4j
 /**
  * Created by Patrick Windegger on 16.03.2017.
  */
-public class SettingsScreen implements Screen {
+public class SettingsScreen implements AssetScreen {
 
     private Stage stage;
     private Skin skin;
@@ -35,7 +39,7 @@ public class SettingsScreen implements Screen {
         viewport = new ScreenViewport(cam);
         stage = new Stage(viewport);
         stage.setViewport(viewport);
-        skin = new Skin(Gdx.files.internal("assets/prototype/styles/buttonfont/textbuttonstyles.json"));
+        skin = AL.asset.get(Assets.TEXTBUTTONSTYLES);
         AL.input.setInputProcessor(stage);
 
         String vsyncText = AL.cvideo.vsyncEnabled() == true ? "Vsync on" : "Vsync off";
@@ -102,11 +106,14 @@ public class SettingsScreen implements Screen {
     @Override
     public void hide() {
         Gdx.input.setInputProcessor(null);
+        AL.asset.unload(Assets.TEXTBUTTONSTYLES.fileName);
+        stage.dispose();
     }
 
     @Override
     public void dispose() {
-        stage.dispose();
+        //AL.asset.unload(Assets.TEXTBUTTONSTYLES.fileName);
+        //stage.dispose();
     }
 
     private void vsyncOnOff() {
@@ -121,5 +128,10 @@ public class SettingsScreen implements Screen {
         AL.cedit.flush();
         btFullScreen.setText(AL.cvideo.fullscreen() == true ? "FULLSCREEN on" : "FULLSCREEN off");
         log.debug(AL.cvideo.fullscreen() + "");
+    }
+
+    @Override
+    public List<AssetDescriptor> assets() {
+        return Arrays.asList(Assets.TEXTBUTTONSTYLES);
     }
 }
