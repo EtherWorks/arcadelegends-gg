@@ -42,7 +42,7 @@ public class SettingsScreen implements AssetScreen, InputProcessor {
         viewport = new ScreenViewport(cam);
         stage = new Stage(viewport);
         stage.setViewport(viewport);
-        skin = AL.asset.get(Assets.TEXTBUTTONSTYLES);
+        skin = AL.asset.get(Assets.PT_TEXTBUTTONSTYLES_JSON);
         Gdx.input.setInputProcessor(new InputMultiplexer(this, stage));
 
         String vsyncText = AL.cvideo.vsyncEnabled() == true ? "Vsync on" : "Vsync off";
@@ -113,7 +113,7 @@ public class SettingsScreen implements AssetScreen, InputProcessor {
 
     @Override
     public void dispose() {
-        AL.asset.unload(Assets.TEXTBUTTONSTYLES.fileName);
+        AL.asset.unload(Assets.PT_TEXTBUTTONSTYLES_JSON.fileName);
         stage.dispose();
     }
 
@@ -133,7 +133,7 @@ public class SettingsScreen implements AssetScreen, InputProcessor {
 
     @Override
     public List<AssetDescriptor> assets() {
-        return Arrays.asList(Assets.TEXTBUTTONSTYLES);
+        return Arrays.asList(Assets.PT_TEXTBUTTONSTYLES_JSON);
     }
 
     @Override

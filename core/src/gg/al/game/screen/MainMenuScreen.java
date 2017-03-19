@@ -38,7 +38,7 @@ public class MainMenuScreen implements AssetScreen {
         stage = new Stage(viewport);
         stage.setViewport(viewport);
         //skin = new Skin(Gdx.files.internal("assets/prototype/styles/buttonfont/textbuttonstyles.json"));
-        skin = AL.asset.get(Assets.TEXTBUTTONSTYLES);
+        skin = AL.asset.get(Assets.PT_TEXTBUTTONSTYLES_JSON);
         int x = Gdx.graphics.getWidth();
         int y = Gdx.graphics.getHeight();
 
@@ -108,7 +108,7 @@ public class MainMenuScreen implements AssetScreen {
 
     @Override
     public void dispose() {
-        AL.asset.unload(Assets.TEXTBUTTONSTYLES.fileName);
+        AL.asset.unload(Assets.PT_TEXTBUTTONSTYLES_JSON.fileName);
         stage.dispose();
     }
 
@@ -120,6 +120,6 @@ public class MainMenuScreen implements AssetScreen {
 
     @Override
     public List<AssetDescriptor> assets() {
-        return Arrays.asList(Assets.TEXTBUTTONSTYLES);
+        return Arrays.asList(Assets.PT_TEXTBUTTONSTYLES_JSON);
     }
 }
