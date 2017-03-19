@@ -109,12 +109,12 @@ public class SettingsScreen implements AssetScreen, InputProcessor {
     @Override
     public void hide() {
         Gdx.input.setInputProcessor(null);
+        stage.dispose();
     }
 
     @Override
     public void dispose() {
         AL.asset.unload(Assets.PT_TEXTBUTTONSTYLES_JSON.fileName);
-        stage.dispose();
     }
 
     private void vsyncOnOff() {

@@ -66,6 +66,12 @@ public class MainMenuScreen implements AssetScreen {
         btExit.setWidth(200);
         btExit.setHeight(50);
         btExit.setPosition(x / 2 - 100, y / 5 + y / 6);
+        btExit.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                AL.app.exit();
+            }
+        });
 
         stage.addActor(btPlay);
         stage.addActor(btSettings);
@@ -104,12 +110,12 @@ public class MainMenuScreen implements AssetScreen {
         //game.config.editor.setValue(IVideoConfig.VideoKeyNames.WIDTH, 500);
         //game.config.editor.flush();
         AL.input.setInputProcessor(null);
+        stage.dispose();
     }
 
     @Override
     public void dispose() {
         AL.asset.unload(Assets.PT_TEXTBUTTONSTYLES_JSON.fileName);
-        stage.dispose();
     }
 
     private void changeSize() {
