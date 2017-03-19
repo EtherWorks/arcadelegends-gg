@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import gg.al.game.AL;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -16,6 +17,7 @@ import java.util.List;
 /**
  * Created by Thomas Neumann on 18.03.2017.
  */
+@Slf4j
 public class LoadingScreen implements Screen {
 
     private final List<AssetDescriptor> toLoad;
@@ -37,6 +39,17 @@ public class LoadingScreen implements Screen {
     }
 
     public Screen withAssetScreen(AssetScreen screen) {
+        boolean loaded = true;
+        for (AssetDescriptor desc : screen.assets())
+            if (!AL.asset.isLoaded(desc.fileName, desc.type)) {
+                loaded = false;
+                break;
+            }
+        if (loaded) {
+            for (AssetDescriptor desc : screen.assets())
+                AL.asset.setReferenceCount(desc.fileName, AL.asset.getReferenceCount(desc.fileName) + 1);
+            return screen;
+        }
         toLoad.clear();
         toLoad.addAll(screen.assets());
         next = screen;

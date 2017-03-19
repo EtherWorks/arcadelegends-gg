@@ -14,7 +14,6 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 public class TestScreen implements Screen, InputProcessor {
-
     private long time;
 
     @Override

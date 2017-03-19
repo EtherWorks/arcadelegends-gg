@@ -7,5 +7,5 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
  * Created by Thomas Neumann on 18.03.2017.
  */
 public interface Assets {
-    AssetDescriptor<Skin> TEXTBUTTONSTYLES = new AssetDescriptor<Skin>("assets/prototype/styles/buttonfont/textbuttonstyles.json", Skin.class);
+    AssetDescriptor<Skin> TEXTBUTTONSTYLES = new AssetDescriptor<>("assets/prototype/styles/buttonfont/textbuttonstyles.json", Skin.class);
 }

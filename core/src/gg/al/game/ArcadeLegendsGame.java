@@ -42,14 +42,16 @@ public class ArcadeLegendsGame extends Game {
         AL.cmisc = config.miscellaneous;
         AL.cvideo = config.video;
         AL.screen = screenManager;
-        AL.screen.put(new LoadingScreen(), LoadingScreen.class);
+        AL.screen.register(new LoadingScreen(), LoadingScreen.class);
 
-        setScreen(new MainMenuScreen());
+        AL.screen.register(new MainMenuScreen(), MainMenuScreen.class);
+        setScreen(AL.screen.get(MainMenuScreen.class));
     }
 
     @Override
     public void dispose() {
         super.dispose();
+        screenManager.dispose();
         assetManager.dispose();
     }
 

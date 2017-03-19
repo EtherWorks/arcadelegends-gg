@@ -55,7 +55,9 @@ public class MainMenuScreen implements AssetScreen {
         btSettings.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                AL.game.setScreen(new SettingsScreen());
+                if (!AL.screen.isRegistered(SettingsScreen.class))
+                    AL.screen.register(new SettingsScreen(), SettingsScreen.class);
+                AL.game.setScreen(AL.screen.get(SettingsScreen.class));
             }
         });
 
@@ -102,15 +104,12 @@ public class MainMenuScreen implements AssetScreen {
         //game.config.editor.setValue(IVideoConfig.VideoKeyNames.WIDTH, 500);
         //game.config.editor.flush();
         AL.input.setInputProcessor(null);
-
-        AL.asset.unload(Assets.TEXTBUTTONSTYLES.fileName);
-        stage.dispose();
     }
 
     @Override
     public void dispose() {
-        //AL.asset.unload(Assets.TEXTBUTTONSTYLES.fileName);
-        //stage.dispose();
+        AL.asset.unload(Assets.TEXTBUTTONSTYLES.fileName);
+        stage.dispose();
     }
 
     private void changeSize() {

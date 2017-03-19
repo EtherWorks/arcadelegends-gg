@@ -1,0 +1,30 @@
+public interface Assets {
+	AssetDescriptor<Music> BITRUSH = new AssetDescriptor<>("assets/prototype/audio/bitrush.mp3", Music.class);
+	AssetDescriptor<TiledMap> TEST = new AssetDescriptor<>("assets/prototype/map/test.tmx", TiledMap.class);
+	AssetDescriptor<Texture> AWDSTILESET = new AssetDescriptor<>("assets/prototype/sprites/awdstileset.png", Texture.class);
+	AssetDescriptor<Texture> EZREAL = new AssetDescriptor<>("assets/prototype/sprites/ezreal.png", Texture.class);
+	AssetDescriptor<Texture> EZ_IDLE = new AssetDescriptor<>("assets/prototype/sprites/ez_idle.png", Texture.class);
+	AssetDescriptor<Texture> FACTIONS = new AssetDescriptor<>("assets/prototype/sprites/Factions.png", Texture.class);
+	AssetDescriptor<Texture> KNIGHTTEMPLATE = new AssetDescriptor<>("assets/prototype/sprites/knighttemplate.png", Texture.class);
+	AssetDescriptor<Texture> LAWBRINGER = new AssetDescriptor<>("assets/prototype/sprites/lawbringer.png", Texture.class);
+	AssetDescriptor<Texture> LAWBRINGER32 = new AssetDescriptor<>("assets/prototype/sprites/lawbringer32.png", Texture.class);
+	AssetDescriptor<Texture> LOGO16 = new AssetDescriptor<>("assets/prototype/sprites/logo16.png", Texture.class);
+	AssetDescriptor<Texture> LOGO32 = new AssetDescriptor<>("assets/prototype/sprites/logo32.png", Texture.class);
+	AssetDescriptor<Texture> RETICLE = new AssetDescriptor<>("assets/prototype/sprites/reticle.png", Texture.class);
+	AssetDescriptor<Texture> RIPPEDTILESET = new AssetDescriptor<>("assets/prototype/sprites/rippedtileset.png", Texture.class);
+	AssetDescriptor<Texture> BACKGROUND = new AssetDescriptor<>("assets/prototype/sprites/splash/background.jpg", Texture.class);
+	AssetDescriptor<Texture> SPLASH = new AssetDescriptor<>("assets/prototype/sprites/splash/splash.png", Texture.class);
+	AssetDescriptor<Texture> TILESET = new AssetDescriptor<>("assets/prototype/sprites/tileset.png", Texture.class);
+	AssetDescriptor<Texture> TOWER = new AssetDescriptor<>("assets/prototype/sprites/tower.png", Texture.class);
+	AssetDescriptor<Texture> TOWERFULL = new AssetDescriptor<>("assets/prototype/sprites/towerfull.png", Texture.class);
+	AssetDescriptor<Texture> TOWERTOP = new AssetDescriptor<>("assets/prototype/sprites/towertop.png", Texture.class);
+	AssetDescriptor<BitmapFont> TESTFONT = new AssetDescriptor<>("assets/prototype/styles/buttonfont/testfont.fnt", BitmapFont.class);
+	AssetDescriptor<Texture> TESTFONT1 = new AssetDescriptor<>("assets/prototype/styles/buttonfont/testfont1.png", Texture.class);
+	AssetDescriptor<Texture> TESTFONT2 = new AssetDescriptor<>("assets/prototype/styles/buttonfont/testfont2.png", Texture.class);
+	AssetDescriptor<?> TEXTBUTTONSTYLECOMPOSERSKIN = new AssetDescriptor<>("assets/prototype/styles/buttonfont/textbuttonstyleComposerSkin.scmp", ?.class);
+	AssetDescriptor<?> TEXTBUTTONSTYLES_ATLAS = new AssetDescriptor<>("assets/prototype/styles/buttonfont/textbuttonstyles.atlas", ?.class);
+	AssetDescriptor<?> TEXTBUTTONSTYLES_JSON = new AssetDescriptor<>("assets/prototype/styles/buttonfont/textbuttonstyles.json", ?.class);
+	AssetDescriptor<Texture> TEXTBUTTONSTYLES_PNG = new AssetDescriptor<>("assets/prototype/styles/buttonfont/textbuttonstyles.png", Texture.class);
+	AssetDescriptor<Texture> TEXTBUTTONSTYLES2 = new AssetDescriptor<>("assets/prototype/styles/buttonfont/textbuttonstyles2.png", Texture.class);
+	AssetDescriptor<Texture> UP = new AssetDescriptor<>("assets/prototype/styles/buttonfont/up.png", Texture.class);
+}

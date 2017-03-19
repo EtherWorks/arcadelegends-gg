@@ -1,6 +1,9 @@
 package gg.al.game.screen;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
+import com.badlogic.gdx.InputMultiplexer;
+import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.assets.AssetDescriptor;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -23,7 +26,7 @@ import java.util.List;
 /**
  * Created by Patrick Windegger on 16.03.2017.
  */
-public class SettingsScreen implements AssetScreen {
+public class SettingsScreen implements AssetScreen, InputProcessor {
 
     private Stage stage;
     private Skin skin;
@@ -40,7 +43,7 @@ public class SettingsScreen implements AssetScreen {
         stage = new Stage(viewport);
         stage.setViewport(viewport);
         skin = AL.asset.get(Assets.TEXTBUTTONSTYLES);
-        AL.input.setInputProcessor(stage);
+        Gdx.input.setInputProcessor(new InputMultiplexer(this, stage));
 
         String vsyncText = AL.cvideo.vsyncEnabled() == true ? "Vsync on" : "Vsync off";
         btVsync = new TextButton(vsyncText, skin, "default");
@@ -106,14 +109,12 @@ public class SettingsScreen implements AssetScreen {
     @Override
     public void hide() {
         Gdx.input.setInputProcessor(null);
-        AL.asset.unload(Assets.TEXTBUTTONSTYLES.fileName);
-        stage.dispose();
     }
 
     @Override
     public void dispose() {
-        //AL.asset.unload(Assets.TEXTBUTTONSTYLES.fileName);
-        //stage.dispose();
+        AL.asset.unload(Assets.TEXTBUTTONSTYLES.fileName);
+        stage.dispose();
     }
 
     private void vsyncOnOff() {
@@ -133,5 +134,47 @@ public class SettingsScreen implements AssetScreen {
     @Override
     public List<AssetDescriptor> assets() {
         return Arrays.asList(Assets.TEXTBUTTONSTYLES);
+    }
+
+    @Override
+    public boolean keyDown(int keycode) {
+        if (keycode == Input.Keys.ESCAPE)
+            AL.game.setScreen(AL.screen.get(MainMenuScreen.class));
+        return false;
+    }
+
+    @Override
+    public boolean keyUp(int keycode) {
+        return false;
+    }
+
+    @Override
+    public boolean keyTyped(char character) {
+        return false;
+    }
+
+    @Override
+    public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+        return false;
+    }
+
+    @Override
+    public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+        return false;
+    }
+
+    @Override
+    public boolean touchDragged(int screenX, int screenY, int pointer) {
+        return false;
+    }
+
+    @Override
+    public boolean mouseMoved(int screenX, int screenY) {
+        return false;
+    }
+
+    @Override
+    public boolean scrolled(int amount) {
+        return false;
     }
 }
