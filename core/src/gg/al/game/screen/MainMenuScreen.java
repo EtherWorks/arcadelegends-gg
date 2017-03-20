@@ -24,7 +24,7 @@ import java.util.List;
  * Created by Patrick Windegger on 16.03.2017.
  */
 @Slf4j
-public class MainMenuScreen implements AssetScreen {
+public class MainMenuScreen implements IAssetScreen {
 
     private Stage stage;
     private Skin skin;
@@ -127,5 +127,10 @@ public class MainMenuScreen implements AssetScreen {
     @Override
     public List<AssetDescriptor> assets() {
         return Arrays.asList(Assets.PT_TEXTBUTTONSTYLES_JSON);
+    }
+
+    @Override
+    public ILoadingScreen customLoadingScreen() {
+        return null;
     }
 }

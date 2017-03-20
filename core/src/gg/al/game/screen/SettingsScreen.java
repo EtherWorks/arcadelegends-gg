@@ -26,7 +26,7 @@ import java.util.List;
 /**
  * Created by Patrick Windegger on 16.03.2017.
  */
-public class SettingsScreen implements AssetScreen, InputProcessor {
+public class SettingsScreen implements IAssetScreen, InputProcessor {
 
     private Stage stage;
     private Skin skin;
@@ -176,5 +176,10 @@ public class SettingsScreen implements AssetScreen, InputProcessor {
     @Override
     public boolean scrolled(int amount) {
         return false;
+    }
+
+    @Override
+    public ILoadingScreen customLoadingScreen() {
+        return null;
     }
 }

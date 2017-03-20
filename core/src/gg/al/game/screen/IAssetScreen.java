@@ -8,6 +8,7 @@ import java.util.List;
 /**
  * Created by Thomas Neumann on 18.03.2017.
  */
-public interface AssetScreen extends Screen {
+public interface IAssetScreen extends Screen {
     List<AssetDescriptor> assets();
+    ILoadingScreen customLoadingScreen();
 }

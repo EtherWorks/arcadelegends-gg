@@ -3,7 +3,7 @@ package gg.al.game;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.assets.AssetManager;
 import gg.al.config.Config;
-import gg.al.game.screen.AssetScreen;
+import gg.al.game.screen.IAssetScreen;
 import gg.al.game.screen.LoadingScreen;
 import gg.al.game.screen.MainMenuScreen;
 import gg.al.util.ScreenManager;
@@ -42,10 +42,8 @@ public class ArcadeLegendsGame extends Game {
         AL.cmisc = config.miscellaneous;
         AL.cvideo = config.video;
         AL.screen = screenManager;
-        AL.screen.register(new LoadingScreen(), LoadingScreen.class);
 
-        AL.screen.register(new MainMenuScreen(), MainMenuScreen.class);
-        setScreen(AL.screen.get(MainMenuScreen.class));
+        setScreen(AL.screen.get(MainMenuScreen.class, true));
     }
 
     @Override
@@ -55,7 +53,10 @@ public class ArcadeLegendsGame extends Game {
         assetManager.dispose();
     }
 
-    public void setScreen(AssetScreen screen) {
-        this.setScreen(AL.screen.get(LoadingScreen.class).withAssetScreen(screen));
+    public void setScreen(IAssetScreen screen) {
+        if (screen.customLoadingScreen() != null)
+            this.setScreen(screen.customLoadingScreen().withAssetScreen(screen));
+        else
+            this.setScreen(AL.screen.get(LoadingScreen.class, true).withAssetScreen(screen));
     }
 }

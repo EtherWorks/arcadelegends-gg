@@ -18,7 +18,7 @@ import java.util.List;
  * Created by Thomas Neumann on 18.03.2017.
  */
 @Slf4j
-public class LoadingScreen implements Screen {
+public class LoadingScreen implements ILoadingScreen {
 
     private final List<AssetDescriptor> toLoad;
     private boolean init;
@@ -38,7 +38,8 @@ public class LoadingScreen implements Screen {
         this.next = next;
     }
 
-    public Screen withAssetScreen(AssetScreen screen) {
+    @Override
+    public Screen withAssetScreen(IAssetScreen screen) {
         boolean loaded = true;
         for (AssetDescriptor desc : screen.assets())
             if (!AL.asset.isLoaded(desc.fileName, desc.type)) {
