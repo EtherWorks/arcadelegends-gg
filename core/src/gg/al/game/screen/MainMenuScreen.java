@@ -51,7 +51,7 @@ public class MainMenuScreen implements IAssetScreen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 if(!AL.screen.isRegistered(LevelScreen.class))
-                    AL.screen.register(new LevelScreen(), LevelScreen.class);
+                    AL.screen.register(new LevelScreen(Assets.PT_TEST), LevelScreen.class);
                 AL.game.setScreen(AL.screen.get(LevelScreen.class));
             }
         });
