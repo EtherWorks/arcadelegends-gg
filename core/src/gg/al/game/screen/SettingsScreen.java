@@ -55,6 +55,8 @@ public class SettingsScreen implements IAssetScreen, InputProcessor {
     private TabbedPane tabbedPane;
     private VisTable visTable;
 
+    private Table someOtherTable;
+
 
     @Override
     public void show() {
@@ -82,16 +84,30 @@ public class SettingsScreen implements IAssetScreen, InputProcessor {
             }
         });
 
+        someOtherTable = new Table();
+        someOtherTable.setPosition(x/2+50,y/2+50);
 
         //stage.addActor(btVsync);
-        tabbedPane = new TabbedPane();
+        TabbedPane.TabbedPaneStyle style = VisUI.getSkin().get("vertical", TabbedPane.TabbedPaneStyle.class);
+        tabbedPane = new TabbedPane(style);
+
+        tabbedPane.add(new ALTab());
         tabbedPane.add(new ALTab());
         tabbedPane.getTable().setPosition(x/2,y/2);
+        tabbedPane.addListener(new TabbedPaneAdapter(){
+            @Override
+            public void switchedTab (Tab tab) {
+                Table content = tab.getContentTable();
 
+                someOtherTable.clearChildren();
+                someOtherTable.add(content).expand().fill();
+            }
+        });
 
 
 
         stage.addActor(tabbedPane.getTable());
+        stage.addActor(someOtherTable);
 
         AL.input.setInputProcessor(new InputMultiplexer(stage, this));
 
