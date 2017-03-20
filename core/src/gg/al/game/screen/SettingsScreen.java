@@ -73,7 +73,7 @@ public class SettingsScreen implements IAssetScreen, InputProcessor {
 
         stage.addActor(btVsync);
 
-        AL.input.setInputProcessor(stage);
+        AL.input.setInputProcessor(new InputMultiplexer(stage, this));
 
     }
 
