@@ -25,6 +25,7 @@ import java.util.List;
 
 /**
  * Created by Patrick Windegger on 16.03.2017.
+ * Class responsible for the Main-Menu in the game
  */
 @Slf4j
 public class MainMenuScreen implements IAssetScreen {

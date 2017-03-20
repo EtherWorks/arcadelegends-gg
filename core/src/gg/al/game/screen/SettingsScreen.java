@@ -25,6 +25,7 @@ import java.util.List;
 @Slf4j
 /**
  * Created by Patrick Windegger on 16.03.2017.
+ * Class responsible for the different Settings (Video, Audio, Input) in the game
  */
 public class SettingsScreen implements IAssetScreen, InputProcessor {
 
