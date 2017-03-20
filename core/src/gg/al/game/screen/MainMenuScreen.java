@@ -163,7 +163,7 @@ public class MainMenuScreen implements IAssetScreen {
     private void setButtonPosition(int x, int y)
     {
         btPlay.setPosition(x / 2 - 100, y / 5 + y / 2);
-        btSettings.setPosition(x / 2 - 100, y / 5 + y / 3);
-        btExit.setPosition(x / 2 - 100, y / 5 + y / 6);
+        btSettings.setPosition(x / 2 - 100, y / 5 + y / 2.3f);
+        btExit.setPosition(x / 2 - 100, y / 5 + y / 2.65f);
     }
 }

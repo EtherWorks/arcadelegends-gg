@@ -20,6 +20,8 @@ public interface IVideoConfig {
 
     int height();
 
+    boolean borderless();
+
 
     enum VideoKeys implements IConfigKey {
         VSYNC("vsyncEnabled"),
@@ -27,7 +29,8 @@ public interface IVideoConfig {
         FOREGROUNDFPS("foregroundFPS"),
         FULLSCREEN("fullscreen"),
         WIDTH("width"),
-        HEIGHT("height");
+        HEIGHT("height"),
+        BORDERLESS("borderless");
 
         private final String key;
 

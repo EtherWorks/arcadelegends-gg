@@ -64,6 +64,7 @@ public class DesktopConfigUtil {
         config.vSyncEnabled = cfg.video.vsyncEnabled();
         config.width = cfg.video.width();
         config.height = cfg.video.height();
+        System.setProperty("org.lwjgl.opengl.Window.undecorated", cfg.video.borderless()+"");
     }
 
     public static void registerStandardListeners(DesktopConfigEditor editor, Config cfg, LwjglApplicationConfiguration config, LwjglApplication application) {
@@ -81,5 +82,6 @@ public class DesktopConfigUtil {
         editor.addConfigValueChangedListener(IVideoConfig.VideoKeys.FOREGROUNDFPS, (key, value) -> config.foregroundFPS = parser.parse(value, Integer.class));
         editor.addConfigValueChangedListener(IVideoConfig.VideoKeys.VSYNC, (key, value) -> application.postRunnable(() -> application.getGraphics().setVSync(parser.parse(value, Boolean.class))));
         editor.addConfigValueChangedListener(IVideoConfig.VideoKeys.WIDTH, (key, value) -> application.postRunnable(() -> application.getGraphics().setWindowedMode(cfg.video.width(), cfg.video.height())), true);
+        editor.addConfigValueChangedListener(IVideoConfig.VideoKeys.BORDERLESS, ((key, value) -> application.postRunnable(() -> application.getGraphics().setUndecorated(parser.parse(value,Boolean.class)))));
     }
 }
