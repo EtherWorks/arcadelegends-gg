@@ -6,7 +6,10 @@ import com.google.common.collect.ListMultimap;
 import java.util.*;
 
 /**
- * Created by Thomas Neumann on 15.03.2017.
+ * Created by Thomas Neumann on 15.03.2017.<br />
+ * Abstract class describing a ConfigEditor, which houses methods for
+ * changing the current configuration, and flushing this configuration,
+ * as well as listeners for the flush event.
  */
 public abstract class ConfigEditor {
 

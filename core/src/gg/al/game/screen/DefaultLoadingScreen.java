@@ -15,10 +15,11 @@ import java.util.Collection;
 import java.util.List;
 
 /**
- * Created by Thomas Neumann on 18.03.2017.
+ * Created by Thomas Neumann on 18.03.2017.<br />
+ * {@link ILoadingScreen} used as the default LoadingScreen in {@link gg.al.game.ArcadeLegendsGame}.
  */
 @Slf4j
-public class LoadingScreen implements ILoadingScreen {
+public class DefaultLoadingScreen implements ILoadingScreen {
 
     private final List<AssetDescriptor> toLoad;
     private boolean init;
@@ -29,11 +30,11 @@ public class LoadingScreen implements ILoadingScreen {
     @Setter
     private Screen next;
 
-    public LoadingScreen() {
+    public DefaultLoadingScreen() {
         this.toLoad = new ArrayList<>();
     }
 
-    public LoadingScreen(Screen next) {
+    public DefaultLoadingScreen(Screen next) {
         this();
         this.next = next;
     }

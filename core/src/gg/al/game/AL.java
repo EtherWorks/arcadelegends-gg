@@ -6,10 +6,10 @@ import gg.al.config.*;
 import gg.al.util.ScreenManager;
 
 /**
- * Created by Thomas Neumann on 18.03.2017.
+ * Created by Thomas Neumann on 18.03.2017.<p>
  * Environment class holding references to the {@link ArcadeLegendsGame} and
  * {@link Config} instances. The references are held in public static fields which allows static access to all sub systems.
- * <p>
+ * <br />
  * This is normally a design faux pas but in this case is better than the alternatives.
  */
 public class AL extends Gdx {

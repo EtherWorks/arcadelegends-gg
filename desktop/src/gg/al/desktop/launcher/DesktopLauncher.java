@@ -10,7 +10,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.slf4j.MarkerFactory;
 
 /**
- * Created by Thomas Neumann on 11.03.2017.
+ * Created by Thomas Neumann on 11.03.2017.<br />
+ * Main class responsible for launching the game in a
+ * desktop environment.
  */
 @Slf4j
 public class DesktopLauncher {

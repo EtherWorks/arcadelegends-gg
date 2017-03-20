@@ -10,7 +10,9 @@ import gg.al.game.AL;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * Created by Thomas Neumann on 15.03.2017.
+ * Created by Thomas Neumann on 15.03.2017.<br />
+ * Simple {@link Screen} for testing purposes.
+ * Will be deleted in further development.
  */
 @Slf4j
 public class TestScreen implements Screen, InputProcessor {

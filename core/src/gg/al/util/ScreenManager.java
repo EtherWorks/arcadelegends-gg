@@ -11,7 +11,10 @@ import java.util.Iterator;
 import java.util.Map;
 
 /**
- * Created by Thomas Neumann on 18.03.2017.
+ * Created by Thomas Neumann on 18.03.2017.<br />
+ * Manager class for {@link Screen}, which allow only one Screen
+ * per type to be loaded. Holds additional utility methods for
+ * loaded Screens.
  */
 public class ScreenManager implements Disposable {
     private Map<Class<? extends Screen>, Screen> screenMap;

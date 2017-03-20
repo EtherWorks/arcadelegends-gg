@@ -9,7 +9,8 @@ import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
 /**
- * Created by Thomas Neumann on 18.03.2017.
+ * Created by Thomas Neumann on 18.03.2017.<br />
+ * Utility interface holding {@link AssetDescriptor} to all assets.
  */
 public interface Assets {
     AssetDescriptor<Music> PT_BITRUSH = new AssetDescriptor<>("assets/prototype/audio/bitrush.mp3", Music.class);

@@ -19,7 +19,9 @@ import java.nio.file.Paths;
 import java.util.Arrays;
 
 /**
- * Created by Thomas Neumann on 15.03.2017.
+ * Created by Thomas Neumann on 15.03.2017.<br />
+ * Utility class holding useful methods for building
+ * the {@link Config} class in a desktop environment.
  */
 @Slf4j
 public class DesktopConfigUtil {

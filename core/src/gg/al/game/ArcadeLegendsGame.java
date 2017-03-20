@@ -4,17 +4,19 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.assets.AssetManager;
 import gg.al.config.Config;
 import gg.al.game.screen.IAssetScreen;
-import gg.al.game.screen.LoadingScreen;
+import gg.al.game.screen.DefaultLoadingScreen;
 import gg.al.game.screen.MainMenuScreen;
 import gg.al.util.ScreenManager;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * Created by Thomas Neumann on 11.03.2017.
+ * Created by Thomas Neumann on 11.03.2017.<p>
+ * Main Game class for the ArcadeLegends game.
  */
 @Slf4j
 public class ArcadeLegendsGame extends Game {
+
     @Getter
     private final Config config;
 
@@ -57,6 +59,6 @@ public class ArcadeLegendsGame extends Game {
         if (screen.customLoadingScreen() != null)
             this.setScreen(screen.customLoadingScreen().withAssetScreen(screen));
         else
-            this.setScreen(AL.screen.get(LoadingScreen.class, true).withAssetScreen(screen));
+            this.setScreen(AL.screen.get(DefaultLoadingScreen.class, true).withAssetScreen(screen));
     }
 }
