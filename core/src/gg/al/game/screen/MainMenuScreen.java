@@ -45,11 +45,12 @@ public class MainMenuScreen implements IAssetScreen {
     public void show() {
         // Inits:
         cam = new OrthographicCamera();
-        viewport = new FitViewport(1920,1080);
+        viewport = new FitViewport(1920, 1080);
         viewport.setCamera(cam);
         stage = new Stage(viewport);
         stage.setViewport(viewport);
         skin = AL.asset.get(Assets.PT_TEXTBUTTON_JSON);
+        skin.getFont("bocklin").getData().setScale(2,2);
         int x = 1920;
         int y = 1080;
         spriteBatch = new SpriteBatch();
@@ -58,12 +59,13 @@ public class MainMenuScreen implements IAssetScreen {
 
         // Buttons:
         btPlay = new TextButton("Play", skin, "default");
-        btPlay.setWidth(200);
-        btPlay.setHeight(50);
+        btPlay.setWidth(400);
+        btPlay.setHeight(100);
+        btPlay.getLabel().setFontScale(2);
 
         btSettings = new TextButton("Settings", skin, "default");
-        btSettings.setWidth(200);
-        btSettings.setHeight(50);
+        btSettings.setWidth(400);
+        btSettings.setHeight(100);
         btSettings.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -75,8 +77,8 @@ public class MainMenuScreen implements IAssetScreen {
 
 
         btExit = new TextButton("Exit Game", skin, "default");
-        btExit.setWidth(200);
-        btExit.setHeight(50);
+        btExit.setWidth(400);
+        btExit.setHeight(100);
         btExit.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -101,7 +103,7 @@ public class MainMenuScreen implements IAssetScreen {
 
         spriteBatch.setProjectionMatrix(cam.combined);
         spriteBatch.begin();
-        spriteBatch.draw(mainbackground, 0,0);
+        spriteBatch.draw(mainbackground, 0, 0);
         spriteBatch.end();
 
 
@@ -159,11 +161,10 @@ public class MainMenuScreen implements IAssetScreen {
         return null;
     }
 
-
-    private void setButtonPosition(int x, int y)
-    {
-        btPlay.setPosition(x / 2 - 100, y / 5 + y / 2);
-        btSettings.setPosition(x / 2 - 100, y / 5 + y / 2.3f);
-        btExit.setPosition(x / 2 - 100, y / 5 + y / 2.65f);
+    // Sets the position of all TextButtons on the Screen
+    private void setButtonPosition(int x, int y) {
+        btPlay.setPosition(x / 2 - 200, y / 5 + y / 2);
+        btSettings.setPosition(x / 2 - 200, y / 5 + y / 2.6f);
+        btExit.setPosition(x / 2 - 200, y / 5 + y / 5);
     }
 }
