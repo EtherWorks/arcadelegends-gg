@@ -47,6 +47,14 @@ public class MainMenuScreen implements IAssetScreen {
         btPlay.setWidth(200);
         btPlay.setHeight(50);
         btPlay.setPosition(x / 2 - 100, y / 5 + y / 2);
+        btPlay.addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                if(!AL.screen.isRegistered(LevelScreen.class))
+                    AL.screen.register(new LevelScreen(), LevelScreen.class);
+                AL.game.setScreen(AL.screen.get(LevelScreen.class));
+            }
+        });
 
         TextButton btSettings = new TextButton("Settings", skin, "default");
         btSettings.setWidth(200);
