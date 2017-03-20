@@ -9,27 +9,18 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.FitViewport;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.kotcrab.vis.ui.VisUI;
-import com.kotcrab.vis.ui.widget.VisTable;
-import com.kotcrab.vis.ui.widget.tabbedpane.Tab;
-import com.kotcrab.vis.ui.widget.tabbedpane.TabbedPane;
-import com.kotcrab.vis.ui.widget.tabbedpane.TabbedPaneAdapter;
 import gg.al.config.IVideoConfig;
 import gg.al.game.AL;
-import gg.al.game.ALTab;
 import gg.al.util.Assets;
 import lombok.extern.slf4j.Slf4j;
-import net.dermetfan.gdx.scenes.scene2d.Scene2DUtils;
 
 import java.util.Arrays;
 import java.util.List;
@@ -52,10 +43,7 @@ public class SettingsScreen implements IAssetScreen, InputProcessor {
     private TextButton btFullScreen;
     private TextButton btTest;
 
-    private TabbedPane tabbedPane;
-    private VisTable visTable;
 
-    private Table someOtherTable;
 
 
     @Override
@@ -66,7 +54,6 @@ public class SettingsScreen implements IAssetScreen, InputProcessor {
         stage = new Stage(viewport);
         stage.setViewport(viewport);
         skin = AL.asset.get(Assets.PT_TEXTBUTTON_JSON);
-        VisUI.load();
         int x = 1920;
         int y = 1080;
         spriteBatch = new SpriteBatch();
@@ -83,31 +70,6 @@ public class SettingsScreen implements IAssetScreen, InputProcessor {
                 vsyncOnOff();
             }
         });
-
-        someOtherTable = new Table();
-        someOtherTable.setPosition(x/2+50,y/2+50);
-
-        //stage.addActor(btVsync);
-        TabbedPane.TabbedPaneStyle style = VisUI.getSkin().get("vertical", TabbedPane.TabbedPaneStyle.class);
-        tabbedPane = new TabbedPane(style);
-
-        tabbedPane.add(new ALTab());
-        tabbedPane.add(new ALTab());
-        tabbedPane.getTable().setPosition(x/2,y/2);
-        tabbedPane.addListener(new TabbedPaneAdapter(){
-            @Override
-            public void switchedTab (Tab tab) {
-                Table content = tab.getContentTable();
-
-                someOtherTable.clearChildren();
-                someOtherTable.add(content).expand().fill();
-            }
-        });
-
-
-
-        stage.addActor(tabbedPane.getTable());
-        stage.addActor(someOtherTable);
 
         AL.input.setInputProcessor(new InputMultiplexer(stage, this));
 
