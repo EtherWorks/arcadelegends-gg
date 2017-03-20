@@ -6,7 +6,7 @@ import com.badlogic.gdx.graphics.g3d.decals.Decal;
 import com.badlogic.gdx.graphics.g3d.decals.DecalMaterial;
 
 /**
- * Created by Dr. Gavrel on 03.03.2017.
+ * Created by Thomas Neumann on 03.03.2017.
  */
 public class OrderedDecal extends Decal {
     private int layer;

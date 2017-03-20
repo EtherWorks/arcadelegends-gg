@@ -3,7 +3,7 @@ package gg.al.prototype.manager;
 import com.badlogic.gdx.utils.Disposable;
 
 /**
- * Created by Dr. Gavrel on 28.02.2017.
+ * Created by Thomas Neumann on 28.02.2017.
  */
 public class SceneManager implements Disposable {
 

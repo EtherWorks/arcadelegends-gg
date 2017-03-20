@@ -55,6 +55,7 @@ public class MapTestScreen implements Screen, InputProcessor {
     private Decal towerbaseDecal;
     private Decal towertopDecal;
     private Vector3 testpos;
+
     @Override
     public void show() {
         batch = new SpriteBatch();
