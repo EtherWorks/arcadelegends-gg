@@ -46,13 +46,13 @@ public class SettingsScreen implements IAssetScreen, InputProcessor {
 
     @Override
     public void show() {
-        OrthographicCamera cam = new OrthographicCamera();
+        cam = new OrthographicCamera();
         viewport = new FitViewport(1920, 1080);
         viewport.setCamera(cam);
         stage = new Stage(viewport);
         stage.setViewport(viewport);
         skin = AL.asset.get(Assets.PT_TEXTBUTTON_JSON);
-        Gdx.input.setInputProcessor(new InputMultiplexer(this, stage));
+
         int x = 1920;
         int y = 1080;
         spriteBatch = new SpriteBatch();
@@ -71,7 +71,9 @@ public class SettingsScreen implements IAssetScreen, InputProcessor {
         });
 
 
+        stage.addActor(btVsync);
 
+        AL.input.setInputProcessor(stage);
 
     }
 
@@ -107,7 +109,7 @@ public class SettingsScreen implements IAssetScreen, InputProcessor {
 
     @Override
     public void hide() {
-        Gdx.input.setInputProcessor(null);
+        AL.input.setInputProcessor(null);
         stage.dispose();
         spriteBatch.dispose();
     }
@@ -115,6 +117,7 @@ public class SettingsScreen implements IAssetScreen, InputProcessor {
     @Override
     public void dispose() {
         AL.asset.unload(Assets.PT_TEXTBUTTON_JSON.fileName);
+        AL.asset.unload(Assets.PT_TESTMAINSCREEN.fileName);
     }
 
     private void vsyncOnOff() {
@@ -131,11 +134,12 @@ public class SettingsScreen implements IAssetScreen, InputProcessor {
 
     @Override
     public List<AssetDescriptor> assets() {
-        return Arrays.asList(Assets.PT_TEXTBUTTON_JSON);
+        return Arrays.asList(Assets.PT_TEXTBUTTON_JSON, Assets.PT_TESTMAINSCREEN);
     }
 
     @Override
     public boolean keyDown(int keycode) {
+        log.debug("in keydown");
         if (keycode == Input.Keys.ESCAPE)
             AL.game.setScreen(AL.screen.get(MainMenuScreen.class));
         return false;

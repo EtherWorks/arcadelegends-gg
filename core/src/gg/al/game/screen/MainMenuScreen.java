@@ -135,9 +135,6 @@ public class MainMenuScreen implements IAssetScreen {
 
     @Override
     public void hide() {
-        //game.config.editor.setValue(IVideoConfig.VideoKeyNames.HEIGHT, 500);
-        //game.config.editor.setValue(IVideoConfig.VideoKeyNames.WIDTH, 500);
-        //game.config.editor.flush();
         AL.input.setInputProcessor(null);
         stage.dispose();
         spriteBatch.dispose();
