@@ -7,11 +7,14 @@ import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.assets.AssetDescriptor;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import gg.al.config.IVideoConfig;
@@ -32,6 +35,9 @@ public class SettingsScreen implements IAssetScreen, InputProcessor {
     private Stage stage;
     private Skin skin;
     private Viewport viewport;
+    private OrthographicCamera cam;
+    private SpriteBatch spriteBatch;
+    private Texture mainbackground;
 
     private TextButton btVsync;
     private TextButton btFullScreen;
@@ -41,11 +47,16 @@ public class SettingsScreen implements IAssetScreen, InputProcessor {
     @Override
     public void show() {
         OrthographicCamera cam = new OrthographicCamera();
-        viewport = new ScreenViewport(cam);
+        viewport = new FitViewport(1920, 1080);
+        viewport.setCamera(cam);
         stage = new Stage(viewport);
         stage.setViewport(viewport);
         skin = AL.asset.get(Assets.PT_TEXTBUTTON_JSON);
         Gdx.input.setInputProcessor(new InputMultiplexer(this, stage));
+        int x = 1920;
+        int y = 1080;
+        spriteBatch = new SpriteBatch();
+        mainbackground = AL.asset.get(Assets.PT_TESTMAINSCREEN);
 
         String vsyncText = AL.cvideo.vsyncEnabled() == true ? "Vsync on" : "Vsync off";
         btVsync = new TextButton(vsyncText, skin, "default");
@@ -59,35 +70,7 @@ public class SettingsScreen implements IAssetScreen, InputProcessor {
             }
         });
 
-        String fullscreenText = AL.cvideo.fullscreen() == true ? "Fullscreen on" : "Fullscreen off";
-        log.debug(fullscreenText);
-        btFullScreen = new TextButton(fullscreenText, skin, "default");
-        btFullScreen.setWidth(250);
-        btFullScreen.setHeight(50);
-        btFullScreen.setPosition(Gdx.graphics.getWidth() / 2 - 100, Gdx.graphics.getHeight() / 3 - 25);
-        btFullScreen.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                fullscreenOnOff();
-            }
-        });
 
-        btTest = new TextButton("Test", skin, "default");
-        btTest.setWidth(250);
-        btTest.setHeight(50);
-        btTest.setPosition(0,0);
-        btTest.addListener(new ClickListener(){
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                AL.cedit.setValue(IVideoConfig.VideoKeys.WIDTH, 1920);
-                AL.cedit.setValue(IVideoConfig.VideoKeys.HEIGHT, 1080);
-                AL.cedit.flush();
-            }
-        });
-
-        stage.addActor(btVsync);
-        stage.addActor(btFullScreen);
-        stage.addActor(btTest);
 
 
     }
@@ -96,6 +79,12 @@ public class SettingsScreen implements IAssetScreen, InputProcessor {
     public void render(float delta) {
         AL.gl.glClearColor(0, 0, 0, 1);
         AL.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+        spriteBatch.setProjectionMatrix(cam.combined);
+        spriteBatch.begin();
+        spriteBatch.draw(mainbackground, 0, 0);
+        spriteBatch.end();
+
         stage.act(Gdx.graphics.getDeltaTime());
         stage.draw();
     }
@@ -104,10 +93,6 @@ public class SettingsScreen implements IAssetScreen, InputProcessor {
     public void resize(int width, int height) {
 
         viewport.update(width, height, true);
-        btVsync.setPosition(Gdx.graphics.getWidth() / 2 - 100, Gdx.graphics.getHeight() / 2 - 25);
-        btFullScreen.setPosition(Gdx.graphics.getWidth() / 2 - 100, Gdx.graphics.getHeight() / 3 - 25);
-
-        log.debug("in resize");
     }
 
     @Override
@@ -124,6 +109,7 @@ public class SettingsScreen implements IAssetScreen, InputProcessor {
     public void hide() {
         Gdx.input.setInputProcessor(null);
         stage.dispose();
+        spriteBatch.dispose();
     }
 
     @Override
@@ -135,14 +121,12 @@ public class SettingsScreen implements IAssetScreen, InputProcessor {
         AL.cedit.setValue(IVideoConfig.VideoKeys.VSYNC, !AL.cvideo.vsyncEnabled());
         AL.cedit.flush();
         btVsync.setText(AL.cvideo.vsyncEnabled() == true ? "Vsync on" : "Vsync off");
-        log.debug(AL.cvideo.vsyncEnabled() + "");
     }
 
     private void fullscreenOnOff() {
         AL.cedit.setValue(IVideoConfig.VideoKeys.FULLSCREEN, !AL.cvideo.fullscreen());
         AL.cedit.flush();
         btFullScreen.setText(AL.cvideo.fullscreen() == true ? "Fullscreen on" : "Fullscreen off");
-        log.debug(AL.cvideo.fullscreen() + "");
     }
 
     @Override

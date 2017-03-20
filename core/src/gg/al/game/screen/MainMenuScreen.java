@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.FitViewport;
@@ -76,7 +77,6 @@ public class MainMenuScreen implements IAssetScreen {
             }
         });
 
-
         btExit = new TextButton("Exit Game", skin, "default");
         btExit.setWidth(400);
         btExit.setHeight(100);
@@ -87,12 +87,15 @@ public class MainMenuScreen implements IAssetScreen {
             }
         });
 
-        this.setButtonPosition(x, y);
+        Table table = new Table();
+        table.add(btPlay).width(400).pad(10);
+        table.row();
+        table.add(btSettings).width(400).pad(10);
+        table.row();
+        table.add(btExit).width(400).pad(10);
+        table.setPosition(x/2, y/2+50);
 
-        stage.addActor(btPlay);
-        stage.addActor(btSettings);
-        stage.addActor(btExit);
-
+        stage.addActor(table);
 
         AL.input.setInputProcessor(stage);
     }
