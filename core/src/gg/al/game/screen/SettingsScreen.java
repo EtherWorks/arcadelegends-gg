@@ -9,18 +9,27 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.kotcrab.vis.ui.VisUI;
+import com.kotcrab.vis.ui.widget.VisTable;
+import com.kotcrab.vis.ui.widget.tabbedpane.Tab;
+import com.kotcrab.vis.ui.widget.tabbedpane.TabbedPane;
+import com.kotcrab.vis.ui.widget.tabbedpane.TabbedPaneAdapter;
 import gg.al.config.IVideoConfig;
 import gg.al.game.AL;
+import gg.al.game.ALTab;
 import gg.al.util.Assets;
 import lombok.extern.slf4j.Slf4j;
+import net.dermetfan.gdx.scenes.scene2d.Scene2DUtils;
 
 import java.util.Arrays;
 import java.util.List;
@@ -43,6 +52,9 @@ public class SettingsScreen implements IAssetScreen, InputProcessor {
     private TextButton btFullScreen;
     private TextButton btTest;
 
+    private TabbedPane tabbedPane;
+    private VisTable visTable;
+
 
     @Override
     public void show() {
@@ -52,7 +64,7 @@ public class SettingsScreen implements IAssetScreen, InputProcessor {
         stage = new Stage(viewport);
         stage.setViewport(viewport);
         skin = AL.asset.get(Assets.PT_TEXTBUTTON_JSON);
-
+        VisUI.load();
         int x = 1920;
         int y = 1080;
         spriteBatch = new SpriteBatch();
@@ -62,7 +74,7 @@ public class SettingsScreen implements IAssetScreen, InputProcessor {
         btVsync = new TextButton(vsyncText, skin, "default");
         btVsync.setWidth(250);
         btVsync.setHeight(50);
-        btVsync.setPosition(Gdx.graphics.getWidth() / 2 - 100, Gdx.graphics.getHeight() / 2 - 25);
+        btVsync.setPosition(x / 2 - 100, y / 2 - 25);
         btVsync.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -71,7 +83,15 @@ public class SettingsScreen implements IAssetScreen, InputProcessor {
         });
 
 
-        stage.addActor(btVsync);
+        //stage.addActor(btVsync);
+        tabbedPane = new TabbedPane();
+        tabbedPane.add(new ALTab());
+        tabbedPane.getTable().setPosition(x/2,y/2);
+
+
+
+
+        stage.addActor(tabbedPane.getTable());
 
         AL.input.setInputProcessor(new InputMultiplexer(stage, this));
 
@@ -112,6 +132,7 @@ public class SettingsScreen implements IAssetScreen, InputProcessor {
         AL.input.setInputProcessor(null);
         stage.dispose();
         spriteBatch.dispose();
+        VisUI.dispose();
     }
 
     @Override
@@ -139,7 +160,6 @@ public class SettingsScreen implements IAssetScreen, InputProcessor {
 
     @Override
     public boolean keyDown(int keycode) {
-        log.debug("in keydown");
         if (keycode == Input.Keys.ESCAPE)
             AL.game.setScreen(AL.screen.get(MainMenuScreen.class));
         return false;
