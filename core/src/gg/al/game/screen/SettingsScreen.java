@@ -34,6 +34,7 @@ public class SettingsScreen implements IAssetScreen, InputProcessor {
 
     private TextButton btVsync;
     private TextButton btFullScreen;
+    private TextButton btTest;
 
 
     @Override
@@ -42,38 +43,50 @@ public class SettingsScreen implements IAssetScreen, InputProcessor {
         viewport = new ScreenViewport(cam);
         stage = new Stage(viewport);
         stage.setViewport(viewport);
-        skin = AL.asset.get(Assets.PT_TEXTBUTTONSTYLES_JSON);
+        skin = AL.asset.get(Assets.PT_TEXTBUTTON_JSON);
         Gdx.input.setInputProcessor(new InputMultiplexer(this, stage));
 
         String vsyncText = AL.cvideo.vsyncEnabled() == true ? "Vsync on" : "Vsync off";
         btVsync = new TextButton(vsyncText, skin, "default");
-        btVsync.setWidth(200);
+        btVsync.setWidth(250);
         btVsync.setHeight(50);
         btVsync.setPosition(Gdx.graphics.getWidth() / 2 - 100, Gdx.graphics.getHeight() / 2 - 25);
         btVsync.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                super.clicked(event, x, y);
                 vsyncOnOff();
             }
         });
 
-        String fullscreenText = AL.cvideo.fullscreen() == true ? "FULLSCREEN on" : "FULLSCREEN off";
+        String fullscreenText = AL.cvideo.fullscreen() == true ? "Fullscreen on" : "Fullscreen off";
         log.debug(fullscreenText);
         btFullScreen = new TextButton(fullscreenText, skin, "default");
-        btFullScreen.setWidth(300);
+        btFullScreen.setWidth(250);
         btFullScreen.setHeight(50);
         btFullScreen.setPosition(Gdx.graphics.getWidth() / 2 - 100, Gdx.graphics.getHeight() / 3 - 25);
         btFullScreen.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                super.clicked(event, x, y);
                 fullscreenOnOff();
+            }
+        });
+
+        btTest = new TextButton("Test", skin, "default");
+        btTest.setWidth(250);
+        btTest.setHeight(50);
+        btTest.setPosition(0,0);
+        btTest.addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                AL.cedit.setValue(IVideoConfig.VideoKeys.WIDTH, 1920);
+                AL.cedit.setValue(IVideoConfig.VideoKeys.HEIGHT, 1080);
+                AL.cedit.flush();
             }
         });
 
         stage.addActor(btVsync);
         stage.addActor(btFullScreen);
+        stage.addActor(btTest);
 
 
     }
@@ -114,7 +127,7 @@ public class SettingsScreen implements IAssetScreen, InputProcessor {
 
     @Override
     public void dispose() {
-        AL.asset.unload(Assets.PT_TEXTBUTTONSTYLES_JSON.fileName);
+        AL.asset.unload(Assets.PT_TEXTBUTTON_JSON.fileName);
     }
 
     private void vsyncOnOff() {
@@ -127,13 +140,13 @@ public class SettingsScreen implements IAssetScreen, InputProcessor {
     private void fullscreenOnOff() {
         AL.cedit.setValue(IVideoConfig.VideoKeys.FULLSCREEN, !AL.cvideo.fullscreen());
         AL.cedit.flush();
-        btFullScreen.setText(AL.cvideo.fullscreen() == true ? "FULLSCREEN on" : "FULLSCREEN off");
+        btFullScreen.setText(AL.cvideo.fullscreen() == true ? "Fullscreen on" : "Fullscreen off");
         log.debug(AL.cvideo.fullscreen() + "");
     }
 
     @Override
     public List<AssetDescriptor> assets() {
-        return Arrays.asList(Assets.PT_TEXTBUTTONSTYLES_JSON);
+        return Arrays.asList(Assets.PT_TEXTBUTTON_JSON);
     }
 
     @Override

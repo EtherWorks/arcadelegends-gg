@@ -14,6 +14,7 @@ public interface Assets {
 	AssetDescriptor<Texture> PT_RIPPEDTILESET = new AssetDescriptor<>("assets/prototype/sprites/rippedtileset.png", Texture.class);
 	AssetDescriptor<Texture> PT_BACKGROUND = new AssetDescriptor<>("assets/prototype/sprites/splash/background.jpg", Texture.class);
 	AssetDescriptor<Texture> PT_SPLASH = new AssetDescriptor<>("assets/prototype/sprites/splash/splash.png", Texture.class);
+	AssetDescriptor<Texture> PT_TESTMAINSCREEN = new AssetDescriptor<>("assets/prototype/sprites/testmainscreen.jpg", Texture.class);
 	AssetDescriptor<Texture> PT_TILESET = new AssetDescriptor<>("assets/prototype/sprites/tileset.png", Texture.class);
 	AssetDescriptor<Texture> PT_TOWER = new AssetDescriptor<>("assets/prototype/sprites/tower.png", Texture.class);
 	AssetDescriptor<Texture> PT_TOWERFULL = new AssetDescriptor<>("assets/prototype/sprites/towerfull.png", Texture.class);
@@ -26,4 +27,8 @@ public interface Assets {
 	AssetDescriptor<Texture> PT_TEXTBUTTONSTYLES_PNG = new AssetDescriptor<>("assets/prototype/styles/buttonfont/textbuttonstyles.png", Texture.class);
 	AssetDescriptor<Texture> PT_TEXTBUTTONSTYLES2 = new AssetDescriptor<>("assets/prototype/styles/buttonfont/textbuttonstyles2.png", Texture.class);
 	AssetDescriptor<Texture> PT_UP = new AssetDescriptor<>("assets/prototype/styles/buttonfont/up.png", Texture.class);
+	AssetDescriptor<BitmapFont> PT_BOCKLIN = new AssetDescriptor<>("assets/prototype/styles/textbutton_style/bocklin.fnt", BitmapFont.class);
+	AssetDescriptor<TextureAtlas> PT_TEXTBUTTON_ATLAS = new AssetDescriptor<>("assets/prototype/styles/textbutton_style/textbutton.atlas", TextureAtlas.class);
+	AssetDescriptor<?> PT_TEXTBUTTON_JSON = new AssetDescriptor<>("assets/prototype/styles/textbutton_style/textbutton.json", ?.class);
+	AssetDescriptor<Texture> PT_TEXTBUTTON_PNG = new AssetDescriptor<>("assets/prototype/styles/textbutton_style/textbutton.png", Texture.class);
 }

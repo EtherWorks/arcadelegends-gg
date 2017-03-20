@@ -20,6 +20,7 @@ public class DesktopLauncher {
 
         try {
             LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
+            config.resizable = false;
             DesktopConfigEditor editor = new DesktopConfigEditor();
             Config cfg = DesktopConfigUtil.buildConfig(editor);
             DesktopConfigUtil.setupLwjglConfig(config, cfg);
