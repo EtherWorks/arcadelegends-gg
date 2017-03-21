@@ -1,5 +1,6 @@
 package gg.al.game.screen;
 
+import com.artemis.*;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputMultiplexer;
@@ -21,9 +22,14 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.Ray;
 import com.badlogic.gdx.physics.box2d.*;
+import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import gg.al.game.AL;
+import gg.al.logic.EntityWorld;
+import gg.al.logic.entity.component.Position;
+import gg.al.logic.system.TestSystem;
+import javafx.geometry.Pos;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Arrays;
@@ -54,6 +60,8 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
     private Plane mapHitbox;
 
     private World physicWorld;
+
+    private EntityWorld entityWorld;
 
     public LevelScreen(AssetDescriptor<TiledMap> mapDesc) {
         this(mapDesc, 15);
@@ -122,6 +130,16 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
         under = (TiledMapTileLayer) map.getLayers().get(0);
 
 
+        WorldConfiguration worldConfiguration = new WorldConfigurationBuilder()
+                .with(
+                        new TestSystem()
+                ).build();
+        entityWorld = new EntityWorld(worldConfiguration);
+
+        Archetype type = new ArchetypeBuilder().add(Position.class).build(entityWorld);
+        testEntity = entityWorld.create(type);
+        log.debug("Created: {}", testEntity);
+
         Gdx.input.setInputProcessor(this);
     }
 
@@ -130,6 +148,7 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
     Fixture fix;
     Body body;
     TiledMapTileLayer under;
+    int testEntity;
 
     @Override
     public void render(float delta) {
@@ -155,6 +174,8 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
         //Debug stepping and rendering
         debugRenderer.render(physicWorld, camera.combined);
         physicWorld.step(1 / 45f, 6, 2);
+        entityWorld.setDelta(Gdx.graphics.getDeltaTime());
+        entityWorld.process();
     }
 
     @Override
