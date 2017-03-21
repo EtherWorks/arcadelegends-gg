@@ -16,9 +16,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import com.kotcrab.vis.ui.VisUI;
 import gg.al.config.IVideoConfig;
 import gg.al.game.AL;
+import gg.al.game.ui.ALTabbedPane;
 import gg.al.util.Assets;
 import lombok.extern.slf4j.Slf4j;
 
@@ -42,6 +42,8 @@ public class SettingsScreen implements IAssetScreen, InputProcessor {
     private TextButton btVsync;
     private TextButton btFullScreen;
     private TextButton btTest;
+
+    private ALTabbedPane tabbedPane;
 
 
 
@@ -70,6 +72,16 @@ public class SettingsScreen implements IAssetScreen, InputProcessor {
                 vsyncOnOff();
             }
         });
+
+        tabbedPane = new ALTabbedPane(skin, x, y);
+        tabbedPane.addTab(btVsync);
+        TextButton btTest = new TextButton("Test1", skin);
+        TextButton btTest2 = new TextButton("Test2", skin);
+        tabbedPane.addTab(btTest);
+        tabbedPane.addTab(btTest2);
+
+
+        stage.addActor(tabbedPane);
 
         AL.input.setInputProcessor(new InputMultiplexer(stage, this));
 
@@ -110,7 +122,6 @@ public class SettingsScreen implements IAssetScreen, InputProcessor {
         AL.input.setInputProcessor(null);
         stage.dispose();
         spriteBatch.dispose();
-        VisUI.dispose();
     }
 
     @Override
