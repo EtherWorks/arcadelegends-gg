@@ -1,6 +1,8 @@
 package gg.al.game.screen;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
+import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.assets.AssetDescriptor;
 import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -11,6 +13,11 @@ import com.badlogic.gdx.graphics.g3d.utils.CameraInputController;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+import com.badlogic.gdx.math.Intersector;
+import com.badlogic.gdx.math.Plane;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.math.collision.Ray;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import gg.al.game.AL;
@@ -24,7 +31,7 @@ import java.util.List;
  * Main {@link IAssetScreen} for loading and playing levels.
  */
 @Slf4j
-public class LevelScreen implements IAssetScreen {
+public class LevelScreen implements IAssetScreen, InputProcessor {
 
     private final AssetDescriptor<TiledMap> mapDesc;
     private final float rot;
@@ -41,11 +48,13 @@ public class LevelScreen implements IAssetScreen {
     private Decal mapDecal;
     private TextureRegion mapTemp;
 
+    private Plane mapHitbox;
+
     public LevelScreen(AssetDescriptor<TiledMap> mapDesc) {
         this(mapDesc, 15);
     }
 
-    public LevelScreen(AssetDescriptor mapDesc, float rot) {
+    public LevelScreen(AssetDescriptor<TiledMap> mapDesc, float rot) {
         this.rot = rot;
         this.mapDesc = mapDesc;
     }
@@ -63,10 +72,11 @@ public class LevelScreen implements IAssetScreen {
     @Override
     public void show() {
         camera = new PerspectiveCamera();
-
-        //camera.rotate(Vector3.X, rot);
-        camera.position.set(0, 0, 10);
+        camera.position.set(new Vector3(0,0,50));
+        camera.rotateAround(Vector3.Zero, Vector3.X, rot);
+        camera.position.set(camera.position.x, camera.position.y, 50);
         camera.fieldOfView = 15;
+        camera.update();
         viewport = new FitViewport(1920, 1080, camera);
         viewport.update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         batch = new DecalBatch(new CameraGroupStrategy(camera));
@@ -84,7 +94,9 @@ public class LevelScreen implements IAssetScreen {
         mapDecal = Decal.newDecal(map.getProperties().get("width", Integer.class), map.getProperties().get("height", Integer.class), new TextureRegion());
         mapDecal.setPosition(0, 0, 0);
 
-        Gdx.input.setInputProcessor(new CameraInputController(camera));
+        mapHitbox = new Plane(Vector3.Z, Vector3.Zero);
+
+        Gdx.input.setInputProcessor(this);
     }
 
     @Override
@@ -134,5 +146,65 @@ public class LevelScreen implements IAssetScreen {
     @Override
     public void dispose() {
 
+    }
+
+    @Override
+    public boolean keyDown(int keycode) {
+        switch (keycode)
+        {
+            case Input.Keys.A:
+                camera.translate(-1,0,0);
+                break;
+            case Input.Keys.D:
+                camera.translate(1,0,0);
+                break;
+            case Input.Keys.S:
+                camera.translate(0,-1,0);
+                break;
+            case Input.Keys.W:
+                camera.translate(0,1,0);
+                break;
+        }
+        camera.update();
+        return false;
+    }
+
+    @Override
+    public boolean keyUp(int keycode) {
+        return false;
+    }
+
+    @Override
+    public boolean keyTyped(char character) {
+        return false;
+    }
+
+    @Override
+    public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+        Ray ray = camera.getPickRay(screenX, screenY);
+        Vector3 worldcoor = new Vector3();
+        Intersector.intersectRayPlane(ray, mapHitbox, worldcoor);
+        log.debug("Clicked: " + worldcoor.toString());
+        return false;
+    }
+
+    @Override
+    public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+        return false;
+    }
+
+    @Override
+    public boolean touchDragged(int screenX, int screenY, int pointer) {
+        return false;
+    }
+
+    @Override
+    public boolean mouseMoved(int screenX, int screenY) {
+        return false;
+    }
+
+    @Override
+    public boolean scrolled(int amount) {
+        return false;
     }
 }
