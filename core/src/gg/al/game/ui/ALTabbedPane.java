@@ -2,7 +2,9 @@ package gg.al.game.ui;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -33,6 +35,12 @@ public class ALTabbedPane extends Container {
     }
 
     public void addTab(TextButton btnTab) {
+        btnTab.addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                log.debug("click " + btnTab.getText());
+            }
+        });
         buttonTable.add(btnTab).pad(10);
         centerBaseTable();
     }
