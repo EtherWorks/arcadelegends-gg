@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 
 /**
  * Created by Patrick Windegger on 21.03.2017.
+ * Class responsible for providing a TabbedPane for our requirements
  */
 @Slf4j
 public class ALTabbedPane extends Container {
