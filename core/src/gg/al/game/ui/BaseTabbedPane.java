@@ -5,33 +5,41 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.google.common.collect.ListMultimap;
 import lombok.extern.slf4j.Slf4j;
+
+import java.util.HashMap;
 
 /**
  * Created by Patrick Windegger on 21.03.2017.
  * Class responsible for providing a TabbedPane for our requirements
  */
 @Slf4j
-public class ALTabbedPane extends Container {
+public abstract class BaseTabbedPane extends Container {
 
     private Table baseTable;
     private Table buttonTable;
+    protected Table contentTable;
+
+    protected HashMap<TextButton, Table> componentMap;
 
     private int x;
     private int y;
 
 
-    public ALTabbedPane(Skin skin, int x, int y) {
+    public BaseTabbedPane(Skin skin, int x, int y, HashMap<TextButton, Table> componentMap) {
         this.x = x;
         this.y = y;
+        this.componentMap = componentMap;
         baseTable = new Table();
         buttonTable = new Table();
-
+        contentTable = new Table();
 
         baseTable.add(buttonTable);
         baseTable.row();
+        baseTable.add(contentTable);
 
-        this.setPosition(x / 2, x / 2);
+        this.setPosition(x / 2, x / 1.3f);
         this.setActor(baseTable);
     }
 
@@ -39,7 +47,7 @@ public class ALTabbedPane extends Container {
         btnTab.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                log.debug("click " + btnTab.getText());
+                currentTable(btnTab);
             }
         });
         buttonTable.add(btnTab).pad(10);
@@ -47,8 +55,12 @@ public class ALTabbedPane extends Container {
     }
 
     public void centerBaseTable() {
-        this.setPosition(x / 2, y / 2);
+        this.setPosition(x / 2, y / 1.3f);
     }
+
+    protected abstract void currentTable(TextButton btnTab);
+
+
 
 
 }

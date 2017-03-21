@@ -12,17 +12,22 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import gg.al.config.IVideoConfig;
 import gg.al.game.AL;
-import gg.al.game.ui.ALTabbedPane;
+import gg.al.game.ui.BaseTabbedPane;
+import gg.al.game.ui.SettingsTabbedPane;
 import gg.al.util.Assets;
+import javafx.scene.control.Tab;
 import lombok.extern.slf4j.Slf4j;
 
+import javax.xml.soap.Text;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 @Slf4j
@@ -43,7 +48,15 @@ public class SettingsScreen implements IAssetScreen, InputProcessor {
     private TextButton btFullScreen;
     private TextButton btTest;
 
-    private ALTabbedPane tabbedPane;
+    private TextButton btTabVideo;
+    private TextButton btTabAudio;
+    private TextButton btTabInput;
+
+    private Table tableVideo;
+
+    private BaseTabbedPane tabbedPane;
+
+    private HashMap<TextButton, Table> componentMap;
 
 
 
@@ -60,12 +73,35 @@ public class SettingsScreen implements IAssetScreen, InputProcessor {
         int y = 1080;
         spriteBatch = new SpriteBatch();
         mainbackground = AL.asset.get(Assets.PT_TESTMAINSCREEN);
+        componentMap = new HashMap<>();
+
+
+
+        tabbedPane = new SettingsTabbedPane(skin, x, y, componentMap);
+
+        // Init Tabs:
+        btTabVideo = new TextButton("Video", skin);
+        btTabVideo.setSize(300,50);
+        tabbedPane.addTab(btTabVideo);
+
+        btTabAudio = new TextButton("Audio", skin);
+        btTabAudio.setSize(300,50);
+        tabbedPane.addTab(btTabAudio);
+
+        btTabInput = new TextButton("Input", skin);
+        btTabInput.setSize(300,50);
+        tabbedPane.addTab(btTabInput);
+
+
+
+
+
+
 
         String vsyncText = AL.cvideo.vsyncEnabled() == true ? "Vsync on" : "Vsync off";
         btVsync = new TextButton(vsyncText, skin, "default");
         btVsync.setWidth(250);
         btVsync.setHeight(50);
-        btVsync.setPosition(x / 2 - 100, y / 2 - 25);
         btVsync.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -73,12 +109,18 @@ public class SettingsScreen implements IAssetScreen, InputProcessor {
             }
         });
 
-        tabbedPane = new ALTabbedPane(skin, x, y);
-        tabbedPane.addTab(btVsync);
-        TextButton btTest = new TextButton("Test1", skin);
-        TextButton btTest2 = new TextButton("Test2", skin);
-        tabbedPane.addTab(btTest);
-        tabbedPane.addTab(btTest2);
+
+        btFullScreen = new TextButton("", skin);
+        btFullScreen.setSize(250,50);
+
+        tableVideo = new Table();
+        tableVideo.add(btVsync).pad(10);
+        tableVideo.row();
+        tableVideo.add(btFullScreen).pad(10);
+
+        tableVideo.setName("video table");
+
+        componentMap.put(btTabVideo, tableVideo);
 
 
         stage.addActor(tabbedPane);
