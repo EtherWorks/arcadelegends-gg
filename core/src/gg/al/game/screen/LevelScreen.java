@@ -1,17 +1,20 @@
 package gg.al.game.screen;
 
-import com.artemis.*;
+import com.artemis.Archetype;
+import com.artemis.ArchetypeBuilder;
+import com.artemis.WorldConfiguration;
+import com.artemis.WorldConfigurationBuilder;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.assets.AssetDescriptor;
 import com.badlogic.gdx.graphics.*;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g3d.decals.CameraGroupStrategy;
 import com.badlogic.gdx.graphics.g3d.decals.Decal;
 import com.badlogic.gdx.graphics.g3d.decals.DecalBatch;
-import com.badlogic.gdx.graphics.g3d.utils.CameraInputController;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
@@ -22,14 +25,16 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.Ray;
 import com.badlogic.gdx.physics.box2d.*;
-import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import gg.al.game.AL;
 import gg.al.logic.EntityWorld;
+import gg.al.logic.entity.component.Movement;
+import gg.al.logic.entity.component.Physics;
 import gg.al.logic.entity.component.Position;
+import gg.al.logic.entity.component.PositionUpdate;
+import gg.al.logic.system.PositionUpdateSystem;
 import gg.al.logic.system.TestSystem;
-import javafx.geometry.Pos;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Arrays;
@@ -44,29 +49,29 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
 
     private final AssetDescriptor<TiledMap> mapDesc;
     private final float rot;
+    //Debug objects
+    Box2DDebugRenderer debugRenderer = new Box2DDebugRenderer();
+    Fixture fix;
+    Body body;
+    TiledMapTileLayer under;
+    int testEntity;
     private TiledMap map;
-
     private OrthogonalTiledMapRenderer mapRenderer;
-
     private FrameBuffer mapBuffer;
-
     private DecalBatch batch;
     private PerspectiveCamera camera;
     private Viewport viewport;
-
     private Decal mapDecal;
     private TextureRegion mapTemp;
-
     private Plane mapHitbox;
-
     private World physicWorld;
-
     private EntityWorld entityWorld;
+    private SpriteBatch fpsBatch;
+    private BitmapFont font;
 
     public LevelScreen(AssetDescriptor<TiledMap> mapDesc) {
         this(mapDesc, 15);
     }
-
     public LevelScreen(AssetDescriptor<TiledMap> mapDesc, float rot) {
         this.rot = rot;
         this.mapDesc = mapDesc;
@@ -84,10 +89,12 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
 
     @Override
     public void show() {
+        fpsBatch = new SpriteBatch();
+        font = new BitmapFont();
+
         camera = new PerspectiveCamera();
-        camera.position.set(new Vector3(0, 0, 50));
-        camera.rotateAround(Vector3.Zero, Vector3.X, rot);
-        camera.position.set(camera.position.x, camera.position.y, 50);
+        camera.position.set(new Vector3(-.5f, -.5f, 50));
+        camera.rotateAround(new Vector3(-.5f, -.5f, 0), Vector3.X, rot);
         camera.fieldOfView = 15;
         camera.update();
         viewport = new FitViewport(1920, 1080, camera);
@@ -105,7 +112,7 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
                 map.getProperties().get("height", Integer.class) * map.getProperties().get("tileheight", Integer.class),
                 false);
         mapDecal = Decal.newDecal(map.getProperties().get("width", Integer.class), map.getProperties().get("height", Integer.class), new TextureRegion());
-        mapDecal.setPosition(0, 0, 0);
+        mapDecal.setPosition(-.5f, -.5f, 0);
 
         mapHitbox = new Plane(Vector3.Z, Vector3.Zero);
 
@@ -114,7 +121,7 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
         //Debug hitbox
         BodyDef bodyDef = new BodyDef();
         bodyDef.type = BodyDef.BodyType.DynamicBody;
-        bodyDef.position.set(0.5f, 0.5f);
+        bodyDef.position.set(0, 0);
         body = physicWorld.createBody(bodyDef);
         CircleShape circle = new CircleShape();
         circle.setRadius(.5f);
@@ -132,23 +139,20 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
 
         WorldConfiguration worldConfiguration = new WorldConfigurationBuilder()
                 .with(
+                        new PositionUpdateSystem(),
                         new TestSystem()
                 ).build();
         entityWorld = new EntityWorld(worldConfiguration);
 
-        Archetype type = new ArchetypeBuilder().add(Position.class).build(entityWorld);
+        Archetype type = new ArchetypeBuilder().add(Position.class, Movement.class, Physics.class).build(entityWorld);
         testEntity = entityWorld.create(type);
+        entityWorld.getEntity(testEntity).getComponent(Movement.class).stepTime = 1;
+        entityWorld.getEntity(testEntity).getComponent(Movement.class).direction.set(1, 0);
+        entityWorld.getEntity(testEntity).getComponent(Physics.class).body = this.body;
         log.debug("Created: {}", testEntity);
 
         Gdx.input.setInputProcessor(this);
     }
-
-    //Debug objects
-    Box2DDebugRenderer debugRenderer = new Box2DDebugRenderer();
-    Fixture fix;
-    Body body;
-    TiledMapTileLayer under;
-    int testEntity;
 
     @Override
     public void render(float delta) {
@@ -176,6 +180,10 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
         physicWorld.step(1 / 45f, 6, 2);
         entityWorld.setDelta(Gdx.graphics.getDeltaTime());
         entityWorld.process();
+
+        fpsBatch.begin();
+        font.draw(fpsBatch, String.format("%d FPS", Gdx.graphics.getFramesPerSecond()), 0, 15);
+        fpsBatch.end();
     }
 
     @Override
@@ -197,6 +205,7 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
     public void hide() {
         mapBuffer.dispose();
         batch.dispose();
+        fpsBatch.dispose();
         AL.asset.unload(mapDesc.fileName);
     }
 
@@ -240,8 +249,12 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
         Ray ray = camera.getPickRay(screenX, screenY);
         Vector3 worldcoor = new Vector3();
         Intersector.intersectRayPlane(ray, mapHitbox, worldcoor);
+        //worldcoor.sub(.5f,.5f,0);
         log.debug("Clicked: " + worldcoor.toString());
-        TiledMapTileLayer.Cell c = under.getCell(Math.round(worldcoor.x) + map.getProperties().get("width", Integer.class)/2, Math.round(worldcoor.y)+ map.getProperties().get("height", Integer.class)/2);
+
+        entityWorld.getMapper(PositionUpdate.class).create(testEntity).futurePosition.set(Math.round(worldcoor.x), Math.round(worldcoor.y));
+
+        TiledMapTileLayer.Cell c = under.getCell(Math.round(worldcoor.x) + map.getProperties().get("width", Integer.class) / 2, Math.round(worldcoor.y) + map.getProperties().get("height", Integer.class) / 2);
         if (c != null) {
             log.debug(c.getTile().getProperties().get("untraversable") + "");
         }
@@ -265,6 +278,10 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
 
     @Override
     public boolean scrolled(int amount) {
+
+        //camera.position.set(camera.position.x, camera.position.y, camera.position.z + amount);
+        camera.translate(0, 0, amount);
+        camera.update();
         return false;
     }
 }
