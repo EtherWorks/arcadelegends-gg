@@ -8,6 +8,11 @@
  </tileset>
  <tileset firstgid="513" name="awdstileset" tilewidth="32" tileheight="32" tilecount="480" columns="32">
   <image source="../sprites/awdstileset.png" width="1024" height="480"/>
+  <tile id="2">
+   <properties>
+    <property name="untraversable" type="bool" value="true"/>
+   </properties>
+  </tile>
  </tileset>
  <layer name="under" width="100" height="100">
   <data encoding="csv">

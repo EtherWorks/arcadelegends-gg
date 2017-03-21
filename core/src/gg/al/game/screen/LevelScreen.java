@@ -13,6 +13,7 @@ import com.badlogic.gdx.graphics.g3d.decals.DecalBatch;
 import com.badlogic.gdx.graphics.g3d.utils.CameraInputController;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Plane;
@@ -76,7 +77,7 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
     @Override
     public void show() {
         camera = new PerspectiveCamera();
-        camera.position.set(new Vector3(0,0,50));
+        camera.position.set(new Vector3(0, 0, 50));
         camera.rotateAround(Vector3.Zero, Vector3.X, rot);
         camera.position.set(camera.position.x, camera.position.y, 50);
         camera.fieldOfView = 15;
@@ -100,7 +101,7 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
 
         mapHitbox = new Plane(Vector3.Z, Vector3.Zero);
 
-        physicWorld = new World(new Vector2(0,0), true);
+        physicWorld = new World(new Vector2(0, 0), true);
 
         //Debug hitbox
         BodyDef bodyDef = new BodyDef();
@@ -118,15 +119,17 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
 
         circle.dispose();
 
+        under = (TiledMapTileLayer) map.getLayers().get(0);
 
 
-        Gdx.input.setInputProcessor(new InputMultiplexer(new CameraInputController(camera),this));
+        Gdx.input.setInputProcessor(this);
     }
 
     //Debug objects
     Box2DDebugRenderer debugRenderer = new Box2DDebugRenderer();
     Fixture fix;
     Body body;
+    TiledMapTileLayer under;
 
     @Override
     public void render(float delta) {
@@ -151,7 +154,7 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
 
         //Debug stepping and rendering
         debugRenderer.render(physicWorld, camera.combined);
-        physicWorld.step(1/45f, 6, 2);
+        physicWorld.step(1 / 45f, 6, 2);
     }
 
     @Override
@@ -183,19 +186,18 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
 
     @Override
     public boolean keyDown(int keycode) {
-        switch (keycode)
-        {
+        switch (keycode) {
             case Input.Keys.A:
-                camera.translate(-1,0,0);
+                camera.translate(-1, 0, 0);
                 break;
             case Input.Keys.D:
-                camera.translate(1,0,0);
+                camera.translate(1, 0, 0);
                 break;
             case Input.Keys.S:
-                camera.translate(0,-1,0);
+                camera.translate(0, -1, 0);
                 break;
             case Input.Keys.W:
-                camera.translate(0,1,0);
+                camera.translate(0, 1, 0);
                 break;
         }
         camera.update();
@@ -218,6 +220,10 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
         Vector3 worldcoor = new Vector3();
         Intersector.intersectRayPlane(ray, mapHitbox, worldcoor);
         log.debug("Clicked: " + worldcoor.toString());
+        TiledMapTileLayer.Cell c = under.getCell(Math.round(worldcoor.x) + map.getProperties().get("width", Integer.class)/2, Math.round(worldcoor.y)+ map.getProperties().get("height", Integer.class)/2);
+        if (c != null) {
+            log.debug(c.getTile().getProperties().get("untraversable") + "");
+        }
         return false;
     }
 
