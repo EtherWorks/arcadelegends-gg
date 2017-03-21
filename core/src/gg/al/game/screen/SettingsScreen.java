@@ -111,7 +111,8 @@ public class SettingsScreen implements IAssetScreen, InputProcessor {
 
 
         btFullScreen = new TextButton("", skin);
-        btFullScreen.setSize(250,50);
+        btFullScreen.setWidth(250);
+        btFullScreen.setHeight(50);
 
         tableVideo = new Table();
         tableVideo.add(btVsync).pad(10);
@@ -121,6 +122,7 @@ public class SettingsScreen implements IAssetScreen, InputProcessor {
         tableVideo.setName("video table");
 
         componentMap.put(btTabVideo, tableVideo);
+        log.debug(tableVideo.getRows()+"");
 
 
         stage.addActor(tabbedPane);

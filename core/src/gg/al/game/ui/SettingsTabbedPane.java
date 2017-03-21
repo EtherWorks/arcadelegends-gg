@@ -20,6 +20,7 @@ public class SettingsTabbedPane extends BaseTabbedPane {
     @Override
     protected void currentTable(TextButton btnTab) {
         Table currentTable = componentMap.get(btnTab);
+        log.debug(currentTable.getRows()+"");
         contentTable.clear();
         contentTable.add(currentTable);
     }
