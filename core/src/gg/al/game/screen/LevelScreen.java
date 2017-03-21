@@ -2,6 +2,7 @@ package gg.al.game.screen;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.assets.AssetDescriptor;
 import com.badlogic.gdx.graphics.*;
@@ -18,6 +19,7 @@ import com.badlogic.gdx.math.Plane;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.Ray;
+import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import gg.al.game.AL;
@@ -49,6 +51,8 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
     private TextureRegion mapTemp;
 
     private Plane mapHitbox;
+
+    private World physicWorld;
 
     public LevelScreen(AssetDescriptor<TiledMap> mapDesc) {
         this(mapDesc, 15);
@@ -96,8 +100,33 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
 
         mapHitbox = new Plane(Vector3.Z, Vector3.Zero);
 
-        Gdx.input.setInputProcessor(this);
+        physicWorld = new World(new Vector2(0,0), true);
+
+        //Debug hitbox
+        BodyDef bodyDef = new BodyDef();
+        bodyDef.type = BodyDef.BodyType.DynamicBody;
+        bodyDef.position.set(0.5f, 0.5f);
+        body = physicWorld.createBody(bodyDef);
+        CircleShape circle = new CircleShape();
+        circle.setRadius(.5f);
+        FixtureDef fixtureDef = new FixtureDef();
+        fixtureDef.shape = circle;
+        fixtureDef.density = 0.5f;
+        fixtureDef.friction = 0.4f;
+        fixtureDef.restitution = 0.6f;
+        fix = body.createFixture(fixtureDef);
+
+        circle.dispose();
+
+
+
+        Gdx.input.setInputProcessor(new InputMultiplexer(new CameraInputController(camera),this));
     }
+
+    //Debug objects
+    Box2DDebugRenderer debugRenderer = new Box2DDebugRenderer();
+    Fixture fix;
+    Body body;
 
     @Override
     public void render(float delta) {
@@ -119,6 +148,10 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
         mapDecal.setTextureRegion(mapTemp);
         batch.add(mapDecal);
         batch.flush();
+
+        //Debug stepping and rendering
+        debugRenderer.render(physicWorld, camera.combined);
+        physicWorld.step(1/45f, 6, 2);
     }
 
     @Override
