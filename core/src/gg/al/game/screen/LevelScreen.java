@@ -29,12 +29,13 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import gg.al.game.AL;
 import gg.al.logic.EntityWorld;
-import gg.al.logic.entity.component.Movement;
 import gg.al.logic.entity.component.Physics;
-import gg.al.logic.entity.component.Position;
 import gg.al.logic.entity.component.PositionUpdate;
+import gg.al.logic.entity.component.Render;
+import gg.al.logic.system.MovementSystem;
 import gg.al.logic.system.PositionUpdateSystem;
-import gg.al.logic.system.TestSystem;
+import gg.al.logic.system.RenderSystem;
+import gg.al.util.Assets;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Arrays;
@@ -79,7 +80,7 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
 
     @Override
     public List<AssetDescriptor> assets() {
-        return Arrays.asList(mapDesc);
+        return Arrays.asList(mapDesc, Assets.PT_EZREAL);
     }
 
     @Override
@@ -132,6 +133,11 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
         fixtureDef.restitution = 0.6f;
         fix = body.createFixture(fixtureDef);
 
+//        Body test = physicWorld.createBody(bodyDef);
+//        test.createFixture(fixtureDef);
+//        test.setTransform(5,0,0);
+//        test.applyLinearImpulse(new Vector2(-.5f, 0), test.getPosition(), true);
+
         circle.dispose();
 
         under = (TiledMapTileLayer) map.getLayers().get(0);
@@ -140,15 +146,17 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
         WorldConfiguration worldConfiguration = new WorldConfigurationBuilder()
                 .with(
                         new PositionUpdateSystem(),
-                        new TestSystem()
+                        new MovementSystem(),
+                        new RenderSystem(batch, rot)
                 ).build();
         entityWorld = new EntityWorld(worldConfiguration);
 
-        Archetype type = new ArchetypeBuilder().add(Position.class, Movement.class, Physics.class).build(entityWorld);
+        Archetype type = new ArchetypeBuilder().add(Physics.class, Render.class).build(entityWorld);
         testEntity = entityWorld.create(type);
-        entityWorld.getEntity(testEntity).getComponent(Movement.class).stepTime = 1;
-        entityWorld.getEntity(testEntity).getComponent(Movement.class).direction.set(1, 0);
-        entityWorld.getEntity(testEntity).getComponent(Physics.class).body = this.body;
+        //entityWorld.getMapper(Movement.class).get(testEntity).stepTime = 1;
+        //entityWorld.getMapper(Movement.class).get(testEntity).direction.set(1, 0);
+        entityWorld.getMapper(Physics.class).get(testEntity).body = this.body;
+        entityWorld.getMapper(Render.class).get(testEntity).texture = Assets.PT_EZREAL;
         log.debug("Created: {}", testEntity);
 
         Gdx.input.setInputProcessor(this);
@@ -173,13 +181,16 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
 
         mapDecal.setTextureRegion(mapTemp);
         batch.add(mapDecal);
-        batch.flush();
 
         //Debug stepping and rendering
-        debugRenderer.render(physicWorld, camera.combined);
+
         physicWorld.step(1 / 45f, 6, 2);
         entityWorld.setDelta(Gdx.graphics.getDeltaTime());
         entityWorld.process();
+
+        batch.flush();
+
+        debugRenderer.render(physicWorld, camera.combined);
 
         fpsBatch.begin();
         font.draw(fpsBatch, String.format("%d FPS", Gdx.graphics.getFramesPerSecond()), 0, 15);
@@ -207,6 +218,7 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
         batch.dispose();
         fpsBatch.dispose();
         AL.asset.unload(mapDesc.fileName);
+        AL.asset.unload(Assets.PT_EZREAL.fileName);
     }
 
     @Override
