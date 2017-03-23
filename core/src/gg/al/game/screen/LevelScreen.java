@@ -19,6 +19,7 @@ import com.badlogic.gdx.math.collision.Ray;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import gg.al.game.AL;
+import gg.al.logic.LogicWorld;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Arrays;
@@ -43,6 +44,8 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
     private Decal mapDecal;
     private TextureRegion mapTemp;
     private Plane mapHitbox;
+
+    private LogicWorld logicWorld;
 
     private SpriteBatch fpsBatch;
     private BitmapFont font;
@@ -95,6 +98,8 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
 
         mapHitbox = new Plane(Vector3.Z, Vector3.Zero);
 
+        logicWorld = new LogicWorld(map, rot);
+
         Gdx.input.setInputProcessor(this);
     }
 
@@ -118,6 +123,9 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
         mapDecal.setTextureRegion(mapTemp);
         batch.add(mapDecal);
         batch.flush();
+
+        logicWorld.step(Gdx.graphics.getDeltaTime());
+        logicWorld.render();
 
         fpsBatch.begin();
         font.draw(fpsBatch, String.format("%d FPS", Gdx.graphics.getFramesPerSecond()), 0, 15);
@@ -145,6 +153,7 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
         mapBuffer.dispose();
         fpsBatch.dispose();
         AL.asset.unload(mapDesc.fileName);
+        logicWorld.dispose();
     }
 
     @Override
