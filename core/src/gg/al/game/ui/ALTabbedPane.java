@@ -12,7 +12,7 @@ import java.util.HashMap;
  * Class responsible for providing a TabbedPane for our requirements
  */
 @Slf4j
-public abstract class BaseTabbedPane extends Container {
+public class ALTabbedPane extends Container {
 
     private Table baseTable;
     private Table buttonTable;
@@ -24,7 +24,7 @@ public abstract class BaseTabbedPane extends Container {
     private int y;
 
 
-    public BaseTabbedPane(Skin skin, int x, int y, HashMap<TextButton, Table> componentMap) {
+    public ALTabbedPane(Skin skin, int x, int y, HashMap<TextButton, Table> componentMap) {
         this.x = x;
         this.y = y;
         this.componentMap = componentMap;
@@ -52,10 +52,20 @@ public abstract class BaseTabbedPane extends Container {
     }
 
     public void centerBaseTable() {
+
+
         this.setPosition(x / 2, y / 1.3f);
+
+
+
     }
 
-    protected abstract void currentTable(TextButton btnTab);
+    public  void currentTable(TextButton btnTab)
+    {
+        Table currentTable = componentMap.get(btnTab);
+        contentTable.clear();
+        contentTable.add(currentTable);
+    }
 
 
 

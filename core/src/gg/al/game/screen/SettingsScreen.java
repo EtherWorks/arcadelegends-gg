@@ -5,12 +5,13 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.assets.AssetDescriptor;
-import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.*;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
@@ -19,13 +20,11 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import gg.al.config.IVideoConfig;
 import gg.al.game.AL;
-import gg.al.game.ui.BaseTabbedPane;
-import gg.al.game.ui.SettingsTabbedPane;
+import gg.al.game.ui.ALTabbedPane;
 import gg.al.util.Assets;
-import javafx.scene.control.Tab;
 import lombok.extern.slf4j.Slf4j;
 
-import javax.xml.soap.Text;
+import java.awt.*;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -54,7 +53,7 @@ public class SettingsScreen implements IAssetScreen, InputProcessor {
 
     private Table tableVideo;
 
-    private BaseTabbedPane tabbedPane;
+    private ALTabbedPane tabbedPane;
 
     private HashMap<TextButton, Table> componentMap;
 
@@ -77,7 +76,7 @@ public class SettingsScreen implements IAssetScreen, InputProcessor {
 
 
 
-        tabbedPane = new SettingsTabbedPane(skin, x, y, componentMap);
+        tabbedPane = new ALTabbedPane(skin, x, y, componentMap);
 
         // Init Tabs:
         btTabVideo = new TextButton("Video", skin);
@@ -93,11 +92,6 @@ public class SettingsScreen implements IAssetScreen, InputProcessor {
         tabbedPane.addTab(btTabInput);
 
 
-
-
-
-
-
         String vsyncText = AL.cvideo.vsyncEnabled() == true ? "Vsync on" : "Vsync off";
         btVsync = new TextButton(vsyncText, skin, "default");
         btVsync.setWidth(250);
@@ -110,19 +104,23 @@ public class SettingsScreen implements IAssetScreen, InputProcessor {
         });
 
 
-        btFullScreen = new TextButton("", skin);
+        btFullScreen = new TextButton(AL.cvideo.fullscreen() == true ? "Fullscreen on":"Fullscreen off", skin);
         btFullScreen.setWidth(250);
         btFullScreen.setHeight(50);
+        btFullScreen.addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                fullscreenOnOff();
+            }
+        });
 
         tableVideo = new Table();
         tableVideo.add(btVsync).pad(10);
         tableVideo.row();
         tableVideo.add(btFullScreen).pad(10);
-
-        tableVideo.setName("video table");
+        tableVideo.row();
 
         componentMap.put(btTabVideo, tableVideo);
-        log.debug(tableVideo.getRows()+"");
 
 
         stage.addActor(tabbedPane);
