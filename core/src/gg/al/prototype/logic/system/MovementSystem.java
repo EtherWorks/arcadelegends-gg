@@ -1,9 +1,9 @@
-package gg.al.logic.system;
+package gg.al.prototype.logic.system;
 
 import com.artemis.Aspect;
 import com.artemis.systems.IteratingSystem;
-import gg.al.logic.entity.component.Movement;
-import gg.al.logic.entity.component.Physics;
+import gg.al.prototype.logic.entity.component.Movement;
+import gg.al.prototype.logic.entity.component.Physics;
 import lombok.extern.slf4j.Slf4j;
 
 /**

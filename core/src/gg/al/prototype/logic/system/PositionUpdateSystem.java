@@ -1,10 +1,10 @@
-package gg.al.logic.system;
+package gg.al.prototype.logic.system;
 
 import com.artemis.Aspect;
 import com.artemis.ComponentMapper;
 import com.artemis.systems.IteratingSystem;
-import gg.al.logic.entity.component.Physics;
-import gg.al.logic.entity.component.PositionUpdate;
+import gg.al.prototype.logic.entity.component.Physics;
+import gg.al.prototype.logic.entity.component.PositionUpdate;
 
 /**
  * Created by Thomas Neumann on 21.03.2017.

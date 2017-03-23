@@ -1,4 +1,4 @@
-package gg.al.logic.entity.component;
+package gg.al.prototype.logic.entity.component;
 
 import com.artemis.PooledComponent;
 import com.badlogic.gdx.math.Vector2;
