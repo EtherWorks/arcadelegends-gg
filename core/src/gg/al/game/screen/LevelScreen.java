@@ -19,7 +19,7 @@ import com.badlogic.gdx.math.collision.Ray;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import gg.al.game.AL;
-import gg.al.logic.LogicWorld;
+import gg.al.logic.ArcadeWorld;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Arrays;
@@ -36,16 +36,10 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
     private final float rot;
 
     private TiledMap map;
-    private OrthogonalTiledMapRenderer mapRenderer;
-    private FrameBuffer mapBuffer;
-    private DecalBatch batch;
     private PerspectiveCamera camera;
     private Viewport viewport;
-    private Decal mapDecal;
-    private TextureRegion mapTemp;
-    private Plane mapHitbox;
 
-    private LogicWorld logicWorld;
+    private ArcadeWorld arcadeWorld;
 
     private SpriteBatch fpsBatch;
     private BitmapFont font;
@@ -81,24 +75,10 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
         camera.update();
         viewport = new FitViewport(1920, 1080, camera);
         viewport.update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        batch = new DecalBatch(new CameraGroupStrategy(camera));
+
         map = AL.asset.get(mapDesc);
-        OrthographicCamera mapCam = new OrthographicCamera();
-        Viewport viewportMap = new FitViewport(map.getProperties().get("width", Integer.class) * map.getProperties().get("tilewidth", Integer.class),
-                map.getProperties().get("height", Integer.class) * map.getProperties().get("tileheight", Integer.class), mapCam);
-        viewportMap.update(viewportMap.getScreenWidth(), viewportMap.getScreenHeight(), true);
-        mapRenderer = new OrthogonalTiledMapRenderer(map);
-        mapRenderer.setView(mapCam);
 
-        mapBuffer = new FrameBuffer(Pixmap.Format.RGBA8888, map.getProperties().get("width", Integer.class) * map.getProperties().get("tilewidth", Integer.class),
-                map.getProperties().get("height", Integer.class) * map.getProperties().get("tileheight", Integer.class),
-                false);
-        mapDecal = Decal.newDecal(map.getProperties().get("width", Integer.class), map.getProperties().get("height", Integer.class), new TextureRegion());
-        mapDecal.setPosition(-.5f, -.5f, 0);
-
-        mapHitbox = new Plane(Vector3.Z, Vector3.Zero);
-
-        logicWorld = new LogicWorld(map, rot);
+        arcadeWorld = new ArcadeWorld(map, rot, camera);
 
         Gdx.input.setInputProcessor(this);
     }
@@ -108,24 +88,9 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
         AL.graphics.getGL20().glClearColor(0, 0, 0, 1);
         AL.graphics.getGL20().glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 
-        mapBuffer.begin();
-        AL.graphics.getGL20().glClearColor(0, 0, 0, 1);
-        AL.graphics.getGL20().glClear(GL20.GL_COLOR_BUFFER_BIT);
-        mapRenderer.render();
-        mapBuffer.end();
-        mapBuffer.getColorBufferTexture().setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
-
-        if (mapTemp == null) {
-            mapTemp = new TextureRegion(mapBuffer.getColorBufferTexture());
-            mapTemp.flip(false, true);
-        } else mapTemp.setTexture(mapBuffer.getColorBufferTexture());
-
-        mapDecal.setTextureRegion(mapTemp);
-        batch.add(mapDecal);
-        batch.flush();
-
-        logicWorld.step(Gdx.graphics.getDeltaTime());
-        logicWorld.render();
+        arcadeWorld.setDelta(AL.graphics.getDeltaTime());
+        arcadeWorld.step();
+        arcadeWorld.render();
 
         fpsBatch.begin();
         font.draw(fpsBatch, String.format("%d FPS", Gdx.graphics.getFramesPerSecond()), 0, 15);
@@ -149,11 +114,9 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
 
     @Override
     public void hide() {
-        batch.dispose();
-        mapBuffer.dispose();
         fpsBatch.dispose();
         AL.asset.unload(mapDesc.fileName);
-        logicWorld.dispose();
+        arcadeWorld.dispose();
     }
 
     @Override
@@ -195,7 +158,7 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
         Ray ray = camera.getPickRay(screenX, screenY);
         Vector3 worldcoor = new Vector3();
-        Intersector.intersectRayPlane(ray, mapHitbox, worldcoor);
+        Intersector.intersectRayPlane(ray, arcadeWorld.getMapHitbox(), worldcoor);
         //worldcoor.sub(.5f,.5f,0);
         log.debug("Clicked: " + worldcoor.toString());
         return false;
