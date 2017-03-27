@@ -8,6 +8,8 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
+import javax.xml.soap.Text;
+
 /**
  * Created by Thomas Neumann on 18.03.2017.<br />
  * Utility interface holding {@link AssetDescriptor} to all assets.

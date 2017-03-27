@@ -11,10 +11,8 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
@@ -44,8 +42,7 @@ public class SettingsScreen implements IAssetScreen, InputProcessor {
     private Texture mainbackground;
 
     private TextButton btVsync;
-    private TextButton btFullScreen;
-    private TextButton btTest;
+    private SelectBox sbResolution;
 
     private TextButton btTabVideo;
     private TextButton btTabAudio;
@@ -103,21 +100,15 @@ public class SettingsScreen implements IAssetScreen, InputProcessor {
             }
         });
 
+        //sbResolution = new SelectBox(skin);
+        //sbResolution.setItems("Test1", "Test2", "Test3");
+        // not working at the moment
 
-        btFullScreen = new TextButton(AL.cvideo.fullscreen() == true ? "Fullscreen on":"Fullscreen off", skin);
-        btFullScreen.setWidth(250);
-        btFullScreen.setHeight(50);
-        btFullScreen.addListener(new ClickListener(){
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                fullscreenOnOff();
-            }
-        });
 
         tableVideo = new Table();
         tableVideo.add(btVsync).pad(10);
         tableVideo.row();
-        tableVideo.add(btFullScreen).pad(10);
+        //tableVideo.add(sbResolution).pad(10);
         tableVideo.row();
 
         componentMap.put(btTabVideo, tableVideo);
@@ -178,11 +169,7 @@ public class SettingsScreen implements IAssetScreen, InputProcessor {
         btVsync.setText(AL.cvideo.vsyncEnabled() == true ? "Vsync on" : "Vsync off");
     }
 
-    private void fullscreenOnOff() {
-        AL.cedit.setValue(IVideoConfig.VideoKeys.FULLSCREEN, !AL.cvideo.fullscreen());
-        AL.cedit.flush();
-        btFullScreen.setText(AL.cvideo.fullscreen() == true ? "Fullscreen on" : "Fullscreen off");
-    }
+
 
     @Override
     public List<AssetDescriptor> assets() {
