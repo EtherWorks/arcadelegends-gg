@@ -52,7 +52,7 @@ public class MainMenuScreen implements IAssetScreen {
         stage = new Stage(viewport);
         stage.setViewport(viewport);
         skin = AL.asset.get(Assets.PT_TEXTBUTTON_JSON);
-        skin.getFont("bocklin").getData().setScale(2,2);
+        skin.getFont("bocklin").getData().setScale(0.8f,0.8f);
         int x = 1920;
         int y = 1080;
         spriteBatch = new SpriteBatch();
@@ -63,7 +63,7 @@ public class MainMenuScreen implements IAssetScreen {
         btPlay = new TextButton("Play", skin, "default");
         btPlay.setWidth(400);
         btPlay.setHeight(100);
-        btPlay.getLabel().setFontScale(2);
+
 
         btSettings = new TextButton("Settings", skin, "default");
         btSettings.setWidth(400);
