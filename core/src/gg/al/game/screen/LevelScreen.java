@@ -1,5 +1,6 @@
 package gg.al.game.screen;
 
+import com.artemis.Aspect;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
@@ -69,6 +70,7 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
         font = new BitmapFont();
 
         camera = new PerspectiveCamera();
+        camera.far = 1000;
         camera.position.set(new Vector3(-.5f, -.5f, 50));
         camera.rotateAround(new Vector3(-.5f, -.5f, 0), Vector3.X, rot);
         camera.fieldOfView = 15;
@@ -93,7 +95,7 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
         arcadeWorld.render();
 
         fpsBatch.begin();
-        font.draw(fpsBatch, String.format("%d FPS", Gdx.graphics.getFramesPerSecond()), 0, 15);
+        font.draw(fpsBatch, String.format("%d FPS %d", Gdx.graphics.getFramesPerSecond(), arcadeWorld.getEntityWorld().getAspectSubscriptionManager().get(Aspect.all()).getEntities().size()), 0, 15);
         fpsBatch.end();
     }
 
@@ -159,7 +161,6 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
         Ray ray = camera.getPickRay(screenX, screenY);
         Vector3 worldcoor = new Vector3();
         Intersector.intersectRayPlane(ray, arcadeWorld.getMapHitbox(), worldcoor);
-        //worldcoor.sub(.5f,.5f,0);
         log.debug("Clicked: " + worldcoor.toString());
         return false;
     }

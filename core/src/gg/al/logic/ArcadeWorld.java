@@ -1,7 +1,6 @@
 package gg.al.logic;
 
-import com.artemis.WorldConfiguration;
-import com.artemis.WorldConfigurationBuilder;
+import com.artemis.*;
 import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g3d.decals.CameraGroupStrategy;
@@ -13,20 +12,31 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Plane;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import gg.al.game.AL;
+import gg.al.logic.component.Physic;
+import gg.al.logic.component.Position;
+import gg.al.logic.system.PhysicsSystem;
+import gg.al.logic.system.TestSystem;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
+
+import java.util.Random;
 
 /**
  * Created by Thomas Neumann on 23.03.2017.<br />
  */
-public class ArcadeWorld implements Disposable{
+@Slf4j
+public class ArcadeWorld implements Disposable {
     @Getter
     private World physicsWorld;
+    private Box2DDebugRenderer debugPhysicrender;
+
     @Getter
     private EntityWorld entityWorld;
 
@@ -37,7 +47,8 @@ public class ArcadeWorld implements Disposable{
     @Getter
     private float worldViewRotation;
 
-    @Getter @Setter
+    @Getter
+    @Setter
     private float delta;
 
 
@@ -51,8 +62,13 @@ public class ArcadeWorld implements Disposable{
     @Getter
     private Plane mapHitbox;
 
-    @Getter @Setter
+    @Getter
+    @Setter
     private Camera cam;
+
+    @Getter
+    private float step = 1.0f / 60;
+
 
     public ArcadeWorld(TiledMap map, float worldViewRotation, Camera cam) {
         this.map = map;
@@ -70,9 +86,11 @@ public class ArcadeWorld implements Disposable{
         mapRenderer = new OrthogonalTiledMapRenderer(map);
         mapRenderer.setView(mapCam);
 
-        mapBuffer = new FrameBuffer(Pixmap.Format.RGBA8888, mapWidth * mapTileWidth, mapHeight * mapTileHeight,false);
-        mapTemp = new TextureRegion(new Texture(mapWidth * mapTileWidth, mapHeight * mapTileHeight, Pixmap.Format.RGBA4444));
-        mapTemp.flip(false,true);
+        mapBuffer = new FrameBuffer(Pixmap.Format.RGBA8888, mapWidth * mapTileWidth, mapHeight * mapTileHeight, false);
+        mapBuffer.getColorBufferTexture().setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
+
+        mapTemp = new TextureRegion(mapBuffer.getColorBufferTexture());
+        mapTemp.flip(false, true);
 
         mapDecal = Decal.newDecal(mapWidth, mapHeight, mapTemp);
         mapDecal.setPosition(-.5f, -.5f, 0);
@@ -82,36 +100,47 @@ public class ArcadeWorld implements Disposable{
         mapHitbox = new Plane(Vector3.Z, Vector3.Zero);
 
         physicsWorld = new World(Vector2.Zero, true);
+        debugPhysicrender = new Box2DDebugRenderer();
 
-        WorldConfiguration worldConfiguration = new WorldConfigurationBuilder().build();
+        WorldConfiguration worldConfiguration = new WorldConfigurationBuilder()
+                .with(
+                        new PhysicsSystem(),
+                        new TestSystem(decalBatch)
+                )
+                .build();
         entityWorld = new EntityWorld(worldConfiguration);
     }
 
-    public void step()
-    {
-        physicsWorld.step(1 / 45f, 6, 2);
+    public void step() {
+        float accu = delta;
+        do {
+            physicsWorld.step(step, 6, 2);
+            accu -= step;
+        } while (accu >= step);
         entityWorld.setDelta(delta);
         entityWorld.process();
     }
 
-    public void render()
-    {
+    public void render() {
         mapBuffer.begin();
         AL.graphics.getGL20().glClearColor(0, 0, 0, 1);
         AL.graphics.getGL20().glClear(GL20.GL_COLOR_BUFFER_BIT);
         mapRenderer.render();
         mapBuffer.end();
-        mapBuffer.getColorBufferTexture().setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
 
         mapTemp.setTexture(mapBuffer.getColorBufferTexture());
         mapDecal.setTextureRegion(mapTemp);
         decalBatch.add(mapDecal);
         decalBatch.flush();
-    }
 
+        debugPhysicrender.render(physicsWorld, cam.combined);
+    }
 
     @Override
     public void dispose() {
-
+        decalBatch.dispose();
+        mapBuffer.dispose();
+        physicsWorld.dispose();
+        entityWorld.dispose();
     }
 }
