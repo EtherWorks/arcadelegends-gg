@@ -19,7 +19,7 @@ import java.util.Map;
  */
 public class TestSystem extends IteratingSystem {
 
-    private ComponentMapper<Position> positionComponentMapper;
+    private ComponentMapper<Position> mPosition;
 
     private DecalBatch decalBatch;
     private Pixmap map;
@@ -37,7 +37,7 @@ public class TestSystem extends IteratingSystem {
 
     @Override
     protected void process(int entityId) {
-        Position pos = positionComponentMapper.get(entityId);
+        Position pos = mPosition.get(entityId);
         Decal d = decalMap.get(entityId);
         d.setPosition(pos.position.x, pos.position.y, 0.01f);
         decalBatch.add(d);

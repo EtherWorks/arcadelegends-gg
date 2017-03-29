@@ -11,8 +11,8 @@ import gg.al.logic.component.Position;
  */
 public class PhysicsSystem extends IteratingSystem{
 
-    private ComponentMapper<Physic> physicComponentMapper;
-    private ComponentMapper<Position> positionComponentMapper;
+    private ComponentMapper<Physic> mPhysic;
+    private ComponentMapper<Position> mPosition;
 
     public PhysicsSystem()
     {
@@ -21,8 +21,8 @@ public class PhysicsSystem extends IteratingSystem{
 
     @Override
     protected void process(int entityId) {
-        Physic ph = physicComponentMapper.get(entityId);
-        Position pos = positionComponentMapper.get(entityId);
+        Physic ph = mPhysic.get(entityId);
+        Position pos = mPosition.get(entityId);
         if(pos != null)
             pos.position.set(ph.body.getPosition());
     }
