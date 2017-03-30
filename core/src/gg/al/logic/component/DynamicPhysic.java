@@ -14,4 +14,8 @@ public class DynamicPhysic extends PooledComponent {
     protected void reset() {
         body = null;
     }
+
+    public void set(Body body) {
+        this.body = body;
+    }
 }

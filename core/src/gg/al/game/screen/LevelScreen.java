@@ -21,6 +21,9 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import gg.al.game.AL;
 import gg.al.logic.ArcadeWorld;
+import gg.al.logic.EntityUtil;
+import gg.al.logic.EntityWorld;
+import gg.al.util.Assets;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Arrays;
@@ -56,7 +59,7 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
 
     @Override
     public List<AssetDescriptor> assets() {
-        return Arrays.asList(mapDesc);
+        return Arrays.asList(mapDesc, Assets.PT_EZREAL);
     }
 
     @Override
@@ -118,6 +121,7 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
     public void hide() {
         fpsBatch.dispose();
         AL.asset.unload(mapDesc.fileName);
+        AL.asset.unload(Assets.PT_EZREAL.fileName);
         arcadeWorld.dispose();
     }
 
@@ -125,6 +129,8 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
     public void dispose() {
 
     }
+
+    int playerEnt;
 
     @Override
     public boolean keyDown(int keycode) {
@@ -140,6 +146,22 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
                 break;
             case Input.Keys.W:
                 camera.translate(0, 1, 0);
+                break;
+            case Input.Keys.UP:
+                gg.al.logic.component.Input input = arcadeWorld.getEntityWorld().getMapper(gg.al.logic.component.Input.class).get(playerEnt);
+                input.set(0, 1);
+                break;
+            case Input.Keys.DOWN:
+                input = arcadeWorld.getEntityWorld().getMapper(gg.al.logic.component.Input.class).get(playerEnt);
+                input.set(0, -1);
+                break;
+            case Input.Keys.LEFT:
+                input = arcadeWorld.getEntityWorld().getMapper(gg.al.logic.component.Input.class).get(playerEnt);
+                input.set(-1, 0);
+                break;
+            case Input.Keys.RIGHT:
+                input = arcadeWorld.getEntityWorld().getMapper(gg.al.logic.component.Input.class).get(playerEnt);
+                input.set(1, 0);
                 break;
         }
         camera.update();
@@ -162,6 +184,9 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
         Vector3 worldcoor = new Vector3();
         Intersector.intersectRayPlane(ray, arcadeWorld.getMapHitbox(), worldcoor);
         log.debug("Clicked: " + worldcoor.toString());
+        Vector2 mapCoord = new Vector2(Math.round(worldcoor.x), Math.round(worldcoor.y));
+        log.debug(arcadeWorld.getLogicMap().getTile(mapCoord).isTraversable() + "");
+        playerEnt = EntityUtil.spawnTest(arcadeWorld, (int) mapCoord.x, (int) mapCoord.y, 100, 10, Assets.PT_EZREAL);
         return false;
     }
 

@@ -19,6 +19,10 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import gg.al.game.AL;
 import gg.al.logic.map.LogicMap;
+import gg.al.logic.map.Tile;
+import gg.al.logic.system.InputSystem;
+import gg.al.logic.system.PositionTileSystem;
+import gg.al.logic.system.RenderSystem;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -77,8 +81,6 @@ public class ArcadeWorld implements Disposable {
         this.mapTileWidth = map.getProperties().get("tilewidth", Integer.class);
         this.mapTileHeight = map.getProperties().get("tileheight", Integer.class);
         logicMap = new LogicMap(map);
-        log.debug(logicMap.getTile(1,1).toString());
-
         OrthographicCamera mapCam = new OrthographicCamera();
         Viewport viewportMap = new FitViewport(mapWidth * mapTileWidth, mapHeight * mapTileHeight, mapCam);
         viewportMap.update(viewportMap.getScreenWidth(), viewportMap.getScreenHeight(), true);
@@ -92,18 +94,22 @@ public class ArcadeWorld implements Disposable {
         mapTemp.flip(false, true);
 
         mapDecal = Decal.newDecal(mapWidth, mapHeight, mapTemp);
-        mapDecal.setPosition(-.5f, -.5f, 0);
+        mapDecal.setPosition(-.5f + mapWidth / 2, -.5f + mapHeight / 2, 0);
 
         decalBatch = new DecalBatch(new CameraGroupStrategy(cam));
 
         mapHitbox = new Plane(Vector3.Z, Vector3.Zero);
 
         physicsWorld = new World(Vector2.Zero, true);
+
         debugPhysicrender = new Box2DDebugRenderer();
 
         WorldConfiguration worldConfiguration = new WorldConfigurationBuilder()
-//                .with(
-//                )
+                .with(
+                        new PositionTileSystem(logicMap),
+                        new InputSystem(),
+                        new RenderSystem(decalBatch, AL.asset)
+                )
                 .build();
         entityWorld = new EntityWorld(worldConfiguration);
     }
@@ -139,5 +145,13 @@ public class ArcadeWorld implements Disposable {
         mapBuffer.dispose();
         physicsWorld.dispose();
         entityWorld.dispose();
+    }
+
+    public Tile getTile(int x, int y) {
+        return logicMap.getTile(x, y);
+    }
+
+    public Tile getTile(Vector2 pos) {
+        return logicMap.getTile(pos);
     }
 }
