@@ -1,6 +1,7 @@
 package gg.al.logic;
 
-import com.artemis.*;
+import com.artemis.WorldConfiguration;
+import com.artemis.WorldConfigurationBuilder;
 import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g3d.decals.CameraGroupStrategy;
@@ -12,7 +13,7 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Plane;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.physics.box2d.*;
+import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.viewport.FitViewport;
@@ -107,7 +108,7 @@ public class ArcadeWorld implements Disposable {
         WorldConfiguration worldConfiguration = new WorldConfigurationBuilder()
                 .with(
                         new PositionTileSystem(logicMap),
-                        new InputSystem(),
+                        new InputSystem(logicMap),
                         new RenderSystem(decalBatch, AL.asset)
                 )
                 .build();

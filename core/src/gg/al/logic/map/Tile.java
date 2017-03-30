@@ -3,6 +3,7 @@ package gg.al.logic.map;
 import com.badlogic.gdx.maps.MapProperties;
 import com.badlogic.gdx.maps.tiled.TiledMapTile;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
+import com.badlogic.gdx.utils.IntArray;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -20,10 +21,14 @@ public class Tile {
     @Setter
     private boolean traversable;
 
+    @Getter
+    private IntArray entities;
+
     public Tile(int x, int y) {
         this.x = x;
         this.y = y;
         traversable = true;
+        entities = new IntArray();
     }
 
     public static Tile fromCell(TiledMapTileLayer.Cell cell, int x, int y) {
@@ -35,10 +40,18 @@ public class Tile {
 
         Tile tile = new Tile(x, y);
 
-        if(mapProperties.get("untraversable") != null)
+        if (mapProperties.get("untraversable") != null)
             tile.setTraversable(mapProperties.get("untraversable", Boolean.class));
 
         return tile;
+    }
+
+    public void addEntity(int entityId) {
+        entities.add(entityId);
+    }
+
+    public void removeEntity(int entityId) {
+        entities.removeValue(entityId);
     }
 
     @Override

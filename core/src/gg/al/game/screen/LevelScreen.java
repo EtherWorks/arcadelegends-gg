@@ -5,24 +5,20 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.assets.AssetDescriptor;
-import com.badlogic.gdx.graphics.*;
+import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.graphics.g3d.decals.CameraGroupStrategy;
-import com.badlogic.gdx.graphics.g3d.decals.Decal;
-import com.badlogic.gdx.graphics.g3d.decals.DecalBatch;
-import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.maps.tiled.TiledMap;
-import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
-import com.badlogic.gdx.math.*;
+import com.badlogic.gdx.math.Intersector;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.Ray;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import gg.al.game.AL;
 import gg.al.logic.ArcadeWorld;
 import gg.al.logic.EntityUtil;
-import gg.al.logic.EntityWorld;
 import gg.al.util.Assets;
 import lombok.extern.slf4j.Slf4j;
 
@@ -38,13 +34,11 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
 
     private final AssetDescriptor<TiledMap> mapDesc;
     private final float rot;
-
+    int playerEnt;
     private TiledMap map;
     private PerspectiveCamera camera;
     private Viewport viewport;
-
     private ArcadeWorld arcadeWorld;
-
     private SpriteBatch fpsBatch;
     private BitmapFont font;
 
@@ -130,8 +124,6 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
 
     }
 
-    int playerEnt;
-
     @Override
     public boolean keyDown(int keycode) {
         switch (keycode) {
@@ -185,8 +177,12 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
         Intersector.intersectRayPlane(ray, arcadeWorld.getMapHitbox(), worldcoor);
         log.debug("Clicked: " + worldcoor.toString());
         Vector2 mapCoord = new Vector2(Math.round(worldcoor.x), Math.round(worldcoor.y));
-        log.debug(arcadeWorld.getLogicMap().getTile(mapCoord).isTraversable() + "");
-        playerEnt = EntityUtil.spawnTest(arcadeWorld, (int) mapCoord.x, (int) mapCoord.y, 100, 10, Assets.PT_EZREAL);
+        try {
+            log.debug(arcadeWorld.getLogicMap().getTile(mapCoord).isTraversable() + "");
+            playerEnt = EntityUtil.spawnTest(arcadeWorld, (int) mapCoord.x, (int) mapCoord.y, 100, 10, Assets.PT_EZREAL);
+        } catch (IndexOutOfBoundsException ex) {
+            log.debug("User clicked out of map");
+        }
         return false;
     }
 
