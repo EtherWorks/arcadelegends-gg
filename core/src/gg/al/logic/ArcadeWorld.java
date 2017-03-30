@@ -18,15 +18,10 @@ import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import gg.al.game.AL;
-import gg.al.logic.component.Physic;
-import gg.al.logic.component.Position;
-import gg.al.logic.system.PhysicsSystem;
-import gg.al.logic.system.TestSystem;
+import gg.al.logic.map.LogicMap;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-
-import java.util.Random;
 
 /**
  * Created by Thomas Neumann on 23.03.2017.<br />
@@ -41,7 +36,7 @@ public class ArcadeWorld implements Disposable {
     private EntityWorld entityWorld;
 
     @Getter
-    private TiledMap map;
+    private TiledMap tiledMap;
     @Getter
     private int mapWidth, mapHeight, mapTileHeight, mapTileWidth;
     @Getter
@@ -69,9 +64,11 @@ public class ArcadeWorld implements Disposable {
     @Getter
     private float step = 1.0f / 60;
 
+    @Getter
+    private LogicMap logicMap;
 
     public ArcadeWorld(TiledMap map, float worldViewRotation, Camera cam) {
-        this.map = map;
+        this.tiledMap = map;
         this.worldViewRotation = worldViewRotation;
         this.cam = cam;
 
@@ -79,6 +76,8 @@ public class ArcadeWorld implements Disposable {
         this.mapHeight = map.getProperties().get("height", Integer.class);
         this.mapTileWidth = map.getProperties().get("tilewidth", Integer.class);
         this.mapTileHeight = map.getProperties().get("tileheight", Integer.class);
+        logicMap = new LogicMap(map);
+        log.debug(logicMap.getTile(1,1).toString());
 
         OrthographicCamera mapCam = new OrthographicCamera();
         Viewport viewportMap = new FitViewport(mapWidth * mapTileWidth, mapHeight * mapTileHeight, mapCam);
@@ -103,20 +102,18 @@ public class ArcadeWorld implements Disposable {
         debugPhysicrender = new Box2DDebugRenderer();
 
         WorldConfiguration worldConfiguration = new WorldConfigurationBuilder()
-                .with(
-                        new PhysicsSystem(),
-                        new TestSystem(decalBatch)
-                )
+//                .with(
+//                )
                 .build();
         entityWorld = new EntityWorld(worldConfiguration);
     }
 
     public void step() {
-        float accu = delta;
+        float accumulator = delta;
         do {
             physicsWorld.step(step, 6, 2);
-            accu -= step;
-        } while (accu >= step);
+            accumulator -= step;
+        } while (accumulator >= step);
         entityWorld.setDelta(delta);
         entityWorld.process();
     }

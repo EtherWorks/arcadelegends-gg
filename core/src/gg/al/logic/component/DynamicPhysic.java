@@ -6,7 +6,7 @@ import com.badlogic.gdx.physics.box2d.Body;
 /**
  * Created by Thomas Neumann on 23.03.2017.<br />
  */
-public class Physic extends PooledComponent {
+public class DynamicPhysic extends PooledComponent {
 
     public Body body = null;
 
