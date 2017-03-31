@@ -3,7 +3,7 @@ package gg.al.logic.map;
 import com.badlogic.gdx.maps.MapProperties;
 import com.badlogic.gdx.maps.tiled.TiledMapTile;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
-import com.badlogic.gdx.utils.IntArray;
+import com.badlogic.gdx.utils.IntSet;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -22,13 +22,13 @@ public class Tile {
     private boolean traversable;
 
     @Getter
-    private IntArray entities;
+    private IntSet entities;
 
     public Tile(int x, int y) {
         this.x = x;
         this.y = y;
         traversable = true;
-        entities = new IntArray();
+        entities = new IntSet();
     }
 
     public static Tile fromCell(TiledMapTileLayer.Cell cell, int x, int y) {
@@ -51,7 +51,7 @@ public class Tile {
     }
 
     public void removeEntity(int entityId) {
-        entities.removeValue(entityId);
+        entities.remove(entityId);
     }
 
     @Override

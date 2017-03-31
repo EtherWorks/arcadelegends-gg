@@ -22,6 +22,7 @@ import gg.al.game.AL;
 import gg.al.logic.map.LogicMap;
 import gg.al.logic.map.Tile;
 import gg.al.logic.system.InputSystem;
+import gg.al.logic.system.PhysicPositionSystem;
 import gg.al.logic.system.PositionTileSystem;
 import gg.al.logic.system.RenderSystem;
 import lombok.Getter;
@@ -107,6 +108,7 @@ public class ArcadeWorld implements Disposable {
 
         WorldConfiguration worldConfiguration = new WorldConfigurationBuilder()
                 .with(
+                        new PhysicPositionSystem(),
                         new PositionTileSystem(logicMap),
                         new InputSystem(logicMap),
                         new RenderSystem(decalBatch, AL.asset)

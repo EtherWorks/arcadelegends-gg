@@ -1,21 +1,21 @@
 package gg.al.logic.component;
 
-import com.artemis.PooledComponent;
 import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.BodyDef;
 
 /**
  * Created by Thomas Neumann on 23.03.2017.<br />
  */
-public class DynamicPhysic extends PooledComponent {
-
-    public Body body = null;
-
+public class DynamicPhysic extends Physic {
     @Override
-    protected void reset() {
-        body = null;
+    public void setBody(Body body) {
+        if (body.getType() != BodyDef.BodyType.DynamicBody)
+            throw new IllegalArgumentException("Only DynamicBody type allowed");
+        this.body = body;
     }
 
-    public void set(Body body) {
-        this.body = body;
+    @Override
+    public BodyDef.BodyType getBodyType() {
+        return BodyDef.BodyType.DynamicBody;
     }
 }

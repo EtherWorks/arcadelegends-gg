@@ -177,12 +177,15 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
         Intersector.intersectRayPlane(ray, arcadeWorld.getMapHitbox(), worldcoor);
         log.debug("Clicked: " + worldcoor.toString());
         Vector2 mapCoord = new Vector2(Math.round(worldcoor.x), Math.round(worldcoor.y));
-        try {
-            log.debug(arcadeWorld.getLogicMap().getTile(mapCoord).isTraversable() + "");
-            playerEnt = EntityUtil.spawnTest(arcadeWorld, (int) mapCoord.x, (int) mapCoord.y, 100, 10, Assets.PT_EZREAL);
-        } catch (IndexOutOfBoundsException ex) {
-            log.debug("User clicked out of map");
+        switch (button) {
+            case Input.Buttons.LEFT:
+                playerEnt = EntityUtil.spawnTest(arcadeWorld, (int) mapCoord.x, (int) mapCoord.y, 100, 10, Assets.PT_EZREAL);
+                break;
+            case Input.Buttons.RIGHT:
+                EntityUtil.spawnBullet(arcadeWorld, (int) mapCoord.x, (int) mapCoord.y, Vector2.X, Assets.PT_EZREAL);
+                break;
         }
+
         return false;
     }
 

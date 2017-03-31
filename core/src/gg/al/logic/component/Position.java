@@ -24,8 +24,11 @@ public class Position extends PooledComponent{
     }
 
     public void set(Tile tile){
-        position.set(tile.getX(), tile.getY());
         this.tile = tile;
+    }
+
+    public void set(Vector2 vec) {
+        position.set(vec);
     }
 
     public void translate(Vector2 move)

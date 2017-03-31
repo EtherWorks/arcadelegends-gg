@@ -8,7 +8,6 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g3d.decals.Decal;
 import com.badlogic.gdx.graphics.g3d.decals.DecalBatch;
 import com.badlogic.gdx.utils.ObjectMap;
-import gg.al.game.AL;
 import gg.al.logic.component.Position;
 import gg.al.logic.component.Render;
 
@@ -18,12 +17,10 @@ import gg.al.logic.component.Render;
 public class RenderSystem extends IteratingSystem {
 
     private final ObjectMap<Integer, Decal> decalMap;
-
-    private ComponentMapper<Render> mapperRender;
-    private ComponentMapper<Position> mapperPosition;
-
     private final DecalBatch decalBatch;
     private final AssetManager assetManager;
+    private ComponentMapper<Render> mapperRender;
+    private ComponentMapper<Position> mapperPosition;
 
     public RenderSystem(DecalBatch decalBatch, AssetManager assetManager) {
         super(Aspect.all(Render.class, Position.class));
@@ -34,7 +31,6 @@ public class RenderSystem extends IteratingSystem {
 
     @Override
     protected void process(int entityId) {
-        Render render = mapperRender.get(entityId);
         Position position = mapperPosition.get(entityId);
         Decal decal = decalMap.get(entityId);
         decal.setPosition(position.position.x, position.position.y, 0.01f);
