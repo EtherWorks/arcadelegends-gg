@@ -11,15 +11,13 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
-import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
-import com.badlogic.gdx.scenes.scene2d.utils.TiledDrawable;
+import com.badlogic.gdx.scenes.scene2d.utils.*;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import gg.al.config.IVideoConfig;
@@ -113,13 +111,22 @@ public class SettingsScreen implements IAssetScreen, InputProcessor {
 
 
         BitmapFont font = AL.asset.get(Assets.PT_BOCKLIN);
+        font.getData().setScale(0.5f, 0.5f);
         ScrollPane.ScrollPaneStyle scrollPaneStyle = new ScrollPane.ScrollPaneStyle();
         com.badlogic.gdx.scenes.scene2d.ui.List.ListStyle listStyle = new com.badlogic.gdx.scenes.scene2d.ui.List.ListStyle(font, Color.BLACK, Color.BLACK, selection);
         SelectBox.SelectBoxStyle selectBoxStyle = new SelectBox.SelectBoxStyle(font, Color.BLACK, null, scrollPaneStyle, listStyle);
 
 
+
         sbResolution = new SelectBox(selectBoxStyle);
-        sbResolution.setItems("Test1", "Test2", "Test3");
+        sbResolution.setItems("Fullscreen", "Windowed Fullscreen", "800x600");
+        sbResolution.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                setResolution();
+            }
+        });
+
         // not working at the moment
 
 
@@ -185,6 +192,32 @@ public class SettingsScreen implements IAssetScreen, InputProcessor {
         AL.cedit.setValue(IVideoConfig.VideoKeys.VSYNC, !AL.cvideo.vsyncEnabled());
         AL.cedit.flush();
         btVsync.setText(AL.cvideo.vsyncEnabled() == true ? "Vsync on" : "Vsync off");
+    }
+
+    private void setResolution()
+    {
+        String resolution = (String) sbResolution.getSelected();
+        switch(resolution)
+        {
+            case "Fullscreen":
+                AL.cedit.setValue(IVideoConfig.VideoKeys.FULLSCREEN, true);
+                AL.cedit.flush();
+                break;
+            case "Windowed Fullscreen":
+                AL.cedit.setValue(IVideoConfig.VideoKeys.BORDERLESS, true);
+                //AL.cedit.setValue(IVideoConfig.VideoKeys.FULLSCREEN, true);
+                AL.cedit.flush();
+                break;
+            default:
+                int xSize = Integer.parseInt(resolution.split("x")[0]);
+                int ySize = Integer.parseInt(resolution.split("x")[1]);
+                AL.cedit.setValue(IVideoConfig.VideoKeys.WIDTH, xSize);
+                AL.cedit.setValue(IVideoConfig.VideoKeys.HEIGHT, ySize);
+                AL.cedit.setValue(IVideoConfig.VideoKeys.BORDERLESS, false);
+                AL.cedit.setValue(IVideoConfig.VideoKeys.FULLSCREEN, false);
+                AL.cedit.flush();
+                break;
+        }
     }
 
 
