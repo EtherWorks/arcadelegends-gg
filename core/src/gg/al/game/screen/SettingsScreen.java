@@ -8,13 +8,17 @@ import com.badlogic.gdx.assets.AssetDescriptor;
 import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
+import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
+import com.badlogic.gdx.scenes.scene2d.utils.TiledDrawable;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import gg.al.config.IVideoConfig;
@@ -54,6 +58,8 @@ public class SettingsScreen implements IAssetScreen, InputProcessor {
     private ALTabbedPane tabbedPane;
 
     private HashMap<TextButton, Table> componentMap;
+    private SpriteDrawable selection;
+    private Texture selectionTexture;
 
 
 
@@ -65,12 +71,15 @@ public class SettingsScreen implements IAssetScreen, InputProcessor {
         viewport.setCamera(cam);
         stage = new Stage(viewport);
         stage.setViewport(viewport);
-        skin = AL.asset.get(Assets.PT_NEON_JSON);
+        skin = AL.asset.get(Assets.PT_TEXTBUTTON_JSON);
         int x = 1920;
         int y = 1080;
         spriteBatch = new SpriteBatch();
         mainbackground = AL.asset.get(Assets.PT_TESTMAINSCREEN);
         componentMap = new HashMap<>();
+        selectionTexture = AL.asset.get(Assets.PT_SELECTION);
+        Sprite sprite = new Sprite(selectionTexture);
+        selection = new SpriteDrawable(sprite);
 
 
 
@@ -101,9 +110,13 @@ public class SettingsScreen implements IAssetScreen, InputProcessor {
             }
         });
 
+        BitmapFont font = new BitmapFont();
+        ScrollPane.ScrollPaneStyle scrollPaneStyle = new ScrollPane.ScrollPaneStyle();
+        com.badlogic.gdx.scenes.scene2d.ui.List.ListStyle listStyle = new com.badlogic.gdx.scenes.scene2d.ui.List.ListStyle(font, Color.BLACK, Color.BLACK, selection);
+        SelectBox.SelectBoxStyle selectBoxStyle = new SelectBox.SelectBoxStyle(font, Color.BLACK, null, scrollPaneStyle, listStyle);
 
 
-        sbResolution = new SelectBox(skin);
+        sbResolution = new SelectBox(selectBoxStyle);
         sbResolution.setItems("Test1", "Test2", "Test3");
         // not working at the moment
 
@@ -111,7 +124,7 @@ public class SettingsScreen implements IAssetScreen, InputProcessor {
         tableVideo = new Table();
         tableVideo.add(btVsync).pad(10);
         tableVideo.row();
-        //tableVideo.add(sbResolution).pad(10);
+        tableVideo.add(sbResolution).pad(10);
         tableVideo.row();
 
         componentMap.put(btTabVideo, tableVideo);
@@ -176,7 +189,7 @@ public class SettingsScreen implements IAssetScreen, InputProcessor {
 
     @Override
     public List<AssetDescriptor> assets() {
-        return Arrays.asList(Assets.PT_TEXTBUTTON_JSON, Assets.PT_TESTMAINSCREEN);
+        return Arrays.asList(Assets.PT_TEXTBUTTON_JSON, Assets.PT_TESTMAINSCREEN, Assets.PT_SELECTION);
     }
 
     @Override
