@@ -27,6 +27,12 @@ public interface Assets {
 	AssetDescriptor<Texture> PT_TEXTBUTTONSTYLES_PNG = new AssetDescriptor<>("assets/prototype/styles/buttonfont/textbuttonstyles.png", Texture.class);
 	AssetDescriptor<Texture> PT_TEXTBUTTONSTYLES2 = new AssetDescriptor<>("assets/prototype/styles/buttonfont/textbuttonstyles2.png", Texture.class);
 	AssetDescriptor<Texture> PT_UP = new AssetDescriptor<>("assets/prototype/styles/buttonfont/up.png", Texture.class);
+	AssetDescriptor<BitmapFont> PT_FONT-EXPORT = new AssetDescriptor<>("assets/prototype/styles/neon_ui_style/font-export.fnt", BitmapFont.class);
+	AssetDescriptor<BitmapFont> PT_FONT-OVER-EXPORT = new AssetDescriptor<>("assets/prototype/styles/neon_ui_style/font-over-export.fnt", BitmapFont.class);
+	AssetDescriptor<BitmapFont> PT_FONT-PRESSED-EXPORT = new AssetDescriptor<>("assets/prototype/styles/neon_ui_style/font-pressed-export.fnt", BitmapFont.class);
+	AssetDescriptor<TextureAtlas> PT_NEON_ATLAS = new AssetDescriptor<>("assets/prototype/styles/neon_ui_style/neon.atlas", TextureAtlas.class);
+	AssetDescriptor<?> PT_NEON_JSON = new AssetDescriptor<>("assets/prototype/styles/neon_ui_style/neon.json", ?.class);
+	AssetDescriptor<Texture> PT_NEON_PNG = new AssetDescriptor<>("assets/prototype/styles/neon_ui_style/neon.png", Texture.class);
 	AssetDescriptor<BitmapFont> PT_BOCKLIN = new AssetDescriptor<>("assets/prototype/styles/textbutton_style/bocklin.fnt", BitmapFont.class);
 	AssetDescriptor<TextureAtlas> PT_TEXTBUTTON_ATLAS = new AssetDescriptor<>("assets/prototype/styles/textbutton_style/textbutton.atlas", TextureAtlas.class);
 	AssetDescriptor<?> PT_TEXTBUTTON_JSON = new AssetDescriptor<>("assets/prototype/styles/textbutton_style/textbutton.json", ?.class);

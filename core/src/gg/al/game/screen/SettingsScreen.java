@@ -14,6 +14,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import gg.al.config.IVideoConfig;
@@ -64,7 +65,7 @@ public class SettingsScreen implements IAssetScreen, InputProcessor {
         viewport.setCamera(cam);
         stage = new Stage(viewport);
         stage.setViewport(viewport);
-        skin = AL.asset.get(Assets.PT_TEXTBUTTON_JSON);
+        skin = AL.asset.get(Assets.PT_NEON_JSON);
         int x = 1920;
         int y = 1080;
         spriteBatch = new SpriteBatch();
@@ -100,8 +101,10 @@ public class SettingsScreen implements IAssetScreen, InputProcessor {
             }
         });
 
-        //sbResolution = new SelectBox(skin);
-        //sbResolution.setItems("Test1", "Test2", "Test3");
+
+
+        sbResolution = new SelectBox(skin);
+        sbResolution.setItems("Test1", "Test2", "Test3");
         // not working at the moment
 
 

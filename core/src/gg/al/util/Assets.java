@@ -47,4 +47,5 @@ public interface Assets {
     AssetDescriptor<Skin> PT_TEXTBUTTON_JSON = new AssetDescriptor<>("assets/prototype/styles/textbutton_style/textbutton.json", Skin.class);
     AssetDescriptor<Texture> PT_TEXTBUTTON_PNG = new AssetDescriptor<>("assets/prototype/styles/textbutton_style/textbutton.png", Texture.class);
     AssetDescriptor<Texture> PT_TESTMAINSCREEN = new AssetDescriptor<>("assets/prototype/sprites/testmainscreen.jpg", Texture.class);
+    AssetDescriptor<Skin> PT_NEON_JSON = new AssetDescriptor<>("assets/prototype/styles/neon_ui_style/neon.json", Skin.class);
 }
