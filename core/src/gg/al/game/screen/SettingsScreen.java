@@ -5,19 +5,21 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.assets.AssetDescriptor;
-import com.badlogic.gdx.files.FileHandle;
-import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.*;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
-import com.badlogic.gdx.scenes.scene2d.utils.*;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import gg.al.config.IVideoConfig;
@@ -29,6 +31,7 @@ import lombok.extern.slf4j.Slf4j;
 import java.awt.*;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.List;
 
 @Slf4j
@@ -200,11 +203,13 @@ public class SettingsScreen implements IAssetScreen, InputProcessor {
         switch(resolution)
         {
             case "Fullscreen":
-                AL.cedit.setValue(IVideoConfig.VideoKeys.FULLSCREEN, true);
+                AL.cedit.setValue(IVideoConfig.VideoKeys.SCREENMODE, IVideoConfig.ScreenMode.Fullscreen);
                 AL.cedit.flush();
                 break;
             case "Windowed Fullscreen":
-                AL.cedit.setValue(IVideoConfig.VideoKeys.BORDERLESS, true);
+                AL.cedit.setValue(IVideoConfig.VideoKeys.WIDTH, (int) Toolkit.getDefaultToolkit().getScreenSize().getWidth());
+                AL.cedit.setValue(IVideoConfig.VideoKeys.HEIGHT, (int) Toolkit.getDefaultToolkit().getScreenSize().getHeight());
+                AL.cedit.setValue(IVideoConfig.VideoKeys.SCREENMODE, IVideoConfig.ScreenMode.Borderless);
                 //AL.cedit.setValue(IVideoConfig.VideoKeys.FULLSCREEN, true);
                 AL.cedit.flush();
                 break;
@@ -213,8 +218,7 @@ public class SettingsScreen implements IAssetScreen, InputProcessor {
                 int ySize = Integer.parseInt(resolution.split("x")[1]);
                 AL.cedit.setValue(IVideoConfig.VideoKeys.WIDTH, xSize);
                 AL.cedit.setValue(IVideoConfig.VideoKeys.HEIGHT, ySize);
-                AL.cedit.setValue(IVideoConfig.VideoKeys.BORDERLESS, false);
-                AL.cedit.setValue(IVideoConfig.VideoKeys.FULLSCREEN, false);
+                AL.cedit.setValue(IVideoConfig.VideoKeys.SCREENMODE, IVideoConfig.ScreenMode.Windowed);
                 AL.cedit.flush();
                 break;
         }

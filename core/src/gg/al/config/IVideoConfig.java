@@ -14,23 +14,20 @@ public interface IVideoConfig {
 
     int backgroundFPS();
 
-    boolean fullscreen();
+    ScreenMode screenmode();
 
     int width();
 
     int height();
-
-    boolean borderless();
 
 
     enum VideoKeys implements IConfigKey {
         VSYNC("vsyncEnabled"),
         BACKGROUNDFPS("backgroundFPS"),
         FOREGROUNDFPS("foregroundFPS"),
-        FULLSCREEN("fullscreen"),
+        SCREENMODE("screenmode"),
         WIDTH("width"),
-        HEIGHT("height"),
-        BORDERLESS("borderless");
+        HEIGHT("height");
 
         private final String key;
 
@@ -46,6 +43,22 @@ public interface IVideoConfig {
         @Override
         public String getPrefix() {
             return PREFIX;
+        }
+    }
+
+    enum ScreenMode {
+        Fullscreen, Borderless, Windowed;
+
+        public boolean isFullscreen() {
+            return this == Fullscreen;
+        }
+
+        public boolean isWindowed() {
+            return this == Windowed;
+        }
+
+        public boolean isBorderless() {
+            return this == Borderless;
         }
     }
 }

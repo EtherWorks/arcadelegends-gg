@@ -62,7 +62,7 @@ public class TestScreen implements Screen, InputProcessor {
     public boolean keyDown(int keycode) {
         switch (keycode) {
             case Input.Keys.F11:
-                AL.cedit.setValue(IVideoConfig.VideoKeys.FULLSCREEN, !AL.cvideo.fullscreen());
+                AL.cedit.setValue(IVideoConfig.VideoKeys.SCREENMODE, AL.config.video.screenmode().isFullscreen() ? IVideoConfig.ScreenMode.Windowed : IVideoConfig.ScreenMode.Fullscreen);
                 AL.cedit.flush();
                 break;
             case Input.Keys.F6:
