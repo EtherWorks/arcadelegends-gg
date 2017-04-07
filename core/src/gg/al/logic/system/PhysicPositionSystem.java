@@ -28,6 +28,6 @@ public class PhysicPositionSystem extends IteratingSystem {
 
         position.set(Math.round(dynamicPhysic.getBody().getPosition().x),
                 Math.round(dynamicPhysic.getBody().getPosition().y));
-        log.debug(position.position.toString());
+        //log.debug(position.position.toString());
     }
 }

@@ -31,7 +31,8 @@ public class InputSystem extends IteratingSystem {
         Position pos = mapperPosition.get(entityId);
         Input input = mapperInput.get(entityId);
         DynamicPhysic dynamicPhysic = mapperDynamicPhysic.get(entityId);
-        if (!input.move.equals(pos.position)) {
+        System.out.println(dynamicPhysic.getBody().getLinearVelocity());
+        if (!input.move.equals(pos.position) && dynamicPhysic.getBody().getLinearVelocity().equals(Vector2.Zero)) {
             IntSet entities = logicMap.getTile(input.move).getEntities();
             boolean move = true;
             while (entities.iterator().hasNext) {
@@ -43,13 +44,15 @@ public class InputSystem extends IteratingSystem {
                 }
             }
             entities.iterator().reset();
-            if (move) {
+
+            if (move)
                 dynamicPhysic.getBody().setLinearVelocity(input.move.cpy().sub(pos.position).nor());
-            } else
+            else
                 input.move.set(pos.position);
-        }
-        else if(!dynamicPhysic.getBody().getLinearVelocity().equals(Vector2.Zero))
+        } else if (input.move.equals(pos.position) && !dynamicPhysic.getBody().getLinearVelocity().equals(Vector2.Zero)) {
+            dynamicPhysic.getBody().setTransform(pos.position, dynamicPhysic.getBody().getAngle());
             dynamicPhysic.getBody().setLinearVelocity(Vector2.Zero);
+        }
     }
 
 }
