@@ -19,6 +19,7 @@ import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import gg.al.game.AL;
+import gg.al.logic.entity.EntityWorld;
 import gg.al.logic.map.LogicMap;
 import gg.al.logic.map.Tile;
 import gg.al.logic.system.InputSystem;

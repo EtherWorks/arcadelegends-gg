@@ -18,7 +18,9 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import gg.al.game.AL;
 import gg.al.logic.ArcadeWorld;
-import gg.al.logic.EntityUtil;
+import gg.al.logic.entity.Entity;
+import gg.al.logic.entity.EntityArguments;
+import gg.al.logic.entity.EntityUtil;
 import gg.al.util.Assets;
 import lombok.extern.slf4j.Slf4j;
 
@@ -179,10 +181,21 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
         Vector2 mapCoord = new Vector2(Math.round(worldcoor.x), Math.round(worldcoor.y));
         switch (button) {
             case Input.Buttons.LEFT:
-                playerEnt = EntityUtil.spawnTest(arcadeWorld, (int) mapCoord.x, (int) mapCoord.y, 100, 10, Assets.PT_EZREAL);
+                EntityArguments arguments = new EntityArguments();
+                arguments.put("texture", Assets.PT_EZREAL);
+                arguments.put("x", (int) mapCoord.x);
+                arguments.put("y", (int) mapCoord.y);
+                arguments.put("maxHealth", 100);
+                arguments.put("maxAP", 10);
+                playerEnt = EntityUtil.spawn(Entity.TEST, arcadeWorld, arguments);
                 break;
             case Input.Buttons.RIGHT:
-                EntityUtil.spawnBullet(arcadeWorld, (int) mapCoord.x, (int) mapCoord.y, Vector2.X, Assets.PT_EZREAL);
+                arguments = new EntityArguments();
+                arguments.put("texture", Assets.PT_EZREAL);
+                arguments.put("x", (int) mapCoord.x);
+                arguments.put("y", (int) mapCoord.y);
+                arguments.put("move", new Vector2(1, 0));
+                EntityUtil.spawn(Entity.BULLET, arcadeWorld, arguments);
                 break;
         }
 

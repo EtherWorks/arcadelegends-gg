@@ -1,9 +1,6 @@
-package gg.al.logic;
+package gg.al.logic.entity;
 
-import com.artemis.Archetype;
-import com.artemis.ArchetypeBuilder;
-import com.artemis.World;
-import com.artemis.WorldConfiguration;
+import com.artemis.*;
 import com.badlogic.gdx.utils.ObjectMap;
 
 /**
@@ -32,5 +29,9 @@ public class EntityWorld extends World {
         if(!archetypeMap.containsKey(builder))
             archetypeMap.put(builder, builder.build(this));
         return archetypeMap.get(builder);
+    }
+
+    public <T extends Component> T getComponentOf(int id, Class<T> type) {
+        return super.getMapper(type).get(id);
     }
 }
