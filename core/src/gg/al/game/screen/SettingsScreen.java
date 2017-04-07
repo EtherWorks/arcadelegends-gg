@@ -29,10 +29,8 @@ import gg.al.util.Assets;
 import lombok.extern.slf4j.Slf4j;
 
 import java.awt.*;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.List;
+import java.util.*;
+
 
 @Slf4j
 /**
@@ -50,12 +48,14 @@ public class SettingsScreen implements IAssetScreen, InputProcessor {
 
     private TextButton btVsync;
     private SelectBox sbResolution;
+    private Slider volumeSlider;
 
     private TextButton btTabVideo;
     private TextButton btTabAudio;
     private TextButton btTabInput;
 
     private Table tableVideo;
+    private Table tableAudio;
 
     private ALTabbedPane tabbedPane;
 
@@ -97,7 +97,24 @@ public class SettingsScreen implements IAssetScreen, InputProcessor {
         btTabInput.setSize(300, 50);
         tabbedPane.addTab(btTabInput);
 
+        createVideoTable();
+        createAudioTable();
 
+
+
+
+        componentMap.put(btTabVideo, tableVideo);
+        componentMap.put(btTabAudio, tableAudio);
+
+
+        stage.addActor(tabbedPane);
+
+        AL.input.setInputProcessor(new InputMultiplexer(stage, this));
+
+    }
+
+    private void createVideoTable()
+    {
         String vsyncText = AL.cvideo.vsyncEnabled() == true ? "Vsync on" : "Vsync off";
         btVsync = new TextButton(vsyncText, skin, "default");
         btVsync.setWidth(250);
@@ -116,20 +133,18 @@ public class SettingsScreen implements IAssetScreen, InputProcessor {
         com.badlogic.gdx.scenes.scene2d.ui.List.ListStyle listStyle = new com.badlogic.gdx.scenes.scene2d.ui.List.ListStyle(font, Color.BLACK, Color.BLACK, selection);
         SelectBox.SelectBoxStyle selectBoxStyle = new SelectBox.SelectBoxStyle(font, Color.BLACK, null, scrollPaneStyle, listStyle);
 
-
+        String[] resolutions = {"Fullscreen", "Windowed Fullscreen", "1920x1080", "1680x1050",
+                "1600x900", "1400x1050", "1280x1024", "1280x768",
+                "1280x720", "1024x768", "1024x600", "800x600"};
         sbResolution = new SelectBox(selectBoxStyle);
-        sbResolution.setItems("Fullscreen", "Windowed Fullscreen", "1920x1080", "1680x1050",
-                        "1600x900", "1400x1050", "1280x1024", "1280x768",
-                        "1280x720", "1024x768", "1024x600", "800x600");
+        sbResolution.setItems(resolutions);
         sbResolution.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 setResolution();
             }
         });
-
-        // not working at the moment
-
+        sbResolution.setSelected(getResolution());
 
         tableVideo = new Table();
         tableVideo.add(btVsync).pad(10);
@@ -137,12 +152,15 @@ public class SettingsScreen implements IAssetScreen, InputProcessor {
         tableVideo.add(sbResolution).pad(10);
         tableVideo.row();
 
-        componentMap.put(btTabVideo, tableVideo);
+    }
 
-
-        stage.addActor(tabbedPane);
-
-        AL.input.setInputProcessor(new InputMultiplexer(stage, this));
+    private void createAudioTable()
+    {
+        volumeSlider = new Slider(0,100,1,false,skin);
+        volumeSlider.setScale(5,5);
+        tableAudio = new Table();
+        tableAudio.add(volumeSlider).pad(10);
+        tableAudio.row();
 
     }
 
@@ -162,7 +180,6 @@ public class SettingsScreen implements IAssetScreen, InputProcessor {
 
     @Override
     public void resize(int width, int height) {
-
         viewport.update(width, height, true);
     }
 
@@ -213,16 +230,19 @@ public class SettingsScreen implements IAssetScreen, InputProcessor {
                 int ySize = Integer.parseInt(resolution.split("x")[1]);
                 AL.cedit.setValue(IVideoConfig.VideoKeys.WIDTH, xSize);
                 AL.cedit.setValue(IVideoConfig.VideoKeys.HEIGHT, ySize);
-                AL.cedit.flush();
                 AL.cedit.setValue(IVideoConfig.VideoKeys.SCREENMODE, IVideoConfig.ScreenMode.Windowed);
                 AL.cedit.flush();
                 break;
         }
     }
 
+    private String getResolution() {
+        return AL.cvideo.width() + "x" + AL.cvideo.height();
+    }
+
 
     @Override
-    public List<AssetDescriptor> assets() {
+    public java.util.List<AssetDescriptor> assets() {
         return Arrays.asList(Assets.PT_TEXTBUTTON_JSON, Assets.PT_TESTMAINSCREEN, Assets.PT_SELECTION, Assets.PT_BOCKLIN);
     }
 
