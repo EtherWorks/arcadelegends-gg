@@ -64,8 +64,6 @@ public class SettingsScreen implements IAssetScreen, InputProcessor {
     private Texture selectionTexture;
 
 
-
-
     @Override
     public void show() {
         cam = new OrthographicCamera();
@@ -84,20 +82,19 @@ public class SettingsScreen implements IAssetScreen, InputProcessor {
         selection = new SpriteDrawable(sprite);
 
 
-
         tabbedPane = new ALTabbedPane(skin, x, y, componentMap);
 
         // Init Tabs:
         btTabVideo = new TextButton("Video", skin);
-        btTabVideo.setSize(300,50);
+        btTabVideo.setSize(300, 50);
         tabbedPane.addTab(btTabVideo);
 
         btTabAudio = new TextButton("Audio", skin);
-        btTabAudio.setSize(300,50);
+        btTabAudio.setSize(300, 50);
         tabbedPane.addTab(btTabAudio);
 
         btTabInput = new TextButton("Input", skin);
-        btTabInput.setSize(300,50);
+        btTabInput.setSize(300, 50);
         tabbedPane.addTab(btTabInput);
 
 
@@ -120,9 +117,10 @@ public class SettingsScreen implements IAssetScreen, InputProcessor {
         SelectBox.SelectBoxStyle selectBoxStyle = new SelectBox.SelectBoxStyle(font, Color.BLACK, null, scrollPaneStyle, listStyle);
 
 
-
         sbResolution = new SelectBox(selectBoxStyle);
-        sbResolution.setItems("Fullscreen", "Windowed Fullscreen", "800x600");
+        sbResolution.setItems("Fullscreen", "Windowed Fullscreen", "1920x1080", "1680x1050",
+                        "1600x900", "1400x1050", "1280x1024", "1280x768",
+                        "1280x720", "1024x768", "1024x600", "800x600");
         sbResolution.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
@@ -197,11 +195,9 @@ public class SettingsScreen implements IAssetScreen, InputProcessor {
         btVsync.setText(AL.cvideo.vsyncEnabled() == true ? "Vsync on" : "Vsync off");
     }
 
-    private void setResolution()
-    {
+    private void setResolution() {
         String resolution = (String) sbResolution.getSelected();
-        switch(resolution)
-        {
+        switch (resolution) {
             case "Fullscreen":
                 AL.cedit.setValue(IVideoConfig.VideoKeys.SCREENMODE, IVideoConfig.ScreenMode.Fullscreen);
                 AL.cedit.flush();
@@ -210,7 +206,6 @@ public class SettingsScreen implements IAssetScreen, InputProcessor {
                 AL.cedit.setValue(IVideoConfig.VideoKeys.WIDTH, (int) Toolkit.getDefaultToolkit().getScreenSize().getWidth());
                 AL.cedit.setValue(IVideoConfig.VideoKeys.HEIGHT, (int) Toolkit.getDefaultToolkit().getScreenSize().getHeight());
                 AL.cedit.setValue(IVideoConfig.VideoKeys.SCREENMODE, IVideoConfig.ScreenMode.Borderless);
-                //AL.cedit.setValue(IVideoConfig.VideoKeys.FULLSCREEN, true);
                 AL.cedit.flush();
                 break;
             default:
@@ -218,12 +213,12 @@ public class SettingsScreen implements IAssetScreen, InputProcessor {
                 int ySize = Integer.parseInt(resolution.split("x")[1]);
                 AL.cedit.setValue(IVideoConfig.VideoKeys.WIDTH, xSize);
                 AL.cedit.setValue(IVideoConfig.VideoKeys.HEIGHT, ySize);
+                AL.cedit.flush();
                 AL.cedit.setValue(IVideoConfig.VideoKeys.SCREENMODE, IVideoConfig.ScreenMode.Windowed);
                 AL.cedit.flush();
                 break;
         }
     }
-
 
 
     @Override
