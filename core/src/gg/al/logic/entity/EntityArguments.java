@@ -6,7 +6,7 @@ import java.util.Iterator;
 
 /**
  * Created by Thomas Neumann on 07.04.2017.<br />
- * Arguments indexed with {@link String} objects for use with Entities.
+ * Arguments indexed with {@link String} objects for use with Entity.
  */
 public class EntityArguments {
     private final ObjectMap<String, Object> arguments;

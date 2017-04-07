@@ -18,6 +18,7 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import gg.al.game.AL;
 import gg.al.logic.ArcadeWorld;
+import gg.al.logic.component.Position;
 import gg.al.logic.entity.Entity;
 import gg.al.logic.entity.EntityArguments;
 import gg.al.logic.entity.EntityUtil;
@@ -36,7 +37,7 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
 
     private final AssetDescriptor<TiledMap> mapDesc;
     private final float rot;
-    int playerEnt;
+    private int playerEnt = -1;
     private TiledMap map;
     private PerspectiveCamera camera;
     private Viewport viewport;
@@ -142,20 +143,35 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
                 camera.translate(0, 1, 0);
                 break;
             case Input.Keys.UP:
-                gg.al.logic.component.Input input = arcadeWorld.getEntityWorld().getMapper(gg.al.logic.component.Input.class).get(playerEnt);
-                input.set(0, 1);
+                gg.al.logic.component.Input input = arcadeWorld.getEntityWorld().getComponentOf(playerEnt, gg.al.logic.component.Input.class);
+
+                Position position = arcadeWorld.getEntityWorld().getComponentOf(playerEnt, Position.class);
+                if (!input.move.equals(position.position))
+                    break;
+                input.move.set(position.position.x, position.position.y + 1);
                 break;
             case Input.Keys.DOWN:
-                input = arcadeWorld.getEntityWorld().getMapper(gg.al.logic.component.Input.class).get(playerEnt);
-                input.set(0, -1);
+                input = arcadeWorld.getEntityWorld().getComponentOf(playerEnt, gg.al.logic.component.Input.class);
+
+                position = arcadeWorld.getEntityWorld().getComponentOf(playerEnt, Position.class);
+                if (!input.move.equals(position.position))
+                    break;
+                input.move.set(position.position.x, position.position.y - 1);
                 break;
             case Input.Keys.LEFT:
-                input = arcadeWorld.getEntityWorld().getMapper(gg.al.logic.component.Input.class).get(playerEnt);
-                input.set(-1, 0);
+                input = arcadeWorld.getEntityWorld().getComponentOf(playerEnt, gg.al.logic.component.Input.class);
+
+                position = arcadeWorld.getEntityWorld().getComponentOf(playerEnt, Position.class);
+                if (!input.move.equals(position.position))
+                    break;
+                input.move.set(position.position.x - 1, position.position.y);
                 break;
             case Input.Keys.RIGHT:
-                input = arcadeWorld.getEntityWorld().getMapper(gg.al.logic.component.Input.class).get(playerEnt);
-                input.set(1, 0);
+                input = arcadeWorld.getEntityWorld().getComponentOf(playerEnt, gg.al.logic.component.Input.class);
+                position = arcadeWorld.getEntityWorld().getComponentOf(playerEnt, Position.class);
+                if (!input.move.equals(position.position))
+                    break;
+                input.move.set(position.position.x + 1, position.position.y);
                 break;
         }
         camera.update();
@@ -181,16 +197,21 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
         Vector2 mapCoord = new Vector2(Math.round(worldcoor.x), Math.round(worldcoor.y));
         switch (button) {
             case Input.Buttons.LEFT:
-                EntityArguments arguments = new EntityArguments();
-                arguments.put("texture", Assets.PT_EZREAL);
-                arguments.put("x", (int) mapCoord.x);
-                arguments.put("y", (int) mapCoord.y);
-                arguments.put("maxHealth", 100);
-                arguments.put("maxAP", 10);
-                playerEnt = EntityUtil.spawn(Entity.TEST, arcadeWorld, arguments);
+                if (playerEnt == -1) {
+                    EntityArguments arguments = new EntityArguments();
+                    arguments.put("texture", Assets.PT_EZREAL);
+                    arguments.put("x", (int) mapCoord.x);
+                    arguments.put("y", (int) mapCoord.y);
+                    arguments.put("maxHealth", 100);
+                    arguments.put("maxAP", 10);
+                    playerEnt = EntityUtil.spawn(Entity.TEST, arcadeWorld, arguments);
+                } else {
+                    gg.al.logic.component.Input input = arcadeWorld.getEntityWorld().getComponentOf(playerEnt, gg.al.logic.component.Input.class);
+                    input.move.set((int) mapCoord.x, (int) mapCoord.y);
+                }
                 break;
             case Input.Buttons.RIGHT:
-                arguments = new EntityArguments();
+                EntityArguments arguments = new EntityArguments();
                 arguments.put("texture", Assets.PT_EZREAL);
                 arguments.put("x", (int) mapCoord.x);
                 arguments.put("y", (int) mapCoord.y);

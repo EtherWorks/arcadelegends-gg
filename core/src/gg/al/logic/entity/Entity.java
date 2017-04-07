@@ -12,7 +12,7 @@ public enum Entity {
             .add(Render.class)
             .add(Position.class)
             .add(Stats.class)
-            .add(KinematicPhysic.class)
+            .add(DynamicPhysic.class)
             .add(Input.class)),
     BULLET(1, new ArchetypeBuilder()
             .add(Render.class)

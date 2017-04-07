@@ -1,16 +1,12 @@
 package gg.al.logic.entity;
 
-import com.artemis.ArchetypeBuilder;
-import com.artemis.Component;
 import com.badlogic.gdx.assets.AssetDescriptor;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import gg.al.exception.EntityException;
 import gg.al.logic.ArcadeWorld;
 import gg.al.logic.component.*;
 import gg.al.logic.map.Tile;
-import javafx.scene.shape.Arc;
 
 /**
  * Created by Thomas Neumann on 24.03.2017.<br />
@@ -35,18 +31,20 @@ public class EntityUtil {
                 Position position = entityWorld.getComponentOf(id, Position.class);
                 Stats stats = entityWorld.getComponentOf(id, Stats.class);
                 Render render = entityWorld.getComponentOf(id, Render.class);
-                KinematicPhysic kinematicPhysic = entityWorld.getComponentOf(id, KinematicPhysic.class);
+                DynamicPhysic dynamicPhysic = entityWorld.getComponentOf(id, DynamicPhysic.class);
+                Input input = entityWorld.getComponentOf(id, Input.class);
 
                 setup(id, stats, arcadeWorld, arguments);
                 setup(id, position, arcadeWorld, arguments);
                 setup(id, render, arcadeWorld, arguments);
-                setup(id, kinematicPhysic, arcadeWorld, arguments);
+                setup(id, dynamicPhysic, arcadeWorld, arguments);
+                setup(id, input, arcadeWorld, arguments);
                 return id;
             case BULLET:
 
                 id = entityWorld.create(entityWorld.getArchetype(entity.getArchetype()));
 
-                DynamicPhysic dynamicPhysic = entityWorld.getComponentOf(id, DynamicPhysic.class);
+                dynamicPhysic = entityWorld.getComponentOf(id, DynamicPhysic.class);
                 position = entityWorld.getComponentOf(id, Position.class);
                 render = entityWorld.getComponentOf(id, Render.class);
 
@@ -71,6 +69,10 @@ public class EntityUtil {
                 arguments.get("renderHeight", 1f, Float.class),
                 arguments.get("transparent", true, Boolean.class),
                 arguments.get("texture", AssetDescriptor.class));
+    }
+
+    private static void setup(int entityId, Input input, ArcadeWorld arcadeWorld, EntityArguments arguments) {
+        input.move.set(arguments.get("x", Integer.class), arguments.get("y", Integer.class));
     }
 
     private static void setup(int entityId, IPhysic physic, ArcadeWorld arcadeWorld, EntityArguments arguments) {

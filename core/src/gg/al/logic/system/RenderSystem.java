@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g3d.decals.Decal;
 import com.badlogic.gdx.graphics.g3d.decals.DecalBatch;
 import com.badlogic.gdx.utils.ObjectMap;
+import gg.al.logic.component.DynamicPhysic;
 import gg.al.logic.component.Position;
 import gg.al.logic.component.Render;
 
@@ -21,6 +22,7 @@ public class RenderSystem extends IteratingSystem {
     private final AssetManager assetManager;
     private ComponentMapper<Render> mapperRender;
     private ComponentMapper<Position> mapperPosition;
+    private ComponentMapper<DynamicPhysic> mapperDynamicPhysic;
 
     public RenderSystem(DecalBatch decalBatch, AssetManager assetManager) {
         super(Aspect.all(Render.class, Position.class));
@@ -31,9 +33,13 @@ public class RenderSystem extends IteratingSystem {
 
     @Override
     protected void process(int entityId) {
+        DynamicPhysic dynamicPhysic = mapperDynamicPhysic.get(entityId);
         Position position = mapperPosition.get(entityId);
         Decal decal = decalMap.get(entityId);
-        decal.setPosition(position.position.x, position.position.y, 0.01f);
+        if (dynamicPhysic != null)
+            decal.setPosition(dynamicPhysic.getBody().getPosition().x, dynamicPhysic.getBody().getPosition().y, 0.01f);
+        else
+            decal.setPosition(position.position.x, position.position.y, 0.01f);
         decalBatch.add(decal);
     }
 
