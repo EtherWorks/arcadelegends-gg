@@ -6,12 +6,7 @@ buildscript {
         maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
         jcenter()
     }
-    dependencies {
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-    }
 }
-apply plugin: 'kotlin'
-
 allprojects {
     apply plugin: "eclipse"
     apply plugin: "idea"
@@ -19,7 +14,7 @@ allprojects {
     version = '1.0'
     ext {
         appName = "ArcadeLeague"
-        gdxVersion = '1.9.5'
+        gdxVersion = '1.9.6'
         roboVMVersion = '2.3.0'
         box2DLightsVersion = '1.4'
         artemisVersion = '2.1.0'
@@ -103,7 +98,4 @@ tasks.eclipse.doLast {
 }
 repositories {
     mavenCentral()
-}
-dependencies {
-    compile "org.jetbrains.kotlin:kotlin-stdlib-jre8:$kotlin_version"
 }
