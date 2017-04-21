@@ -37,9 +37,9 @@ public class RenderSystem extends IteratingSystem {
         Position position = mapperPosition.get(entityId);
         Decal decal = decalMap.get(entityId);
         if (dynamicPhysic != null)
-            decal.setPosition(dynamicPhysic.getBody().getPosition().x, dynamicPhysic.getBody().getPosition().y, 0.00f);
+            decal.setPosition(dynamicPhysic.getBody().getPosition().x, dynamicPhysic.getBody().getPosition().y, 0);
         else
-            decal.setPosition(position.position.x, position.position.y, 0.00f);
+            decal.setPosition(position.position.x, position.position.y, 0);
         decalBatch.add(decal);
     }
 
@@ -48,7 +48,7 @@ public class RenderSystem extends IteratingSystem {
         Render render = mapperRender.get(entityId);
         Position position = mapperPosition.get(entityId);
         Decal decal = Decal.newDecal(render.width, render.height, new TextureRegion(assetManager.get(render.texture)), render.transparent);
-        decal.setPosition(position.position.x, position.position.y, 0.01f);
+        decal.setPosition(position.position.x, position.position.y, 0);
         decalMap.put(entityId, decal);
     }
 

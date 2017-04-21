@@ -5,9 +5,7 @@ import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import com.github.drapostolos.typeparser.TypeParser;
 import com.google.common.io.Files;
-import gg.al.config.Config;
-import gg.al.config.IAudioConfig;
-import gg.al.config.IVideoConfig;
+import gg.al.config.*;
 import lombok.extern.slf4j.Slf4j;
 import org.cfg4j.provider.ConfigurationProvider;
 import org.cfg4j.provider.ConfigurationProviderBuilder;
@@ -15,10 +13,13 @@ import org.cfg4j.source.ConfigurationSource;
 import org.cfg4j.source.files.FilesConfigurationSource;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.file.Paths;
 import java.util.Arrays;
+import java.util.NoSuchElementException;
+import java.util.Properties;
 
 /**
  * Created by Thomas Neumann on 15.03.2017.<br />
@@ -38,10 +39,9 @@ public class DesktopConfigUtil {
         File file = new File(getCurrentConfigPath());
         if (!file.exists()) {
             try {
-                File defaultConfig = new File(DesktopConfigUtil.class.getResource("/config.properties").toURI());
-                Files.copy(defaultConfig, file);
-            } catch (URISyntaxException e) {
-                e.printStackTrace();
+                FileOutputStream fos = new FileOutputStream(file);
+                Config.defaultConfig().store(fos, "Default config for ArcadeLegends");
+                fos.close();
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -56,7 +56,15 @@ public class DesktopConfigUtil {
     }
 
     public static Config buildConfig(DesktopConfigEditor editor) {
-        return new Config(buildConfigProvider(), editor);
+        Config cfg = null;
+        try {
+            cfg = new Config(buildConfigProvider(), editor);
+        } catch (NoSuchElementException ex) {
+            File file = new File(getCurrentConfigPath());
+            file.renameTo(new File(getCurrentConfigPath() + ".err"));
+            cfg = new Config(buildConfigProvider(), editor);
+        }
+        return cfg;
     }
 
     public static void setupLwjglConfig(LwjglApplicationConfiguration config, Config cfg) {
@@ -99,8 +107,7 @@ public class DesktopConfigUtil {
         editor.addConfigValueChangedListener(IVideoConfig.VideoKeys.FOREGROUNDFPS, (key, value) -> config.foregroundFPS = parser.parse(value, Integer.class));
         editor.addConfigValueChangedListener(IVideoConfig.VideoKeys.VSYNC, (key, value) -> application.postRunnable(() -> application.getGraphics().setVSync(parser.parse(value, Boolean.class))));
         editor.addConfigValueChangedListener(IVideoConfig.VideoKeys.WIDTH, ((key, value) -> application.postRunnable(() -> {
-            if(cfg.video.screenmode().isWindowed())
-            {
+            if (cfg.video.screenmode().isWindowed()) {
                 application.getGraphics().setFullscreenMode(application.getGraphics().getDisplayMode());
                 application.getGraphics().setUndecorated(false);
                 application.getGraphics().setWindowedMode(cfg.video.width(), cfg.video.height());

@@ -10,9 +10,11 @@ public interface IInputConfig {
     enum InputKeys implements IConfigKey {
         ;
         private final String key;
+        private final String defaultValue;
 
-        InputKeys(String key) {
+        InputKeys(String key, String defaultValue) {
             this.key = key;
+            this.defaultValue = defaultValue;
         }
 
         @Override
@@ -23,6 +25,11 @@ public interface IInputConfig {
         @Override
         public String getPrefix() {
             return PREFIX;
+        }
+
+        @Override
+        public String getDefaultValue() {
+            return defaultValue;
         }
     }
 }

@@ -11,12 +11,14 @@ public interface IMiscellaneousConfig {
     boolean logConfigEvents();
 
     enum MiscellaneousKeys implements IConfigKey {
-        LOGCONFIGEV("logConfigEvents");
+        LOGCONFIGEV("logConfigEvents", "true");
 
         private final String key;
+        private final String defaultValue;
 
-        MiscellaneousKeys(String key) {
+        MiscellaneousKeys(String key, String defaultValue) {
             this.key = key;
+            this.defaultValue = defaultValue;
         }
 
         @Override
@@ -27,6 +29,11 @@ public interface IMiscellaneousConfig {
         @Override
         public String getPrefix() {
             return PREFIX;
+        }
+
+        @Override
+        public String getDefaultValue() {
+            return defaultValue;
         }
     }
 }

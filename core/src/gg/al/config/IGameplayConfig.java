@@ -10,9 +10,11 @@ public interface IGameplayConfig {
     enum GameplayKeys implements IConfigKey {
         ;
         private final String key;
+        private final String defaultValue;
 
-        GameplayKeys(String key) {
+        GameplayKeys(String key, String defaultValue) {
             this.key = key;
+            this.defaultValue = defaultValue;
         }
 
         @Override
@@ -23,6 +25,11 @@ public interface IGameplayConfig {
         @Override
         public String getPrefix() {
             return PREFIX;
+        }
+
+        @Override
+        public String getDefaultValue() {
+            return defaultValue;
         }
     }
 }

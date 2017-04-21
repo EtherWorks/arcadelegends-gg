@@ -39,4 +39,25 @@ public class Config {
         editor.setEditing(asProperties());
     }
 
+    public static Properties defaultConfig()
+    {
+        Properties defaultConf = new Properties();
+        for (IConfigKey key : IAudioConfig.AudioKeys.values()) {
+            defaultConf.setProperty(key.getKey(), key.getDefaultValue());
+        }
+        for (IConfigKey key : IMiscellaneousConfig.MiscellaneousKeys.values()) {
+            defaultConf.setProperty(key.getKey(), key.getDefaultValue());
+        }
+        for (IConfigKey key : IVideoConfig.VideoKeys.values()) {
+            defaultConf.setProperty(key.getKey(), key.getDefaultValue());
+        }
+        for (IConfigKey key : IInputConfig.InputKeys.values()) {
+            defaultConf.setProperty(key.getKey(), key.getDefaultValue());
+        }
+        for (IConfigKey key : IGameplayConfig.GameplayKeys.values()) {
+            defaultConf.setProperty(key.getKey(), key.getDefaultValue());
+        }
+        return defaultConf;
+    }
+
 }

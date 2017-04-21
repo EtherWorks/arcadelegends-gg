@@ -10,6 +10,8 @@ public interface IConfigKey {
 
     String getPrefix();
 
+    String getDefaultValue();
+
     default String getKey() {
         return getPrefix() + "." + getKeyName();
     }

@@ -10,12 +10,14 @@ public interface IAudioConfig {
     float masterVolume();
 
     enum AudioKeys implements IConfigKey {
-        MASTERVOLUME("masterVolume")
+        MASTERVOLUME("masterVolume", "100")
         ;
         private final String key;
+        private final String defaultValue;
 
-        AudioKeys(String key) {
+        AudioKeys(String key, String defaultValue) {
             this.key = key;
+            this.defaultValue = defaultValue;
         }
 
         @Override
@@ -26,6 +28,11 @@ public interface IAudioConfig {
         @Override
         public String getPrefix() {
             return PREFIX;
+        }
+
+        @Override
+        public String getDefaultValue() {
+            return defaultValue;
         }
     }
 }
