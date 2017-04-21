@@ -4,11 +4,15 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetDescriptor;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import gg.al.config.IVideoConfig;
@@ -23,6 +27,7 @@ import java.util.List;
 
 /**
  * Created by Patrick Windegger on 16.03.2017.
+ * Class responsible for the Main-Menu in the game
  */
 @Slf4j
 public class MainMenuScreen implements IAssetScreen {
@@ -30,24 +35,35 @@ public class MainMenuScreen implements IAssetScreen {
     private Stage stage;
     private Skin skin;
     private Viewport viewport;
+    private SpriteBatch spriteBatch;
+    private Texture mainbackground;
+    private OrthographicCamera cam;
+
+    private TextButton btPlay;
+    private TextButton btSettings;
+    private TextButton btExit;
+
 
     @Override
     public void show() {
         // Inits:
-        OrthographicCamera cam = new OrthographicCamera();
-        viewport = new ScreenViewport(cam);
+        cam = new OrthographicCamera();
+        viewport = new FitViewport(1920, 1080);
+        viewport.setCamera(cam);
         stage = new Stage(viewport);
         stage.setViewport(viewport);
-        //skin = new Skin(Gdx.files.internal("assets/prototype/styles/buttonfont/textbuttonstyles.json"));
-        skin = AL.asset.get(Assets.PT_TEXTBUTTONSTYLES_JSON);
-        int x = Gdx.graphics.getWidth();
-        int y = Gdx.graphics.getHeight();
+        skin = AL.asset.get(Assets.PT_TEXTBUTTON_JSON);
+        skin.getFont("bocklin").getData().setScale(0.8f,0.8f);
+        int x = 1920;
+        int y = 1080;
+        spriteBatch = new SpriteBatch();
+        mainbackground = AL.asset.get(Assets.PT_TESTMAINSCREEN);
+
 
         // Buttons:
         TextButton btPlay = new TextButton("Play", skin, "default");
-        btPlay.setWidth(200);
-        btPlay.setHeight(50);
-        btPlay.setPosition(x / 2 - 100, y / 5 + y / 2);
+        btPlay.setWidth(400);
+        btPlay.setHeight(100);
         btPlay.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -58,9 +74,9 @@ public class MainMenuScreen implements IAssetScreen {
         });
 
         TextButton btSettings = new TextButton("Settings", skin, "default");
-        btSettings.setWidth(200);
-        btSettings.setHeight(50);
-        btSettings.setPosition(x / 2 - 100, y / 5 + y / 3);
+        btSettings.setWidth(400);
+        btSettings.setHeight(100);
+      
         btSettings.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -70,11 +86,9 @@ public class MainMenuScreen implements IAssetScreen {
             }
         });
 
-
-        TextButton btExit = new TextButton("Exit Game", skin, "default");
-        btExit.setWidth(200);
-        btExit.setHeight(50);
-        btExit.setPosition(x / 2 - 100, y / 5 + y / 6);
+        btExit = new TextButton("Exit Game", skin, "default");
+        btExit.setWidth(400);
+        btExit.setHeight(100);
         btExit.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -82,10 +96,15 @@ public class MainMenuScreen implements IAssetScreen {
             }
         });
 
-        stage.addActor(btPlay);
-        stage.addActor(btSettings);
-        stage.addActor(btExit);
+        Table table = new Table();
+        table.add(btPlay).width(400).pad(10);
+        table.row();
+        table.add(btSettings).width(400).pad(10);
+        table.row();
+        table.add(btExit).width(400).pad(10);
+        table.setPosition(x/2, y/2+50);
 
+        stage.addActor(table);
 
         AL.input.setInputProcessor(stage);
     }
@@ -94,12 +113,22 @@ public class MainMenuScreen implements IAssetScreen {
     public void render(float delta) {
         AL.gl.glClearColor(0, 0, 0, 1);
         AL.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+        spriteBatch.setProjectionMatrix(cam.combined);
+        spriteBatch.begin();
+        spriteBatch.draw(mainbackground, 0, 0);
+        spriteBatch.end();
+
+
         stage.act(Gdx.graphics.getDeltaTime());
         stage.draw();
+
+
     }
 
     @Override
     public void resize(int width, int height) {
+
         viewport.update(width, height, true);
     }
 
@@ -115,16 +144,15 @@ public class MainMenuScreen implements IAssetScreen {
 
     @Override
     public void hide() {
-        //game.config.editor.setValue(IVideoConfig.VideoKeyNames.HEIGHT, 500);
-        //game.config.editor.setValue(IVideoConfig.VideoKeyNames.WIDTH, 500);
-        //game.config.editor.flush();
         AL.input.setInputProcessor(null);
         stage.dispose();
+        spriteBatch.dispose();
     }
 
     @Override
     public void dispose() {
-        AL.asset.unload(Assets.PT_TEXTBUTTONSTYLES_JSON.fileName);
+        AL.asset.unload(Assets.PT_TEXTBUTTON_JSON.fileName);
+        AL.asset.unload(Assets.PT_TESTMAINSCREEN.fileName);
     }
 
     private void changeSize() {
@@ -135,11 +163,18 @@ public class MainMenuScreen implements IAssetScreen {
 
     @Override
     public List<AssetDescriptor> assets() {
-        return Arrays.asList(Assets.PT_TEXTBUTTONSTYLES_JSON);
+        return Arrays.asList(Assets.PT_TEXTBUTTON_JSON, Assets.PT_TESTMAINSCREEN);
     }
 
     @Override
     public ILoadingScreen customLoadingScreen() {
         return null;
+    }
+
+    // Sets the position of all TextButtons on the Screen
+    private void setButtonPosition(int x, int y) {
+        btPlay.setPosition(x / 2 - 200, y / 5 + y / 2);
+        btSettings.setPosition(x / 2 - 200, y / 5 + y / 2.6f);
+        btExit.setPosition(x / 2 - 200, y / 5 + y / 5);
     }
 }

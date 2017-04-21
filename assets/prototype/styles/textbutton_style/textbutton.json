@@ -1,0 +1,29 @@
+{
+com.badlogic.gdx.graphics.g2d.BitmapFont: {
+	bocklin: {
+		file: bocklin.fnt
+	}
+}
+com.badlogic.gdx.graphics.Color: {
+	RGBA_255_244_0_255: {
+		r: 1
+		g: 0.9573333
+		b: 0
+		a: 1
+	}
+}
+com.badlogic.gdx.scenes.scene2d.ui.Slider$SliderStyle: {
+	default-horizontal: {
+		background: background
+		knob: knob
+	}
+}
+com.badlogic.gdx.scenes.scene2d.ui.TextButton$TextButtonStyle: {
+	default: {
+		font: bocklin
+		fontColor: RGBA_255_244_0_255
+		up: background
+		over: background_over
+	}
+}
+}

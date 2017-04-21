@@ -20,10 +20,12 @@ public class DesktopLauncher {
 
         try {
             LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
+            config.resizable = false;
             DesktopConfigEditor editor = new DesktopConfigEditor();
             Config cfg = DesktopConfigUtil.buildConfig(editor);
             DesktopConfigUtil.setupLwjglConfig(config, cfg);
             LwjglApplication application = new LwjglApplication(new ArcadeLegendsGame(cfg), config);
+            //application.postRunnable(() -> application.getGraphics().setUndecorated(true));
             DesktopConfigUtil.registerStandardListeners(editor, cfg, config, application);
         } catch (Exception ex) {
             log.error(MarkerFactory.getMarker("ERROR"), "Error loading config", ex);

@@ -60,26 +60,49 @@ public class DesktopConfigUtil {
     public static void setupLwjglConfig(LwjglApplicationConfiguration config, Config cfg) {
         config.foregroundFPS = cfg.video.foregroundFPS();
         config.backgroundFPS = cfg.video.backgroundFPS();
-        config.fullscreen = cfg.video.fullscreen();
+        config.fullscreen = cfg.video.screenmode().isFullscreen();
         config.vSyncEnabled = cfg.video.vsyncEnabled();
         config.width = cfg.video.width();
         config.height = cfg.video.height();
+        System.setProperty("org.lwjgl.opengl.Window.undecorated", cfg.video.screenmode().isBorderless() + "");
     }
 
     public static void registerStandardListeners(DesktopConfigEditor editor, Config cfg, LwjglApplicationConfiguration config, LwjglApplication application) {
         TypeParser parser = TypeParser.newBuilder().build();
         if (cfg.miscellaneous.logConfigEvents())
             editor.addConfigValueChangedListener((key, value) -> log.debug("Config value changed: {}={}", key, value));
-        editor.addConfigValueChangedListener(IVideoConfig.VideoKeys.FULLSCREEN, (key, value) -> {
-            boolean fullscreen = parser.parse(value, Boolean.class);
-            if (fullscreen)
-                application.postRunnable(() -> application.getGraphics().setFullscreenMode(application.getGraphics().getDisplayMode()));
-            else
-                application.postRunnable(() -> application.getGraphics().setWindowedMode(cfg.video.width(), cfg.video.height()));
-        });
+        editor.addConfigValueChangedListener(IVideoConfig.VideoKeys.SCREENMODE, (key, value) -> {
+            IVideoConfig.ScreenMode mode = parser.parse(value, IVideoConfig.ScreenMode.class);
+            switch (mode) {
+                case Fullscreen:
+                    application.postRunnable(() -> application.getGraphics().setFullscreenMode(application.getGraphics().getDisplayMode()));
+                    break;
+                case Borderless:
+                    application.postRunnable(() -> {
+                        application.getGraphics().setFullscreenMode(application.getGraphics().getDisplayMode());
+                        application.getGraphics().setUndecorated(true);
+                        application.getGraphics().setWindowedMode(cfg.video.width(), cfg.video.height());
+                    });
+                    break;
+                case Windowed:
+                    application.postRunnable(() -> {
+                        application.getGraphics().setFullscreenMode(application.getGraphics().getDisplayMode());
+                        application.getGraphics().setUndecorated(false);
+                        application.getGraphics().setWindowedMode(cfg.video.width(), cfg.video.height());
+                    });
+                    break;
+            }
+        }, true);
         editor.addConfigValueChangedListener(IVideoConfig.VideoKeys.BACKGROUNDFPS, (key, value) -> config.backgroundFPS = parser.parse(value, Integer.class));
         editor.addConfigValueChangedListener(IVideoConfig.VideoKeys.FOREGROUNDFPS, (key, value) -> config.foregroundFPS = parser.parse(value, Integer.class));
         editor.addConfigValueChangedListener(IVideoConfig.VideoKeys.VSYNC, (key, value) -> application.postRunnable(() -> application.getGraphics().setVSync(parser.parse(value, Boolean.class))));
-        editor.addConfigValueChangedListener(IVideoConfig.VideoKeys.WIDTH, (key, value) -> application.postRunnable(() -> application.getGraphics().setWindowedMode(cfg.video.width(), cfg.video.height())), true);
+        editor.addConfigValueChangedListener(IVideoConfig.VideoKeys.WIDTH, ((key, value) -> application.postRunnable(() -> {
+            if(cfg.video.screenmode().isWindowed())
+            {
+                application.getGraphics().setFullscreenMode(application.getGraphics().getDisplayMode());
+                application.getGraphics().setUndecorated(false);
+                application.getGraphics().setWindowedMode(cfg.video.width(), cfg.video.height());
+            }
+        })), true);
     }
 }

@@ -28,11 +28,11 @@ public class DesktopLauncher {
         defaults.put("vsync", false);
         defaults.put("height", ScreenSizes.DEFAULT.getHeight());
         defaults.put("width", ScreenSizes.DEFAULT.getWidth());
-        defaults.put("fullscreen", true);
+        defaults.put("isFullscreen", true);
         config.foregroundFPS = pref.getInteger("foregroundFPS", (int) defaults.get("foregroundFPS"));
         config.backgroundFPS = pref.getInteger("backgroundFPS", (int) defaults.get("backgroundFPS"));
         application.postRunnable(() -> {
-            if (pref.getBoolean("fullscreen", (boolean) defaults.get("fullscreen")))
+            if (pref.getBoolean("isFullscreen", (boolean) defaults.get("isFullscreen")))
                 application.getGraphics().setFullscreenMode(application.getGraphics().getDisplayMode());
             else
                 application.getGraphics().setWindowedMode(

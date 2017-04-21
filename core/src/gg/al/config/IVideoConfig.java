@@ -14,7 +14,7 @@ public interface IVideoConfig {
 
     int backgroundFPS();
 
-    boolean fullscreen();
+    ScreenMode screenmode();
 
     int width();
 
@@ -25,7 +25,7 @@ public interface IVideoConfig {
         VSYNC("vsyncEnabled"),
         BACKGROUNDFPS("backgroundFPS"),
         FOREGROUNDFPS("foregroundFPS"),
-        FULLSCREEN("fullscreen"),
+        SCREENMODE("screenmode"),
         WIDTH("width"),
         HEIGHT("height");
 
@@ -43,6 +43,22 @@ public interface IVideoConfig {
         @Override
         public String getPrefix() {
             return PREFIX;
+        }
+    }
+
+    enum ScreenMode {
+        Fullscreen, Borderless, Windowed;
+
+        public boolean isFullscreen() {
+            return this == Fullscreen;
+        }
+
+        public boolean isWindowed() {
+            return this == Windowed;
+        }
+
+        public boolean isBorderless() {
+            return this == Borderless;
         }
     }
 }
