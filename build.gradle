@@ -5,10 +5,7 @@ buildscript {
         maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
         jcenter()
     }
-    dependencies {
-    }
 }
-
 allprojects {
     apply plugin: "eclipse"
     apply plugin: "idea"
@@ -97,4 +94,7 @@ project(":core") {
 
 tasks.eclipse.doLast {
     delete ".project"
+}
+repositories {
+    mavenCentral()
 }

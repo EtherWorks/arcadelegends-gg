@@ -13,6 +13,7 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import gg.al.config.IVideoConfig;
 import gg.al.game.AL;
+import gg.al.game.screen.LevelScreen;
 import gg.al.util.Assets;
 import lombok.extern.slf4j.Slf4j;
 
