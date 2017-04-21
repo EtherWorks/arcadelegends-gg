@@ -9,15 +9,12 @@ public class Stats extends PooledComponent {
 
     public float maxHealth;
     public float maxActionPoints;
+    public float moveSpeed;
 
     @Override
     protected void reset() {
         maxActionPoints = 0;
         maxHealth = 0;
-    }
-
-    public void set(float maxHealth, float maxActionPoints) {
-        this.maxHealth = maxHealth;
-        this.maxActionPoints = maxActionPoints;
+        moveSpeed = 0;
     }
 }

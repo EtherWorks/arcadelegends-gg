@@ -12,6 +12,6 @@ public class VectorUtil {
 
     public static double sqrMag(Vector2 vec)
     {
-        return Math.abs(Math.pow(vec.x, 2) + Math.pow(vec.y, 2));
+        return Math.pow(vec.x, 2) + Math.pow(vec.y, 2);
     }
 }

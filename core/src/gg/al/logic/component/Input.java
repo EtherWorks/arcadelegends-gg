@@ -2,7 +2,6 @@ package gg.al.logic.component;
 
 import com.artemis.PooledComponent;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.joints.MouseJoint;
 
 /**
  * Created by Thomas Neumann on 30.03.2017.<br />
@@ -10,16 +9,19 @@ import com.badlogic.gdx.physics.box2d.joints.MouseJoint;
 public class Input extends PooledComponent {
 
     public final Vector2 move;
+    public final Vector2 stepMove;
     public double lastDist;
 
     public Input() {
         move = new Vector2();
+        stepMove = new Vector2();
         lastDist = Double.MAX_VALUE;
     }
 
     @Override
     protected void reset() {
-        move.set(Vector2.Zero);
+        move.setZero();
+        stepMove.setZero();
         lastDist = Double.MAX_VALUE;
     }
 

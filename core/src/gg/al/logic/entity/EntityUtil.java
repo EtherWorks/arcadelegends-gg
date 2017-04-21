@@ -3,8 +3,6 @@ package gg.al.logic.entity;
 import com.badlogic.gdx.assets.AssetDescriptor;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
-import com.badlogic.gdx.physics.box2d.joints.MouseJoint;
-import com.badlogic.gdx.physics.box2d.joints.MouseJointDef;
 import gg.al.exception.EntityException;
 import gg.al.logic.ArcadeWorld;
 import gg.al.logic.component.*;
@@ -62,7 +60,9 @@ public class EntityUtil {
     }
 
     private static void setup(int entityId, Stats stats, ArcadeWorld arcadeWorld, EntityArguments arguments) {
-        stats.set(arguments.get("maxHealth", Integer.class), arguments.get("maxAP", Integer.class));
+        stats.maxHealth = arguments.get("maxHealth", Integer.class);
+        stats.maxActionPoints = arguments.get("maxAP", Integer.class);
+        stats.moveSpeed = arguments.get("moveSpeed", Integer.class);
     }
 
     private static void setup(int entityId, Render render, ArcadeWorld arcadeWorld, EntityArguments arguments) {
