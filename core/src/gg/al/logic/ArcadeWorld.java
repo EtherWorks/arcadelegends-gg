@@ -19,6 +19,7 @@ import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import gg.al.game.AL;
+import gg.al.graphics.CameraLayerGroupStrategy;
 import gg.al.logic.entity.EntityWorld;
 import gg.al.logic.map.LogicMap;
 import gg.al.logic.map.Tile;
@@ -99,7 +100,7 @@ public class ArcadeWorld implements Disposable {
         mapDecal = Decal.newDecal(mapWidth, mapHeight, mapTemp);
         mapDecal.setPosition(-.5f + mapWidth / 2, -.5f + mapHeight / 2, 0);
 
-        decalBatch = new DecalBatch(new CameraGroupStrategy(cam));
+        decalBatch = new DecalBatch(new CameraLayerGroupStrategy(cam));
 
         mapHitbox = new Plane(Vector3.Z, Vector3.Zero);
 
