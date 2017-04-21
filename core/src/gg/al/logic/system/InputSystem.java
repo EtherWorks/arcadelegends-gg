@@ -55,6 +55,7 @@ public class InputSystem extends IteratingSystem {
         Position pos = mapperPosition.get(entityId);
         Input input = mapperInput.get(entityId);
         DynamicPhysic dynamicPhysic = mapperDynamicPhysic.get(entityId);
+        log.debug("{} ", input.lastDist);
         if (input.move.dst(pos.position) != 0 && dynamicPhysic.getBody().getLinearVelocity().equals(Vector2.Zero)) {
 //            Vector2 to = vectorPool.obtain();
 //            if (Math.abs(input.move.x - pos.position.x) > Math.abs(input.move.y - pos.position.y))
@@ -63,11 +64,20 @@ public class InputSystem extends IteratingSystem {
 //                to.set(0, Math.signum(input.move.y - pos.position.y));
 //            dynamicPhysic.getBody().setLinearVelocity(to);
 //            vectorPool.free(to);
-            dynamicPhysic.getBody().setLinearVelocity(input.move.x - pos.position.x, input.move.y - pos.position.y);
-        } else if (input.move.dst(dynamicPhysic.getBody().getPosition()) < VectorUtil.magni(dynamicPhysic.getBody().getLinearVelocity())) {
-            dynamicPhysic.getBody().setLinearVelocity(0, 0);
-            dynamicPhysic.getBody().setTransform(pos.position, dynamicPhysic.getBody().getAngle());
+            Vector2 vec = vectorPool.obtain();
+            dynamicPhysic.getBody().setLinearVelocity(vec.set(input.move).sub(pos.position).nor().scl(2));
+            vectorPool.free(vec);
+        } else {
+            Vector2 vec = vectorPool.obtain();
+            if (input.lastDist < VectorUtil.sqrMag(vec.set(input.move).sub(pos.position))) {
+                dynamicPhysic.getBody().setLinearVelocity(0, 0);
+                dynamicPhysic.getBody().setTransform(input.move, dynamicPhysic.getBody().getAngle());
+                input.lastDist = Double.MAX_VALUE;
+            } else
+                input.lastDist = VectorUtil.sqrMag(vec.set(input.move).sub(pos.position));
+            vectorPool.free(vec);
         }
+        //log.debug("{} {}", VectorUtil.magni(dynamicPhysic.getBody().getLinearVelocity()), input.move.dst(dynamicPhysic.getBody().getPosition()));
 
 //        System.out.println(dynamicPhysic.getBody().getLinearVelocity());
 //        if (!input.move.equals(pos.position)) {

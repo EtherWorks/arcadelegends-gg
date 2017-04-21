@@ -10,14 +10,17 @@ import com.badlogic.gdx.physics.box2d.joints.MouseJoint;
 public class Input extends PooledComponent {
 
     public final Vector2 move;
+    public double lastDist;
 
     public Input() {
         move = new Vector2();
+        lastDist = Double.MAX_VALUE;
     }
 
     @Override
     protected void reset() {
         move.set(Vector2.Zero);
+        lastDist = Double.MAX_VALUE;
     }
 
     public void set(int moveX, int moveY) {
