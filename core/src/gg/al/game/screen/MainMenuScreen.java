@@ -17,6 +17,7 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import gg.al.config.IVideoConfig;
 import gg.al.game.AL;
+import gg.al.game.screen.LevelScreen;
 import gg.al.util.Assets;
 import lombok.extern.slf4j.Slf4j;
 
@@ -60,14 +61,22 @@ public class MainMenuScreen implements IAssetScreen {
 
 
         // Buttons:
-        btPlay = new TextButton("Play", skin, "default");
+        TextButton btPlay = new TextButton("Play", skin, "default");
         btPlay.setWidth(400);
         btPlay.setHeight(100);
+        btPlay.addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                if(!AL.screen.isRegistered(LevelScreen.class))
+                    AL.screen.register(new LevelScreen(Assets.PT_TEST), LevelScreen.class);
+                AL.game.setScreen(AL.screen.get(LevelScreen.class));
+            }
+        });
 
-
-        btSettings = new TextButton("Settings", skin, "default");
+        TextButton btSettings = new TextButton("Settings", skin, "default");
         btSettings.setWidth(400);
         btSettings.setHeight(100);
+      
         btSettings.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {

@@ -2,6 +2,9 @@ package gg.al.game;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
+import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import gg.al.config.Config;
 import gg.al.game.screen.IAssetScreen;
 import gg.al.game.screen.DefaultLoadingScreen;
@@ -36,6 +39,8 @@ public class ArcadeLegendsGame extends Game {
     public void create() {
         AL.game = this;
         AL.asset = assetManager;
+        assetManager.setLoader(TiledMap.class, new TmxMapLoader(new InternalFileHandleResolver()));
+
         AL.config = config;
         AL.cedit = config.editor;
         AL.caudio = config.audio;
