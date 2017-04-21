@@ -49,6 +49,7 @@ public class SettingsScreen implements IAssetScreen, InputProcessor {
 
     private TextButton btVsync;
     private SelectBox sbResolution;
+    private SelectBox sbFps;
     private Slider volumeSlider;
 
     private TextButton btTabVideo;
@@ -127,14 +128,13 @@ public class SettingsScreen implements IAssetScreen, InputProcessor {
             }
         });
 
-
         BitmapFont font = AL.asset.get(Assets.PT_BOCKLIN);
         font.getData().setScale(0.5f, 0.5f);
         ScrollPane.ScrollPaneStyle scrollPaneStyle = new ScrollPane.ScrollPaneStyle();
         com.badlogic.gdx.scenes.scene2d.ui.List.ListStyle listStyle = new com.badlogic.gdx.scenes.scene2d.ui.List.ListStyle(font, Color.BLACK, Color.BLACK, selection);
         SelectBox.SelectBoxStyle selectBoxStyle = new SelectBox.SelectBoxStyle(font, Color.BLACK, null, scrollPaneStyle, listStyle);
 
-        String[] resolutions = {"Fullscreen", "Windowed Fullscreen", "1920x1080", "1680x1050",
+        String[] resolutions = {"Fullscreen", "Borderless", "1920x1080", "1680x1050",
                 "1600x900", "1400x1050", "1280x1024", "1280x768",
                 "1280x720", "1024x768", "1024x600", "800x600"};
         sbResolution = new SelectBox(selectBoxStyle);
@@ -147,11 +147,23 @@ public class SettingsScreen implements IAssetScreen, InputProcessor {
         });
         sbResolution.setSelected(getResolution());
 
+        sbFps = new SelectBox(selectBoxStyle);
+        sbFps.setItems(30,60,144);
+        sbFps.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                setFps();
+            }
+        });
+        sbFps.setSelected(getCurrentFPS());
+
+
         tableVideo = new Table();
         tableVideo.add(btVsync).pad(10);
         tableVideo.row();
         tableVideo.add(sbResolution).pad(10);
         tableVideo.row();
+        tableVideo.add(sbFps).pad(10);
 
     }
 
@@ -225,7 +237,7 @@ public class SettingsScreen implements IAssetScreen, InputProcessor {
                 AL.cedit.setValue(IVideoConfig.VideoKeys.SCREENMODE, IVideoConfig.ScreenMode.Fullscreen);
                 AL.cedit.flush();
                 break;
-            case "Windowed Fullscreen":
+            case "Borderless":
                 AL.cedit.setValue(IVideoConfig.VideoKeys.WIDTH, (int) Toolkit.getDefaultToolkit().getScreenSize().getWidth());
                 AL.cedit.setValue(IVideoConfig.VideoKeys.HEIGHT, (int) Toolkit.getDefaultToolkit().getScreenSize().getHeight());
                 AL.cedit.setValue(IVideoConfig.VideoKeys.SCREENMODE, IVideoConfig.ScreenMode.Borderless);
@@ -244,6 +256,29 @@ public class SettingsScreen implements IAssetScreen, InputProcessor {
 
     private String getResolution() {
         return AL.cvideo.width() + "x" + AL.cvideo.height();
+    }
+
+    private void setFps()
+    {
+        int fps = (int) sbFps.getSelected();
+        switch(fps)
+        {
+            case 30:
+                AL.cedit.setValue(IVideoConfig.VideoKeys.FOREGROUNDFPS, fps);
+                break;
+            case 60:
+                AL.cedit.setValue(IVideoConfig.VideoKeys.FOREGROUNDFPS, fps);
+                break;
+            case 144:
+                AL.cedit.setValue(IVideoConfig.VideoKeys.FOREGROUNDFPS, fps);
+                break;
+        }
+        AL.cedit.flush();
+    }
+
+    private int getCurrentFPS()
+    {
+        return AL.cvideo.foregroundFPS();
     }
 
 
