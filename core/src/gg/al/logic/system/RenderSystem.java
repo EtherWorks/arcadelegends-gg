@@ -39,7 +39,7 @@ public class RenderSystem extends IteratingSystem {
         if (dynamicPhysic != null)
             decal.setPosition(dynamicPhysic.getBody().getPosition().x, dynamicPhysic.getBody().getPosition().y, 0.01f);
         else
-            decal.setPosition(position.position.x, position.position.y, 0.01f);
+            decal.setPosition(position.position.x, position.position.y, 0.1f);
         decalBatch.add(decal);
     }
 
