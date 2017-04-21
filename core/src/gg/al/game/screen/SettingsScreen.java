@@ -22,6 +22,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import gg.al.config.IAudioConfig;
 import gg.al.config.IVideoConfig;
 import gg.al.game.AL;
 import gg.al.game.ui.ALTabbedPane;
@@ -71,13 +72,13 @@ public class SettingsScreen implements IAssetScreen, InputProcessor {
         viewport.setCamera(cam);
         stage = new Stage(viewport);
         stage.setViewport(viewport);
-        skin = AL.asset.get(Assets.PT_TEXTBUTTON_JSON);
+        skin = AL.asset.get(Assets.PT_STYLES_JSON);
         int x = 1920;
         int y = 1080;
         spriteBatch = new SpriteBatch();
         mainbackground = AL.asset.get(Assets.PT_TESTMAINSCREEN);
         componentMap = new HashMap<>();
-        selectionTexture = AL.asset.get(Assets.PT_SELECTION);
+        selectionTexture = AL.asset.get(Assets.PT_BACKGROUND_TEXTBUTTON);
         Sprite sprite = new Sprite(selectionTexture);
         selection = new SpriteDrawable(sprite);
 
@@ -156,8 +157,13 @@ public class SettingsScreen implements IAssetScreen, InputProcessor {
 
     private void createAudioTable()
     {
-        volumeSlider = new Slider(0,100,1,false,skin);
-        volumeSlider.setScale(5,5);
+        volumeSlider = new Slider(0,100,1,false, skin);
+        volumeSlider.addListener(new ChangeListener(){
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                AL.cedit.setValue(IAudioConfig.AudioKeys.MASTERVOLUME, volumeSlider.getValue());
+            }
+        });
         tableAudio = new Table();
         tableAudio.add(volumeSlider).pad(10);
         tableAudio.row();
@@ -202,7 +208,7 @@ public class SettingsScreen implements IAssetScreen, InputProcessor {
 
     @Override
     public void dispose() {
-        AL.asset.unload(Assets.PT_TEXTBUTTON_JSON.fileName);
+        AL.asset.unload(Assets.PT_STYLES_JSON.fileName);
         AL.asset.unload(Assets.PT_TESTMAINSCREEN.fileName);
     }
 
@@ -243,7 +249,7 @@ public class SettingsScreen implements IAssetScreen, InputProcessor {
 
     @Override
     public java.util.List<AssetDescriptor> assets() {
-        return Arrays.asList(Assets.PT_TEXTBUTTON_JSON, Assets.PT_TESTMAINSCREEN, Assets.PT_SELECTION, Assets.PT_BOCKLIN);
+        return Arrays.asList(Assets.PT_STYLES_JSON, Assets.PT_TESTMAINSCREEN, Assets.PT_BACKGROUND_TEXTBUTTON, Assets.PT_BOCKLIN);
     }
 
     @Override

@@ -1,34 +1,41 @@
 
-textbutton.png
+styles.png
 size: 1024,1024
 format: RGBA8888
 filter: Linear,Linear
 repeat: none
-background
+background_slider
   rotate: false
-  xy: 515, 537
-  size: 1, 1
-  orig: 1, 1
+  xy: 38, 29
+  size: 1, 10
+  orig: 1, 10
   offset: 0, 0
   index: -1
-background_over
+background_textbutton
   rotate: false
-  xy: 1, 1
+  xy: 515, 552
   size: 1, 1
   orig: 1, 1
   offset: 0, 0
   index: -1
 bocklin
   rotate: false
-  xy: 1, 26
+  xy: 1, 41
   size: 512, 512
   orig: 512, 512
   offset: 0, 0
   index: -1
-knob
+knob_slider
   rotate: false
   xy: 1, 4
-  size: 20, 20
-  orig: 20, 20
+  size: 35, 35
+  orig: 35, 35
+  offset: 0, 0
+  index: -1
+over_textbutton
+  rotate: false
+  xy: 1, 1
+  size: 1, 1
+  orig: 1, 1
   offset: 0, 0
   index: -1

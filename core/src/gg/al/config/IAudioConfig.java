@@ -7,8 +7,10 @@ package gg.al.config;
 public interface IAudioConfig {
     String PREFIX = "audio";
 
+    float masterVolume();
 
     enum AudioKeys implements IConfigKey {
+        MASTERVOLUME("masterVolume")
         ;
         private final String key;
 

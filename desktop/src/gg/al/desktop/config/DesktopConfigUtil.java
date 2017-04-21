@@ -1,10 +1,12 @@
 package gg.al.desktop.config;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import com.github.drapostolos.typeparser.TypeParser;
 import com.google.common.io.Files;
 import gg.al.config.Config;
+import gg.al.config.IAudioConfig;
 import gg.al.config.IVideoConfig;
 import lombok.extern.slf4j.Slf4j;
 import org.cfg4j.provider.ConfigurationProvider;

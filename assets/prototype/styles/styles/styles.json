@@ -7,23 +7,23 @@ com.badlogic.gdx.graphics.g2d.BitmapFont: {
 com.badlogic.gdx.graphics.Color: {
 	RGBA_255_244_0_255: {
 		r: 1
-		g: 0.9573333
+		g: 0.95686275
 		b: 0
 		a: 1
 	}
 }
 com.badlogic.gdx.scenes.scene2d.ui.Slider$SliderStyle: {
 	default-horizontal: {
-		background: background
-		knob: knob
+		background: background_slider
+		knob: knob_slider
 	}
 }
 com.badlogic.gdx.scenes.scene2d.ui.TextButton$TextButtonStyle: {
 	default: {
 		font: bocklin
 		fontColor: RGBA_255_244_0_255
-		up: background
-		over: background_over
+		up: background_textbutton
+		over: over_textbutton
 	}
 }
 }

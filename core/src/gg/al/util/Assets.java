@@ -38,11 +38,10 @@ public interface Assets {
     AssetDescriptor<Texture> PT_TESTFONT1 = new AssetDescriptor<>("assets/prototype/styles/buttonfont/testfont1.png", Texture.class);
     AssetDescriptor<Texture> PT_TESTFONT2 = new AssetDescriptor<>("assets/prototype/styles/buttonfont/testfont2.png", Texture.class);
     AssetDescriptor<TextureAtlas> PT_TEXTBUTTONSTYLES_ATLAS = new AssetDescriptor<>("assets/prototype/styles/buttonfont/textbuttonstyles.atlas", TextureAtlas.class);
-    AssetDescriptor<Skin> PT_TEXTBUTTONSTYLES_JSON = new AssetDescriptor<>("assets/prototype/styles/buttonfont/textbuttonstyles.json", Skin.class);
     AssetDescriptor<Texture> PT_TEXTBUTTONSTYLES_PNG = new AssetDescriptor<>("assets/prototype/styles/buttonfont/textbuttonstyles.png", Texture.class);
     AssetDescriptor<Texture> PT_TEXTBUTTONSTYLES2 = new AssetDescriptor<>("assets/prototype/styles/buttonfont/textbuttonstyles2.png", Texture.class);
     AssetDescriptor<Texture> PT_UP = new AssetDescriptor<>("assets/prototype/styles/buttonfont/up.png", Texture.class);
-    AssetDescriptor<BitmapFont> PT_BOCKLIN = new AssetDescriptor<>("assets/prototype/styles/textbutton_style/bocklin.fnt", BitmapFont.class);
+    AssetDescriptor<BitmapFont> PT_BOCKLIN = new AssetDescriptor<>("assets/prototype/styles/styles/bocklin.fnt", BitmapFont.class);
     AssetDescriptor<TextureAtlas> PT_TEXTBUTTON_ATLAS = new AssetDescriptor<>("assets/prototype/styles/textbutton_style/textbutton.atlas", TextureAtlas.class);
     AssetDescriptor<Skin> PT_TEXTBUTTON_JSON = new AssetDescriptor<>("assets/prototype/styles/textbutton_style/textbutton.json", Skin.class);
     AssetDescriptor<Texture> PT_TEXTBUTTON_PNG = new AssetDescriptor<>("assets/prototype/styles/textbutton_style/textbutton.png", Texture.class);
@@ -50,5 +49,8 @@ public interface Assets {
     AssetDescriptor<Skin> PT_NEON_JSON = new AssetDescriptor<>("assets/prototype/styles/neon_ui_style/neon.json", Skin.class);
     AssetDescriptor<Skin> PT_ARCADE_UI_JSON = new AssetDescriptor<>("assets/prototype/styles/arcade/arcade-ui.json", Skin.class);
     AssetDescriptor<Texture> PT_SELECTION = new AssetDescriptor<>("assets/prototype/styles/teststyle/selection.png", Texture.class);
+    AssetDescriptor<Skin> PT_STYLES_JSON = new AssetDescriptor<>("assets/prototype/styles/styles/styles.json", Skin.class);
+    AssetDescriptor<Texture> PT_BACKGROUND_TEXTBUTTON = new AssetDescriptor<>("assets/prototype/styles/styles/background_textbutton.png", Texture.class);
+
 
 }

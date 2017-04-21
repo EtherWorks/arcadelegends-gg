@@ -6,6 +6,7 @@ import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import gg.al.config.Config;
+import gg.al.config.IAudioConfig;
 import gg.al.game.screen.IAssetScreen;
 import gg.al.game.screen.DefaultLoadingScreen;
 import gg.al.game.screen.MainMenuScreen;
@@ -49,6 +50,9 @@ public class ArcadeLegendsGame extends Game {
         AL.cmisc = config.miscellaneous;
         AL.cvideo = config.video;
         AL.screen = screenManager;
+        AL.cedit.addConfigValueChangedListener(IAudioConfig.AudioKeys.MASTERVOLUME, (key, value) -> {
+            // warten auf Audiomanager
+        });
 
         setScreen(AL.screen.get(MainMenuScreen.class, true));
     }

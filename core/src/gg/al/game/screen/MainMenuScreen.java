@@ -52,7 +52,7 @@ public class MainMenuScreen implements IAssetScreen {
         viewport.setCamera(cam);
         stage = new Stage(viewport);
         stage.setViewport(viewport);
-        skin = AL.asset.get(Assets.PT_TEXTBUTTON_JSON);
+        skin = AL.asset.get(Assets.PT_STYLES_JSON);
         skin.getFont("bocklin").getData().setScale(0.8f,0.8f);
         int x = 1920;
         int y = 1080;
@@ -151,8 +151,7 @@ public class MainMenuScreen implements IAssetScreen {
 
     @Override
     public void dispose() {
-        AL.asset.unload(Assets.PT_TEXTBUTTON_JSON.fileName);
-        AL.asset.unload(Assets.PT_TESTMAINSCREEN.fileName);
+        AL.asset.unload(Assets.PT_STYLES_JSON.fileName);
     }
 
     private void changeSize() {
@@ -163,7 +162,7 @@ public class MainMenuScreen implements IAssetScreen {
 
     @Override
     public List<AssetDescriptor> assets() {
-        return Arrays.asList(Assets.PT_TEXTBUTTON_JSON, Assets.PT_TESTMAINSCREEN);
+        return Arrays.asList(Assets.PT_STYLES_JSON, Assets.PT_TESTMAINSCREEN);
     }
 
     @Override
