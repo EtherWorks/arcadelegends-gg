@@ -3,6 +3,7 @@ package gg.al.logic.component;
 import com.artemis.PooledComponent;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.joints.MouseJoint;
 import lombok.Getter;
 
 /**
@@ -10,7 +11,6 @@ import lombok.Getter;
  */
 public class DynamicPhysic extends PooledComponent implements IPhysic {
 
-    @Getter
     protected Body body;
 
     @Override
@@ -28,5 +28,10 @@ public class DynamicPhysic extends PooledComponent implements IPhysic {
     @Override
     public BodyDef.BodyType getBodyType() {
         return BodyDef.BodyType.DynamicBody;
+    }
+
+    @Override
+    public Body getBody() {
+        return body;
     }
 }

@@ -3,9 +3,7 @@ package gg.al.logic.system;
 import com.artemis.Aspect;
 import com.artemis.ComponentMapper;
 import com.artemis.systems.IteratingSystem;
-import gg.al.logic.component.DynamicPhysic;
-import gg.al.logic.component.Input;
-import gg.al.logic.component.Position;
+import gg.al.logic.component.*;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -15,19 +13,23 @@ import lombok.extern.slf4j.Slf4j;
 public class PhysicPositionSystem extends IteratingSystem {
 
     private ComponentMapper<DynamicPhysic> mapperDynamicPhysic;
+    private ComponentMapper<KinematicPhysic> mapperKinematicPhysic;
     private ComponentMapper<Position> mapperPosition;
 
     public PhysicPositionSystem() {
-        super(Aspect.all(Position.class, DynamicPhysic.class));
+        super(Aspect.all(Position.class).one(DynamicPhysic.class, KinematicPhysic.class));
     }
 
     @Override
     protected void process(int entityId) {
         DynamicPhysic dynamicPhysic = mapperDynamicPhysic.get(entityId);
+        KinematicPhysic kinematicPhysic = mapperKinematicPhysic.get(entityId);
+        IPhysic physic = dynamicPhysic == null ? kinematicPhysic : dynamicPhysic;
+
         Position position = mapperPosition.get(entityId);
 
-        position.set(Math.round(dynamicPhysic.getBody().getPosition().x),
-                Math.round(dynamicPhysic.getBody().getPosition().y));
+        position.set(Math.round(physic.getBody().getPosition().x),
+                Math.round(physic.getBody().getPosition().y));
         //log.debug(position.position.toString());
     }
 }

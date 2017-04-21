@@ -9,4 +9,5 @@ import com.badlogic.gdx.physics.box2d.BodyDef;
 public interface IPhysic {
       BodyDef.BodyType getBodyType();
       void setBody(Body body);
+      Body getBody();
 }

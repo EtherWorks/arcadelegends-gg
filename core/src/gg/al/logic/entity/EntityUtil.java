@@ -3,6 +3,8 @@ package gg.al.logic.entity;
 import com.badlogic.gdx.assets.AssetDescriptor;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
+import com.badlogic.gdx.physics.box2d.joints.MouseJoint;
+import com.badlogic.gdx.physics.box2d.joints.MouseJointDef;
 import gg.al.exception.EntityException;
 import gg.al.logic.ArcadeWorld;
 import gg.al.logic.component.*;
@@ -12,7 +14,6 @@ import gg.al.logic.map.Tile;
  * Created by Thomas Neumann on 24.03.2017.<br />
  */
 public class EntityUtil {
-
 
     public static int spawn(Entity entity, ArcadeWorld arcadeWorld, EntityArguments arguments) {
         EntityWorld entityWorld = arcadeWorld.getEntityWorld();
@@ -76,7 +77,6 @@ public class EntityUtil {
     }
 
     private static void setup(int entityId, IPhysic physic, ArcadeWorld arcadeWorld, EntityArguments arguments) {
-
         BodyDef bodyDef = new BodyDef();
         bodyDef.type = physic.getBodyType();
         bodyDef.position.set(arguments.get("x", Integer.class), arguments.get("y", Integer.class));
@@ -85,12 +85,15 @@ public class EntityUtil {
         FixtureDef fixtureDef = new FixtureDef();
         CircleShape shape = new CircleShape();
         shape.setRadius(.5f);
+
         fixtureDef.shape = shape;
         body.createFixture(fixtureDef);
 
         shape.dispose();
         body.setUserData(entityId);
         physic.setBody(body);
+
+
     }
 
 

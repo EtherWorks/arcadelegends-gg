@@ -10,7 +10,6 @@ import lombok.Getter;
  */
 public class KinematicPhysic extends PooledComponent implements IPhysic {
 
-    @Getter
     protected Body body;
 
     @Override
@@ -28,5 +27,10 @@ public class KinematicPhysic extends PooledComponent implements IPhysic {
     @Override
     public BodyDef.BodyType getBodyType() {
         return BodyDef.BodyType.KinematicBody;
+    }
+
+    @Override
+    public Body getBody() {
+        return body;
     }
 }

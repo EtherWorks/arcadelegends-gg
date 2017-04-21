@@ -90,9 +90,10 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
         AL.graphics.getGL20().glClearColor(0, 0, 0, 1);
         AL.graphics.getGL20().glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 
-        arcadeWorld.setDelta(AL.graphics.getDeltaTime());
-        arcadeWorld.step();
-        arcadeWorld.render();
+            arcadeWorld.setDelta(AL.graphics.getDeltaTime());
+            arcadeWorld.step();
+            arcadeWorld.render();
+
 
         fpsBatch.begin();
         font.draw(fpsBatch, String.format("%d FPS %d", Gdx.graphics.getFramesPerSecond(), arcadeWorld.getEntityWorld().getAspectSubscriptionManager().get(Aspect.all()).getEntities().size()), 0, 15);
@@ -106,12 +107,10 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
 
     @Override
     public void pause() {
-
     }
 
     @Override
     public void resume() {
-
     }
 
     @Override
