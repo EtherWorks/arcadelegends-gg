@@ -15,6 +15,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
@@ -147,6 +148,8 @@ public class SettingsScreen implements IAssetScreen, InputProcessor {
         });
         sbResolution.setSelected(getResolution());
 
+        Label lbResoultion = new Label("Resolution", skin);
+
         sbFps = new SelectBox(selectBoxStyle);
         sbFps.setItems(30,60,144);
         sbFps.addListener(new ChangeListener() {
@@ -157,13 +160,17 @@ public class SettingsScreen implements IAssetScreen, InputProcessor {
         });
         sbFps.setSelected(getCurrentFPS());
 
+        Label lbFps = new Label("FPS", skin);
+
 
         tableVideo = new Table();
-        tableVideo.add(btVsync).pad(10);
+        tableVideo.add(btVsync).pad(10).fill().colspan(2);
         tableVideo.row();
-        tableVideo.add(sbResolution).pad(10);
+        tableVideo.add(lbResoultion).pad(10).fill();
+        tableVideo.add(sbResolution).pad(10).fill();
         tableVideo.row();
-        tableVideo.add(sbFps).pad(10);
+        tableVideo.add(lbFps).pad(10).fill();
+        tableVideo.add(sbFps).pad(10).fill();
 
     }
 
