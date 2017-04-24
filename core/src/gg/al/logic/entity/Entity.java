@@ -9,12 +9,12 @@ import gg.al.logic.component.*;
  */
 public enum Entity {
 
-    TEST(0, Render.class,
+    Test(0, Render.class,
             Position.class,
             Stats.class,
             DynamicPhysic.class,
             Input.class),
-    BULLET(1,
+    Bullet(1,
             Render.class,
             Position.class,
             DynamicPhysic.class);
@@ -42,5 +42,15 @@ public enum Entity {
             builder.add(component);
         }
         return builder;
+    }
+
+    public static Entity fromId(int id)
+    {
+        for (Entity entity:
+             values()) {
+            if(entity.getEntityId() == id)
+                return entity;
+        }
+        throw new IllegalArgumentException("No entity with id " + id);
     }
 }

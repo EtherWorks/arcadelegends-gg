@@ -1,28 +1,11 @@
 package gg.al.logic.component;
 
-import com.artemis.PooledComponent;
 import gg.al.logic.entity.EntityArguments;
 
 /**
  * Created by Thomas Neumann on 30.03.2017.<br />
  */
-public class Stats extends PooledComponent {
-
-    public enum Fields {
-        maxHealth,
-        healthRegen,
-        maxActionPoints,
-        actionPointRegen,
-        maxResource,
-        resourceRegen,
-        attackDamage,
-        abilityPower,
-        armor,
-        magicResist,
-        criticalStrikeChance,
-        cooldownReduction,
-        moveSpeed
-    }
+public class Stats extends PooledDefComponent {
 
     public int maxHealth;
     public float healthRegen;
@@ -52,33 +35,38 @@ public class Stats extends PooledComponent {
     public float experience;
 
     public void set(EntityArguments arguments) {
-        maxHealth = arguments.get(Fields.maxHealth.toString(), Integer.class);
-        healthRegen = arguments.get(Fields.healthRegen.toString(), Float.class);
-        health = maxHealth;
-
-        maxActionPoints = arguments.get(Fields.maxActionPoints.toString(), Integer.class);
-        actionPointRegen = arguments.get(Fields.actionPointRegen.toString(), Float.class);
-        actionPoints = maxActionPoints;
-
-        maxResource = arguments.get(Fields.maxResource.toString(), Integer.class);
-        resourceRegen = arguments.get(Fields.resourceRegen.toString(), Float.class);
-        resource = maxResource;
-
-        attackDamage = arguments.get(Fields.attackDamage.toString(), Float.class);
-        abilityPower = arguments.get(Fields.abilityPower.toString(), Float.class);
-
-        armor = arguments.get(Fields.armor.toString(), Float.class);
-        magicResist = arguments.get(Fields.magicResist.toString(), Float.class);
-
-        criticalStrikeChance = arguments.get(Fields.criticalStrikeChance.toString(), Float.class);
-
-        cooldownReduction = arguments.get(Fields.cooldownReduction.toString(), Float.class);
-
-        moveSpeed = arguments.get(Fields.moveSpeed.toString(), Float.class);
-        level = 1;
-        experience = 0;
+        fromDef(arguments.get("stats", StatsDef.class));
     }
 
+    @Override
+    public IComponentDef getDefaultDef() {
+        return new StatsDef();
+    }
+
+    @Override
+    public void fromDef(IComponentDef def) {
+        StatsDef stats = (StatsDef) def;
+        maxHealth = stats.maxHealth;
+        healthRegen = stats.healthRegen;
+
+        maxActionPoints = stats.maxActionPoints;
+        actionPointRegen = stats.actionPointRegen;
+
+        maxResource = stats.maxResource;
+        resourceRegen = stats.resourceRegen;
+
+        attackDamage = stats.attackDamage;
+        abilityPower = stats.abilityPower;
+
+        armor = stats.armor;
+        magicResist = stats.magicResist;
+
+        criticalStrikeChance = stats.criticalStrikeChance;
+
+        cooldownReduction = stats.cooldownReduction;
+
+        moveSpeed = stats.moveSpeed;
+    }
 
     @Override
     protected void reset() {
@@ -98,5 +86,28 @@ public class Stats extends PooledComponent {
         magicResist = 0;
         criticalStrikeChance = 0;
         cooldownReduction = 0;
+    }
+
+    public static class StatsDef extends IComponentDef {
+        public int maxHealth;
+        public float healthRegen;
+
+        public int maxActionPoints;
+        public float actionPointRegen;
+
+        public int maxResource;
+        public float resourceRegen;
+
+        public float attackDamage;
+        public float abilityPower;
+
+        public float armor;
+        public float magicResist;
+
+        public float criticalStrikeChance;
+
+        public float cooldownReduction;
+
+        public float moveSpeed;
     }
 }

@@ -25,6 +25,7 @@ import gg.al.logic.entity.EntityUtil;
 import gg.al.util.Assets;
 import lombok.extern.slf4j.Slf4j;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
@@ -197,15 +198,14 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
         switch (button) {
             case Input.Buttons.LEFT:
                 if (playerEnt == -1) {
-                    EntityArguments arguments = new EntityArguments();
-                    arguments.put("texture", Assets.PT_EZREAL);
-                    arguments.put("x", (int) mapCoord.x);
-                    arguments.put("y", (int) mapCoord.y);
-                    arguments.put("maxHealth", 100);
-                    arguments.put("maxAP", 10);
-                    arguments.put("moveSpeed", 6f);
-                    arguments.put("actionPointRegen", 1f);
-                    playerEnt = EntityUtil.spawn(Entity.TEST, arcadeWorld, arguments);
+                    EntityArguments arguments = null;
+                    try {
+                        arguments = EntityArguments.fromFile("test.json");
+                        arguments.put("texture", Assets.PT_EZREAL);
+                        playerEnt = EntityUtil.spawn(Entity.Test, arcadeWorld, arguments);
+                    } catch (IOException e) {
+                       log.error("Couldn´t load player", e);
+                    }
                 } else {
                     gg.al.logic.component.Input input = arcadeWorld.getEntityWorld().getComponentOf(playerEnt, gg.al.logic.component.Input.class);
                     input.move.set((int) mapCoord.x, (int) mapCoord.y);
@@ -217,7 +217,7 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
                 arguments.put("x", (int) mapCoord.x);
                 arguments.put("y", (int) mapCoord.y);
                 arguments.put("move", new Vector2(1, 0));
-                EntityUtil.spawn(Entity.BULLET, arcadeWorld, arguments);
+                EntityUtil.spawn(Entity.Bullet, arcadeWorld, arguments);
                 break;
         }
 

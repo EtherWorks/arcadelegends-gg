@@ -24,6 +24,7 @@ allprojects {
         javaslangVersion = '2.1.0-alpha'
         slf4jVersion = '1.7.24'
         cfg4jVersion = '4.4.0'
+        gsonVersion = '2.8.0'
     }
 
     repositories {
@@ -83,6 +84,7 @@ project(":core") {
         compile "io.javaslang:javaslang:$javaslangVersion"
         //compile "org.slf4j:slf4j-api:$slf4jVersion"
         compile "org.cfg4j:cfg4j-core:$cfg4jVersion"
+        compile "com.google.code.gson:gson:$gsonVersion"
 
     }
 

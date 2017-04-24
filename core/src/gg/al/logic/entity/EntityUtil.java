@@ -4,17 +4,21 @@ import com.artemis.Component;
 import com.badlogic.gdx.assets.AssetDescriptor;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import gg.al.exception.EntityException;
 import gg.al.logic.ArcadeWorld;
 import gg.al.logic.component.*;
 import gg.al.logic.map.Tile;
 
-import java.util.Properties;
+import java.io.*;
+import java.util.*;
 
 /**
  * Created by Thomas Neumann on 24.03.2017.<br />
  */
 public class EntityUtil {
+    private static Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
     public static int spawn(Entity entity, ArcadeWorld arcadeWorld, EntityArguments arguments) {
         EntityWorld entityWorld = arcadeWorld.getEntityWorld();
@@ -22,9 +26,9 @@ public class EntityUtil {
         int id;
 
         switch (entity) {
-            case TEST:
-
-                Tile tile = arcadeWorld.getTile(arguments.get("x", Integer.class), arguments.get("y", Integer.class));
+            case Test:
+                Position.PositionDef positionDef = arguments.get("Position", Position.PositionDef.class);
+                Tile tile = arcadeWorld.getTile(positionDef.x, positionDef.y);
                 if (tile.getEntities().size > 0)
                     throw new EntityException("Can´t spawn test at position: other entity present");
 
@@ -42,7 +46,7 @@ public class EntityUtil {
                 setup(id, dynamicPhysic, arcadeWorld, arguments);
                 setup(id, input, arcadeWorld, arguments);
                 return id;
-            case BULLET:
+            case Bullet:
 
                 id = entityWorld.create(entityWorld.getArchetype(entity.getArchetype()));
 
@@ -67,14 +71,14 @@ public class EntityUtil {
     }
 
     private static void setup(int entityId, Render render, ArcadeWorld arcadeWorld, EntityArguments arguments) {
-        render.set(arguments.get("renderWidth", 1f, Float.class),
-                arguments.get("renderHeight", 1f, Float.class),
-                arguments.get("transparent", true, Boolean.class),
-                arguments.get("texture", AssetDescriptor.class));
+        Render.RenderDef renderDef = arguments.get("Render", Render.RenderDef.class);
+        render.fromDef(renderDef);
+        render.texture = arguments.get("texture", AssetDescriptor.class);
     }
 
     private static void setup(int entityId, Input input, ArcadeWorld arcadeWorld, EntityArguments arguments) {
-        input.move.set(arguments.get("x", Integer.class), arguments.get("y", Integer.class));
+        Position.PositionDef positionDef = arguments.get("Position", Position.PositionDef.class);
+        input.move.set(positionDef.x, positionDef.y);
     }
 
     private static void setup(int entityId, IPhysic physic, ArcadeWorld arcadeWorld, EntityArguments arguments) {
@@ -97,7 +101,6 @@ public class EntityUtil {
 
     }
 
-
     private static void setup(int entityId, Position position, ArcadeWorld arcadeWorld, EntityArguments arguments) {
         Tile tile = arcadeWorld.getTile(arguments.get("x", Integer.class), arguments.get("y", Integer.class));
         position.set(arguments.get("x", Integer.class), arguments.get("y", Integer.class));
@@ -105,16 +108,48 @@ public class EntityUtil {
         position.set(tile);
     }
 
-    public static Properties getTemplate(Entity entity)
-    {
-        Properties properties = new Properties();
-        for (Class<? extends Component> component:
-             entity.getComponents()) {
+    public static String getJsonTemplate(Entity entity) {
+        Map<String, IComponentDef> defs = new HashMap<>();
+        for (Class<? extends Component> component :
+                entity.getComponents()) {
+            if (!IDefComponent.class.isAssignableFrom(component))
+                continue;
+            try {
+                IDefComponent instance = (IDefComponent) component.newInstance();
+                IComponentDef def = instance.getDefaultDef();
+                defs.put(instance.getClass().getSimpleName(), def);
+            } catch (InstantiationException e) {
 
+            } catch (IllegalAccessException e) {
 
-
+            }
         }
-        return properties;
+        return GSON.toJson(defs);
+    }
+
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Load template for: ");
+        for (Entity entity :
+                Entity.values()) {
+            System.out.println("\t" + entity.getEntityId() + ": " + entity.name());
+        }
+        int id = scanner.nextInt();
+        Entity entity = Entity.fromId(id);
+        File out = new File(System.getProperty("user.dir") + File.separator + entity.name().toLowerCase() + ".json");
+        String json = getJsonTemplate(entity);
+        try {
+            FileWriter writer = new FileWriter(out);
+            writer.write(json);
+            writer.close();
+            System.out.println(out.getName() + " written successfully");
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 
 
