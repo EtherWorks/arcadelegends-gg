@@ -7,7 +7,14 @@ package gg.al.config;
 public interface IInputConfig {
     String PREFIX = "input";
 
+    int up();
+    int down();
+    int left();
+    int right();
+
     enum InputKeys implements IConfigKey {
+
+
         ;
         private final String key;
         private final String defaultValue;
