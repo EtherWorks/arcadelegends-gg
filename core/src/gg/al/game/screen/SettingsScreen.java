@@ -12,6 +12,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -21,6 +22,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import gg.al.config.IAudioConfig;
@@ -52,6 +55,8 @@ public class SettingsScreen implements IAssetScreen, InputProcessor {
     private SelectBox sbResolution;
     private SelectBox sbFps;
     private Slider volumeSlider;
+    private Slider musicSlider;
+    private Slider effectSlider;
 
     private TextButton btTabVideo;
     private TextButton btTabAudio;
@@ -129,11 +134,13 @@ public class SettingsScreen implements IAssetScreen, InputProcessor {
             }
         });
 
+        TextureRegion backgroundTexture = new TextureRegion(AL.asset.get(Assets.PT_BACKGROUND_TEXTBUTTON));
         BitmapFont font = AL.asset.get(Assets.PT_BOCKLIN);
         font.getData().setScale(0.5f, 0.5f);
         ScrollPane.ScrollPaneStyle scrollPaneStyle = new ScrollPane.ScrollPaneStyle();
-        com.badlogic.gdx.scenes.scene2d.ui.List.ListStyle listStyle = new com.badlogic.gdx.scenes.scene2d.ui.List.ListStyle(font, Color.BLACK, Color.BLACK, selection);
-        SelectBox.SelectBoxStyle selectBoxStyle = new SelectBox.SelectBoxStyle(font, Color.BLACK, null, scrollPaneStyle, listStyle);
+        com.badlogic.gdx.scenes.scene2d.ui.List.ListStyle listStyle = new com.badlogic.gdx.scenes.scene2d.ui.List.ListStyle(font, Color.BLACK, new Color(255,244,0,255), selection);
+        listStyle.background = new TextureRegionDrawable(backgroundTexture);
+        SelectBox.SelectBoxStyle selectBoxStyle = new SelectBox.SelectBoxStyle(font, new Color(255,244,0,255), new TextureRegionDrawable(backgroundTexture), scrollPaneStyle, listStyle);
 
         String[] resolutions = {"Fullscreen", "Borderless", "1920x1080", "1680x1050",
                 "1600x900", "1400x1050", "1280x1024", "1280x768",
@@ -149,6 +156,7 @@ public class SettingsScreen implements IAssetScreen, InputProcessor {
         });
 
         Label lbResoultion = new Label("Resolution", skin);
+        lbResoultion.setAlignment(Align.center);
 
         sbFps = new SelectBox(selectBoxStyle);
         sbFps.setItems(30,60,144);
@@ -161,6 +169,7 @@ public class SettingsScreen implements IAssetScreen, InputProcessor {
         sbFps.setSelected(getCurrentFPS());
 
         Label lbFps = new Label("FPS", skin);
+        lbFps.setAlignment(Align.center);
 
 
         tableVideo = new Table();
@@ -176,6 +185,8 @@ public class SettingsScreen implements IAssetScreen, InputProcessor {
 
     private void createAudioTable()
     {
+        Label lbMasterVolume = new Label("Master Volume", skin);
+        lbMasterVolume.setAlignment(Align.center);
         volumeSlider = new Slider(0,100,1,false, skin);
         volumeSlider.addListener(new ChangeListener(){
             @Override
@@ -183,9 +194,37 @@ public class SettingsScreen implements IAssetScreen, InputProcessor {
                 AL.cedit.setValue(IAudioConfig.AudioKeys.MASTERVOLUME, volumeSlider.getValue());
             }
         });
+
+        Label lbMusic = new Label("Music", skin);
+        lbMusic.setAlignment(Align.center);
+        musicSlider = new Slider(0, 100, 1, false, skin);
+        musicSlider.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                AL.cedit.setValue(IAudioConfig.AudioKeys.MUSICVOLUME, musicSlider.getValue());
+            }
+        });
+
+        Label lbEffects = new Label("Effects", skin);
+        lbEffects.setAlignment(Align.center);
+        effectSlider = new Slider(0,100,1,false, skin);
+        effectSlider.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                AL.cedit.setValue(IAudioConfig.AudioKeys.EFFECTVOLUME, effectSlider.getValue());
+            }
+        });
         tableAudio = new Table();
-        tableAudio.add(volumeSlider).pad(10);
+        tableAudio.add(lbMasterVolume).pad(10).fill();
+        tableAudio.add(volumeSlider).pad(10).fill();
         tableAudio.row();
+        tableAudio.add(lbMusic).pad(10).fill();
+        tableAudio.add(musicSlider).pad(10).fill();
+        tableAudio.row();
+        tableAudio.add(lbEffects).pad(10).fill();
+        tableAudio.add(effectSlider).pad(10).fill();
+
+
 
     }
 
@@ -229,6 +268,7 @@ public class SettingsScreen implements IAssetScreen, InputProcessor {
     public void dispose() {
         AL.asset.unload(Assets.PT_STYLES_JSON.fileName);
         AL.asset.unload(Assets.PT_TESTMAINSCREEN.fileName);
+        AL.asset.unload(Assets.PT_BACKGROUND_TEXTBUTTON.fileName);
     }
 
     private void vsyncOnOff() {
@@ -292,7 +332,7 @@ public class SettingsScreen implements IAssetScreen, InputProcessor {
 
     @Override
     public java.util.List<AssetDescriptor> assets() {
-        return Arrays.asList(Assets.PT_STYLES_JSON, Assets.PT_TESTMAINSCREEN, Assets.PT_BACKGROUND_TEXTBUTTON, Assets.PT_BOCKLIN);
+        return Arrays.asList(Assets.PT_STYLES_JSON, Assets.PT_TESTMAINSCREEN, Assets.PT_BACKGROUND_TEXTBUTTON, Assets.PT_BOCKLIN, Assets.PT_BACKGROUND_TEXTBUTTON);
     }
 
     @Override

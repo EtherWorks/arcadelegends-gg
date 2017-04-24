@@ -9,8 +9,14 @@ public interface IAudioConfig {
 
     float masterVolume();
 
+    float musicVolume();
+
+    float effectVolume();
+
     enum AudioKeys implements IConfigKey {
-        MASTERVOLUME("masterVolume", "100")
+        MASTERVOLUME("masterVolume", "100"),
+        MUSICVOLUME("musicVolume", "100"),
+        EFFECTVOLUME("effectVolume", "100")
         ;
         private final String key;
         private final String defaultValue;
