@@ -212,12 +212,14 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
                 }
                 break;
             case Input.Buttons.RIGHT:
-                EntityArguments arguments = new EntityArguments();
-                arguments.put("texture", Assets.PT_EZREAL);
-                arguments.put("x", (int) mapCoord.x);
-                arguments.put("y", (int) mapCoord.y);
-                arguments.put("move", new Vector2(1, 0));
-                EntityUtil.spawn(Entity.Bullet, arcadeWorld, arguments);
+                EntityArguments arguments = null;
+                try {
+                    arguments = EntityArguments.fromFile("test.json");
+                    arguments.put("texture", Assets.PT_EZREAL);
+                    EntityUtil.spawn(Entity.Test, arcadeWorld, arguments);
+                } catch (IOException e) {
+                    log.error("Couldn´t load player", e);
+                }
                 break;
         }
 

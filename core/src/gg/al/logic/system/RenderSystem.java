@@ -18,6 +18,7 @@ import gg.al.logic.component.Render;
 public class RenderSystem extends IteratingSystem {
 
     private final ObjectMap<Integer, Decal> decalMap;
+    private final ObjectMap<Integer, Decal> uiMap;
     private final DecalBatch decalBatch;
     private final AssetManager assetManager;
     private ComponentMapper<Render> mapperRender;
@@ -27,6 +28,7 @@ public class RenderSystem extends IteratingSystem {
     public RenderSystem(DecalBatch decalBatch, AssetManager assetManager) {
         super(Aspect.all(Render.class, Position.class));
         decalMap = new ObjectMap<>();
+        uiMap = new ObjectMap<>();
         this.decalBatch = decalBatch;
         this.assetManager = assetManager;
     }

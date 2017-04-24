@@ -4,11 +4,8 @@ import com.badlogic.gdx.utils.ObjectMap;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
-import gg.al.logic.component.IComponentDef;
 
-import java.awt.*;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.lang.reflect.Type;
@@ -23,12 +20,34 @@ import java.util.Properties;
  */
 public class EntityArguments {
 
-    private static Gson GSON = new GsonBuilder().create();
+    private static Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
     private final ObjectMap<String, Object> arguments;
 
     public EntityArguments() {
         arguments = new ObjectMap<>();
+    }
+
+    public static EntityArguments fromFile(String name) throws IOException {
+        try {
+            EntityArguments arguments = new EntityArguments();
+            File argumentFile = new File(EntityArguments.class.getResource("/" + name).toURI());
+            FileReader reader = new FileReader(argumentFile);
+            Type type = new TypeToken<Map<String, Object>>() {
+            }.getType();
+            Map<String, Object> defs = GSON.fromJson(reader, type);
+            reader.close();
+
+            for (Map.Entry<String, Object> entries : defs.entrySet()) {
+                arguments.put(entries.getKey(), entries.getValue());
+            }
+            return arguments;
+        } catch (NullPointerException ex) {
+            throw new IOException("No resource found");
+        } catch (URISyntaxException e) {
+            throw new IOException("URI exception");
+        }
+
     }
 
     /**
@@ -131,25 +150,10 @@ public class EntityArguments {
         }
     }
 
-    public static EntityArguments fromFile(String name) throws IOException {
-        try {
-            EntityArguments arguments = new EntityArguments();
-            File argumentFile = new File(EntityArguments.class.getResource("/" + name).toURI());
-            FileReader reader = new FileReader(argumentFile);
-            Type type =  new TypeToken<Map<String, Object>>(){}.getType();
-            Map<String, Object> defs = GSON.fromJson(reader, type);
-            reader.close();
-
-            for (Map.Entry<String, Object> entries : defs.entrySet())
-            {
-                arguments.put(entries.getKey(), entries.getValue());
-            }
-            return arguments;
-        } catch (NullPointerException ex) {
-            throw new IOException("No resource found");
-        } catch (URISyntaxException e) {
-            throw new IOException("URI exception");
-        }
-
+    @Override
+    public String toString() {
+        return "EntityArguments{" +
+                "arguments=" + arguments +
+                '}';
     }
 }

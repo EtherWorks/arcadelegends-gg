@@ -4,7 +4,6 @@ import com.artemis.WorldConfiguration;
 import com.artemis.WorldConfigurationBuilder;
 import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.graphics.g3d.decals.CameraGroupStrategy;
 import com.badlogic.gdx.graphics.g3d.decals.Decal;
 import com.badlogic.gdx.graphics.g3d.decals.DecalBatch;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
@@ -19,6 +18,7 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import gg.al.game.AL;
 import gg.al.graphics.CameraLayerGroupStrategy;
+import gg.al.logic.component.Position;
 import gg.al.logic.entity.EntityWorld;
 import gg.al.logic.map.LogicMap;
 import gg.al.logic.map.Tile;
@@ -101,9 +101,39 @@ public class ArcadeWorld implements Disposable {
         mapHitbox = new Plane(Vector3.Z, Vector3.Zero);
 
         physicsWorld = new World(Vector2.Zero, true);
+
+
+        debugPhysicrender = new Box2DDebugRenderer();
+
+        WorldConfiguration worldConfiguration = new WorldConfigurationBuilder()
+                .with(
+                        new StatSystem(),
+                        new PhysicPositionSystem(),
+                        new PositionTileSystem(logicMap),
+                        new InputSystem(physicsWorld),
+                        new RenderSystem(decalBatch, AL.asset)
+                )
+                .build();
+        entityWorld = new EntityWorld(worldConfiguration);
+
         physicsWorld.setContactListener(new ContactListener() {
             @Override
             public void beginContact(Contact contact) {
+                gg.al.logic.component.Input inputA = entityWorld.getMapper(gg.al.logic.component.Input.class).get((int) contact.getFixtureA().getBody().getUserData());
+                gg.al.logic.component.Input inputB = entityWorld.getMapper(gg.al.logic.component.Input.class).get((int) contact.getFixtureB().getBody().getUserData());
+
+                if (inputA != null && inputB != null) {
+                    Position positionA = entityWorld.getMapper(Position.class).get((int) contact.getFixtureA().getBody().getUserData());
+                    Position positionB = entityWorld.getMapper(Position.class).get((int) contact.getFixtureB().getBody().getUserData());
+                    contact.getFixtureA().getBody().setLinearVelocity(Vector2.Zero);
+                    contact.getFixtureB().getBody().setLinearVelocity(Vector2.Zero);
+
+                    contact.getFixtureA().getBody().setTransform(positionA.position, contact.getFixtureA().getBody().getAngle());
+                    contact.getFixtureB().getBody().setTransform(positionB.position, contact.getFixtureB().getBody().getAngle());
+
+                    inputA.move.set(positionA.position);
+                    inputB.move.set(positionB.position);
+                }
             }
 
             @Override
@@ -121,19 +151,6 @@ public class ArcadeWorld implements Disposable {
 
             }
         });
-
-        debugPhysicrender = new Box2DDebugRenderer();
-
-        WorldConfiguration worldConfiguration = new WorldConfigurationBuilder()
-                .with(
-                        new StatSystem(),
-                        new PhysicPositionSystem(),
-                        new PositionTileSystem(logicMap),
-                        new InputSystem(physicsWorld),
-                        new RenderSystem(decalBatch, AL.asset)
-                )
-                .build();
-        entityWorld = new EntityWorld(worldConfiguration);
     }
 
     public void step() {

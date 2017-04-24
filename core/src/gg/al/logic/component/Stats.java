@@ -2,6 +2,8 @@ package gg.al.logic.component;
 
 import gg.al.logic.entity.EntityArguments;
 
+import java.util.Map;
+
 /**
  * Created by Thomas Neumann on 30.03.2017.<br />
  */
@@ -35,7 +37,30 @@ public class Stats extends PooledDefComponent {
     public float experience;
 
     public void set(EntityArguments arguments) {
-        fromDef(arguments.get("stats", StatsDef.class));
+        Map<String, Object> stats = arguments.get("Stats", Map.class);
+        maxHealth = (int) (double) stats.get("maxHealth");
+        healthRegen = (float) (double) stats.get("healthRegen");
+        health = maxHealth;
+
+        maxActionPoints = (int) (double) stats.get("maxActionPoints");
+        actionPointRegen = (float) (double) stats.get("actionPointRegen");
+        actionPoints = maxActionPoints;
+
+        maxResource = (int) (double) stats.get("maxResource");
+        resourceRegen = (float) (double) stats.get("resourceRegen");
+        resource = maxResource;
+
+        attackDamage = (float) (double) stats.get("attackDamage");
+        abilityPower = (float) (double) stats.get("abilityPower");
+
+        armor = (float) (double) stats.get("armor");
+        magicResist = (float) (double) stats.get("magicResist");
+
+        criticalStrikeChance = (float) (double) stats.get("criticalStrikeChance");
+
+        cooldownReduction = (float) (double) stats.get("cooldownReduction");
+
+        moveSpeed = (float) (double) stats.get("moveSpeed");
     }
 
     @Override

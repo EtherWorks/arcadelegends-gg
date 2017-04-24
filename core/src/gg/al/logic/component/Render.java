@@ -1,11 +1,10 @@
 package gg.al.logic.component;
 
-import com.artemis.Component;
-import com.artemis.PooledComponent;
 import com.badlogic.gdx.assets.AssetDescriptor;
 import com.badlogic.gdx.graphics.Texture;
-import gg.al.game.AL;
 import gg.al.logic.entity.EntityArguments;
+
+import java.util.Map;
 
 /**
  * Created by Thomas Neumann on 30.03.2017.<br />
@@ -25,12 +24,11 @@ public class Render extends PooledDefComponent {
         texture = null;
     }
 
-    public void set(float width, float height, boolean transparent, AssetDescriptor<Texture> texture)
-    {
-        this.width = width;
-        this.height = height;
-        this.transparent = transparent;
-        this.texture = texture;
+    public void set(EntityArguments arguments) {
+        Map<String, Object> render = arguments.get("Render", Map.class);
+        width = (float) (double) render.get("width");
+        height = (float) (double) render.get("height");
+        transparent = (boolean) render.get("transparent");
     }
 
     @Override
@@ -46,8 +44,7 @@ public class Render extends PooledDefComponent {
         transparent = renderDef.transparent;
     }
 
-    public static class RenderDef extends IComponentDef
-    {
+    public static class RenderDef extends IComponentDef {
         public float width;
         public float height;
         public boolean transparent;
