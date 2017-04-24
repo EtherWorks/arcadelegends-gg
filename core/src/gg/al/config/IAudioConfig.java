@@ -13,6 +13,7 @@ public interface IAudioConfig {
 
     float effectVolume();
 
+
     enum AudioKeys implements IConfigKey {
         MASTERVOLUME("masterVolume", "100"),
         MUSICVOLUME("musicVolume", "100"),

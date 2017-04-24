@@ -64,6 +64,7 @@ public class SettingsScreen implements IAssetScreen, InputProcessor {
 
     private Table tableVideo;
     private Table tableAudio;
+    private Table tableInput;
 
     private ALTabbedPane tabbedPane;
 
@@ -107,16 +108,12 @@ public class SettingsScreen implements IAssetScreen, InputProcessor {
 
         createVideoTable();
         createAudioTable();
-
-
-
+        createInputTable();
 
         componentMap.put(btTabVideo, tableVideo);
         componentMap.put(btTabAudio, tableAudio);
-
-
+        componentMap.put(btTabInput, tableInput);
         stage.addActor(tabbedPane);
-
         AL.input.setInputProcessor(new InputMultiplexer(stage, this));
 
     }
@@ -196,14 +193,50 @@ public class SettingsScreen implements IAssetScreen, InputProcessor {
             }
         });
 
-        Label lbMusic = new Label("Music", skin);
-        lbMusic.setAlignment(Align.center);
+        TextButton musicOnOff = new TextButton("Music on", skin);
+        musicOnOff.center();
         musicSlider = new Slider(0, 100, 1, false, skin);
         musicSlider.setValue(AL.caudio.musicVolume());
         musicSlider.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 AL.cedit.setValue(IAudioConfig.AudioKeys.MUSICVOLUME, musicSlider.getValue());
+                if(musicSlider.getValue() > 0)
+                {
+                    musicOnOff.setText("Music on");
+                }
+                else
+                {
+                    musicOnOff.setText("Music off");
+                }
+            }
+        });
+        // musicOnOff.setText(AL.caudio.musicVolume() == 0 ? "Music off" : "Music on"); <-- Das verwenden wenn AudioManager da ist.
+        if(musicSlider.getValue() == 0)
+        {
+            musicOnOff.setText("Music off");
+        }
+        else
+        {
+            musicOnOff.setText("Music on");
+        }
+
+        musicOnOff.addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                switch(musicOnOff.getText().toString())
+                {
+                    case "Music on":
+                        musicOnOff.setText("Music off");
+                        AL.cedit.setValue(IAudioConfig.AudioKeys.MUSICVOLUME, 0);
+                        musicSlider.setValue(0);
+                        break;
+                    case "Music off":
+                        musicOnOff.setText("Music on");
+                        AL.cedit.setValue(IAudioConfig.AudioKeys.MUSICVOLUME, 100);
+                        musicSlider.setValue(100);
+                        break;
+                }
             }
         });
 
@@ -221,7 +254,7 @@ public class SettingsScreen implements IAssetScreen, InputProcessor {
         tableAudio.add(lbMasterVolume).pad(10).fill();
         tableAudio.add(volumeSlider).pad(10).fill();
         tableAudio.row();
-        tableAudio.add(lbMusic).pad(10).fill();
+        tableAudio.add(musicOnOff).pad(10).fill();
         tableAudio.add(musicSlider).pad(10).fill();
         tableAudio.row();
         tableAudio.add(lbEffects).pad(10).fill();
@@ -230,6 +263,12 @@ public class SettingsScreen implements IAssetScreen, InputProcessor {
 
 
     }
+
+    private void createInputTable()
+    {
+        tableInput = new Table();
+    }
+
 
     @Override
     public void render(float delta) {
