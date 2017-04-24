@@ -10,19 +10,20 @@ public class Input extends PooledComponent {
 
     public final Vector2 move;
     public final Vector2 stepMove;
-    public double lastDist;
+
+    public final Vector2 startToEnd;
 
     public Input() {
         move = new Vector2();
         stepMove = new Vector2();
-        lastDist = Double.MAX_VALUE;
+        startToEnd = new Vector2();
     }
 
     @Override
     protected void reset() {
         move.setZero();
         stepMove.setZero();
-        lastDist = Double.MAX_VALUE;
+        startToEnd.setZero();
     }
 
     public void set(int moveX, int moveY) {

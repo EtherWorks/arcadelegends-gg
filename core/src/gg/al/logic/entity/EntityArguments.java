@@ -3,6 +3,8 @@ package gg.al.logic.entity;
 import com.badlogic.gdx.utils.ObjectMap;
 
 import java.util.Iterator;
+import java.util.Map;
+import java.util.Properties;
 
 /**
  * Created by Thomas Neumann on 07.04.2017.<br />
@@ -98,5 +100,24 @@ public class EntityArguments {
      */
     public Iterator<Object> getValues() {
         return arguments.values();
+    }
+
+    public Properties toProperites()
+    {
+        Properties properties = new Properties();
+        for (ObjectMap.Entries<String, Object> iter = arguments.entries();iter.hasNext();)
+        {
+            ObjectMap.Entry<String, Object> entr = iter.next();
+            properties.put(entr.key, entr.value);
+        }
+        return properties;
+    }
+
+    public void fromProperties(Properties properties)
+    {
+        for (Map.Entry<Object, Object> entry :properties.entrySet())
+        {
+            arguments.put(entry.getKey().toString(), entry.getValue());
+        }
     }
 }

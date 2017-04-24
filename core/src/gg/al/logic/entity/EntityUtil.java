@@ -62,7 +62,7 @@ public class EntityUtil {
     private static void setup(int entityId, Stats stats, ArcadeWorld arcadeWorld, EntityArguments arguments) {
         stats.maxHealth = arguments.get("maxHealth", Integer.class);
         stats.maxActionPoints = arguments.get("maxAP", Integer.class);
-        stats.moveSpeed = arguments.get("moveSpeed", Integer.class);
+        stats.moveSpeed = arguments.get("moveSpeed", Float.class);
     }
 
     private static void setup(int entityId, Render render, ArcadeWorld arcadeWorld, EntityArguments arguments) {

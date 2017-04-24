@@ -140,13 +140,13 @@ public class SettingsScreen implements IAssetScreen, InputProcessor {
                 "1280x720", "1024x768", "1024x600", "800x600"};
         sbResolution = new SelectBox(selectBoxStyle);
         sbResolution.setItems(resolutions);
+        sbResolution.setSelected(getResolution());
         sbResolution.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 setResolution();
             }
         });
-        sbResolution.setSelected(getResolution());
 
         Label lbResoultion = new Label("Resolution", skin);
 
@@ -239,6 +239,7 @@ public class SettingsScreen implements IAssetScreen, InputProcessor {
 
     private void setResolution() {
         String resolution = (String) sbResolution.getSelected();
+        log.debug(resolution);
         switch (resolution) {
             case "Fullscreen":
                 AL.cedit.setValue(IVideoConfig.VideoKeys.SCREENMODE, IVideoConfig.ScreenMode.Fullscreen);

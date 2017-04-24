@@ -50,56 +50,36 @@ public class InputSystem extends IteratingSystem {
         Input input = mapperInput.get(entityId);
         DynamicPhysic dynamicPhysic = mapperDynamicPhysic.get(entityId);
         Stats stats = mapperStats.get(entityId);
+
+
         if (input.move.dst(pos.position) != 0 && dynamicPhysic.getBody().getLinearVelocity().equals(Vector2.Zero)) {
-            Vector2 to = vectorPool.obtain();
+            //anfangen sich zu bewegen
+            Vector2 dir = vectorPool.obtain();
+            Vector2 speed = vectorPool.obtain();
             if (Math.abs(input.move.x - pos.position.x) > Math.abs(input.move.y - pos.position.y))
-                to.set(Math.signum(input.move.x - pos.position.x), 0);
+                dir.set(Math.signum(input.move.x - pos.position.x), 0);
             else
-                to.set(0, Math.signum(input.move.y - pos.position.y));
-            dynamicPhysic.getBody().setLinearVelocity(to.scl(stats.moveSpeed));
-            input.stepMove.set(to.add(pos.position));
-            vectorPool.free(to);
-        } else if (!input.stepMove.equals(Vector2.Zero)) {
-            Vector2 vec = vectorPool.obtain();
+                dir.set(0, Math.signum(input.move.y - pos.position.y));
 
-            if (input.lastDist < VectorUtil.sqrMag(vec.set(input.stepMove).sub(dynamicPhysic.getBody().getPosition()))) {
-                dynamicPhysic.getBody().setLinearVelocity(0, 0);
-                dynamicPhysic.getBody().setTransform(pos.position, dynamicPhysic.getBody().getAngle());
-                input.lastDist = Double.MAX_VALUE;
-                input.stepMove.setZero();
-            } else
-                input.lastDist = VectorUtil.sqrMag(vec.set(input.stepMove).sub(dynamicPhysic.getBody().getPosition()));
-            vectorPool.free(vec);
+
+            dynamicPhysic.getBody().setLinearVelocity(speed.set(dir).scl(stats.moveSpeed));
+            input.stepMove.set(dir.add(pos.position));
+            input.startToEnd.set(dir.set(pos.position).sub(input.stepMove));
+            vectorPool.free(dir);
+            vectorPool.free(speed);
         } else if (!dynamicPhysic.getBody().getLinearVelocity().equals(Vector2.Zero)) {
-            dynamicPhysic.getBody().setLinearVelocity(0, 0);
-            dynamicPhysic.getBody().setTransform(pos.position, dynamicPhysic.getBody().getAngle());
-            input.lastDist = Double.MAX_VALUE;
-        }
-        //log.debug("{} {}", VectorUtil.magni(dynamicPhysic.getBody().getLinearVelocity()), input.move.dst(dynamicPhysic.getBody().getPosition()));
+            //Testen ob an oder über stepmove, dann stoppen
+            Vector2 curr = vectorPool.obtain();
 
-//        System.out.println(dynamicPhysic.getBody().getLinearVelocity());
-//        if (!input.move.equals(pos.position)) {
-//            IntSet entities = logicMap.getTile(input.move).getEntities();
-//            boolean move = true;
-//            while (entities.iterator().hasNext) {
-//                int entity = entities.iterator().next();
-//                DynamicPhysic other = mapperDynamicPhysic.get(entity);
-//                if (other != null) {
-//                    move = false;
-//                    break;
-//                }
-//            }
-//            entities.iterator().reset();
-//
-//            if (move)
-//                dynamicPhysic.getBody().setLinearVelocity(input.move.cpy().sub(pos.position).nor().scl(2));
-//            else
-//                input.move.set(pos.position);
-//        } else if (dynamicPhysic.getBody().getPosition().dst(input.move) < 0.01f && !dynamicPhysic.getBody().getLinearVelocity().equals(Vector2.Zero)) {
-//            dynamicPhysic.getBody().setTransform(pos.position, dynamicPhysic.getBody().getAngle());
-//            dynamicPhysic.getBody().setLinearVelocity(Vector2.Zero);
-//            pos.position.set(input.move);
-//        }
+            curr.set(dynamicPhysic.getBody().getPosition()).sub(input.stepMove);
+
+            if (curr.dot(input.startToEnd) < 0) {
+                dynamicPhysic.getBody().setLinearVelocity(Vector2.Zero);
+                dynamicPhysic.getBody().setTransform(pos.position, dynamicPhysic.getBody().getAngle());
+            }
+            vectorPool.free(curr);
+        }
+
     }
 
 }

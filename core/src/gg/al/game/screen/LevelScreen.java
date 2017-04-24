@@ -203,7 +203,7 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
                     arguments.put("y", (int) mapCoord.y);
                     arguments.put("maxHealth", 100);
                     arguments.put("maxAP", 10);
-                    arguments.put("moveSpeed", 2);
+                    arguments.put("moveSpeed", 2f);
                     playerEnt = EntityUtil.spawn(Entity.TEST, arcadeWorld, arguments);
                 } else {
                     gg.al.logic.component.Input input = arcadeWorld.getEntityWorld().getComponentOf(playerEnt, gg.al.logic.component.Input.class);
