@@ -1,6 +1,7 @@
 package gg.al.logic.entity;
 
 import com.artemis.ArchetypeBuilder;
+import com.artemis.Component;
 import gg.al.logic.component.*;
 
 /**
@@ -8,30 +9,38 @@ import gg.al.logic.component.*;
  */
 public enum Entity {
 
-    TEST(0, new ArchetypeBuilder()
-            .add(Render.class)
-            .add(Position.class)
-            .add(Stats.class)
-            .add(DynamicPhysic.class)
-            .add(Input.class)),
-    BULLET(1, new ArchetypeBuilder()
-            .add(Render.class)
-            .add(Position.class)
-            .add(DynamicPhysic.class));
+    TEST(0, Render.class,
+            Position.class,
+            Stats.class,
+            DynamicPhysic.class,
+            Input.class),
+    BULLET(1,
+            Render.class,
+            Position.class,
+            DynamicPhysic.class);
 
     private final int entityId;
-    private final ArchetypeBuilder archetype;
+    private final Class<? extends Component>[] components;
 
-    Entity(int entityId, ArchetypeBuilder archetype) {
+    Entity(int entityId, Class<? extends Component>... components) {
         this.entityId = entityId;
-        this.archetype = archetype;
+        this.components = components;
     }
 
     public int getEntityId() {
         return entityId;
     }
 
+    public Class<? extends Component>[] getComponents() {
+        return components;
+    }
+
     public ArchetypeBuilder getArchetype() {
-        return archetype;
+        ArchetypeBuilder builder = new ArchetypeBuilder();
+        for (Class<? extends Component> component :
+                components) {
+            builder.add(component);
+        }
+        return builder;
     }
 }

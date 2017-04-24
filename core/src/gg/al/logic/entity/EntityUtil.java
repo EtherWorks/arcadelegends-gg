@@ -1,5 +1,6 @@
 package gg.al.logic.entity;
 
+import com.artemis.Component;
 import com.badlogic.gdx.assets.AssetDescriptor;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
@@ -7,6 +8,8 @@ import gg.al.exception.EntityException;
 import gg.al.logic.ArcadeWorld;
 import gg.al.logic.component.*;
 import gg.al.logic.map.Tile;
+
+import java.util.Properties;
 
 /**
  * Created by Thomas Neumann on 24.03.2017.<br />
@@ -60,11 +63,7 @@ public class EntityUtil {
     }
 
     private static void setup(int entityId, Stats stats, ArcadeWorld arcadeWorld, EntityArguments arguments) {
-        stats.maxHealth = arguments.get("maxHealth", Integer.class);
-        stats.maxActionPoints = arguments.get("maxAP", Integer.class);
-        stats.moveSpeed = arguments.get("moveSpeed", Float.class);
-        stats.actionPointRegen = arguments.get("actionPointRegen", Float.class);
-        stats.actionPoints = stats.maxActionPoints;
+        stats.set(arguments);
     }
 
     private static void setup(int entityId, Render render, ArcadeWorld arcadeWorld, EntityArguments arguments) {
@@ -104,6 +103,18 @@ public class EntityUtil {
         position.set(arguments.get("x", Integer.class), arguments.get("y", Integer.class));
         tile.addEntity(entityId);
         position.set(tile);
+    }
+
+    public static Properties getTemplate(Entity entity)
+    {
+        Properties properties = new Properties();
+        for (Class<? extends Component> component:
+             entity.getComponents()) {
+
+
+
+        }
+        return properties;
     }
 
 

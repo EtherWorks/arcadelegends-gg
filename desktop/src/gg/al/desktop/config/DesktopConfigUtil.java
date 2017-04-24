@@ -61,7 +61,10 @@ public class DesktopConfigUtil {
             cfg = new Config(buildConfigProvider(), editor);
         } catch (NoSuchElementException ex) {
             File file = new File(getCurrentConfigPath());
-            file.renameTo(new File(getCurrentConfigPath() + ".err"));
+            File errFile = new File(getCurrentConfigPath() + ".err");
+            if(errFile.exists())
+                errFile.delete();
+            file.renameTo(errFile);
             cfg = new Config(buildConfigProvider(), editor);
         }
         return cfg;

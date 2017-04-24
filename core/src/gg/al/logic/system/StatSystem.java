@@ -19,9 +19,20 @@ public class StatSystem extends IntervalIteratingSystem {
     @Override
     protected void process(int entityId) {
         Stats stats = mapperStats.get(entityId);
+
         if(stats.actionPoints + stats.actionPointRegen /2 <= stats.maxActionPoints)
             stats.actionPoints += stats.actionPointRegen/2;
         else
             stats.actionPoints = stats.maxActionPoints;
+
+        if(stats.health + stats.healthRegen /2 <= stats.maxHealth)
+            stats.health += stats.healthRegen/2;
+        else
+            stats.health = stats.maxHealth;
+
+        if(stats.resource + stats.resourceRegen /2 <= stats.maxResource)
+            stats.resource += stats.resourceRegen/2;
+        else
+            stats.resource = stats.maxResource;
     }
 }
