@@ -84,7 +84,7 @@ public class DesktopConfigUtil {
         TypeParser parser = TypeParser.newBuilder().build();
         if (cfg.miscellaneous.logConfigEvents())
             editor.addConfigValueChangedListener((key, value) -> log.debug("Config value changed: {}={}", key, value));
-        editor.addConfigValueChangedListener(IVideoConfig.VideoKeys.SCREENMODE, (key, value) -> {
+        editor.addConfigValueChangedListener(IVideoConfig.VideoKeys.screenmode, (key, value) -> {
             IVideoConfig.ScreenMode mode = parser.parse(value, IVideoConfig.ScreenMode.class);
             switch (mode) {
                 case Fullscreen:
@@ -106,10 +106,10 @@ public class DesktopConfigUtil {
                     break;
             }
         }, true);
-        editor.addConfigValueChangedListener(IVideoConfig.VideoKeys.BACKGROUNDFPS, (key, value) -> config.backgroundFPS = parser.parse(value, Integer.class));
-        editor.addConfigValueChangedListener(IVideoConfig.VideoKeys.FOREGROUNDFPS, (key, value) -> config.foregroundFPS = parser.parse(value, Integer.class));
-        editor.addConfigValueChangedListener(IVideoConfig.VideoKeys.VSYNC, (key, value) -> application.postRunnable(() -> application.getGraphics().setVSync(parser.parse(value, Boolean.class))));
-        editor.addConfigValueChangedListener(IVideoConfig.VideoKeys.WIDTH, ((key, value) -> application.postRunnable(() -> {
+        editor.addConfigValueChangedListener(IVideoConfig.VideoKeys.backgroundFPS, (key, value) -> config.backgroundFPS = parser.parse(value, Integer.class));
+        editor.addConfigValueChangedListener(IVideoConfig.VideoKeys.foregroundFPS, (key, value) -> config.foregroundFPS = parser.parse(value, Integer.class));
+        editor.addConfigValueChangedListener(IVideoConfig.VideoKeys.vsyncEnabled, (key, value) -> application.postRunnable(() -> application.getGraphics().setVSync(parser.parse(value, Boolean.class))));
+        editor.addConfigValueChangedListener(IVideoConfig.VideoKeys.width, ((key, value) -> application.postRunnable(() -> {
             if (cfg.video.screenmode().isWindowed()) {
                 application.getGraphics().setFullscreenMode(application.getGraphics().getDisplayMode());
                 application.getGraphics().setUndecorated(false);

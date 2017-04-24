@@ -15,21 +15,20 @@ public interface IAudioConfig {
 
 
     enum AudioKeys implements IConfigKey {
-        MASTERVOLUME("masterVolume", "100"),
-        MUSICVOLUME("musicVolume", "100"),
-        EFFECTVOLUME("effectVolume", "100")
+        masterVolume("100"),
+        musicVolume("100"),
+        effectVolume("100")
         ;
-        private final String key;
+
         private final String defaultValue;
 
-        AudioKeys(String key, String defaultValue) {
-            this.key = key;
+        AudioKeys(String defaultValue) {
             this.defaultValue = defaultValue;
         }
 
         @Override
         public String getKeyName() {
-            return key;
+            return name();
         }
 
         @Override

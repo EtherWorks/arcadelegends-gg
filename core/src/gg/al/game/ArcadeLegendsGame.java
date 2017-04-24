@@ -50,7 +50,7 @@ public class ArcadeLegendsGame extends Game {
         AL.cmisc = config.miscellaneous;
         AL.cvideo = config.video;
         AL.screen = screenManager;
-        AL.cedit.addConfigValueChangedListener(IAudioConfig.AudioKeys.MASTERVOLUME, (key, value) -> {
+        AL.cedit.addConfigValueChangedListener(IAudioConfig.AudioKeys.masterVolume, (key, value) -> {
             // warten auf Audiomanager
         });
 

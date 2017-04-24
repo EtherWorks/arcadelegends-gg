@@ -13,20 +13,22 @@ public interface IInputConfig {
     int right();
 
     enum InputKeys implements IConfigKey {
-
+        up("0"),
+        down("0"),
+        left("0"),
+        right("0")
 
         ;
-        private final String key;
+
         private final String defaultValue;
 
-        InputKeys(String key, String defaultValue) {
-            this.key = key;
+        InputKeys(String defaultValue) {
             this.defaultValue = defaultValue;
         }
 
         @Override
         public String getKeyName() {
-            return key;
+            return name();
         }
 
         @Override

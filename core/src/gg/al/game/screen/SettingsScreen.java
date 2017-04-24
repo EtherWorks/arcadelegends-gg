@@ -189,7 +189,7 @@ public class SettingsScreen implements IAssetScreen, InputProcessor {
         volumeSlider.addListener(new ChangeListener(){
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                AL.cedit.setValue(IAudioConfig.AudioKeys.MASTERVOLUME, volumeSlider.getValue());
+                AL.cedit.setValue(IAudioConfig.AudioKeys.masterVolume, volumeSlider.getValue());
             }
         });
 
@@ -200,7 +200,7 @@ public class SettingsScreen implements IAssetScreen, InputProcessor {
         musicSlider.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                AL.cedit.setValue(IAudioConfig.AudioKeys.MUSICVOLUME, musicSlider.getValue());
+                AL.cedit.setValue(IAudioConfig.AudioKeys.musicVolume, musicSlider.getValue());
                 if(musicSlider.getValue() > 0)
                 {
                     musicOnOff.setText("Music on");
@@ -228,12 +228,12 @@ public class SettingsScreen implements IAssetScreen, InputProcessor {
                 {
                     case "Music on":
                         musicOnOff.setText("Music off");
-                        AL.cedit.setValue(IAudioConfig.AudioKeys.MUSICVOLUME, 0);
+                        AL.cedit.setValue(IAudioConfig.AudioKeys.musicVolume, 0);
                         musicSlider.setValue(0);
                         break;
                     case "Music off":
                         musicOnOff.setText("Music on");
-                        AL.cedit.setValue(IAudioConfig.AudioKeys.MUSICVOLUME, 100);
+                        AL.cedit.setValue(IAudioConfig.AudioKeys.musicVolume, 100);
                         musicSlider.setValue(100);
                         break;
                 }
@@ -247,7 +247,7 @@ public class SettingsScreen implements IAssetScreen, InputProcessor {
         effectSlider.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                AL.cedit.setValue(IAudioConfig.AudioKeys.EFFECTVOLUME, effectSlider.getValue());
+                AL.cedit.setValue(IAudioConfig.AudioKeys.effectVolume, effectSlider.getValue());
             }
         });
         tableAudio = new Table();
@@ -314,7 +314,7 @@ public class SettingsScreen implements IAssetScreen, InputProcessor {
     }
 
     private void vsyncOnOff() {
-        AL.cedit.setValue(IVideoConfig.VideoKeys.VSYNC, !AL.cvideo.vsyncEnabled());
+        AL.cedit.setValue(IVideoConfig.VideoKeys.vsyncEnabled, !AL.cvideo.vsyncEnabled());
         AL.cedit.flush();
         btVsync.setText(AL.cvideo.vsyncEnabled() == true ? "Vsync on" : "Vsync off");
     }
@@ -324,21 +324,21 @@ public class SettingsScreen implements IAssetScreen, InputProcessor {
         log.debug(resolution);
         switch (resolution) {
             case "Fullscreen":
-                AL.cedit.setValue(IVideoConfig.VideoKeys.SCREENMODE, IVideoConfig.ScreenMode.Fullscreen);
+                AL.cedit.setValue(IVideoConfig.VideoKeys.screenmode, IVideoConfig.ScreenMode.Fullscreen);
                 AL.cedit.flush();
                 break;
             case "Borderless":
-                AL.cedit.setValue(IVideoConfig.VideoKeys.WIDTH, (int) Toolkit.getDefaultToolkit().getScreenSize().getWidth());
-                AL.cedit.setValue(IVideoConfig.VideoKeys.HEIGHT, (int) Toolkit.getDefaultToolkit().getScreenSize().getHeight());
-                AL.cedit.setValue(IVideoConfig.VideoKeys.SCREENMODE, IVideoConfig.ScreenMode.Borderless);
+                AL.cedit.setValue(IVideoConfig.VideoKeys.width, (int) Toolkit.getDefaultToolkit().getScreenSize().getWidth());
+                AL.cedit.setValue(IVideoConfig.VideoKeys.height, (int) Toolkit.getDefaultToolkit().getScreenSize().getHeight());
+                AL.cedit.setValue(IVideoConfig.VideoKeys.screenmode, IVideoConfig.ScreenMode.Borderless);
                 AL.cedit.flush();
                 break;
             default:
                 int xSize = Integer.parseInt(resolution.split("x")[0]);
                 int ySize = Integer.parseInt(resolution.split("x")[1]);
-                AL.cedit.setValue(IVideoConfig.VideoKeys.WIDTH, xSize);
-                AL.cedit.setValue(IVideoConfig.VideoKeys.HEIGHT, ySize);
-                AL.cedit.setValue(IVideoConfig.VideoKeys.SCREENMODE, IVideoConfig.ScreenMode.Windowed);
+                AL.cedit.setValue(IVideoConfig.VideoKeys.width, xSize);
+                AL.cedit.setValue(IVideoConfig.VideoKeys.height, ySize);
+                AL.cedit.setValue(IVideoConfig.VideoKeys.screenmode, IVideoConfig.ScreenMode.Windowed);
                 AL.cedit.flush();
                 break;
         }
@@ -354,13 +354,13 @@ public class SettingsScreen implements IAssetScreen, InputProcessor {
         switch(fps)
         {
             case 30:
-                AL.cedit.setValue(IVideoConfig.VideoKeys.FOREGROUNDFPS, fps);
+                AL.cedit.setValue(IVideoConfig.VideoKeys.foregroundFPS, fps);
                 break;
             case 60:
-                AL.cedit.setValue(IVideoConfig.VideoKeys.FOREGROUNDFPS, fps);
+                AL.cedit.setValue(IVideoConfig.VideoKeys.foregroundFPS, fps);
                 break;
             case 144:
-                AL.cedit.setValue(IVideoConfig.VideoKeys.FOREGROUNDFPS, fps);
+                AL.cedit.setValue(IVideoConfig.VideoKeys.foregroundFPS, fps);
                 break;
         }
         AL.cedit.flush();

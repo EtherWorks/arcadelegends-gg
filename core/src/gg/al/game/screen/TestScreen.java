@@ -62,20 +62,20 @@ public class TestScreen implements Screen, InputProcessor {
     public boolean keyDown(int keycode) {
         switch (keycode) {
             case Input.Keys.F11:
-                AL.cedit.setValue(IVideoConfig.VideoKeys.SCREENMODE, AL.config.video.screenmode().isFullscreen() ? IVideoConfig.ScreenMode.Windowed : IVideoConfig.ScreenMode.Fullscreen);
+                AL.cedit.setValue(IVideoConfig.VideoKeys.screenmode, AL.config.video.screenmode().isFullscreen() ? IVideoConfig.ScreenMode.Windowed : IVideoConfig.ScreenMode.Fullscreen);
                 AL.cedit.flush();
                 break;
             case Input.Keys.F6:
-                AL.cedit.setValue(IVideoConfig.VideoKeys.VSYNC, !AL.cvideo.vsyncEnabled());
+                AL.cedit.setValue(IVideoConfig.VideoKeys.vsyncEnabled, !AL.cvideo.vsyncEnabled());
                 AL.cedit.flush();
                 break;
             case Input.Keys.F5:
-                AL.cedit.setValue(IVideoConfig.VideoKeys.FOREGROUNDFPS, AL.cvideo.foregroundFPS() + 10);
+                AL.cedit.setValue(IVideoConfig.VideoKeys.foregroundFPS, AL.cvideo.foregroundFPS() + 10);
                 AL.cedit.flush();
                 break;
             case Input.Keys.F3:
-                AL.cedit.setValue(IVideoConfig.VideoKeys.WIDTH, 1920);
-                AL.cedit.setValue(IVideoConfig.VideoKeys.HEIGHT, 1080);
+                AL.cedit.setValue(IVideoConfig.VideoKeys.width, 1920);
+                AL.cedit.setValue(IVideoConfig.VideoKeys.height, 1080);
                 AL.cedit.flush();
                 break;
         }

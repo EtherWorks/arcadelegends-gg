@@ -22,24 +22,22 @@ public interface IVideoConfig {
 
 
     enum VideoKeys implements IConfigKey {
-        VSYNC("vsyncEnabled", "true"),
-        BACKGROUNDFPS("backgroundFPS", "15"),
-        FOREGROUNDFPS("foregroundFPS", "144"),
-        SCREENMODE("screenmode", "Fullscreen"),
-        WIDTH("width", "960"),
-        HEIGHT("height", "540");
+        vsyncEnabled("true"),
+        backgroundFPS("15"),
+        foregroundFPS("144"),
+        screenmode("Fullscreen"),
+        width("960"),
+        height("540");
 
-        private final String key;
         private final String defaultValue;
 
-        VideoKeys(String key, String defaultValue) {
-            this.key = key;
+        VideoKeys(String defaultValue) {
             this.defaultValue = defaultValue;
         }
 
         @Override
         public String getKeyName() {
-            return key;
+            return name();
         }
 
         @Override

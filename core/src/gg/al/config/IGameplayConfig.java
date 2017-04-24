@@ -9,17 +9,15 @@ public interface IGameplayConfig {
 
     enum GameplayKeys implements IConfigKey {
         ;
-        private final String key;
         private final String defaultValue;
 
-        GameplayKeys(String key, String defaultValue) {
-            this.key = key;
+        GameplayKeys(String defaultValue) {
             this.defaultValue = defaultValue;
         }
 
         @Override
         public String getKeyName() {
-            return key;
+            return name();
         }
 
         @Override

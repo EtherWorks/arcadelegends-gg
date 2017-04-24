@@ -155,8 +155,8 @@ public class MainMenuScreen implements IAssetScreen {
     }
 
     private void changeSize() {
-        AL.cedit.setValue(IVideoConfig.VideoKeys.HEIGHT, AL.cvideo.height() + 10);
-        AL.cedit.setValue(IVideoConfig.VideoKeys.WIDTH, AL.cvideo.width() + 10);
+        AL.cedit.setValue(IVideoConfig.VideoKeys.height, AL.cvideo.height() + 10);
+        AL.cedit.setValue(IVideoConfig.VideoKeys.width, AL.cvideo.width() + 10);
         AL.cedit.flush();
     }
 
