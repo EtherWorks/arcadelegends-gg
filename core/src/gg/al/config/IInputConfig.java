@@ -12,6 +12,8 @@ public interface IInputConfig {
     int left();
     int right();
 
+
+
     enum InputKeys implements IConfigKey {
         up("0"),
         down("0"),
@@ -40,5 +42,17 @@ public interface IInputConfig {
         public String getDefaultValue() {
             return defaultValue;
         }
+
+        public static int getFromKey(InputKeys key, IInputConfig cfg) {
+            switch (key)
+            {
+                case up: return cfg.up();
+                case down: return cfg.down();
+                case left: return cfg.left();
+                case right: return cfg.right();
+                default: throw new IllegalArgumentException("Key does not exist");
+            }
+        }
+
     }
 }

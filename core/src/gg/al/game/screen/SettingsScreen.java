@@ -27,12 +27,14 @@ import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import gg.al.config.IAudioConfig;
+import gg.al.config.IInputConfig;
 import gg.al.config.IVideoConfig;
 import gg.al.game.AL;
 import gg.al.game.ui.ALTabbedPane;
 import gg.al.util.Assets;
 import lombok.extern.slf4j.Slf4j;
 
+import javax.xml.soap.Text;
 import java.awt.*;
 import java.util.*;
 
@@ -104,11 +106,18 @@ public class SettingsScreen implements IAssetScreen, InputProcessor {
 
         btTabInput = new TextButton("Input", skin);
         btTabInput.setSize(300, 50);
+        btTabInput.addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                if (!AL.screen.isRegistered(InputSettingsScreen.class))
+                    AL.screen.register(new InputSettingsScreen(), InputSettingsScreen.class);
+                AL.game.setScreen(AL.screen.get(InputSettingsScreen.class));
+            }
+        });
         tabbedPane.addTab(btTabInput);
 
         createVideoTable();
         createAudioTable();
-        createInputTable();
 
         componentMap.put(btTabVideo, tableVideo);
         componentMap.put(btTabAudio, tableAudio);
@@ -118,8 +127,7 @@ public class SettingsScreen implements IAssetScreen, InputProcessor {
 
     }
 
-    private void createVideoTable()
-    {
+    private void createVideoTable() {
         String vsyncText = AL.cvideo.vsyncEnabled() == true ? "Vsync on" : "Vsync off";
         btVsync = new TextButton(vsyncText, skin, "default");
         btVsync.setWidth(250);
@@ -135,9 +143,9 @@ public class SettingsScreen implements IAssetScreen, InputProcessor {
         BitmapFont font = AL.asset.get(Assets.PT_BOCKLIN);
         font.getData().setScale(0.5f, 0.5f);
         ScrollPane.ScrollPaneStyle scrollPaneStyle = new ScrollPane.ScrollPaneStyle();
-        com.badlogic.gdx.scenes.scene2d.ui.List.ListStyle listStyle = new com.badlogic.gdx.scenes.scene2d.ui.List.ListStyle(font, Color.BLACK, new Color(255,244,0,255), selection);
+        com.badlogic.gdx.scenes.scene2d.ui.List.ListStyle listStyle = new com.badlogic.gdx.scenes.scene2d.ui.List.ListStyle(font, Color.BLACK, new Color(255, 244, 0, 255), selection);
         listStyle.background = new TextureRegionDrawable(backgroundTexture);
-        SelectBox.SelectBoxStyle selectBoxStyle = new SelectBox.SelectBoxStyle(font, new Color(255,244,0,255), new TextureRegionDrawable(backgroundTexture), scrollPaneStyle, listStyle);
+        SelectBox.SelectBoxStyle selectBoxStyle = new SelectBox.SelectBoxStyle(font, new Color(255, 244, 0, 255), new TextureRegionDrawable(backgroundTexture), scrollPaneStyle, listStyle);
 
         String[] resolutions = {"Fullscreen", "Borderless", "1920x1080", "1680x1050",
                 "1600x900", "1400x1050", "1280x1024", "1280x768",
@@ -156,7 +164,7 @@ public class SettingsScreen implements IAssetScreen, InputProcessor {
         lbResoultion.setAlignment(Align.center);
 
         sbFps = new SelectBox(selectBoxStyle);
-        sbFps.setItems(30,60,144);
+        sbFps.setItems(30, 60, 144);
         sbFps.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
@@ -180,13 +188,12 @@ public class SettingsScreen implements IAssetScreen, InputProcessor {
 
     }
 
-    private void createAudioTable()
-    {
+    private void createAudioTable() {
         Label lbMasterVolume = new Label("Master Volume", skin);
         lbMasterVolume.setAlignment(Align.center);
-        volumeSlider = new Slider(0,100,1,false, skin);
+        volumeSlider = new Slider(0, 100, 1, false, skin);
         volumeSlider.setValue(AL.caudio.masterVolume());
-        volumeSlider.addListener(new ChangeListener(){
+        volumeSlider.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 AL.cedit.setValue(IAudioConfig.AudioKeys.masterVolume, volumeSlider.getValue());
@@ -201,31 +208,24 @@ public class SettingsScreen implements IAssetScreen, InputProcessor {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 AL.cedit.setValue(IAudioConfig.AudioKeys.musicVolume, musicSlider.getValue());
-                if(musicSlider.getValue() > 0)
-                {
+                if (musicSlider.getValue() > 0) {
                     musicOnOff.setText("Music on");
-                }
-                else
-                {
+                } else {
                     musicOnOff.setText("Music off");
                 }
             }
         });
         // musicOnOff.setText(AL.caudio.musicVolume() == 0 ? "Music off" : "Music on"); <-- Das verwenden wenn AudioManager da ist.
-        if(musicSlider.getValue() == 0)
-        {
+        if (musicSlider.getValue() == 0) {
             musicOnOff.setText("Music off");
-        }
-        else
-        {
+        } else {
             musicOnOff.setText("Music on");
         }
 
-        musicOnOff.addListener(new ClickListener(){
+        musicOnOff.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                switch(musicOnOff.getText().toString())
-                {
+                switch (musicOnOff.getText().toString()) {
                     case "Music on":
                         musicOnOff.setText("Music off");
                         AL.cedit.setValue(IAudioConfig.AudioKeys.musicVolume, 0);
@@ -242,7 +242,7 @@ public class SettingsScreen implements IAssetScreen, InputProcessor {
 
         Label lbEffects = new Label("Effects", skin);
         lbEffects.setAlignment(Align.center);
-        effectSlider = new Slider(0,100,1,false, skin);
+        effectSlider = new Slider(0, 100, 1, false, skin);
         effectSlider.setValue(AL.caudio.effectVolume());
         effectSlider.addListener(new ChangeListener() {
             @Override
@@ -261,12 +261,27 @@ public class SettingsScreen implements IAssetScreen, InputProcessor {
         tableAudio.add(effectSlider).pad(10).fill();
 
 
-
     }
 
-    private void createInputTable()
-    {
+    private void createInputTable() {
         tableInput = new Table();
+
+
+        IInputConfig.InputKeys[] keys = IInputConfig.InputKeys.values();
+        for (int i = 0; i < 4; i++) {
+            Label lbKey = new Label(keys[1].getKeyName(), skin);
+            lbKey.setAlignment(Align.center);
+
+            TextButton btKey = new TextButton(IInputConfig.InputKeys.getFromKey(keys[1], AL.config.input) + "", skin);
+            btKey.center();
+            tableInput.add(lbKey).pad(10).fill();
+            tableInput.add(btKey).pad(10).fill();
+            tableInput.row();
+        }
+        ScrollPane scrollPane = new ScrollPane(tableInput, skin);
+
+        //stage.addActor(scrollPane);
+
     }
 
 
@@ -311,6 +326,7 @@ public class SettingsScreen implements IAssetScreen, InputProcessor {
         AL.asset.unload(Assets.PT_STYLES_JSON.fileName);
         AL.asset.unload(Assets.PT_TESTMAINSCREEN.fileName);
         AL.asset.unload(Assets.PT_BACKGROUND_TEXTBUTTON.fileName);
+        AL.asset.unload(Assets.PT_BOCKLIN.fileName);
     }
 
     private void vsyncOnOff() {
@@ -348,11 +364,9 @@ public class SettingsScreen implements IAssetScreen, InputProcessor {
         return AL.cvideo.width() + "x" + AL.cvideo.height();
     }
 
-    private void setFps()
-    {
+    private void setFps() {
         int fps = (int) sbFps.getSelected();
-        switch(fps)
-        {
+        switch (fps) {
             case 30:
                 AL.cedit.setValue(IVideoConfig.VideoKeys.foregroundFPS, fps);
                 break;
@@ -366,15 +380,14 @@ public class SettingsScreen implements IAssetScreen, InputProcessor {
         AL.cedit.flush();
     }
 
-    private int getCurrentFPS()
-    {
+    private int getCurrentFPS() {
         return AL.cvideo.foregroundFPS();
     }
 
 
     @Override
     public java.util.List<AssetDescriptor> assets() {
-        return Arrays.asList(Assets.PT_STYLES_JSON, Assets.PT_TESTMAINSCREEN, Assets.PT_BACKGROUND_TEXTBUTTON, Assets.PT_BOCKLIN, Assets.PT_BACKGROUND_TEXTBUTTON);
+        return Arrays.asList(Assets.PT_STYLES_JSON, Assets.PT_TESTMAINSCREEN, Assets.PT_BACKGROUND_TEXTBUTTON, Assets.PT_BOCKLIN);
     }
 
     @Override

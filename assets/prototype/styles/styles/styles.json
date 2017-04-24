@@ -19,6 +19,11 @@ com.badlogic.gdx.scenes.scene2d.ui.Label$LabelStyle: {
 		background: background_textbutton
 	}
 }
+com.badlogic.gdx.scenes.scene2d.ui.ScrollPane$ScrollPaneStyle: {
+	default: {
+		vScrollKnob: vertical_scrollbar
+	}
+}
 com.badlogic.gdx.scenes.scene2d.ui.Slider$SliderStyle: {
 	default-horizontal: {
 		background: background_slider
