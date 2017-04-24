@@ -38,7 +38,6 @@ public class InputSettingsScreen implements IAssetScreen, InputProcessor {
     private Table inputTable;
 
 
-
     @Override
     public void show() {
         cam = new OrthographicCamera();
@@ -55,7 +54,7 @@ public class InputSettingsScreen implements IAssetScreen, InputProcessor {
         inputTable = new Table();
         IInputConfig.InputKeys[] keys = IInputConfig.InputKeys.values();
         for (int i = 0; i < keys.length; i++) {
-            Label lbKey = new Label(keys[i].getKeyName(), skin);
+            Label lbKey = new Label(keys[i].getKeyName().substring(0, 1).toUpperCase() + keys[i].getKeyName().substring(1), skin);
             lbKey.setAlignment(Align.center);
 
             TextButton btKey = new TextButton(IInputConfig.InputKeys.getFromKey(keys[i], AL.config.input) + "", skin);
@@ -66,11 +65,9 @@ public class InputSettingsScreen implements IAssetScreen, InputProcessor {
         }
 
         scrollPane = new ScrollPane(inputTable, skin);
-        scrollPane.setSize(300,500);
-        scrollPane.setPosition(x / 2-150, y / 2-250);
+        scrollPane.setSize(300, 500);
+        scrollPane.setPosition(x / 2 - 150, y / 2 - 250);
         stage.addActor(scrollPane);
-
-
 
 
         AL.input.setInputProcessor(new InputMultiplexer(stage, this));

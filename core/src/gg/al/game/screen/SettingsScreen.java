@@ -121,7 +121,6 @@ public class SettingsScreen implements IAssetScreen, InputProcessor {
 
         componentMap.put(btTabVideo, tableVideo);
         componentMap.put(btTabAudio, tableAudio);
-        componentMap.put(btTabInput, tableInput);
         stage.addActor(tabbedPane);
         AL.input.setInputProcessor(new InputMultiplexer(stage, this));
 
@@ -263,26 +262,6 @@ public class SettingsScreen implements IAssetScreen, InputProcessor {
 
     }
 
-    private void createInputTable() {
-        tableInput = new Table();
-
-
-        IInputConfig.InputKeys[] keys = IInputConfig.InputKeys.values();
-        for (int i = 0; i < 4; i++) {
-            Label lbKey = new Label(keys[1].getKeyName(), skin);
-            lbKey.setAlignment(Align.center);
-
-            TextButton btKey = new TextButton(IInputConfig.InputKeys.getFromKey(keys[1], AL.config.input) + "", skin);
-            btKey.center();
-            tableInput.add(lbKey).pad(10).fill();
-            tableInput.add(btKey).pad(10).fill();
-            tableInput.row();
-        }
-        ScrollPane scrollPane = new ScrollPane(tableInput, skin);
-
-        //stage.addActor(scrollPane);
-
-    }
 
 
     @Override
