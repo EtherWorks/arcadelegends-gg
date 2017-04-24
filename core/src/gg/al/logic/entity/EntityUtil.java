@@ -63,6 +63,8 @@ public class EntityUtil {
         stats.maxHealth = arguments.get("maxHealth", Integer.class);
         stats.maxActionPoints = arguments.get("maxAP", Integer.class);
         stats.moveSpeed = arguments.get("moveSpeed", Float.class);
+        stats.actionPointRegen = arguments.get("actionPointRegen", Float.class);
+        stats.actionPoints = stats.maxActionPoints;
     }
 
     private static void setup(int entityId, Render render, ArcadeWorld arcadeWorld, EntityArguments arguments) {

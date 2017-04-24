@@ -13,8 +13,7 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Plane;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
-import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
@@ -23,10 +22,7 @@ import gg.al.graphics.CameraLayerGroupStrategy;
 import gg.al.logic.entity.EntityWorld;
 import gg.al.logic.map.LogicMap;
 import gg.al.logic.map.Tile;
-import gg.al.logic.system.InputSystem;
-import gg.al.logic.system.PhysicPositionSystem;
-import gg.al.logic.system.PositionTileSystem;
-import gg.al.logic.system.RenderSystem;
+import gg.al.logic.system.*;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -105,11 +101,32 @@ public class ArcadeWorld implements Disposable {
         mapHitbox = new Plane(Vector3.Z, Vector3.Zero);
 
         physicsWorld = new World(Vector2.Zero, true);
+        physicsWorld.setContactListener(new ContactListener() {
+            @Override
+            public void beginContact(Contact contact) {
+            }
+
+            @Override
+            public void endContact(Contact contact) {
+
+            }
+
+            @Override
+            public void preSolve(Contact contact, Manifold oldManifold) {
+
+            }
+
+            @Override
+            public void postSolve(Contact contact, ContactImpulse impulse) {
+
+            }
+        });
 
         debugPhysicrender = new Box2DDebugRenderer();
 
         WorldConfiguration worldConfiguration = new WorldConfigurationBuilder()
                 .with(
+                        new StatSystem(),
                         new PhysicPositionSystem(),
                         new PositionTileSystem(logicMap),
                         new InputSystem(physicsWorld),

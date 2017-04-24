@@ -7,14 +7,19 @@ import com.artemis.PooledComponent;
  */
 public class Stats extends PooledComponent {
 
-    public float maxHealth;
-    public float maxActionPoints;
+    public int maxHealth;
+    public int maxActionPoints;
     public float moveSpeed;
+    public float actionPointRegen;
+
+    public float actionPoints;
 
     @Override
     protected void reset() {
         maxActionPoints = 0;
         maxHealth = 0;
         moveSpeed = 0;
+        actionPointRegen = 0;
+        actionPoints = 0;
     }
 }

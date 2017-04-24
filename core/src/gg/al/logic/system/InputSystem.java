@@ -53,20 +53,23 @@ public class InputSystem extends IteratingSystem {
 
 
         if (input.move.dst(pos.position) != 0 && dynamicPhysic.getBody().getLinearVelocity().equals(Vector2.Zero)) {
-            //anfangen sich zu bewegen
-            Vector2 dir = vectorPool.obtain();
-            Vector2 speed = vectorPool.obtain();
-            if (Math.abs(input.move.x - pos.position.x) > Math.abs(input.move.y - pos.position.y))
-                dir.set(Math.signum(input.move.x - pos.position.x), 0);
-            else
-                dir.set(0, Math.signum(input.move.y - pos.position.y));
+            if (stats.actionPoints >= 1) {
+                //anfangen sich zu bewegen
+                Vector2 dir = vectorPool.obtain();
+                Vector2 speed = vectorPool.obtain();
+                if (Math.abs(input.move.x - pos.position.x) > Math.abs(input.move.y - pos.position.y))
+                    dir.set(Math.signum(input.move.x - pos.position.x), 0);
+                else
+                    dir.set(0, Math.signum(input.move.y - pos.position.y));
 
 
-            dynamicPhysic.getBody().setLinearVelocity(speed.set(dir).scl(stats.moveSpeed));
-            input.stepMove.set(dir.add(pos.position));
-            input.startToEnd.set(dir.set(pos.position).sub(input.stepMove));
-            vectorPool.free(dir);
-            vectorPool.free(speed);
+                dynamicPhysic.getBody().setLinearVelocity(speed.set(dir).scl(stats.moveSpeed));
+                input.stepMove.set(dir.add(pos.position));
+                input.startToEnd.set(dir.set(pos.position).sub(input.stepMove));
+                vectorPool.free(dir);
+                vectorPool.free(speed);
+                stats.actionPoints -= 1;
+            }
         } else if (!dynamicPhysic.getBody().getLinearVelocity().equals(Vector2.Zero)) {
             //Testen ob an oder über stepmove, dann stoppen
             Vector2 curr = vectorPool.obtain();
