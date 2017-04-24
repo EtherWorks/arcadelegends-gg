@@ -188,6 +188,7 @@ public class SettingsScreen implements IAssetScreen, InputProcessor {
         Label lbMasterVolume = new Label("Master Volume", skin);
         lbMasterVolume.setAlignment(Align.center);
         volumeSlider = new Slider(0,100,1,false, skin);
+        volumeSlider.setValue(AL.caudio.masterVolume());
         volumeSlider.addListener(new ChangeListener(){
             @Override
             public void changed(ChangeEvent event, Actor actor) {
@@ -198,6 +199,7 @@ public class SettingsScreen implements IAssetScreen, InputProcessor {
         Label lbMusic = new Label("Music", skin);
         lbMusic.setAlignment(Align.center);
         musicSlider = new Slider(0, 100, 1, false, skin);
+        musicSlider.setValue(AL.caudio.musicVolume());
         musicSlider.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
@@ -208,6 +210,7 @@ public class SettingsScreen implements IAssetScreen, InputProcessor {
         Label lbEffects = new Label("Effects", skin);
         lbEffects.setAlignment(Align.center);
         effectSlider = new Slider(0,100,1,false, skin);
+        effectSlider.setValue(AL.caudio.effectVolume());
         effectSlider.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
