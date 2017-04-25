@@ -14,10 +14,14 @@ import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.Ray;
+import com.badlogic.gdx.utils.viewport.ExtendViewport;
+import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import gg.al.game.AL;
 import gg.al.logic.ArcadeWorld;
+import gg.al.logic.component.Damage;
+import gg.al.logic.component.DynamicPhysic;
 import gg.al.logic.component.Position;
 import gg.al.logic.entity.Entity;
 import gg.al.logic.entity.EntityArguments;
@@ -76,8 +80,8 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
         camera.rotateAround(new Vector3(-.5f, -.5f, 0), Vector3.X, rot);
         camera.fieldOfView = 15;
         camera.update();
-        viewport = new FitViewport(1920, 1080, camera);
-        viewport.update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        viewport = new ExtendViewport(1920, 1080, camera);
+        viewport.apply();
 
         map = AL.asset.get(mapDesc);
 
@@ -91,10 +95,9 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
         AL.graphics.getGL20().glClearColor(0, 0, 0, 1);
         AL.graphics.getGL20().glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 
-            arcadeWorld.setDelta(AL.graphics.getDeltaTime());
-            arcadeWorld.step();
-            arcadeWorld.render();
-
+        arcadeWorld.setDelta(AL.graphics.getDeltaTime());
+        arcadeWorld.step();
+        arcadeWorld.render();
 
         fpsBatch.begin();
         font.draw(fpsBatch, String.format("%d FPS %d", Gdx.graphics.getFramesPerSecond(), arcadeWorld.getEntityWorld().getAspectSubscriptionManager().get(Aspect.all()).getEntities().size()), 0, 15);
@@ -173,6 +176,12 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
                     break;
                 input.move.set(position.position.x + 1, position.position.y);
                 break;
+            case Input.Keys.K:
+                Damage dmg = arcadeWorld.getEntityWorld().getMapper(Damage.class).create(playerEnt);
+                dmg.damageType = Damage.DamageType.Magic;
+                dmg.amount = 50;
+                dmg.penetration = 10;
+                break;
         }
         camera.update();
         return false;
@@ -204,7 +213,7 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
                         arguments.put("texture", Assets.PT_EZREAL);
                         playerEnt = EntityUtil.spawn(Entity.Test, arcadeWorld, arguments);
                     } catch (IOException e) {
-                       log.error("Couldn´t load player", e);
+                        log.error("Couldn´t load player", e);
                     }
                 } else {
                     gg.al.logic.component.Input input = arcadeWorld.getEntityWorld().getComponentOf(playerEnt, gg.al.logic.component.Input.class);
@@ -216,7 +225,9 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
                 try {
                     arguments = EntityArguments.fromFile("test.json");
                     arguments.put("texture", Assets.PT_EZREAL);
-                    EntityUtil.spawn(Entity.Test, arcadeWorld, arguments);
+                    int entity = EntityUtil.spawn(Entity.Test, arcadeWorld, arguments);
+                    DynamicPhysic dynamicPhysic = arcadeWorld.getEntityWorld().getMapper(DynamicPhysic.class).get(entity);
+                    dynamicPhysic.getBody().setLinearVelocity(Vector2.X);
                 } catch (IOException e) {
                     log.error("Couldn´t load player", e);
                 }

@@ -88,7 +88,7 @@ public class EntityUtil {
 
         FixtureDef fixtureDef = new FixtureDef();
         CircleShape shape = new CircleShape();
-        shape.setRadius(.5f);
+        shape.setRadius(.47f);
 
         fixtureDef.shape = shape;
         body.createFixture(fixtureDef);

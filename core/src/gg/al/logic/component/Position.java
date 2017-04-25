@@ -12,11 +12,13 @@ public class Position extends PooledDefComponent {
 
     public final Vector2 position = new Vector2();
     public Tile tile;
+    public boolean resetPos;
 
     @Override
     protected void reset() {
         position.set(0, 0);
         tile = null;
+        resetPos = false;
     }
 
     public void set(float x, float y) {

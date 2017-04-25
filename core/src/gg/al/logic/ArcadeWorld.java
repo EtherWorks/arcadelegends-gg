@@ -54,7 +54,6 @@ public class ArcadeWorld implements Disposable {
     private FrameBuffer mapBuffer;
     private OrthogonalTiledMapRenderer mapRenderer;
     private Decal mapDecal;
-    private TextureRegion mapTemp;
 
     private DecalBatch decalBatch;
     private RenderSystem renderSystem;
@@ -91,7 +90,7 @@ public class ArcadeWorld implements Disposable {
         mapBuffer = new FrameBuffer(Pixmap.Format.RGBA8888, mapWidth * mapTileWidth, mapHeight * mapTileHeight, false);
         mapBuffer.getColorBufferTexture().setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
 
-        mapTemp = new TextureRegion(mapBuffer.getColorBufferTexture());
+        TextureRegion mapTemp = new TextureRegion(mapBuffer.getColorBufferTexture());
         mapTemp.flip(false, true);
 
         mapDecal = Decal.newDecal(mapWidth, mapHeight, mapTemp);
@@ -113,7 +112,8 @@ public class ArcadeWorld implements Disposable {
                         new PhysicPositionSystem(),
                         new PositionTileSystem(logicMap),
                         new InputSystem(physicsWorld),
-                        renderSystem = new RenderSystem( decalBatch, AL.asset)
+                        renderSystem = new RenderSystem(decalBatch, AL.asset),
+                        new DamageSystem()
                 )
                 .build();
         entityWorld = new EntityWorld(worldConfiguration);
@@ -129,10 +129,8 @@ public class ArcadeWorld implements Disposable {
                     Position positionB = entityWorld.getMapper(Position.class).get((int) contact.getFixtureB().getBody().getUserData());
                     contact.getFixtureA().getBody().setLinearVelocity(Vector2.Zero);
                     contact.getFixtureB().getBody().setLinearVelocity(Vector2.Zero);
-
-                    contact.getFixtureA().getBody().setTransform(positionA.position, contact.getFixtureA().getBody().getAngle());
-                    contact.getFixtureB().getBody().setTransform(positionB.position, contact.getFixtureB().getBody().getAngle());
-
+                    positionA.resetPos = true;
+                    positionB.resetPos = true;
                     inputA.move.set(positionA.position);
                     inputB.move.set(positionB.position);
                 }
@@ -172,8 +170,6 @@ public class ArcadeWorld implements Disposable {
         mapRenderer.render();
         mapBuffer.end();
 
-        mapTemp.setTexture(mapBuffer.getColorBufferTexture());
-        mapDecal.setTextureRegion(mapTemp);
         decalBatch.add(mapDecal);
         decalBatch.flush();
 

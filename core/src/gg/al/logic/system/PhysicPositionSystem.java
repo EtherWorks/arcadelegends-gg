@@ -27,7 +27,11 @@ public class PhysicPositionSystem extends IteratingSystem {
         IPhysic physic = dynamicPhysic == null ? kinematicPhysic : dynamicPhysic;
 
         Position position = mapperPosition.get(entityId);
-
+        if (position.resetPos){
+            physic.getBody().setTransform(position.position, physic.getBody().getAngle());
+            position.resetPos = false;
+        }
+        else
         position.set(Math.round(physic.getBody().getPosition().x),
                 Math.round(physic.getBody().getPosition().y));
         //log.debug(position.position.toString());
