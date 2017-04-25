@@ -1,0 +1,27 @@
+{
+  "Position": {
+    "x": 0,
+    "y": 0
+  },
+  "Render": {
+    "width": 1.0,
+    "height": 1.0,
+    "transparent": true,
+    "texture": ""
+  },
+  "Stats": {
+    "maxHealth": 100,
+    "healthRegen": 2.0,
+    "maxActionPoints": 5,
+    "actionPointRegen": 0.75,
+    "maxResource": 100,
+    "resourceRegen": 2.0,
+    "attackDamage": 10.0,
+    "abilityPower": 0.0,
+    "armor": 15.0,
+    "magicResist": 15.0,
+    "criticalStrikeChance": 0.0,
+    "cooldownReduction": 0.0,
+    "moveSpeed": 3.0
+  }
+}

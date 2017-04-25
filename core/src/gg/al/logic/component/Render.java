@@ -24,11 +24,13 @@ public class Render extends PooledDefComponent {
         texture = null;
     }
 
-    public void set(EntityArguments arguments) {
+    public void set(EntityArguments arguments)
+    {
         Map<String, Object> render = arguments.get("Render", Map.class);
-        width = (float) (double) render.get("width");
-        height = (float) (double) render.get("height");
-        transparent = (boolean) render.get("transparent");
+        this.height = (float)(double)render.get("height");
+        this.width = (float)(double)render.get("width");
+        this.transparent = (boolean)render.get("transparent");
+        render.get("texture");
     }
 
     @Override
@@ -44,7 +46,8 @@ public class Render extends PooledDefComponent {
         transparent = renderDef.transparent;
     }
 
-    public static class RenderDef extends IComponentDef {
+    public static class RenderDef extends IComponentDef
+    {
         public float width;
         public float height;
         public boolean transparent;

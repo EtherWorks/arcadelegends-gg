@@ -11,13 +11,8 @@ import gg.al.logic.ArcadeWorld;
 import gg.al.logic.component.*;
 import gg.al.logic.map.Tile;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Scanner;
+import java.io.*;
+import java.util.*;
 
 /**
  * Created by Thomas Neumann on 24.03.2017.<br />
@@ -33,7 +28,7 @@ public class EntityUtil {
         switch (entity) {
             case Test:
                 Map<String, Object> pos = arguments.get("Position", Map.class);
-                Tile tile = arcadeWorld.getTile((int) (double) pos.get("y"), (int) (double) pos.get("x"));
+                Tile tile = arcadeWorld.getTile((int)(double)pos.get("x"),(int)(double)pos.get("y"));
                 if (tile.getEntities().size > 0)
                     throw new EntityException("Can´t spawn test at position: other entity present");
 
@@ -82,13 +77,13 @@ public class EntityUtil {
 
     private static void setup(int entityId, Input input, ArcadeWorld arcadeWorld, EntityArguments arguments) {
         Map<String, Object> pos = arguments.get("Position", Map.class);
-        input.move.set((int) (double) pos.get("y"), (int) (double) pos.get("x"));
+        input.move.set((int)(double)pos.get("x"), (int)(double)pos.get("y"));
     }
 
     private static void setup(int entityId, IPhysic physic, ArcadeWorld arcadeWorld, EntityArguments arguments) {
         BodyDef bodyDef = new BodyDef();
         bodyDef.type = physic.getBodyType();
-        bodyDef.position.set((int) (double) arguments.get("Position", Map.class).get("x"), (int) (double) arguments.get("Position", Map.class).get("y"));
+        bodyDef.position.set((int)(double)arguments.get("Position", Map.class).get("x"), (int)(double)arguments.get("Position", Map.class).get("y"));
         Body body = arcadeWorld.getPhysicsWorld().createBody(bodyDef);
 
         FixtureDef fixtureDef = new FixtureDef();
@@ -101,14 +96,11 @@ public class EntityUtil {
         shape.dispose();
         body.setUserData(entityId);
         physic.setBody(body);
-
-
     }
 
     private static void setup(int entityId, Position position, ArcadeWorld arcadeWorld, EntityArguments arguments) {
-        Map<String, Object> pos = arguments.get("Position", Map.class);
-        Tile tile = arcadeWorld.getTile((int) (double) pos.get("y"), (int) (double) pos.get("x"));
-        position.set((int) (double) pos.get("y"), (int) (double) pos.get("x"));
+        Tile tile = arcadeWorld.getTile((int)(double)arguments.get("Position", Map.class).get("x"), (int)(double)arguments.get("Position", Map.class).get("y"));
+        position.set((int)(double)arguments.get("Position", Map.class).get("x"), (int)(double)arguments.get("Position", Map.class).get("y"));
         tile.addEntity(entityId);
         position.set(tile);
     }

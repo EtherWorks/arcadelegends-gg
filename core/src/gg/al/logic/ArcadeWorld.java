@@ -57,6 +57,7 @@ public class ArcadeWorld implements Disposable {
     private TextureRegion mapTemp;
 
     private DecalBatch decalBatch;
+    private RenderSystem renderSystem;
 
     @Getter
     private Plane mapHitbox;
@@ -105,13 +106,14 @@ public class ArcadeWorld implements Disposable {
 
         debugPhysicrender = new Box2DDebugRenderer();
 
+
         WorldConfiguration worldConfiguration = new WorldConfigurationBuilder()
                 .with(
                         new StatSystem(),
                         new PhysicPositionSystem(),
                         new PositionTileSystem(logicMap),
                         new InputSystem(physicsWorld),
-                        new RenderSystem(decalBatch, AL.asset)
+                        renderSystem = new RenderSystem( decalBatch, AL.asset)
                 )
                 .build();
         entityWorld = new EntityWorld(worldConfiguration);
