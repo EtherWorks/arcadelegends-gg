@@ -10,7 +10,6 @@ import gg.al.logic.component.DynamicPhysic;
 import gg.al.logic.component.Input;
 import gg.al.logic.component.Position;
 import gg.al.logic.component.Stats;
-import gg.al.util.VectorUtil;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -37,8 +36,8 @@ public class InputSystem extends IteratingSystem {
             }
 
             @Override
-            protected void reset(Vector2 object) {
-                object.set(0, 0);
+            protected void reset(Vector2 vector) {
+                vector.set(0, 0);
             }
         };
     }

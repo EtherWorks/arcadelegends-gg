@@ -121,12 +121,14 @@ public class ArcadeWorld implements Disposable {
         physicsWorld.setContactListener(new ContactListener() {
             @Override
             public void beginContact(Contact contact) {
-                gg.al.logic.component.Input inputA = entityWorld.getMapper(gg.al.logic.component.Input.class).get((int) contact.getFixtureA().getBody().getUserData());
-                gg.al.logic.component.Input inputB = entityWorld.getMapper(gg.al.logic.component.Input.class).get((int) contact.getFixtureB().getBody().getUserData());
+                int entityIdA = (int) contact.getFixtureA().getBody().getUserData();
+                int entityIdB = (int) contact.getFixtureB().getBody().getUserData();
+                gg.al.logic.component.Input inputA = entityWorld.getMapper(gg.al.logic.component.Input.class).get(entityIdA);
+                gg.al.logic.component.Input inputB = entityWorld.getMapper(gg.al.logic.component.Input.class).get(entityIdB);
 
                 if (inputA != null && inputB != null) {
-                    Position positionA = entityWorld.getMapper(Position.class).get((int) contact.getFixtureA().getBody().getUserData());
-                    Position positionB = entityWorld.getMapper(Position.class).get((int) contact.getFixtureB().getBody().getUserData());
+                    Position positionA = entityWorld.getMapper(Position.class).get(entityIdA);
+                    Position positionB = entityWorld.getMapper(Position.class).get(entityIdB);
                     contact.getFixtureA().getBody().setLinearVelocity(Vector2.Zero);
                     contact.getFixtureB().getBody().setLinearVelocity(Vector2.Zero);
                     positionA.resetPos = true;
@@ -156,7 +158,7 @@ public class ArcadeWorld implements Disposable {
     public void step() {
         float accumulator = delta;
         do {
-            physicsWorld.step(step, 6, 2);
+            physicsWorld.step(Math.min(delta, step), 6, 2);
             accumulator -= step;
         } while (accumulator >= step);
         entityWorld.setDelta(delta);
