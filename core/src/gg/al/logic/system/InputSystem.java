@@ -52,7 +52,7 @@ public class InputSystem extends IteratingSystem {
         Stats stats = mapperStats.get(entityId);
 
 
-        if (input.move.dst(pos.position) != 0 && dynamicPhysic.getBody().getLinearVelocity().equals(Vector2.Zero)) {
+        if (input.move.dst(pos.position) != 0 && dynamicPhysic.getBody().getLinearVelocity().equals(Vector2.Zero) && !stats.dead) {
             if (stats.actionPoints >= 1) {
                 //anfangen sich zu bewegen
                 Vector2 dir = vectorPool.obtain();

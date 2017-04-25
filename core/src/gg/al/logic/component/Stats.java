@@ -43,6 +43,7 @@ public class Stats extends PooledDefComponent {
     public float experience;
 
     public boolean dead;
+    public boolean invulnerable;
 
     public void set(EntityArguments arguments) {
         Map<String, Object> stats = arguments.get("Stats", Map.class);
@@ -76,6 +77,7 @@ public class Stats extends PooledDefComponent {
         criticalStrikeDamage = (float) (double) stats.get("criticalStrikeDamage");
         tenacity = (float) (double) stats.get("tenacity");
         dead = false;
+        invulnerable = false;
     }
 
     @Override
@@ -113,6 +115,7 @@ public class Stats extends PooledDefComponent {
         criticalStrikeDamage = stats.criticalStrikeDamage;
         tenacity = stats.tenacity;
         dead = false;
+        invulnerable = false;
     }
 
     @Override
