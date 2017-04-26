@@ -37,7 +37,7 @@ public class DamageSystem extends IteratingSystem {
                     amount = amount - amount * ar / 100;
                     break;
             }
-            if (stats.health - amount <= 0) {
+            if ((int) (stats.health - amount) <= 0) {
                 stats.health = 0;
                 stats.resource = 0;
                 stats.actionPoints = 0;

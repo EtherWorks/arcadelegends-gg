@@ -71,13 +71,7 @@ public class StatusEffect {
 
     public float valueMoveSpeed;
 
-
-    public void apply(Stats stats) {
-        applyValue(stats);
-        applyPercentage(stats);
-    }
-
-    private void applyValue(Stats stats) {
+    public void applyValue(Stats stats) {
         stats.maxHealth += valueMaxHealth;
         stats.healthRegen += valueHealthRegen;
 
@@ -105,7 +99,7 @@ public class StatusEffect {
         stats.criticalStrikeDamage += valueCriticalStrikeDamage;
     }
 
-    private void applyPercentage(Stats stats) {
+    public void applyPercentage(Stats stats) {
         stats.maxHealth += stats.maxHealth * percentageMaxHealth;
         stats.healthRegen += stats.healthRegen * percentageHealthRegen;
 

@@ -2,7 +2,6 @@ package gg.al.logic.system;
 
 import com.artemis.Aspect;
 import com.artemis.ComponentMapper;
-import com.artemis.systems.IntervalIteratingSystem;
 import com.artemis.systems.IteratingSystem;
 import gg.al.logic.component.Stats;
 import gg.al.logic.component.StatusEffects;
@@ -19,25 +18,6 @@ public class StatSystem extends IteratingSystem {
     public StatSystem() {
         super(Aspect.all(Stats.class));
     }
-
-    @Override
-    protected void process(int entityId) {
-        Stats stats = mapperStats.get(entityId);
-        if (stats.dead)
-            return;
-
-        resetToBase(stats);
-        applyLevel(stats);
-
-        StatusEffects statusEffects = mapperStatusEffects.get(entityId);
-
-        if (statusEffects != null) {
-            for (StatusEffect effect : statusEffects.statusEffects.values()) {
-                effect.apply(stats);
-            }
-        }
-    }
-
 
     private static void applyLevel(Stats stats) {
         stats.maxHealth += (int) calculateStatGrowth(stats.baseStats.baseHealth, stats.level, stats.baseStats.healthGrowth);
@@ -97,5 +77,26 @@ public class StatSystem extends IteratingSystem {
         stats.armorPenetration = stats.baseStats.baseArmorPenetration;
         stats.magicResistPenetration = stats.baseStats.baseMagicResistPenetration;
         stats.criticalStrikeDamage = stats.baseStats.baseCriticalStrikeDamage;
+    }
+
+    @Override
+    protected void process(int entityId) {
+        Stats stats = mapperStats.get(entityId);
+        if (stats.dead)
+            return;
+
+        resetToBase(stats);
+        applyLevel(stats);
+
+        StatusEffects statusEffects = mapperStatusEffects.get(entityId);
+
+        if (statusEffects != null) {
+            for (StatusEffect effect : statusEffects.statusEffects.values()) {
+                effect.applyValue(stats);
+            }
+            for (StatusEffect effect : statusEffects.statusEffects.values()) {
+                effect.applyPercentage(stats);
+            }
+        }
     }
 }
