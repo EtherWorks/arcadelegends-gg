@@ -3,6 +3,7 @@ package gg.al.logic.component;
 import com.badlogic.gdx.assets.AssetDescriptor;
 import com.badlogic.gdx.graphics.Texture;
 import gg.al.logic.entity.EntityArguments;
+import gg.al.util.Assets;
 
 import java.util.Map;
 
@@ -14,6 +15,7 @@ public class Render extends PooledDefComponent {
     public float width;
     public float height;
     public boolean transparent;
+    public String textureName;
     public AssetDescriptor<Texture> texture;
 
     @Override
@@ -21,16 +23,8 @@ public class Render extends PooledDefComponent {
         width = 0;
         height = 0;
         transparent = false;
+        textureName = null;
         texture = null;
-    }
-
-    public void set(EntityArguments arguments)
-    {
-        Map<String, Object> render = arguments.get("Render", Map.class);
-        this.height = (float)(double)render.get("height");
-        this.width = (float)(double)render.get("width");
-        this.transparent = (boolean)render.get("transparent");
-        render.get("texture");
     }
 
     @Override
@@ -44,6 +38,7 @@ public class Render extends PooledDefComponent {
         width = renderDef.width;
         height = renderDef.height;
         transparent = renderDef.transparent;
+        textureName = renderDef.texture;
     }
 
     public static class RenderDef extends IComponentDef

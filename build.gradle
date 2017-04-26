@@ -20,11 +20,12 @@ allprojects {
         aiVersion = '1.8.0'
         logbackVersion = '1.2.1'
         guavaVersion = '21.0'
-        lomborkVersion = '1.16.14'
+        lomborkVersion = '1.16.16'
         javaslangVersion = '2.1.0-alpha'
         slf4jVersion = '1.7.24'
         cfg4jVersion = '4.4.0'
         gsonVersion = '2.8.0'
+        gsonFireVersion = '1.8.0'
     }
 
     repositories {
@@ -85,6 +86,7 @@ project(":core") {
         //compile "org.slf4j:slf4j-api:$slf4jVersion"
         compile "org.cfg4j:cfg4j-core:$cfg4jVersion"
         compile "com.google.code.gson:gson:$gsonVersion"
+        compile "io.gsonfire:gson-fire:$gsonFireVersion"
 
     }
 

@@ -115,7 +115,7 @@ public class InputSettingsScreen implements IAssetScreen, InputProcessor {
         AL.asset.unload(Assets.PT_STYLES_JSON.fileName);
         AL.asset.unload(Assets.PT_TESTMAINSCREEN.fileName);
         AL.asset.unload(Assets.PT_BACKGROUND_TEXTBUTTON.fileName);
-        AL.asset.unload(Assets.PT_BOCKLIN.fileName);
+        AL.asset.unload(Assets.PT_BOCKLIN_FNT.fileName);
     }
 
     @Override
@@ -162,7 +162,7 @@ public class InputSettingsScreen implements IAssetScreen, InputProcessor {
 
     @Override
     public List<AssetDescriptor> assets() {
-        return Arrays.asList(Assets.PT_STYLES_JSON, Assets.PT_TESTMAINSCREEN, Assets.PT_BACKGROUND_TEXTBUTTON, Assets.PT_BOCKLIN);
+        return Arrays.asList(Assets.PT_STYLES_JSON, Assets.PT_TESTMAINSCREEN, Assets.PT_BACKGROUND_TEXTBUTTON, Assets.PT_BOCKLIN_FNT);
     }
 
     @Override

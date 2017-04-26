@@ -9,6 +9,8 @@ import java.util.Map;
  */
 public class Stats extends PooledDefComponent {
 
+    public StatsDef baseStats;
+
     public int maxHealth;
     public float healthRegen;
     public float health;
@@ -45,37 +47,39 @@ public class Stats extends PooledDefComponent {
     public boolean dead;
     public boolean invulnerable;
 
-    public void set(EntityArguments arguments) {
-        Map<String, Object> stats = arguments.get("Stats", Map.class);
-        maxHealth = (int) (double) stats.get("maxHealth");
-        healthRegen = (float) (double) stats.get("healthRegen");
+    @Override
+    public void fromDef(IComponentDef def) {
+        StatsDef statsDef = (StatsDef) def;
+        this.baseStats = statsDef;
+        maxHealth = baseStats.baseHealth;
+        healthRegen = baseStats.baseHealthRegen;
         health = maxHealth;
 
-        maxActionPoints = (int) (double) stats.get("maxActionPoints");
-        actionPointRegen = (float) (double) stats.get("actionPointRegen");
+        maxActionPoints = baseStats.baseActionPoints;
+        actionPointRegen = baseStats.baseActionPointsRegen;
         actionPoints = maxActionPoints;
 
-        maxResource = (int) (double) stats.get("maxResource");
-        resourceRegen = (float) (double) stats.get("resourceRegen");
+        maxResource = baseStats.baseResource;
+        resourceRegen = baseStats.baseResourceRegen;
         resource = maxResource;
 
-        attackDamage = (float) (double) stats.get("attackDamage");
-        spellPower = (float) (double) stats.get("spellPower");
+        attackDamage = baseStats.baseAttackDamage;
+        spellPower = baseStats.baseSpellPower;
 
-        armor = (float) (double) stats.get("armor");
-        magicResist = (float) (double) stats.get("magicResist");
+        armor = baseStats.baseArmor;
+        magicResist = baseStats.baseMagicResist;
 
-        criticalStrikeChance = (float) (double) stats.get("criticalStrikeChance");
+        criticalStrikeChance = baseStats.baseCriticalStrikeChance;
 
-        cooldownReduction = (float) (double) stats.get("cooldownReduction");
+        cooldownReduction = baseStats.baseCooldownReduction;
 
-        moveSpeed = (float) (double) stats.get("moveSpeed");
+        moveSpeed = baseStats.baseMoveSpeed;
 
-        attackSpeed = (float) (double) stats.get("attackSpeed");
-        armorPenetration = (float) (double) stats.get("armorPenetration");
-        magicResistPenetration = (float) (double) stats.get("magicResistPenetration");
-        criticalStrikeDamage = (float) (double) stats.get("criticalStrikeDamage");
-        tenacity = (float) (double) stats.get("tenacity");
+        attackSpeed = baseStats.baseAttackSpeed;
+        armorPenetration = baseStats.baseArmorPenetration;
+        magicResistPenetration = baseStats.baseMagicResistPenetration;
+        criticalStrikeDamage = baseStats.baseCriticalStrikeDamage;
+        tenacity = baseStats.baseTenacity;
         dead = false;
         invulnerable = false;
     }
@@ -83,39 +87,6 @@ public class Stats extends PooledDefComponent {
     @Override
     public IComponentDef getDefaultDef() {
         return new StatsDef();
-    }
-
-    @Override
-    public void fromDef(IComponentDef def) {
-        StatsDef stats = (StatsDef) def;
-        maxHealth = stats.maxHealth;
-        healthRegen = stats.healthRegen;
-
-        maxActionPoints = stats.maxActionPoints;
-        actionPointRegen = stats.actionPointRegen;
-
-        maxResource = stats.maxResource;
-        resourceRegen = stats.resourceRegen;
-
-        attackDamage = stats.attackDamage;
-        spellPower = stats.spellPower;
-
-        armor = stats.armor;
-        magicResist = stats.magicResist;
-
-        criticalStrikeChance = stats.criticalStrikeChance;
-
-        cooldownReduction = stats.cooldownReduction;
-
-        moveSpeed = stats.moveSpeed;
-
-        attackSpeed = stats.attackSpeed;
-        armorPenetration = stats.armorPenetration;
-        magicResistPenetration = stats.magicResistPenetration;
-        criticalStrikeDamage = stats.criticalStrikeDamage;
-        tenacity = stats.tenacity;
-        dead = false;
-        invulnerable = false;
     }
 
     @Override
@@ -163,34 +134,67 @@ public class Stats extends PooledDefComponent {
         magicResistPenetration = 0;
         criticalStrikeDamage = 0;
         tenacity = 0;
+        baseStats = null;
     }
 
     public static class StatsDef extends IComponentDef {
-        public int maxHealth;
-        public float healthRegen;
 
-        public int maxActionPoints;
-        public float actionPointRegen;
+        public int baseHealth;
+        public float baseHealthRegen;
 
-        public int maxResource;
-        public float resourceRegen;
+        public int baseActionPoints;
+        public float baseActionPointsRegen;
 
-        public float attackDamage;
-        public float attackSpeed;
-        public float spellPower;
+        public int baseResource;
+        public float baseResourceRegen;
 
-        public float armor;
-        public float armorPenetration;
-        public float magicResist;
-        public float magicResistPenetration;
+        public float baseAttackDamage;
+        public float baseAttackSpeed;
 
-        public float criticalStrikeChance;
-        public float criticalStrikeDamage;
+        public float baseSpellPower;
 
-        public float tenacity;
+        public float baseArmor;
+        public float baseArmorPenetration;
 
-        public float cooldownReduction;
+        public float baseMagicResist;
+        public float baseMagicResistPenetration;
 
-        public float moveSpeed;
+        public float baseCriticalStrikeChance;
+        public float baseCriticalStrikeDamage;
+
+        public float baseTenacity;
+
+        public float baseCooldownReduction;
+
+        public float baseMoveSpeed;
+
+        public int healthGrowth;
+        public float healthRegenGrowth;
+
+        public int actionPointsGrowth;
+        public float actionPointsRegenGrowth;
+
+        public int resourceGrowth;
+        public float resourceRegenGrowth;
+
+        public float attackDamageGrowth;
+        public float attackSpeedGrowth;
+
+        public float spellPowerGrowth;
+
+        public float armorGrowth;
+        public float armorPenetrationGrowth;
+
+        public float magicResistGrowth;
+        public float magicResistPenetrationGrowth;
+
+        public float criticalStrikeChanceGrowth;
+        public float criticalStrikeDamageGrowth;
+
+        public float tenacityGrowth;
+
+        public float cooldownReductionGrowth;
+
+        public float moveSpeedGrowth;
     }
 }

@@ -107,8 +107,12 @@ public class ArcadeWorld implements Disposable {
 
 
         WorldConfiguration worldConfiguration = new WorldConfigurationBuilder()
-                .with(
+                .with(1,
+                        new StatusSystem(),
                         new StatSystem(),
+                        new RegenSystem(.5f)
+                )
+                .with(0,
                         new PhysicPositionSystem(),
                         new PositionTileSystem(logicMap),
                         new InputSystem(physicsWorld),

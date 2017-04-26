@@ -6,10 +6,12 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
 import gg.al.exception.EntityException;
 import gg.al.logic.ArcadeWorld;
 import gg.al.logic.component.*;
 import gg.al.logic.map.Tile;
+import gg.al.util.GsonUtil;
 
 import java.io.*;
 import java.util.*;
@@ -18,7 +20,6 @@ import java.util.*;
  * Created by Thomas Neumann on 24.03.2017.<br />
  */
 public class EntityUtil {
-    private static Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
     public static int spawn(Entity entity, ArcadeWorld arcadeWorld, EntityArguments arguments) {
         EntityWorld entityWorld = arcadeWorld.getEntityWorld();
@@ -27,8 +28,8 @@ public class EntityUtil {
 
         switch (entity) {
             case Test:
-                Map<String, Object> pos = arguments.get("Position", Map.class);
-                Tile tile = arcadeWorld.getTile((int)(double)pos.get("x"),(int)(double)pos.get("y"));
+                Position.PositionDef pos = arguments.get("Position", Position.PositionDef.class);
+                Tile tile = arcadeWorld.getTile(pos.x, pos.y);
                 if (tile.getEntities().size > 0)
                     throw new EntityException("Can´t spawn test at position: other entity present");
 
@@ -67,23 +68,23 @@ public class EntityUtil {
     }
 
     private static void setup(int entityId, Stats stats, ArcadeWorld arcadeWorld, EntityArguments arguments) {
-        stats.set(arguments);
+        stats.fromDef(arguments.get("Stats", Stats.StatsDef.class));
     }
 
     private static void setup(int entityId, Render render, ArcadeWorld arcadeWorld, EntityArguments arguments) {
-        render.set(arguments);
-        render.texture = arguments.get("texture", AssetDescriptor.class);
+        render.fromDef(arguments.get("Render", Render.RenderDef.class));
     }
 
     private static void setup(int entityId, Input input, ArcadeWorld arcadeWorld, EntityArguments arguments) {
-        Map<String, Object> pos = arguments.get("Position", Map.class);
-        input.move.set((int)(double)pos.get("x"), (int)(double)pos.get("y"));
+        Position.PositionDef pos = arguments.get("Position", Position.PositionDef.class);
+        input.move.set(pos.x, pos.y);
     }
 
     private static void setup(int entityId, IPhysic physic, ArcadeWorld arcadeWorld, EntityArguments arguments) {
         BodyDef bodyDef = new BodyDef();
         bodyDef.type = physic.getBodyType();
-        bodyDef.position.set((int)(double)arguments.get("Position", Map.class).get("x"), (int)(double)arguments.get("Position", Map.class).get("y"));
+        Position.PositionDef pos = arguments.get("Position", Position.PositionDef.class);
+        bodyDef.position.set(pos.x, pos.y);
         Body body = arcadeWorld.getPhysicsWorld().createBody(bodyDef);
 
         FixtureDef fixtureDef = new FixtureDef();
@@ -99,8 +100,9 @@ public class EntityUtil {
     }
 
     private static void setup(int entityId, Position position, ArcadeWorld arcadeWorld, EntityArguments arguments) {
-        Tile tile = arcadeWorld.getTile((int)(double)arguments.get("Position", Map.class).get("x"), (int)(double)arguments.get("Position", Map.class).get("y"));
-        position.set((int)(double)arguments.get("Position", Map.class).get("x"), (int)(double)arguments.get("Position", Map.class).get("y"));
+        Position.PositionDef pos = arguments.get("Position", Position.PositionDef.class);
+        Tile tile = arcadeWorld.getTile(pos.x, pos.y);
+        position.fromDef(pos);
         tile.addEntity(entityId);
         position.set(tile);
     }
@@ -121,7 +123,7 @@ public class EntityUtil {
 
             }
         }
-        return GSON.toJson(defs);
+        return GsonUtil.getGSON().toJson(defs);
     }
 
 

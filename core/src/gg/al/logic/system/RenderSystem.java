@@ -19,6 +19,7 @@ import gg.al.logic.component.DynamicPhysic;
 import gg.al.logic.component.Position;
 import gg.al.logic.component.Render;
 import gg.al.logic.component.Stats;
+import gg.al.util.Assets;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -114,6 +115,8 @@ public class RenderSystem extends IteratingSystem {
     protected void inserted(int entityId) {
         Render render = mapperRender.get(entityId);
         Position position = mapperPosition.get(entityId);
+        if(render.texture == null)
+            render.texture = Assets.get(render.textureName);
         Decal decal = Decal.newDecal(render.width, render.height, new TextureRegion(assetManager.get(render.texture)), render.transparent);
         decal.setPosition(position.position.x, position.position.y, 0);
         decalMap.put(entityId, decal);

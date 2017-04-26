@@ -139,7 +139,7 @@ public class SettingsScreen implements IAssetScreen, InputProcessor {
         });
 
         TextureRegion backgroundTexture = new TextureRegion(AL.asset.get(Assets.PT_BACKGROUND_TEXTBUTTON));
-        BitmapFont font = AL.asset.get(Assets.PT_BOCKLIN);
+        BitmapFont font = AL.asset.get(Assets.PT_BOCKLIN_FNT);
         font.getData().setScale(0.5f, 0.5f);
         ScrollPane.ScrollPaneStyle scrollPaneStyle = new ScrollPane.ScrollPaneStyle();
         com.badlogic.gdx.scenes.scene2d.ui.List.ListStyle listStyle = new com.badlogic.gdx.scenes.scene2d.ui.List.ListStyle(font, Color.BLACK, new Color(255, 244, 0, 255), selection);
@@ -305,7 +305,7 @@ public class SettingsScreen implements IAssetScreen, InputProcessor {
         AL.asset.unload(Assets.PT_STYLES_JSON.fileName);
         AL.asset.unload(Assets.PT_TESTMAINSCREEN.fileName);
         AL.asset.unload(Assets.PT_BACKGROUND_TEXTBUTTON.fileName);
-        AL.asset.unload(Assets.PT_BOCKLIN.fileName);
+        AL.asset.unload(Assets.PT_BOCKLIN_FNT.fileName);
     }
 
     private void vsyncOnOff() {
@@ -366,7 +366,7 @@ public class SettingsScreen implements IAssetScreen, InputProcessor {
 
     @Override
     public java.util.List<AssetDescriptor> assets() {
-        return Arrays.asList(Assets.PT_STYLES_JSON, Assets.PT_TESTMAINSCREEN, Assets.PT_BACKGROUND_TEXTBUTTON, Assets.PT_BOCKLIN);
+        return Arrays.asList(Assets.PT_STYLES_JSON, Assets.PT_TESTMAINSCREEN, Assets.PT_BACKGROUND_TEXTBUTTON, Assets.PT_BOCKLIN_FNT);
     }
 
     @Override

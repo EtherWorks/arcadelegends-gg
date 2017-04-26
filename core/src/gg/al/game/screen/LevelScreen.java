@@ -20,9 +20,8 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import gg.al.game.AL;
 import gg.al.logic.ArcadeWorld;
-import gg.al.logic.component.Damage;
-import gg.al.logic.component.DynamicPhysic;
-import gg.al.logic.component.Position;
+import gg.al.logic.component.*;
+import gg.al.logic.data.StatusEffect;
 import gg.al.logic.entity.Entity;
 import gg.al.logic.entity.EntityArguments;
 import gg.al.logic.entity.EntityUtil;
@@ -179,8 +178,17 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
             case Input.Keys.K:
                 Damage dmg = arcadeWorld.getEntityWorld().getMapper(Damage.class).create(playerEnt);
                 dmg.damageType = Damage.DamageType.Magic;
-                dmg.amount = 50;
+                dmg.amount = 10;
                 dmg.penetration = 10;
+                break;
+            case Input.Keys.J:
+                Stats stats = arcadeWorld.getEntityWorld().getMapper(Stats.class).get(playerEnt);
+                stats.level += 1;
+                break;
+
+            case Input.Keys.Z:
+                StatusEffects statusEffects = arcadeWorld.getEntityWorld().getMapper(StatusEffects.class).create(playerEnt);
+                statusEffects.statusEffects.put("ARP1", StatusEffect.builder().effectTime(10).valueHealthRegen(10).build());
                 break;
         }
         camera.update();
@@ -210,8 +218,12 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
                     EntityArguments arguments = null;
                     try {
                         arguments = EntityArguments.fromFile("test.json");
-                        arguments.put("texture", Assets.PT_EZREAL);
+                        Position.PositionDef positionDef = arguments.get("Position", Position.PositionDef.class);
+                        positionDef.x = (int) mapCoord.x;
+                        positionDef.y = (int) mapCoord.y;
                         playerEnt = EntityUtil.spawn(Entity.Test, arcadeWorld, arguments);
+                        Stats stats = arcadeWorld.getEntityWorld().getMapper(Stats.class).get(playerEnt);
+                        stats.level = 2;
                     } catch (IOException e) {
                         log.error("Couldn´t load player", e);
                     }
