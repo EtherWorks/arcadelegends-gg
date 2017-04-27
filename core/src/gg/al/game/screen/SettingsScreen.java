@@ -27,16 +27,15 @@ import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import gg.al.config.IAudioConfig;
-import gg.al.config.IInputConfig;
 import gg.al.config.IVideoConfig;
 import gg.al.game.AL;
 import gg.al.game.ui.ALTabbedPane;
 import gg.al.util.Assets;
 import lombok.extern.slf4j.Slf4j;
 
-import javax.xml.soap.Text;
 import java.awt.*;
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
 
 
 @Slf4j
@@ -106,7 +105,7 @@ public class SettingsScreen implements IAssetScreen, InputProcessor {
 
         btTabInput = new TextButton("Input", skin);
         btTabInput.setSize(300, 50);
-        btTabInput.addListener(new ClickListener(){
+        btTabInput.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 if (!AL.screen.isRegistered(InputSettingsScreen.class))
@@ -196,6 +195,7 @@ public class SettingsScreen implements IAssetScreen, InputProcessor {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 AL.cedit.setValue(IAudioConfig.AudioKeys.masterVolume, volumeSlider.getValue());
+                AL.cedit.flush();
             }
         });
 
@@ -212,14 +212,10 @@ public class SettingsScreen implements IAssetScreen, InputProcessor {
                 } else {
                     musicOnOff.setText("Music off");
                 }
+                AL.cedit.flush();
             }
         });
-        // musicOnOff.setText(AL.caudio.musicVolume() == 0 ? "Music off" : "Music on"); <-- Das verwenden wenn AudioManager da ist.
-        if (musicSlider.getValue() == 0) {
-            musicOnOff.setText("Music off");
-        } else {
-            musicOnOff.setText("Music on");
-        }
+        musicOnOff.setText(AL.caudio.musicVolume() == 0 ? "Music off" : "Music on");
 
         musicOnOff.addListener(new ClickListener() {
             @Override
@@ -229,11 +225,13 @@ public class SettingsScreen implements IAssetScreen, InputProcessor {
                         musicOnOff.setText("Music off");
                         AL.cedit.setValue(IAudioConfig.AudioKeys.musicVolume, 0);
                         musicSlider.setValue(0);
+                        AL.cedit.flush();
                         break;
                     case "Music off":
                         musicOnOff.setText("Music on");
                         AL.cedit.setValue(IAudioConfig.AudioKeys.musicVolume, 100);
                         musicSlider.setValue(100);
+                        AL.cedit.flush();
                         break;
                 }
             }
@@ -247,6 +245,7 @@ public class SettingsScreen implements IAssetScreen, InputProcessor {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 AL.cedit.setValue(IAudioConfig.AudioKeys.effectVolume, effectSlider.getValue());
+                AL.cedit.flush();
             }
         });
         tableAudio = new Table();
@@ -261,7 +260,6 @@ public class SettingsScreen implements IAssetScreen, InputProcessor {
 
 
     }
-
 
 
     @Override

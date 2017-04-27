@@ -13,11 +13,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.FitViewport;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import gg.al.config.IVideoConfig;
 import gg.al.game.AL;
-import gg.al.game.screen.LevelScreen;
 import gg.al.util.Assets;
 import lombok.extern.slf4j.Slf4j;
 
@@ -46,6 +44,8 @@ public class MainMenuScreen implements IAssetScreen {
 
     @Override
     public void show() {
+        AL.audioManager.registerMusic(Assets.getName(Assets.PT_BITRUSH), AL.asset.get(Assets.PT_BITRUSH));
+        AL.audioManager.playMusic(Assets.getName(Assets.PT_BITRUSH));
         // Inits:
         cam = new OrthographicCamera();
         viewport = new FitViewport(1920, 1080);
@@ -53,7 +53,7 @@ public class MainMenuScreen implements IAssetScreen {
         stage = new Stage(viewport);
         stage.setViewport(viewport);
         skin = AL.asset.get(Assets.PT_STYLES_JSON);
-        skin.getFont("bocklin").getData().setScale(0.8f,0.8f);
+        skin.getFont("bocklin").getData().setScale(0.8f, 0.8f);
         int x = 1920;
         int y = 1080;
         spriteBatch = new SpriteBatch();
@@ -64,10 +64,10 @@ public class MainMenuScreen implements IAssetScreen {
         TextButton btPlay = new TextButton("Play", skin, "default");
         btPlay.setWidth(400);
         btPlay.setHeight(100);
-        btPlay.addListener(new ClickListener(){
+        btPlay.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                if(!AL.screen.isRegistered(LevelScreen.class))
+                if (!AL.screen.isRegistered(LevelScreen.class))
                     AL.screen.register(new LevelScreen(Assets.PT_TEST), LevelScreen.class);
                 AL.game.setScreen(AL.screen.get(LevelScreen.class));
             }
@@ -76,7 +76,7 @@ public class MainMenuScreen implements IAssetScreen {
         TextButton btSettings = new TextButton("Settings", skin, "default");
         btSettings.setWidth(400);
         btSettings.setHeight(100);
-      
+
         btSettings.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -102,7 +102,7 @@ public class MainMenuScreen implements IAssetScreen {
         table.add(btSettings).width(400).pad(10);
         table.row();
         table.add(btExit).width(400).pad(10);
-        table.setPosition(x/2, y/2+50);
+        table.setPosition(x / 2, y / 2 + 50);
 
         stage.addActor(table);
 
@@ -122,8 +122,6 @@ public class MainMenuScreen implements IAssetScreen {
 
         stage.act(Gdx.graphics.getDeltaTime());
         stage.draw();
-
-
     }
 
     @Override
@@ -145,6 +143,7 @@ public class MainMenuScreen implements IAssetScreen {
     @Override
     public void hide() {
         AL.input.setInputProcessor(null);
+        AL.audioManager.stopMusic(Assets.getName(Assets.PT_BITRUSH));
         stage.dispose();
         spriteBatch.dispose();
     }
@@ -152,6 +151,7 @@ public class MainMenuScreen implements IAssetScreen {
     @Override
     public void dispose() {
         AL.asset.unload(Assets.PT_STYLES_JSON.fileName);
+        AL.asset.unload(Assets.PT_BITRUSH.fileName);
     }
 
     private void changeSize() {
@@ -162,7 +162,7 @@ public class MainMenuScreen implements IAssetScreen {
 
     @Override
     public List<AssetDescriptor> assets() {
-        return Arrays.asList(Assets.PT_STYLES_JSON, Assets.PT_TESTMAINSCREEN);
+        return Arrays.asList(Assets.PT_STYLES_JSON, Assets.PT_TESTMAINSCREEN, Assets.PT_BITRUSH);
     }
 
     @Override

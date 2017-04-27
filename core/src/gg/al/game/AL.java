@@ -3,6 +3,7 @@ package gg.al.game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import gg.al.config.*;
+import gg.al.util.AudioManager;
 import gg.al.util.ScreenManager;
 
 /**
@@ -24,4 +25,5 @@ public class AL extends Gdx {
     public static IInputConfig cinput;
     public static AssetManager asset;
     public static ScreenManager screen;
+    public static AudioManager audioManager;
 }
