@@ -44,8 +44,8 @@ public class MainMenuScreen implements IAssetScreen {
 
     @Override
     public void show() {
-        AL.audioManager.registerMusic(Assets.getName(Assets.PT_BITRUSH), AL.asset.get(Assets.PT_BITRUSH));
-        AL.audioManager.playMusic(Assets.getName(Assets.PT_BITRUSH));
+        AL.audioManager.registerMusics(Assets.PT_BITRUSH);
+        AL.audioManager.playMusic(Assets.PT_BITRUSH);
         // Inits:
         cam = new OrthographicCamera();
         viewport = new FitViewport(1920, 1080);
@@ -143,7 +143,8 @@ public class MainMenuScreen implements IAssetScreen {
     @Override
     public void hide() {
         AL.input.setInputProcessor(null);
-        AL.audioManager.stopMusic(Assets.getName(Assets.PT_BITRUSH));
+        AL.audioManager.stopMusic(Assets.PT_BITRUSH);
+        AL.audioManager.unregisterMusics(Assets.PT_BITRUSH);
         stage.dispose();
         spriteBatch.dispose();
     }

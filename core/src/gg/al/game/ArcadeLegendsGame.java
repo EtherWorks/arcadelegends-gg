@@ -56,6 +56,7 @@ public class ArcadeLegendsGame extends Game {
         AL.cvideo = config.video;
         AL.screen = screenManager;
         AL.audioManager = audioManager;
+        audioManager.setAssetManager(assetManager);
 
         TypeParser parser = TypeParser.newBuilder().build();
         AL.cedit.addConfigValueChangedListener(IAudioConfig.AudioKeys.masterVolume, (key, value) -> {
