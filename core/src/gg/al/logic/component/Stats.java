@@ -35,6 +35,8 @@ public class Stats extends PooledDefComponent {
     public float criticalStrikeChance;
     public float criticalStrikeDamage;
 
+    public float attackRange;
+
     public float tenacity;
 
     public float cooldownReduction;
@@ -64,6 +66,7 @@ public class Stats extends PooledDefComponent {
         resource = maxResource;
 
         attackDamage = baseStats.baseAttackDamage;
+        attackRange = baseStats.baseAttackRange;
         spellPower = baseStats.baseSpellPower;
 
         armor = baseStats.baseArmor;
@@ -95,6 +98,7 @@ public class Stats extends PooledDefComponent {
                 "\n" + actionPoints + " / " + maxActionPoints + " AP, " + actionPointRegen + " AP/s" +
                 "\n" + resource + " / " + maxResource + " R, " + resourceRegen + " R/s" +
                 "\n" + attackDamage + " AD" +
+                "\n" + attackRange + " RA" +
                 "\n" + attackSpeed + " AS" +
                 "\n" + spellPower + " SP" +
                 "\n" + armor + " AR" +
@@ -134,6 +138,7 @@ public class Stats extends PooledDefComponent {
         magicResistPenetration = 0;
         criticalStrikeDamage = 0;
         tenacity = 0;
+        attackRange = 0;
         baseStats = null;
     }
 
@@ -149,6 +154,7 @@ public class Stats extends PooledDefComponent {
         public float baseResourceRegen;
 
         public float baseAttackDamage;
+        public float baseAttackRange;
         public float baseAttackSpeed;
 
         public float baseSpellPower;
@@ -178,6 +184,7 @@ public class Stats extends PooledDefComponent {
         public float resourceRegenGrowth;
 
         public float attackDamageGrowth;
+        public float attackRangeGrowth;
         public float attackSpeedGrowth;
 
         public float spellPowerGrowth;

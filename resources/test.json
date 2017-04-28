@@ -22,6 +22,7 @@
     "baseResource": 50,
     "baseResourceRegen": 1.0,
     "baseAttackDamage": 0.0,
+    "baseAttackRange": 1.0,
     "baseAttackSpeed": 0.0,
     "baseSpellPower": 0.0,
     "baseArmor": 0.0,

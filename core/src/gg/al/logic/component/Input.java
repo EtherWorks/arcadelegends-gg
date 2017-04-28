@@ -13,10 +13,13 @@ public class Input extends PooledComponent {
 
     public final Vector2 startToEnd;
 
+    public int targetId;
+
     public Input() {
         move = new Vector2();
         stepMove = new Vector2();
         startToEnd = new Vector2();
+        targetId = -1;
     }
 
     @Override
@@ -24,6 +27,7 @@ public class Input extends PooledComponent {
         move.setZero();
         stepMove.setZero();
         startToEnd.setZero();
+        targetId = -1;
     }
 
     public void set(int moveX, int moveY) {

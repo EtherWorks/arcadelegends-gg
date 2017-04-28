@@ -25,6 +25,7 @@ import gg.al.logic.data.StatusEffect;
 import gg.al.logic.entity.Entity;
 import gg.al.logic.entity.EntityArguments;
 import gg.al.logic.entity.EntityUtil;
+import gg.al.logic.map.Tile;
 import gg.al.util.Assets;
 import lombok.extern.slf4j.Slf4j;
 
@@ -99,7 +100,7 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
         arcadeWorld.render();
 
         fpsBatch.begin();
-        font.draw(fpsBatch, String.format("%d FPS %d", Gdx.graphics.getFramesPerSecond(), arcadeWorld.getEntityWorld().getAspectSubscriptionManager().get(Aspect.all()).getEntities().size()), 0, 15);
+        font.draw(fpsBatch, String.format("%d FPS %d Entities", Gdx.graphics.getFramesPerSecond(), arcadeWorld.getEntityWorld().getAspectSubscriptionManager().get(Aspect.all()).getEntities().size()), 0, 15);
         fpsBatch.end();
     }
 
@@ -132,19 +133,19 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
     @Override
     public boolean keyDown(int keycode) {
         switch (keycode) {
-            case Input.Keys.A:
+            case Input.Keys.LEFT:
                 camera.translate(-1, 0, 0);
                 break;
-            case Input.Keys.D:
+            case Input.Keys.RIGHT:
                 camera.translate(1, 0, 0);
                 break;
-            case Input.Keys.S:
+            case Input.Keys.DOWN:
                 camera.translate(0, -1, 0);
                 break;
-            case Input.Keys.W:
+            case Input.Keys.UP:
                 camera.translate(0, 1, 0);
                 break;
-            case Input.Keys.UP:
+            case Input.Keys.W:
                 gg.al.logic.component.Input input = arcadeWorld.getEntityWorld().getComponentOf(playerEnt, gg.al.logic.component.Input.class);
 
                 Position position = arcadeWorld.getEntityWorld().getComponentOf(playerEnt, Position.class);
@@ -152,7 +153,7 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
                     break;
                 input.move.set(position.position.x, position.position.y + 1);
                 break;
-            case Input.Keys.DOWN:
+            case Input.Keys.S:
                 input = arcadeWorld.getEntityWorld().getComponentOf(playerEnt, gg.al.logic.component.Input.class);
 
                 position = arcadeWorld.getEntityWorld().getComponentOf(playerEnt, Position.class);
@@ -160,7 +161,7 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
                     break;
                 input.move.set(position.position.x, position.position.y - 1);
                 break;
-            case Input.Keys.LEFT:
+            case Input.Keys.A:
                 input = arcadeWorld.getEntityWorld().getComponentOf(playerEnt, gg.al.logic.component.Input.class);
 
                 position = arcadeWorld.getEntityWorld().getComponentOf(playerEnt, Position.class);
@@ -168,7 +169,7 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
                     break;
                 input.move.set(position.position.x - 1, position.position.y);
                 break;
-            case Input.Keys.RIGHT:
+            case Input.Keys.D:
                 input = arcadeWorld.getEntityWorld().getComponentOf(playerEnt, gg.al.logic.component.Input.class);
                 position = arcadeWorld.getEntityWorld().getComponentOf(playerEnt, Position.class);
                 if (!input.move.equals(position.position))
@@ -233,15 +234,12 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
                 }
                 break;
             case Input.Buttons.RIGHT:
-                EntityArguments arguments = null;
+                Tile t = arcadeWorld.getTile(mapCoord);
                 try {
-                    arguments = EntityArguments.fromFile("test.json");
-                    arguments.put("texture", Assets.PT_EZREAL);
-                    int entity = EntityUtil.spawn(Entity.Test, arcadeWorld, arguments);
-                    DynamicPhysic dynamicPhysic = arcadeWorld.getEntityWorld().getMapper(DynamicPhysic.class).get(entity);
-                    dynamicPhysic.getBody().setLinearVelocity(Vector2.X);
-                } catch (IOException e) {
-                    log.error("Couldn´t load player", e);
+                    int id = t.getEntities().first();
+                    Input input = arcadeWorld.getEntityWorld().getMapper(Input.class).get(id);
+                } catch (IllegalStateException ex) {
+                    
                 }
                 break;
         }

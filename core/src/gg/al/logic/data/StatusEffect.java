@@ -23,6 +23,7 @@ public class StatusEffect {
     public float percentageResourceRegen;
 
     public float percentageAttackDamage;
+    public float percentageAttackRange;
     public float percentageAttackSpeed;
 
     public float percentageSpellPower;
@@ -52,6 +53,7 @@ public class StatusEffect {
     public float valueResourceRegen;
 
     public float valueAttackDamage;
+    public float valueAttackRange;
     public float valueAttackSpeed;
 
     public float valueSpellPower;
@@ -82,6 +84,7 @@ public class StatusEffect {
         stats.resourceRegen += valueResourceRegen;
 
         stats.attackDamage += valueAttackDamage;
+        stats.attackRange += valueAttackRange;
         stats.spellPower += valueSpellPower;
 
         stats.armor += valueArmor;
@@ -110,6 +113,7 @@ public class StatusEffect {
         stats.resourceRegen += stats.resourceRegen * percentageResourceRegen;
 
         stats.attackDamage += stats.attackDamage * percentageAttackDamage;
+        stats.attackRange += stats.attackRange * percentageAttackRange;
         stats.spellPower += stats.spellPower * percentageSpellPower;
 
         stats.armor += stats.armor * percentageArmor;
