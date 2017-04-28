@@ -6,14 +6,14 @@ public abstract class Assets {
 	}
 
 	public static String getName(AssetDescriptor descriptor) {
-		return assetMap.inverse().get(descriptor);
+		return getAssetMap().inverse().get(descriptor);
 	}
-	private static Map<String, AssetDescriptor> getAssetMap() {
+	private static BiMap<String, AssetDescriptor> getAssetMap() {
 		if(assetMap != null)
 			return assetMap;
 		else
 		{
-			assetMap = new HashBiMap.create();
+			assetMap = HashBiMap.create();
 			assetMap.put("PT_BITRUSH", PT_BITRUSH);
 			assetMap.put("PT_TEST", PT_TEST);
 			assetMap.put("PT_BG", PT_BG);
@@ -60,6 +60,7 @@ public abstract class Assets {
 			assetMap.put("PT_TOWERFULL", PT_TOWERFULL);
 			assetMap.put("PT_TOWERTOP", PT_TOWERTOP);
 			assetMap.put("PT_SIDEVIEWSHEET", PT_SIDEVIEWSHEET);
+			assetMap.put("PT_SQUATSHEET", PT_SQUATSHEET);
 			assetMap.put("PT_BACKGROUND_TEXTBUTTON", PT_BACKGROUND_TEXTBUTTON);
 			assetMap.put("PT_BOCKLIN_FNT", PT_BOCKLIN_FNT);
 			assetMap.put("PT_BOCKLIN_PNG", PT_BOCKLIN_PNG);
@@ -115,6 +116,7 @@ public abstract class Assets {
 	public static AssetDescriptor<Texture> PT_TOWERFULL = new AssetDescriptor<>("assets/prototype/sprites/towerfull.png", Texture.class);
 	public static AssetDescriptor<Texture> PT_TOWERTOP = new AssetDescriptor<>("assets/prototype/sprites/towertop.png", Texture.class);
 	public static AssetDescriptor<Texture> PT_SIDEVIEWSHEET = new AssetDescriptor<>("assets/prototype/sprites/walksprites/sideviewsheet.png", Texture.class);
+	public static AssetDescriptor<Texture> PT_SQUATSHEET = new AssetDescriptor<>("assets/prototype/sprites/walksprites/squatsheet.png", Texture.class);
 	public static AssetDescriptor<Texture> PT_BACKGROUND_TEXTBUTTON = new AssetDescriptor<>("assets/prototype/styles/styles/background_textbutton.png", Texture.class);
 	public static AssetDescriptor<BitmapFont> PT_BOCKLIN_FNT = new AssetDescriptor<>("assets/prototype/styles/styles/bocklin.fnt", BitmapFont.class);
 	public static AssetDescriptor<Texture> PT_BOCKLIN_PNG = new AssetDescriptor<>("assets/prototype/styles/styles/bocklin.png", Texture.class);

@@ -116,7 +116,7 @@ public class ArcadeWorld implements Disposable {
                         new PhysicPositionSystem(),
                         new PositionTileSystem(logicMap),
                         new InputSystem(physicsWorld),
-                        renderSystem = new RenderSystem(decalBatch, AL.asset),
+                        renderSystem = new RenderSystem(decalBatch, AL.asset, worldViewRotation),
                         new DamageSystem()
                 )
                 .build();

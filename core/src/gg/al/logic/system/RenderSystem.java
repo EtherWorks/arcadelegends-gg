@@ -39,7 +39,8 @@ public class RenderSystem extends BaseEntitySystem {
     private BitmapFont font;
     private Camera uiCamera;
 
-    public float stateTime;
+    private float stateTime;
+    private float worldDegree;
 
     private final ObjectMap<Integer, Decal> decalMap;
     private final ObjectMap<Integer, Decal> uiMap;
@@ -50,7 +51,7 @@ public class RenderSystem extends BaseEntitySystem {
     private ComponentMapper<DynamicPhysic> mapperDynamicPhysic;
     private ComponentMapper<Stats> mapperStats;
 
-    public RenderSystem(DecalBatch decalBatch, AssetManager assetManager) {
+    public RenderSystem(DecalBatch decalBatch, AssetManager assetManager, float worldDegree) {
         super(Aspect.all(Render.class, Position.class));
         decalMap = new ObjectMap<>();
         uiMap = new ObjectMap<>();
@@ -68,6 +69,7 @@ public class RenderSystem extends BaseEntitySystem {
         viewportUi.update(viewportUi.getScreenWidth(), viewportUi.getScreenHeight(), true);
 
         stateTime = 0;
+        this.worldDegree = worldDegree;
     }
 
 
@@ -143,6 +145,7 @@ public class RenderSystem extends BaseEntitySystem {
             render.animation = new Animation<>(render.frameDuration, new Array<>(frames), Animation.PlayMode.LOOP);
         }
         Decal decal = Decal.newDecal(render.width, render.height, render.animation.getKeyFrame(stateTime), render.transparent);
+        decal.rotateX(worldDegree);
         decal.setPosition(position.position.x, position.position.y, 0);
         decalMap.put(entityId, decal);
 
