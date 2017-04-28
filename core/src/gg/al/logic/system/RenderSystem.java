@@ -1,16 +1,20 @@
 package gg.al.logic.system;
 
 import com.artemis.Aspect;
+import com.artemis.BaseEntitySystem;
 import com.artemis.ComponentMapper;
 import com.artemis.systems.IteratingSystem;
+import com.artemis.utils.IntBag;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.*;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g3d.decals.Decal;
 import com.badlogic.gdx.graphics.g3d.decals.DecalBatch;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
@@ -26,7 +30,7 @@ import lombok.extern.slf4j.Slf4j;
  * Created by Thomas Neumann on 30.03.2017.<br />
  */
 @Slf4j
-public class RenderSystem extends IteratingSystem {
+public class RenderSystem extends BaseEntitySystem {
 
     private ObjectMap<Integer, FrameBuffer> buffers;
     private int buffHeight = 256 * 5;
@@ -34,6 +38,8 @@ public class RenderSystem extends IteratingSystem {
     private SpriteBatch spriteBatch;
     private BitmapFont font;
     private Camera uiCamera;
+
+    public float stateTime;
 
     private final ObjectMap<Integer, Decal> decalMap;
     private final ObjectMap<Integer, Decal> uiMap;
@@ -60,14 +66,20 @@ public class RenderSystem extends IteratingSystem {
 
         Viewport viewportUi = new FitViewport(buffWidth, buffHeight, uiCamera);
         viewportUi.update(viewportUi.getScreenWidth(), viewportUi.getScreenHeight(), true);
+
+        stateTime = 0;
     }
 
-    @Override
+
     protected void process(int entityId) {
         DynamicPhysic dynamicPhysic = mapperDynamicPhysic.get(entityId);
         Position position = mapperPosition.get(entityId);
+        Render render = mapperRender.get(entityId);
+
         Stats stats = mapperStats.get(entityId);
         Decal decal = decalMap.get(entityId);
+        decal.setTextureRegion(render.animation.getKeyFrame(stateTime));
+
         if (dynamicPhysic != null)
             decal.setPosition(dynamicPhysic.getBody().getPosition().x, dynamicPhysic.getBody().getPosition().y, decal.getZ());
         else
@@ -97,16 +109,16 @@ public class RenderSystem extends IteratingSystem {
 //            font.draw(spriteBatch, String.format("%d/%dAP", (int) stats.actionPoints, stats.maxActionPoints), 10, 170);
 //            font.draw(spriteBatch, String.format("%dRP/%dRP", (int) stats.resource, stats.maxResource), 110, 130);
 //            font.draw(spriteBatch, String.format("%dHP/%dHP", (int) stats.health, stats.maxHealth), 110, 170);
-            font.draw(spriteBatch, stats.toString(), 0,buffHeight);
+            font.draw(spriteBatch, stats.toString(), 0, buffHeight);
             //log.debug("{}: {}", entityId, stats.toString());
             spriteBatch.end();
             buffer.end();
 
             Decal uiDecal = uiMap.get(entityId);
             if (dynamicPhysic != null)
-                uiDecal.setPosition(dynamicPhysic.getBody().getPosition().x+2, dynamicPhysic.getBody().getPosition().y -3, uiDecal.getZ());
+                uiDecal.setPosition(dynamicPhysic.getBody().getPosition().x + 2, dynamicPhysic.getBody().getPosition().y - 3, uiDecal.getZ());
             else
-                uiDecal.setPosition(position.position.x+2, position.position.y-3, uiDecal.getZ());
+                uiDecal.setPosition(position.position.x + 2, position.position.y - 3, uiDecal.getZ());
             decalBatch.add(uiDecal);
         }
     }
@@ -115,9 +127,22 @@ public class RenderSystem extends IteratingSystem {
     protected void inserted(int entityId) {
         Render render = mapperRender.get(entityId);
         Position position = mapperPosition.get(entityId);
-        if(render.texture == null)
+        if (render.texture == null) {
             render.texture = Assets.get(render.textureName);
-        Decal decal = Decal.newDecal(render.width, render.height, new TextureRegion(assetManager.get(render.texture)), render.transparent);
+            Texture texture = assetManager.get(render.texture);
+            TextureRegion[][] tmp = TextureRegion.split(texture,
+                    +texture.getWidth() / render.frameColumns,
+                    +texture.getHeight() / render.frameRows);
+            TextureRegion[] frames = new TextureRegion[render.frameColumns * render.frameRows];
+            int index = 0;
+            for (int i = 0; i < render.frameRows; i++) {
+                for (int j = 0; j < render.frameColumns; j++) {
+                    frames[index++] = tmp[i][j];
+                }
+            }
+            render.animation = new Animation<>(render.frameDuration, new Array<>(frames), Animation.PlayMode.LOOP);
+        }
+        Decal decal = Decal.newDecal(render.width, render.height, render.animation.getKeyFrame(stateTime), render.transparent);
         decal.setPosition(position.position.x, position.position.y, 0);
         decalMap.put(entityId, decal);
 
@@ -142,9 +167,21 @@ public class RenderSystem extends IteratingSystem {
     }
 
     @Override
+    protected void processSystem() {
+        if(stateTime == Float.MAX_VALUE)
+            stateTime = 0;
+        stateTime += getWorld().getDelta();
+        IntBag actives = subscription.getEntities();
+        int[] ids = actives.getData();
+        for (int i = 0, s = actives.size(); s > i; i++) {
+            process(ids[i]);
+        }
+    }
+
+    @Override
     public void dispose() {
         ObjectMap.Values<FrameBuffer> buffs = buffers.values();
-        while(buffs.hasNext())
+        while (buffs.hasNext())
             buffs.next().dispose();
         spriteBatch.dispose();
         font.dispose();

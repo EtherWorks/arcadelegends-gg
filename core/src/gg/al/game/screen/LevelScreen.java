@@ -60,7 +60,7 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
 
     @Override
     public List<AssetDescriptor> assets() {
-        return Arrays.asList(mapDesc, Assets.PT_EZREAL);
+        return Arrays.asList(mapDesc, Assets.PT_SIDEVIEWSHEET);
     }
 
     @Override
@@ -120,7 +120,7 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
     public void hide() {
         fpsBatch.dispose();
         AL.asset.unload(mapDesc.fileName);
-        AL.asset.unload(Assets.PT_EZREAL.fileName);
+        AL.asset.unload(Assets.PT_SIDEVIEWSHEET.fileName);
         arcadeWorld.dispose();
     }
 

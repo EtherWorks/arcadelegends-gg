@@ -8,7 +8,10 @@
     "width": 1.0,
     "height": 1.0,
     "transparent": true,
-    "texture": "PT_EZREAL",
+    "texture": "PT_SIDEVIEWSHEET",
+    "frameColumns": 5,
+    "frameRows": 8,
+    "frameDuration": 0.025,
     "type": "RenderDef"
   },
   "Stats": {
@@ -30,7 +33,6 @@
     "baseTenacity": 0.0,
     "baseCooldownReduction": 0.0,
     "baseMoveSpeed": 2.0,
-
     "healthGrowth": 10,
     "healthRegenGrowth": 0.0,
     "actionPointsGrowth": 0,
