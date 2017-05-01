@@ -1,25 +1,42 @@
 package gg.al.logic.entity;
 
 import com.artemis.Component;
-import com.badlogic.gdx.assets.AssetDescriptor;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonObject;
 import gg.al.exception.EntityException;
 import gg.al.logic.ArcadeWorld;
 import gg.al.logic.component.*;
+import gg.al.logic.data.IComponentDef;
+import gg.al.logic.data.IDefComponent;
+import gg.al.logic.data.IPhysic;
 import gg.al.logic.map.Tile;
 import gg.al.util.GsonUtil;
 
-import java.io.*;
-import java.util.*;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Scanner;
 
 /**
  * Created by Thomas Neumann on 24.03.2017.<br />
  */
 public class EntityUtil {
+
+    public static void delete(int id, World physicWorld, com.artemis.World entityWorld) {
+        DynamicPhysic dynamicPhysic = entityWorld.getMapper(DynamicPhysic.class).get(id);
+        KinematicPhysic kinematicPhysic = entityWorld.getMapper(KinematicPhysic.class).get(id);
+        IPhysic physic = dynamicPhysic == null ? kinematicPhysic : dynamicPhysic;
+
+        physicWorld.destroyBody(physic.getBody());
+
+        Position position = entityWorld.getMapper(Position.class).get(id);
+        position.tile.removeEntity(id);
+
+        entityWorld.delete(id);
+    }
 
     public static int spawn(Entity entity, ArcadeWorld arcadeWorld, EntityArguments arguments) {
         EntityWorld entityWorld = arcadeWorld.getEntityWorld();
@@ -40,7 +57,9 @@ public class EntityUtil {
                 Render render = entityWorld.getComponentOf(id, Render.class);
                 DynamicPhysic dynamicPhysic = entityWorld.getComponentOf(id, DynamicPhysic.class);
                 Input input = entityWorld.getComponentOf(id, Input.class);
+                Abilities abilities = entityWorld.getComponentOf(id, Abilities.class);
 
+                setup(abilities, arguments);
                 setup(id, stats, arcadeWorld, arguments);
                 setup(id, position, arcadeWorld, arguments);
                 setup(id, render, arcadeWorld, arguments);
@@ -73,6 +92,10 @@ public class EntityUtil {
 
     private static void setup(int entityId, Render render, ArcadeWorld arcadeWorld, EntityArguments arguments) {
         render.fromDef(arguments.get("Render", Render.RenderDef.class));
+    }
+
+    private static void setup(Abilities abilities, EntityArguments arguments) {
+        abilities.fromDef(arguments.get("Abilities", Abilities.AbilitiesDef.class));
     }
 
     private static void setup(int entityId, Input input, ArcadeWorld arcadeWorld, EntityArguments arguments) {

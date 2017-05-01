@@ -1,7 +1,7 @@
 package gg.al.logic.component;
 
-import com.artemis.PooledComponent;
 import com.badlogic.gdx.math.Vector2;
+import gg.al.logic.data.IComponentDef;
 import gg.al.logic.map.Tile;
 
 /**

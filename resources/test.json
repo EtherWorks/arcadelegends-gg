@@ -1,4 +1,8 @@
 {
+  "Abilities": {
+    "characterName": "Genericus",
+    "type": "AbilitiesDef"
+  },
   "Position": {
     "x": 0,
     "y": 0,
@@ -21,9 +25,9 @@
     "baseActionPointsRegen": 1.0,
     "baseResource": 50,
     "baseResourceRegen": 1.0,
-    "baseAttackDamage": 0.0,
-    "baseAttackRange": 1.0,
-    "baseAttackSpeed": 0.0,
+    "baseAttackDamage": 10.0,
+    "baseAttackRange": 1.5,
+    "baseAttackSpeed": 0.8,
     "baseSpellPower": 0.0,
     "baseArmor": 0.0,
     "baseArmorPenetration": 0.0,

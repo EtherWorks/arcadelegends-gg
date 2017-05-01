@@ -15,12 +15,11 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.Ray;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
-import com.badlogic.gdx.utils.viewport.FillViewport;
-import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import gg.al.game.AL;
 import gg.al.logic.ArcadeWorld;
 import gg.al.logic.component.*;
+import gg.al.logic.data.Damage;
 import gg.al.logic.data.StatusEffect;
 import gg.al.logic.entity.Entity;
 import gg.al.logic.entity.EntityArguments;
@@ -177,10 +176,8 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
                 input.move.set(position.position.x + 1, position.position.y);
                 break;
             case Input.Keys.K:
-                Damage dmg = arcadeWorld.getEntityWorld().getMapper(Damage.class).create(playerEnt);
-                dmg.damageType = Damage.DamageType.Magic;
-                dmg.amount = 10;
-                dmg.penetration = 10;
+                Damages dmg = arcadeWorld.getEntityWorld().getMapper(Damages.class).get(playerEnt);
+                dmg.damages.add(new Damage(Damage.DamageType.Normal, 100, 10));
                 break;
             case Input.Keys.J:
                 Stats stats = arcadeWorld.getEntityWorld().getMapper(Stats.class).get(playerEnt);
@@ -190,6 +187,34 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
             case Input.Keys.Z:
                 StatusEffects statusEffects = arcadeWorld.getEntityWorld().getMapper(StatusEffects.class).create(playerEnt);
                 statusEffects.statusEffects.put("ARP1", StatusEffect.builder().effectTime(10).valueHealthRegen(10).build());
+                break;
+
+            case Input.Keys.O:
+                EntityArguments arguments = null;
+                try {
+                    arguments = EntityArguments.fromFile("test.json");
+                    int id = EntityUtil.spawn(Entity.Test, arcadeWorld, arguments);
+                    stats = arcadeWorld.getEntityWorld().getMapper(Stats.class).get(id);
+                    stats.deleteOnDeath = true;
+                } catch (IOException e) {
+                    log.error("Couldn´t load player", e);
+                }
+                break;
+            case Input.Keys.Q:
+                Abilities abilities = arcadeWorld.getEntityWorld().getMapper(Abilities.class).get(playerEnt);
+                abilities.ability1.cast(arcadeWorld);
+                break;
+            case Input.Keys.E:
+                abilities = arcadeWorld.getEntityWorld().getMapper(Abilities.class).get(playerEnt);
+                abilities.ability2.cast(arcadeWorld);
+                break;
+            case Input.Keys.R:
+                abilities = arcadeWorld.getEntityWorld().getMapper(Abilities.class).get(playerEnt);
+                abilities.ability4.cast(arcadeWorld);
+                break;
+            case Input.Keys.F:
+                abilities = arcadeWorld.getEntityWorld().getMapper(Abilities.class).get(playerEnt);
+                abilities.ability3.cast(arcadeWorld);
                 break;
         }
         camera.update();
@@ -237,9 +262,11 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
                 Tile t = arcadeWorld.getTile(mapCoord);
                 try {
                     int id = t.getEntities().first();
-                    Input input = arcadeWorld.getEntityWorld().getMapper(Input.class).get(id);
+                    gg.al.logic.component.Input input = arcadeWorld.getEntityWorld().getMapper(gg.al.logic.component.Input.class).get(playerEnt);
+                    input.targetId = id;
+                    log.debug("{}", id);
                 } catch (IllegalStateException ex) {
-                    
+
                 }
                 break;
         }

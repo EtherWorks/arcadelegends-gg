@@ -3,13 +3,13 @@ package gg.al.util;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import gg.al.logic.component.IComponentDef;
+import gg.al.logic.component.Abilities;
 import gg.al.logic.component.Position;
 import gg.al.logic.component.Render;
 import gg.al.logic.component.Stats;
+import gg.al.logic.data.IComponentDef;
 import io.gsonfire.GsonFireBuilder;
 import io.gsonfire.PostProcessor;
-import io.gsonfire.PreProcessor;
 
 /**
  * Created by Thomas Neumann on 26.04.2017.<br />
@@ -41,6 +41,8 @@ public class GsonUtil {
                                     return Position.PositionDef.class;
                                 case "RenderDef":
                                     return Render.RenderDef.class;
+                                case "AbilitiesDef":
+                                    return Abilities.AbilitiesDef.class;
                                 default:
                                     return null;
                             }

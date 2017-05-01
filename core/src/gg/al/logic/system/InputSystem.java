@@ -6,10 +6,8 @@ import com.artemis.systems.IteratingSystem;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Pool;
-import gg.al.logic.component.DynamicPhysic;
-import gg.al.logic.component.Input;
-import gg.al.logic.component.Position;
-import gg.al.logic.component.Stats;
+import gg.al.logic.component.*;
+import gg.al.logic.data.Damage;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -23,6 +21,8 @@ public class InputSystem extends IteratingSystem {
     private ComponentMapper<Input> mapperInput;
     private ComponentMapper<DynamicPhysic> mapperDynamicPhysic;
     private ComponentMapper<Stats> mapperStats;
+    private ComponentMapper<Damages> mapperDamages;
+
 
     private Pool<Vector2> vectorPool;
 
@@ -80,6 +80,30 @@ public class InputSystem extends IteratingSystem {
                 dynamicPhysic.getBody().setTransform(pos.position, dynamicPhysic.getBody().getAngle());
             }
             vectorPool.free(curr);
+        }
+
+        if (input.targetId == entityId)
+            input.targetId = -1;
+        else if (input.targetId != -1) {
+            Position otherPos = mapperPosition.get(input.targetId);
+            Damages damages = mapperDamages.get(input.targetId);
+            if (damages != null && otherPos != null) {
+                Vector2 vector = vectorPool.obtain();
+                if (Math.abs(vector.set(pos.position).dst(otherPos.position)) <= stats.attackRange) {
+                    if (stats.attackSpeedTimer >= 1 / stats.attackSpeed) {
+                        stats.attackSpeedTimer = 0;
+                        Damage dmg = new Damage(Damage.DamageType.Normal, stats.attackDamage, stats.armorPenetration);
+                        damages.damages.add(dmg);
+                    } else
+                        stats.attackSpeedTimer += getWorld().getDelta();
+                } else {
+                    stats.attackSpeedTimer = 0;
+                }
+                vectorPool.free(vector);
+            } else {
+                input.targetId = -1;
+                stats.attackSpeedTimer = 0;
+            }
         }
 
     }

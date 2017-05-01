@@ -1,11 +1,8 @@
 package gg.al.logic.entity;
 
 import com.badlogic.gdx.utils.ObjectMap;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
-import gg.al.logic.component.*;
+import gg.al.logic.data.IComponentDef;
 import gg.al.util.GsonUtil;
 
 import java.io.File;
@@ -43,8 +40,6 @@ public class EntityArguments {
                 arguments.put(entries.getKey(), entries.getValue());
             }
             return arguments;
-        } catch (NullPointerException ex) {
-            throw new IOException("No resource found");
         } catch (URISyntaxException e) {
             throw new IOException("URI exception");
         }

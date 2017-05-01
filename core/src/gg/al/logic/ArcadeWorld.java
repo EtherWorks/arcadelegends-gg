@@ -50,6 +50,8 @@ public class ArcadeWorld implements Disposable {
     @Setter
     private float delta;
 
+    private float deltaAccumulator;
+
 
     private FrameBuffer mapBuffer;
     private OrthogonalTiledMapRenderer mapRenderer;
@@ -109,7 +111,7 @@ public class ArcadeWorld implements Disposable {
         WorldConfiguration worldConfiguration = new WorldConfigurationBuilder()
                 .with(1,
                         new StatusSystem(),
-                        new StatSystem(),
+                        new StatSystem(physicsWorld),
                         new RegenSystem(.5f)
                 )
                 .with(0,
@@ -161,12 +163,18 @@ public class ArcadeWorld implements Disposable {
 
     public void step() {
         float accumulator = delta;
+
+        if (deltaAccumulator >= step) {
+            physicsWorld.step(Math.min(delta, step), 6, 2);
+            deltaAccumulator -= step;
+        }
         do {
             physicsWorld.step(Math.min(delta, step), 6, 2);
             accumulator -= step;
         } while (accumulator >= step);
-        entityWorld.setDelta(delta);
+        entityWorld.setDelta(Math.min(delta, step));
         entityWorld.process();
+        deltaAccumulator += accumulator;
     }
 
     public void render() {

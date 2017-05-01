@@ -1,8 +1,6 @@
 package gg.al.logic.component;
 
-import gg.al.logic.entity.EntityArguments;
-
-import java.util.Map;
+import gg.al.logic.data.IComponentDef;
 
 /**
  * Created by Thomas Neumann on 30.03.2017.<br />
@@ -46,7 +44,10 @@ public class Stats extends PooledDefComponent {
     public int level;
     public float experience;
 
+    public float attackSpeedTimer;
+
     public boolean dead;
+    public boolean deleteOnDeath;
     public boolean invulnerable;
 
     @Override
@@ -79,11 +80,14 @@ public class Stats extends PooledDefComponent {
         moveSpeed = baseStats.baseMoveSpeed;
 
         attackSpeed = baseStats.baseAttackSpeed;
+        attackSpeedTimer = 0;
+
         armorPenetration = baseStats.baseArmorPenetration;
         magicResistPenetration = baseStats.baseMagicResistPenetration;
         criticalStrikeDamage = baseStats.baseCriticalStrikeDamage;
         tenacity = baseStats.baseTenacity;
         dead = false;
+        deleteOnDeath = false;
         invulnerable = false;
     }
 
@@ -100,6 +104,7 @@ public class Stats extends PooledDefComponent {
                 "\n" + attackDamage + " AD" +
                 "\n" + attackRange + " RA" +
                 "\n" + attackSpeed + " AS" +
+                "\n" + attackSpeedTimer + " ASt" +
                 "\n" + spellPower + " SP" +
                 "\n" + armor + " AR" +
                 "\n" + armorPenetration + " ARPEN" +
@@ -139,6 +144,9 @@ public class Stats extends PooledDefComponent {
         criticalStrikeDamage = 0;
         tenacity = 0;
         attackRange = 0;
+        dead = false;
+        invulnerable = false;
+        deleteOnDeath = false;
         baseStats = null;
     }
 

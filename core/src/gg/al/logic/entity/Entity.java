@@ -13,7 +13,10 @@ public enum Entity {
             Position.class,
             Stats.class,
             DynamicPhysic.class,
-            Input.class),
+            Input.class,
+            Damages.class,
+            StatusEffects.class,
+            Abilities.class),
     Bullet(1,
             Render.class,
             Position.class,
@@ -25,6 +28,15 @@ public enum Entity {
     Entity(int entityId, Class<? extends Component>... components) {
         this.entityId = entityId;
         this.components = components;
+    }
+
+    public static Entity fromId(int id) {
+        for (Entity entity :
+                values()) {
+            if (entity.getEntityId() == id)
+                return entity;
+        }
+        throw new IllegalArgumentException("No entity with id " + id);
     }
 
     public int getEntityId() {
@@ -42,15 +54,5 @@ public enum Entity {
             builder.add(component);
         }
         return builder;
-    }
-
-    public static Entity fromId(int id)
-    {
-        for (Entity entity:
-             values()) {
-            if(entity.getEntityId() == id)
-                return entity;
-        }
-        throw new IllegalArgumentException("No entity with id " + id);
     }
 }

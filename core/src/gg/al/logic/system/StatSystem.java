@@ -3,9 +3,10 @@ package gg.al.logic.system;
 import com.artemis.Aspect;
 import com.artemis.ComponentMapper;
 import com.artemis.systems.IteratingSystem;
-import gg.al.logic.component.Stats;
-import gg.al.logic.component.StatusEffects;
+import com.badlogic.gdx.physics.box2d.World;
+import gg.al.logic.component.*;
 import gg.al.logic.data.StatusEffect;
+import gg.al.logic.entity.EntityUtil;
 
 /**
  * Created by Thomas Neumann on 24.04.2017.<br />
@@ -14,9 +15,15 @@ public class StatSystem extends IteratingSystem {
 
     private ComponentMapper<Stats> mapperStats;
     private ComponentMapper<StatusEffects> mapperStatusEffects;
+    private ComponentMapper<DynamicPhysic> mapperDynamicPhysic;
+    private ComponentMapper<KinematicPhysic> mapperKinematicPhysic;
+    private ComponentMapper<Abilities> mapperAbilities;
 
-    public StatSystem() {
+    private World physicWorld;
+
+    public StatSystem(World physicWorld) {
         super(Aspect.all(Stats.class));
+        this.physicWorld = physicWorld;
     }
 
     private static void applyLevel(Stats stats) {
@@ -45,6 +52,7 @@ public class StatSystem extends IteratingSystem {
         stats.armorPenetration += calculateStatGrowth(stats.baseStats.baseArmorPenetration, stats.level, stats.baseStats.armorPenetrationGrowth);
         stats.magicResistPenetration += calculateStatGrowth(stats.baseStats.baseMagicResistPenetration, stats.level, stats.baseStats.magicResistPenetrationGrowth);
         stats.criticalStrikeDamage += calculateStatGrowth(stats.baseStats.baseCriticalStrikeDamage, stats.level, stats.baseStats.criticalStrikeDamageGrowth);
+        stats.tenacity += calculateStatGrowth(stats.baseStats.baseTenacity, stats.level, stats.baseStats.tenacityGrowth);
     }
 
     public static float calculateStatGrowth(float stat, int level, float growth) {
@@ -82,11 +90,20 @@ public class StatSystem extends IteratingSystem {
     @Override
     protected void process(int entityId) {
         Stats stats = mapperStats.get(entityId);
-        if (stats.dead)
+        if (stats.dead) {
+            if (stats.deleteOnDeath) {
+                EntityUtil.delete(entityId, physicWorld, getWorld());
+            }
             return;
+        }
 
         resetToBase(stats);
         applyLevel(stats);
+
+        Abilities abilities = mapperAbilities.get(entityId);
+        if (abilities != null) {
+            abilities.passive.passive(stats);
+        }
 
         StatusEffects statusEffects = mapperStatusEffects.get(entityId);
 

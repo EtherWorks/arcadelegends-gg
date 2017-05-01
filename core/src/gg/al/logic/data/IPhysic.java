@@ -1,4 +1,4 @@
-package gg.al.logic.component;
+package gg.al.logic.data;
 
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
@@ -8,6 +8,8 @@ import com.badlogic.gdx.physics.box2d.BodyDef;
  */
 public interface IPhysic {
       BodyDef.BodyType getBodyType();
-      void setBody(Body body);
+
       Body getBody();
+
+    void setBody(Body body);
 }

@@ -4,10 +4,7 @@ import com.badlogic.gdx.assets.AssetDescriptor;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import gg.al.logic.entity.EntityArguments;
-import gg.al.util.Assets;
-
-import java.util.Map;
+import gg.al.logic.data.IComponentDef;
 
 /**
  * Created by Thomas Neumann on 30.03.2017.<br />

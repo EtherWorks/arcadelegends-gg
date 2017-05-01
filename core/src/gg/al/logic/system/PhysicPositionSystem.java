@@ -3,7 +3,10 @@ package gg.al.logic.system;
 import com.artemis.Aspect;
 import com.artemis.ComponentMapper;
 import com.artemis.systems.IteratingSystem;
-import gg.al.logic.component.*;
+import gg.al.logic.component.DynamicPhysic;
+import gg.al.logic.component.KinematicPhysic;
+import gg.al.logic.component.Position;
+import gg.al.logic.data.IPhysic;
 import lombok.extern.slf4j.Slf4j;
 
 /**
