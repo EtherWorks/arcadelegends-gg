@@ -38,7 +38,7 @@ public class EntityUtil {
         entityWorld.delete(id);
     }
 
-    public static int spawn(Entity entity, ArcadeWorld arcadeWorld, EntityArguments arguments) {
+    public static int spawn(Entities entity, ArcadeWorld arcadeWorld, EntityArguments arguments) {
         EntityWorld entityWorld = arcadeWorld.getEntityWorld();
         World physicWorld = arcadeWorld.getPhysicsWorld();
         int id;
@@ -130,7 +130,7 @@ public class EntityUtil {
         position.set(tile);
     }
 
-    public static String getJsonTemplate(Entity entity) {
+    public static String getJsonTemplate(Entities entity) {
         Map<String, IComponentDef> defs = new HashMap<>();
         for (Class<? extends Component> component :
                 entity.getComponents()) {
@@ -153,12 +153,12 @@ public class EntityUtil {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Load template for: ");
-        for (Entity entity :
-                Entity.values()) {
+        for (Entities entity :
+                Entities.values()) {
             System.out.println("\t" + entity.getEntityId() + ": " + entity.name());
         }
         int id = scanner.nextInt();
-        Entity entity = Entity.fromId(id);
+        Entities entity = Entities.fromId(id);
         File out = new File(System.getProperty("user.dir") + File.separator + entity.name().toLowerCase() + ".json");
         String json = getJsonTemplate(entity);
         try {

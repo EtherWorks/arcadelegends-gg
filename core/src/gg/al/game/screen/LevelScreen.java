@@ -21,7 +21,7 @@ import gg.al.logic.ArcadeWorld;
 import gg.al.logic.component.*;
 import gg.al.logic.data.Damage;
 import gg.al.logic.data.StatusEffect;
-import gg.al.logic.entity.Entity;
+import gg.al.logic.entity.Entities;
 import gg.al.logic.entity.EntityArguments;
 import gg.al.logic.entity.EntityUtil;
 import gg.al.logic.map.Tile;
@@ -193,7 +193,7 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
                 EntityArguments arguments = null;
                 try {
                     arguments = EntityArguments.fromFile("test.json");
-                    int id = EntityUtil.spawn(Entity.Test, arcadeWorld, arguments);
+                    int id = EntityUtil.spawn(Entities.Test, arcadeWorld, arguments);
                     stats = arcadeWorld.getEntityWorld().getMapper(Stats.class).get(id);
                     stats.deleteOnDeath = true;
                 } catch (IOException e) {
@@ -247,7 +247,7 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
                         Position.PositionDef positionDef = arguments.get("Position", Position.PositionDef.class);
                         positionDef.x = (int) mapCoord.x;
                         positionDef.y = (int) mapCoord.y;
-                        playerEnt = EntityUtil.spawn(Entity.Test, arcadeWorld, arguments);
+                        playerEnt = EntityUtil.spawn(Entities.Test, arcadeWorld, arguments);
                         Stats stats = arcadeWorld.getEntityWorld().getMapper(Stats.class).get(playerEnt);
                         stats.level = 2;
                     } catch (IOException e) {

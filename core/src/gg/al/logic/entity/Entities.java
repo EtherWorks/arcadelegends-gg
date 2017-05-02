@@ -7,7 +7,7 @@ import gg.al.logic.component.*;
 /**
  * Created by Thomas Neumann on 07.04.2017.<br />
  */
-public enum Entity {
+public enum Entities {
 
     Test(0, Render.class,
             Position.class,
@@ -25,13 +25,13 @@ public enum Entity {
     private final int entityId;
     private final Class<? extends Component>[] components;
 
-    Entity(int entityId, Class<? extends Component>... components) {
+    Entities(int entityId, Class<? extends Component>... components) {
         this.entityId = entityId;
         this.components = components;
     }
 
-    public static Entity fromId(int id) {
-        for (Entity entity :
+    public static Entities fromId(int id) {
+        for (Entities entity :
                 values()) {
             if (entity.getEntityId() == id)
                 return entity;
