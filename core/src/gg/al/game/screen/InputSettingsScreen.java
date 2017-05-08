@@ -5,14 +5,18 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.assets.AssetDescriptor;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
@@ -65,6 +69,19 @@ public class InputSettingsScreen implements IAssetScreen, InputProcessor {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
                     // Setzen der Inputs. Warten auf InputManager
+                    BitmapFont font = AL.asset.get(Assets.PT_BOCKLIN_FNT);
+                    TextureRegion backgroundTexture = new TextureRegion(AL.asset.get(Assets.PT_BACKGROUND_TEXTBUTTON));
+
+                    Dialog d = new Dialog("Test",new Window.WindowStyle(font, Color.BLACK, new TextureRegionDrawable(backgroundTexture)));
+                    TextButton bt = new TextButton("Close", skin);
+                    bt.addListener(new ClickListener(){
+                        @Override
+                        public void clicked(InputEvent event, float x, float y) {
+                            d.hide();
+                        }
+                    });
+                    d.add(bt);
+                    d.show(stage);
                 }
             });
             inputTable.add(lbKey).pad(10).fill();
@@ -73,8 +90,8 @@ public class InputSettingsScreen implements IAssetScreen, InputProcessor {
         }
 
         scrollPane = new ScrollPane(inputTable, skin);
-        scrollPane.setSize(300, 500);
-        scrollPane.setPosition(x / 2 - 150, y / 2 - 250);
+        scrollPane.setSize(450, 500);
+        scrollPane.setPosition(x / 2 - 225, y / 2 - 250);
         stage.addActor(scrollPane);
 
 
