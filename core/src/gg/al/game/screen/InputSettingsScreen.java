@@ -56,6 +56,8 @@ public class InputSettingsScreen implements IAssetScreen, InputProcessor {
         int y = 1080;
         spriteBatch = new SpriteBatch();
         mainbackground = AL.asset.get(Assets.PT_TESTMAINSCREEN);
+        BitmapFont font = AL.asset.get(Assets.PT_BOCKLIN_FNT);
+        TextureRegion backgroundTexture = new TextureRegion(AL.asset.get(Assets.PT_BACKGROUND_TEXTBUTTON));
 
         inputTable = new Table();
         IInputConfig.InputKeys[] keys = IInputConfig.InputKeys.values();
@@ -69,19 +71,11 @@ public class InputSettingsScreen implements IAssetScreen, InputProcessor {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
                     // Setzen der Inputs. Warten auf InputManager
-                    BitmapFont font = AL.asset.get(Assets.PT_BOCKLIN_FNT);
-                    TextureRegion backgroundTexture = new TextureRegion(AL.asset.get(Assets.PT_BACKGROUND_TEXTBUTTON));
 
-                    Dialog d = new Dialog("Test",new Window.WindowStyle(font, Color.BLACK, new TextureRegionDrawable(backgroundTexture)));
-                    TextButton bt = new TextButton("Close", skin);
-                    bt.addListener(new ClickListener(){
-                        @Override
-                        public void clicked(InputEvent event, float x, float y) {
-                            d.hide();
-                        }
-                    });
-                    d.add(bt);
-                    d.show(stage);
+                    // Dialog:
+                    showDialog(font, backgroundTexture);
+
+
                 }
             });
             inputTable.add(lbKey).pad(10).fill();
@@ -97,6 +91,17 @@ public class InputSettingsScreen implements IAssetScreen, InputProcessor {
 
         AL.input.setInputProcessor(new InputMultiplexer(stage, this));
 
+    }
+
+    private void showDialog(BitmapFont font, TextureRegion textureRegion)
+    {
+        Dialog dialog = new Dialog("Inputkey Selection",new Window.WindowStyle(font, Color.BLACK, new TextureRegionDrawable(textureRegion)));
+        Table table = new Table();
+        Label lbKey = new Label("Key:", skin);
+        table.row();
+        table.add(lbKey);
+        dialog.add(table);
+        dialog.show(stage);
     }
 
     @Override
