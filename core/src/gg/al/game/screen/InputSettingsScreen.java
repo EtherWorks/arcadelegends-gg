@@ -9,8 +9,10 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
@@ -59,6 +61,12 @@ public class InputSettingsScreen implements IAssetScreen, InputProcessor {
 
             TextButton btKey = new TextButton(IInputConfig.InputKeys.getFromKey(keys[i], AL.config.input) + "", skin);
             btKey.center();
+            btKey.addListener(new ClickListener(){
+                @Override
+                public void clicked(InputEvent event, float x, float y) {
+                    // Setzen der Inputs. Warten auf InputManager
+                }
+            });
             inputTable.add(lbKey).pad(10).fill();
             inputTable.add(btKey).pad(10).fill();
             inputTable.row();
