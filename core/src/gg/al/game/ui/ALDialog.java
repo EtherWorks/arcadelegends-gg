@@ -1,9 +1,12 @@
 package gg.al.game.ui;
 
 
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
@@ -11,20 +14,23 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import javafx.scene.input.KeyCode;
+import lombok.extern.slf4j.Slf4j;
 
 
 import java.awt.*;
+import java.security.Key;
 
 
 /**
  * Created by Patrick Windegger on 12.05.2017.
  */
+@Slf4j
 public class ALDialog extends Dialog {
 
     private Table table;
     private Skin skin;
     private Stage stage;
-    private Dialog dialog;
     private BitmapFont font;
 
 
@@ -47,11 +53,33 @@ public class ALDialog extends Dialog {
 
         TextField tfKey = new TextField("", skin);
 
+
+        tfKey.addListener(new InputListener(){
+            @Override
+            public boolean keyTyped(InputEvent event, char character) {
+                tfKey.setText(String.format("%c", character));
+
+                return super.keyTyped(event, character);
+            }
+        });
         table.add(tfKey);
+
+        this.addListener(new InputListener(){
+            @Override
+            public boolean keyTyped(InputEvent event, char character) {
+                if(event.getKeyCode() == Input.Keys.ESCAPE)
+                {
+                    hide();
+                }
+                return super.keyTyped(event, character);
+            }
+        });
 
         this.add(table);
         this.show(stage);
     }
+
+
 
 
 
