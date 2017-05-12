@@ -3,10 +3,8 @@ package gg.al.logic.system;
 import com.artemis.Aspect;
 import com.artemis.ComponentMapper;
 import com.artemis.systems.IteratingSystem;
-import gg.al.logic.component.DynamicPhysic;
-import gg.al.logic.component.KinematicPhysic;
-import gg.al.logic.component.Position;
-import gg.al.logic.data.IPhysic;
+import gg.al.logic.component.PhysicComponent;
+import gg.al.logic.component.PositionComponent;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -15,28 +13,24 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class PhysicPositionSystem extends IteratingSystem {
 
-    private ComponentMapper<DynamicPhysic> mapperDynamicPhysic;
-    private ComponentMapper<KinematicPhysic> mapperKinematicPhysic;
-    private ComponentMapper<Position> mapperPosition;
+    private ComponentMapper<PhysicComponent> mapperPhysicComponent;
+    private ComponentMapper<PositionComponent> mapperPosition;
 
     public PhysicPositionSystem() {
-        super(Aspect.all(Position.class).one(DynamicPhysic.class, KinematicPhysic.class));
+        super(Aspect.all(PositionComponent.class, PhysicComponent.class));
     }
 
     @Override
     protected void process(int entityId) {
-        DynamicPhysic dynamicPhysic = mapperDynamicPhysic.get(entityId);
-        KinematicPhysic kinematicPhysic = mapperKinematicPhysic.get(entityId);
-        IPhysic physic = dynamicPhysic == null ? kinematicPhysic : dynamicPhysic;
+        PhysicComponent physic = mapperPhysicComponent.get(entityId);
 
-        Position position = mapperPosition.get(entityId);
-        if (position.resetPos){
-            physic.getBody().setTransform(position.position, physic.getBody().getAngle());
+        PositionComponent position = mapperPosition.get(entityId);
+        if (position.resetPos) {
+            physic.body.setTransform(position.position, physic.body.getAngle());
             position.resetPos = false;
-        }
-        else
-        position.set(Math.round(physic.getBody().getPosition().x),
-                Math.round(physic.getBody().getPosition().y));
+        } else
+            position.set(Math.round(physic.body.getPosition().x),
+                    Math.round(physic.body.getPosition().y));
         //log.debug(position.position.toString());
     }
 }

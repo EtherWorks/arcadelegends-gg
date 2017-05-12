@@ -62,21 +62,21 @@ public class TestScreen implements Screen, InputProcessor {
     public boolean keyDown(int keycode) {
         switch (keycode) {
             case Input.Keys.F11:
-                AL.cedit.setValue(IVideoConfig.VideoKeys.screenmode, AL.config.video.screenmode().isFullscreen() ? IVideoConfig.ScreenMode.Windowed : IVideoConfig.ScreenMode.Fullscreen);
-                AL.cedit.flush();
+                AL.getConfigEditor().setValue(IVideoConfig.VideoKeys.screenmode, AL.getVideoConfig().screenmode().isFullscreen() ? IVideoConfig.ScreenMode.Windowed : IVideoConfig.ScreenMode.Fullscreen);
+                AL.getConfigEditor().flush();
                 break;
             case Input.Keys.F6:
-                AL.cedit.setValue(IVideoConfig.VideoKeys.vsyncEnabled, !AL.cvideo.vsyncEnabled());
-                AL.cedit.flush();
+                AL.getConfigEditor().setValue(IVideoConfig.VideoKeys.vsyncEnabled, !AL.getVideoConfig().vsyncEnabled());
+                AL.getConfigEditor().flush();
                 break;
             case Input.Keys.F5:
-                AL.cedit.setValue(IVideoConfig.VideoKeys.foregroundFPS, AL.cvideo.foregroundFPS() + 10);
-                AL.cedit.flush();
+                AL.getConfigEditor().setValue(IVideoConfig.VideoKeys.foregroundFPS, AL.getVideoConfig().foregroundFPS() + 10);
+                AL.getConfigEditor().flush();
                 break;
             case Input.Keys.F3:
-                AL.cedit.setValue(IVideoConfig.VideoKeys.width, 1920);
-                AL.cedit.setValue(IVideoConfig.VideoKeys.height, 1080);
-                AL.cedit.flush();
+                AL.getConfigEditor().setValue(IVideoConfig.VideoKeys.width, 1920);
+                AL.getConfigEditor().setValue(IVideoConfig.VideoKeys.height, 1080);
+                AL.getConfigEditor().flush();
                 break;
         }
         return false;

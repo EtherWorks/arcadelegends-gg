@@ -7,7 +7,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Pool;
 import gg.al.logic.component.*;
-import gg.al.logic.data.Damage;
+import gg.al.logic.component.data.Damage;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -17,17 +17,16 @@ import lombok.extern.slf4j.Slf4j;
 public class InputSystem extends IteratingSystem {
 
     private final World world;
-    private ComponentMapper<Position> mapperPosition;
-    private ComponentMapper<Input> mapperInput;
-    private ComponentMapper<DynamicPhysic> mapperDynamicPhysic;
-    private ComponentMapper<Stats> mapperStats;
-    private ComponentMapper<Damages> mapperDamages;
-
+    private ComponentMapper<PositionComponent> mapperPosition;
+    private ComponentMapper<InputComponent> mapperInput;
+    private ComponentMapper<PhysicComponent> mapperPhysicComponent;
+    private ComponentMapper<StatComponent> mapperStatComponent;
+    private ComponentMapper<RenderComponent> mapperRenderComponent;
 
     private Pool<Vector2> vectorPool;
 
     public InputSystem(World world) {
-        super(Aspect.all(Input.class, Position.class, DynamicPhysic.class, Stats.class));
+        super(Aspect.all(InputComponent.class, PositionComponent.class, PhysicComponent.class, StatComponent.class));
         this.world = world;
         vectorPool = new Pool<Vector2>() {
             @Override
@@ -45,14 +44,16 @@ public class InputSystem extends IteratingSystem {
 
     @Override
     protected void process(int entityId) {
-        Position pos = mapperPosition.get(entityId);
-        Input input = mapperInput.get(entityId);
-        DynamicPhysic dynamicPhysic = mapperDynamicPhysic.get(entityId);
-        Stats stats = mapperStats.get(entityId);
+        PositionComponent pos = mapperPosition.get(entityId);
+        InputComponent input = mapperInput.get(entityId);
+        StatComponent stats = mapperStatComponent.get(entityId);
+        PhysicComponent physicComponent = mapperPhysicComponent.get(entityId);
+        RenderComponent renderComponent = mapperRenderComponent.get(entityId);
 
 
-        if (input.move.dst(pos.position) != 0 && dynamicPhysic.getBody().getLinearVelocity().equals(Vector2.Zero) && !stats.dead) {
-            if (stats.actionPoints >= 1) {
+        if (input.move.dst(pos.position) != 0 && physicComponent.body.getLinearVelocity().equals(Vector2.Zero) && !stats.getFlagStat(StatComponent.FlagStat.dead)) {
+            if (stats.getRuntimeStat(StatComponent.RuntimeStat.actionPoints) >= 1 && (renderComponent == null || renderComponent.renderState == RenderComponent.RenderState.IDLE
+                    || renderComponent.renderState == RenderComponent.RenderState.ATTACK)) {
                 //anfangen sich zu bewegen
                 Vector2 dir = vectorPool.obtain();
                 Vector2 speed = vectorPool.obtain();
@@ -61,23 +62,29 @@ public class InputSystem extends IteratingSystem {
                 else
                     dir.set(0, Math.signum(input.move.y - pos.position.y));
 
-
-                dynamicPhysic.getBody().setLinearVelocity(speed.set(dir).scl(stats.moveSpeed));
+                if (renderComponent != null) {
+                    renderComponent.renderState = dir.y == 0 ? RenderComponent.RenderState.MOVE_SIDE :
+                            dir.y < 0 ? RenderComponent.RenderState.MOVE_DOWN : RenderComponent.RenderState.MOVE_UP;
+                    renderComponent.flipX = dir.x < 0;
+                }
+                physicComponent.body.setLinearVelocity(speed.set(dir).scl(stats.getCurrentStat(StatComponent.BaseStat.moveSpeed)));
                 input.stepMove.set(dir.add(pos.position));
                 input.startToEnd.set(dir.set(pos.position).sub(input.stepMove));
                 vectorPool.free(dir);
                 vectorPool.free(speed);
-                stats.actionPoints -= 1;
+                stats.addRuntimeStat(StatComponent.RuntimeStat.actionPoints, -1);
+
             }
-        } else if (!dynamicPhysic.getBody().getLinearVelocity().equals(Vector2.Zero)) {
+        } else if (!physicComponent.body.getLinearVelocity().equals(Vector2.Zero)) {
             //Testen ob an oder über stepmove, dann stoppen
             Vector2 curr = vectorPool.obtain();
 
-            curr.set(dynamicPhysic.getBody().getPosition()).sub(input.stepMove);
+            curr.set(physicComponent.body.getPosition()).sub(input.stepMove);
 
             if (curr.dot(input.startToEnd) < 0) {
-                dynamicPhysic.getBody().setLinearVelocity(Vector2.Zero);
-                dynamicPhysic.getBody().setTransform(pos.position, dynamicPhysic.getBody().getAngle());
+                physicComponent.body.setLinearVelocity(Vector2.Zero);
+                physicComponent.body.setTransform(pos.position, physicComponent.body.getAngle());
+                renderComponent.renderState = RenderComponent.RenderState.IDLE;
             }
             vectorPool.free(curr);
         }
@@ -85,24 +92,27 @@ public class InputSystem extends IteratingSystem {
         if (input.targetId == entityId)
             input.targetId = -1;
         else if (input.targetId != -1) {
-            Position otherPos = mapperPosition.get(input.targetId);
-            Damages damages = mapperDamages.get(input.targetId);
-            if (damages != null && otherPos != null) {
+            PositionComponent otherPos = mapperPosition.get(input.targetId);
+            if (otherPos != null) {
                 Vector2 vector = vectorPool.obtain();
-                if (Math.abs(vector.set(pos.position).dst(otherPos.position)) <= stats.attackRange) {
-                    if (stats.attackSpeedTimer >= 1 / stats.attackSpeed) {
-                        stats.attackSpeedTimer = 0;
-                        Damage dmg = new Damage(Damage.DamageType.Normal, stats.attackDamage, stats.armorPenetration);
-                        damages.damages.add(dmg);
+                if (Math.abs(vector.set(pos.position).dst(otherPos.position)) <= stats.getCurrentStat(StatComponent.BaseStat.attackRange)) {
+                    if (renderComponent != null)
+                        renderComponent.renderState = RenderComponent.RenderState.ATTACK;
+                    if (stats.getRuntimeStat(StatComponent.RuntimeStat.attackSpeedTimer) >= 1 / stats.getCurrentStat(StatComponent.BaseStat.attackSpeed)) {
+                        stats.setRuntimeStat(StatComponent.RuntimeStat.attackSpeedTimer, 0);
+                        Damage dmg = new Damage(Damage.DamageType.Normal,
+                                stats.getCurrentStat(StatComponent.BaseStat.attackDamage),
+                                stats.getCurrentStat(StatComponent.BaseStat.armorPenetration));
+                        mapperStatComponent.get(input.targetId).damages.add(dmg);
                     } else
-                        stats.attackSpeedTimer += getWorld().getDelta();
+                        stats.addRuntimeStat(StatComponent.RuntimeStat.attackSpeedTimer, getWorld().getDelta());
                 } else {
-                    stats.attackSpeedTimer = 0;
+                    stats.setRuntimeStat(StatComponent.RuntimeStat.attackSpeedTimer, 0);
                 }
                 vectorPool.free(vector);
             } else {
                 input.targetId = -1;
-                stats.attackSpeedTimer = 0;
+                stats.setRuntimeStat(StatComponent.RuntimeStat.attackSpeedTimer, 0);
             }
         }
 

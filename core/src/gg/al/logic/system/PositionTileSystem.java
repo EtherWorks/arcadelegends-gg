@@ -3,7 +3,7 @@ package gg.al.logic.system;
 import com.artemis.Aspect;
 import com.artemis.ComponentMapper;
 import com.artemis.systems.IteratingSystem;
-import gg.al.logic.component.Position;
+import gg.al.logic.component.PositionComponent;
 import gg.al.logic.map.LogicMap;
 import gg.al.logic.map.Tile;
 
@@ -13,16 +13,16 @@ import gg.al.logic.map.Tile;
 public class PositionTileSystem extends IteratingSystem{
 
     private final LogicMap logicMap;
-    private ComponentMapper<Position> mapperPosition;
+    private ComponentMapper<PositionComponent> mapperPosition;
 
     public PositionTileSystem(LogicMap logicMap) {
-        super(Aspect.all(Position.class));
+        super(Aspect.all(PositionComponent.class));
         this.logicMap = logicMap;
     }
 
     @Override
     protected void process(int entityId) {
-        Position position = mapperPosition.get(entityId);
+        PositionComponent position = mapperPosition.get(entityId);
 
         Tile newTile = logicMap.getTile(position.position);
         if (position.tile != newTile) {

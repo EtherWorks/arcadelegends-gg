@@ -100,7 +100,7 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
         viewport = new FitViewport(1920, 1080, camera);
         viewport.update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         batch = new DecalBatch(new CameraGroupStrategy(camera));
-        map = AL.asset.get(mapDesc);
+        map = AL.getAssetManager().get(mapDesc);
         OrthographicCamera mapCam = new OrthographicCamera();
         Viewport viewportMap = new FitViewport(map.getProperties().get("width", Integer.class) * map.getProperties().get("tilewidth", Integer.class),
                 map.getProperties().get("height", Integer.class) * map.getProperties().get("tileheight", Integer.class), mapCam);
@@ -233,8 +233,8 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
         mapBuffer.dispose();
         batch.dispose();
         fpsBatch.dispose();
-        AL.asset.unload(mapDesc.fileName);
-        AL.asset.unload(Assets.PT_EZREAL.fileName);
+        AL.getAssetManager().unload(mapDesc.fileName);
+        AL.getAssetManager().unload(Assets.PT_EZREAL.fileName);
     }
 
     @Override

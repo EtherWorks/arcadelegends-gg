@@ -9,18 +9,15 @@ import gg.al.logic.component.*;
  */
 public enum Entities {
 
-    Test(0, Render.class,
-            Position.class,
-            Stats.class,
-            DynamicPhysic.class,
-            Input.class,
-            Damages.class,
-            StatusEffects.class,
-            Abilities.class),
+    Player(0, RenderComponent.class,
+            PositionComponent.class,
+            StatComponent.class,
+            PhysicComponent.class,
+            InputComponent.class),
     Bullet(1,
-            Render.class,
-            Position.class,
-            DynamicPhysic.class);
+            RenderComponent.class,
+            PositionComponent.class,
+            PhysicComponent.class);
 
     private final int entityId;
     private final Class<? extends Component>[] components;

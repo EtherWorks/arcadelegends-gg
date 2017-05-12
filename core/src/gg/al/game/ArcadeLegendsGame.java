@@ -8,6 +8,7 @@ import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.github.drapostolos.typeparser.TypeParser;
 import gg.al.config.Config;
 import gg.al.config.IAudioConfig;
+import gg.al.config.IInputConfig;
 import gg.al.game.screen.DefaultLoadingScreen;
 import gg.al.game.screen.IAssetScreen;
 import gg.al.game.screen.MainMenuScreen;
@@ -43,36 +44,30 @@ public class ArcadeLegendsGame extends Game {
 
     @Override
     public void create() {
-        AL.game = this;
-        AL.asset = assetManager;
+        AL.provideGame(this);
+        AL.provideAssetManager(assetManager);
         assetManager.setLoader(TiledMap.class, new TmxMapLoader(new InternalFileHandleResolver()));
 
-        AL.config = config;
-        AL.cedit = config.editor;
-        AL.caudio = config.audio;
-        AL.cgameplay = config.gameplay;
-        AL.cinput = config.input;
-        AL.cmisc = config.miscellaneous;
-        AL.cvideo = config.video;
-        AL.screen = screenManager;
-        AL.audioManager = audioManager;
+        AL.provideConfig(config);
+        AL.provideScreenManager(screenManager);
+        AL.provideAudioManager(audioManager);
         audioManager.setAssetManager(assetManager);
 
         TypeParser parser = TypeParser.newBuilder().build();
-        AL.cedit.addConfigValueChangedListener(IAudioConfig.AudioKeys.masterVolume, (key, value) -> {
+        AL.getConfigEditor().addConfigValueChangedListener(IAudioConfig.AudioKeys.masterVolume, (key, value) -> {
             float masterVolume = parser.parse(value, Float.class);
             audioManager.setMasterVolume(masterVolume);
         });
-        AL.cedit.addConfigValueChangedListener(IAudioConfig.AudioKeys.effectVolume, (key, value) -> {
+        AL.getConfigEditor().addConfigValueChangedListener(IAudioConfig.AudioKeys.effectVolume, (key, value) -> {
             float effectVolume = parser.parse(value, Float.class);
             audioManager.setEffectVolume(effectVolume);
         });
-        AL.cedit.addConfigValueChangedListener(IAudioConfig.AudioKeys.musicVolume, (key, value) -> {
+        AL.getConfigEditor().addConfigValueChangedListener(IAudioConfig.AudioKeys.musicVolume, (key, value) -> {
             float musicVolume = parser.parse(value, Float.class);
             audioManager.setMusicVolume(musicVolume);
         });
 
-        setScreen(AL.screen.get(MainMenuScreen.class, true));
+        setScreen(AL.getScreenManager().get(MainMenuScreen.class, true));
     }
 
     @Override
@@ -86,6 +81,6 @@ public class ArcadeLegendsGame extends Game {
         if (screen.customLoadingScreen() != null)
             this.setScreen(screen.customLoadingScreen().withAssetScreen(screen));
         else
-            this.setScreen(AL.screen.get(DefaultLoadingScreen.class, true).withAssetScreen(screen));
+            this.setScreen(AL.getScreenManager().get(DefaultLoadingScreen.class, true).withAssetScreen(screen));
     }
 }

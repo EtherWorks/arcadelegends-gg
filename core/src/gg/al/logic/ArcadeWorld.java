@@ -1,5 +1,6 @@
 package gg.al.logic;
 
+import com.artemis.Component;
 import com.artemis.WorldConfiguration;
 import com.artemis.WorldConfigurationBuilder;
 import com.badlogic.gdx.graphics.*;
@@ -18,11 +19,15 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import gg.al.game.AL;
 import gg.al.graphics.CameraLayerGroupStrategy;
-import gg.al.logic.component.Position;
+import gg.al.logic.component.*;
+import gg.al.logic.component.data.Template;
+import gg.al.logic.entity.Entities;
+import gg.al.logic.entity.EntityArguments;
 import gg.al.logic.entity.EntityWorld;
 import gg.al.logic.map.LogicMap;
 import gg.al.logic.map.Tile;
 import gg.al.logic.system.*;
+import gg.al.util.Assets;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -106,20 +111,16 @@ public class ArcadeWorld implements Disposable {
 
 
         debugPhysicrender = new Box2DDebugRenderer();
-
-
         WorldConfiguration worldConfiguration = new WorldConfigurationBuilder()
                 .with(1,
-                        new StatusSystem(),
-                        new StatSystem(physicsWorld),
+                        new StatSystem(this),
                         new RegenSystem(.5f)
                 )
                 .with(0,
                         new PhysicPositionSystem(),
                         new PositionTileSystem(logicMap),
                         new InputSystem(physicsWorld),
-                        renderSystem = new RenderSystem(decalBatch, AL.asset, worldViewRotation),
-                        new DamageSystem()
+                        renderSystem = new RenderSystem(decalBatch, AL.getAssetManager(), worldViewRotation)
                 )
                 .build();
         entityWorld = new EntityWorld(worldConfiguration);
@@ -129,12 +130,12 @@ public class ArcadeWorld implements Disposable {
             public void beginContact(Contact contact) {
                 int entityIdA = (int) contact.getFixtureA().getBody().getUserData();
                 int entityIdB = (int) contact.getFixtureB().getBody().getUserData();
-                gg.al.logic.component.Input inputA = entityWorld.getMapper(gg.al.logic.component.Input.class).get(entityIdA);
-                gg.al.logic.component.Input inputB = entityWorld.getMapper(gg.al.logic.component.Input.class).get(entityIdB);
+                InputComponent inputA = entityWorld.getMapper(InputComponent.class).get(entityIdA);
+                InputComponent inputB = entityWorld.getMapper(InputComponent.class).get(entityIdB);
 
                 if (inputA != null && inputB != null) {
-                    Position positionA = entityWorld.getMapper(Position.class).get(entityIdA);
-                    Position positionB = entityWorld.getMapper(Position.class).get(entityIdB);
+                    PositionComponent positionA = entityWorld.getMapper(PositionComponent.class).get(entityIdA);
+                    PositionComponent positionB = entityWorld.getMapper(PositionComponent.class).get(entityIdB);
                     contact.getFixtureA().getBody().setLinearVelocity(Vector2.Zero);
                     contact.getFixtureB().getBody().setLinearVelocity(Vector2.Zero);
                     positionA.resetPos = true;
@@ -204,5 +205,57 @@ public class ArcadeWorld implements Disposable {
 
     public Tile getTile(Vector2 pos) {
         return logicMap.getTile(pos);
+    }
+
+    public int spawn(Entities entity, EntityArguments arguments) {
+        int entityID = entityWorld.create(entityWorld.getArchetype(entity.getArchetype()));
+        for (Class<? extends Component> componentType : entity.getComponents()) {
+            if (StatComponent.class.isAssignableFrom(componentType)) {
+                StatComponent statComponent = entityWorld.getMapper(StatComponent.class).get(entityID);
+                statComponent.fromTemplate((Template) arguments.get(StatComponent.class.getSimpleName()));
+            } else if (PositionComponent.class.isAssignableFrom(componentType)) {
+                PositionComponent positionComponent = entityWorld.getMapper(PositionComponent.class).get(entityID);
+                positionComponent.fromTemplate((Template) arguments.get(PositionComponent.class.getSimpleName()));
+                positionComponent.tile = logicMap.getTile(positionComponent.position);
+                positionComponent.tile.addEntity(entityID);
+            } else if (RenderComponent.class.isAssignableFrom(componentType)) {
+                RenderComponent renderComponent = entityWorld.getMapper(RenderComponent.class).get(entityID);
+                renderComponent.fromTemplate((Template) arguments.get(RenderComponent.class.getSimpleName()));
+            } else if (InputComponent.class.isAssignableFrom(componentType)) {
+                InputComponent inputComponent = entityWorld.getMapper(InputComponent.class).get(entityID);
+                PositionComponent.PositionTemplate pos = arguments.get("PositionComponent", PositionComponent.PositionTemplate.class);
+                inputComponent.move.set(pos.x, pos.y);
+            } else if (PhysicComponent.class.isAssignableFrom(componentType)) {
+                PhysicComponent physicComponent = entityWorld.getMapper(PhysicComponent.class).get(entityID);
+                BodyDef bodyDef = new BodyDef();
+                bodyDef.type = BodyDef.BodyType.DynamicBody;
+                PositionComponent.PositionTemplate pos = arguments.get("PositionComponent", PositionComponent.PositionTemplate.class);
+                bodyDef.position.set(pos.x, pos.y);
+                Body body = physicsWorld.createBody(bodyDef);
+
+                FixtureDef fixtureDef = new FixtureDef();
+                CircleShape shape = new CircleShape();
+                shape.setRadius(.47f);
+
+                fixtureDef.shape = shape;
+                body.createFixture(fixtureDef);
+
+                shape.dispose();
+                body.setUserData(entityID);
+                physicComponent.body = body;
+            }
+        }
+        return entityID;
+    }
+
+    public void delete(int id) {
+        PhysicComponent physicComponent = entityWorld.getMapper(PhysicComponent.class).get(id);
+
+        physicsWorld.destroyBody(physicComponent.body);
+
+        PositionComponent position = entityWorld.getMapper(PositionComponent.class).get(id);
+        position.tile.removeEntity(id);
+
+        entityWorld.delete(id);
     }
 }

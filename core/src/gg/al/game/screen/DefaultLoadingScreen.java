@@ -43,13 +43,13 @@ public class DefaultLoadingScreen implements ILoadingScreen {
     public Screen withAssetScreen(IAssetScreen screen) {
         boolean loaded = true;
         for (AssetDescriptor desc : screen.assets())
-            if (!AL.asset.isLoaded(desc.fileName, desc.type)) {
+            if (!AL.getAssetManager().isLoaded(desc.fileName, desc.type)) {
                 loaded = false;
                 break;
             }
         if (loaded) {
             for (AssetDescriptor desc : screen.assets())
-                AL.asset.setReferenceCount(desc.fileName, AL.asset.getReferenceCount(desc.fileName) + 1);
+                AL.getAssetManager().setReferenceCount(desc.fileName, AL.getAssetManager().getReferenceCount(desc.fileName) + 1);
             return screen;
         }
         toLoad.clear();
@@ -78,7 +78,7 @@ public class DefaultLoadingScreen implements ILoadingScreen {
         }
         init = true;
         for (AssetDescriptor desc : toLoad) {
-            AL.asset.load(desc);
+            AL.getAssetManager().load(desc);
         }
     }
 
@@ -86,11 +86,11 @@ public class DefaultLoadingScreen implements ILoadingScreen {
     public void render(float delta) {
         AL.gl.glClearColor(0, 0, 0, 1);
         AL.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        if (AL.asset.update() && next != null)
-            AL.game.setScreen(next);
+        if (AL.getAssetManager().update() && next != null)
+            AL.getGame().setScreen(next);
 
         batch.begin();
-        font.draw(batch, String.format("%1.0f%%", AL.asset.getProgress() * 100), 0, 15);
+        font.draw(batch, String.format("%1.0f%%", AL.getAssetManager().getProgress() * 100), 0, 15);
         batch.end();
     }
 

@@ -55,7 +55,7 @@ public class RenderSystem extends IteratingSystem {
         Physics ph = physicsComponentMapper.get(entityId);
         Render rend = renderComponentMapper.get(entityId);
         Decal d;
-        decalMap.put(entityId, d = Decal.newDecal(rend.width, rend.heigth, new TextureRegion(AL.asset.get(rend.texture)), rend.transparent));
+        decalMap.put(entityId, d = Decal.newDecal(rend.width, rend.heigth, new TextureRegion(AL.getAssetManager().get(rend.texture)), rend.transparent));
         if (rend.rotate)
             d.rotateX(worldDegree);
     }

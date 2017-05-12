@@ -33,7 +33,7 @@ import java.util.List;
 
 /**
  * Created by Patrick Windegger on 24.04.2017.
- * Class responsible for managing Input Settings with UI
+ * Class responsible for managing InputComponent Settings with UI
  */
 public class InputSettingsScreen implements IAssetScreen, InputProcessor {
 
@@ -57,13 +57,13 @@ public class InputSettingsScreen implements IAssetScreen, InputProcessor {
         viewport.setCamera(cam);
         stage = new Stage(viewport);
         stage.setViewport(viewport);
-        skin = AL.asset.get(Assets.PT_STYLES_JSON);
+        skin = AL.getAssetManager().get(Assets.PT_STYLES_JSON);
         int x = 1920;
         int y = 1080;
         spriteBatch = new SpriteBatch();
-        mainbackground = AL.asset.get(Assets.PT_TESTMAINSCREEN);
-        BitmapFont font = AL.asset.get(Assets.PT_BOCKLIN_FNT);
-        TextureRegion backgroundTexture = new TextureRegion(AL.asset.get(Assets.PT_BACKGROUND_TEXTBUTTON));
+        mainbackground = AL.getAssetManager().get(Assets.PT_TESTMAINSCREEN);
+        BitmapFont font = AL.getAssetManager().get(Assets.PT_BOCKLIN_FNT);
+        TextureRegion backgroundTexture = new TextureRegion(AL.getAssetManager().get(Assets.PT_BACKGROUND_TEXTBUTTON));
 
         inputTable = new Table();
         IInputConfig.InputKeys[] keys = IInputConfig.InputKeys.values();
@@ -71,7 +71,7 @@ public class InputSettingsScreen implements IAssetScreen, InputProcessor {
             Label lbKey = new Label(keys[i].getKeyName().substring(0, 1).toUpperCase() + keys[i].getKeyName().substring(1), skin);
             lbKey.setAlignment(Align.center);
 
-            TextButton btKey = new TextButton(IInputConfig.InputKeys.getFromKey(keys[i], AL.config.input) + "", skin);
+            TextButton btKey = new TextButton(IInputConfig.InputKeys.getFromKey(keys[i], AL.getConfig().input) + "", skin);
             btKey.center();
             btKey.addListener(new ClickListener(){
                 @Override
@@ -147,17 +147,17 @@ public class InputSettingsScreen implements IAssetScreen, InputProcessor {
 
     @Override
     public void dispose() {
-        AL.asset.unload(Assets.PT_STYLES_JSON.fileName);
-        AL.asset.unload(Assets.PT_TESTMAINSCREEN.fileName);
-        AL.asset.unload(Assets.PT_BACKGROUND_TEXTBUTTON.fileName);
-        AL.asset.unload(Assets.PT_BOCKLIN_FNT.fileName);
-        AL.asset.unload(Assets.PT_DLGBACKGROUND.fileName);
+        AL.getAssetManager().unload(Assets.PT_DLGBACKGROUND.fileName);
+        AL.getAssetManager().unload(Assets.PT_STYLES_JSON.fileName);
+        AL.getAssetManager().unload(Assets.PT_TESTMAINSCREEN.fileName);
+        AL.getAssetManager().unload(Assets.PT_BACKGROUND_TEXTBUTTON.fileName);
+        AL.getAssetManager().unload(Assets.PT_BOCKLIN_FNT.fileName);
     }
 
     @Override
     public boolean keyDown(int keycode) {
         if (keycode == Input.Keys.ESCAPE)
-            AL.game.setScreen(AL.screen.get(SettingsScreen.class));
+            AL.getGame().setScreen(AL.getScreenManager().get(SettingsScreen.class));
         return false;
     }
 

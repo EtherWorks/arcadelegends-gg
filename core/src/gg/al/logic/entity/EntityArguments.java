@@ -2,7 +2,7 @@ package gg.al.logic.entity;
 
 import com.badlogic.gdx.utils.ObjectMap;
 import com.google.gson.reflect.TypeToken;
-import gg.al.logic.data.IComponentDef;
+import gg.al.logic.component.data.Template;
 import gg.al.util.GsonUtil;
 
 import java.io.File;
@@ -31,12 +31,12 @@ public class EntityArguments {
             EntityArguments arguments = new EntityArguments();
             File argumentFile = new File(EntityArguments.class.getResource("/" + name).toURI());
             FileReader reader = new FileReader(argumentFile);
-            Type type = new TypeToken<Map<String, IComponentDef>>() {
+            Type type = new TypeToken<Map<String, Template>>() {
             }.getType();
-            Map<String, IComponentDef> defs = GsonUtil.getGSON().fromJson(reader, type);
+            Map<String, Template> defs = GsonUtil.getGSON().fromJson(reader, type);
             reader.close();
 
-            for (Map.Entry<String, IComponentDef> entries : defs.entrySet()) {
+            for (Map.Entry<String, Template> entries : defs.entrySet()) {
                 arguments.put(entries.getKey(), entries.getValue());
             }
             return arguments;

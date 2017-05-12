@@ -41,7 +41,7 @@ import java.util.HashMap;
 @Slf4j
 /**
  * Created by Patrick Windegger on 16.03.2017.
- * Class responsible for the different Settings (Video, Audio, Input) in the game
+ * Class responsible for the different Settings (Video, Audio, InputComponent) in the game
  */
 public class SettingsScreen implements IAssetScreen, InputProcessor {
 
@@ -81,13 +81,13 @@ public class SettingsScreen implements IAssetScreen, InputProcessor {
         viewport.setCamera(cam);
         stage = new Stage(viewport);
         stage.setViewport(viewport);
-        skin = AL.asset.get(Assets.PT_STYLES_JSON);
+        skin = AL.getAssetManager().get(Assets.PT_STYLES_JSON);
         int x = 1920;
         int y = 1080;
         spriteBatch = new SpriteBatch();
-        mainbackground = AL.asset.get(Assets.PT_TESTMAINSCREEN);
+        mainbackground = AL.getAssetManager().get(Assets.PT_TESTMAINSCREEN);
         componentMap = new HashMap<>();
-        selectionTexture = AL.asset.get(Assets.PT_BACKGROUND_TEXTBUTTON);
+        selectionTexture = AL.getAssetManager().get(Assets.PT_BACKGROUND_TEXTBUTTON);
         Sprite sprite = new Sprite(selectionTexture);
         selection = new SpriteDrawable(sprite);
 
@@ -103,14 +103,14 @@ public class SettingsScreen implements IAssetScreen, InputProcessor {
         btTabAudio.setSize(300, 50);
         tabbedPane.addTab(btTabAudio);
 
-        btTabInput = new TextButton("Input", skin);
+        btTabInput = new TextButton("InputComponent", skin);
         btTabInput.setSize(300, 50);
         btTabInput.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                if (!AL.screen.isRegistered(InputSettingsScreen.class))
-                    AL.screen.register(new InputSettingsScreen(), InputSettingsScreen.class);
-                AL.game.setScreen(AL.screen.get(InputSettingsScreen.class));
+                if (!AL.getScreenManager().isRegistered(InputSettingsScreen.class))
+                    AL.getScreenManager().register(new InputSettingsScreen(), InputSettingsScreen.class);
+                AL.getGame().setScreen(AL.getScreenManager().get(InputSettingsScreen.class));
             }
         });
         tabbedPane.addTab(btTabInput);
@@ -126,7 +126,7 @@ public class SettingsScreen implements IAssetScreen, InputProcessor {
     }
 
     private void createVideoTable() {
-        String vsyncText = AL.cvideo.vsyncEnabled() == true ? "Vsync on" : "Vsync off";
+        String vsyncText = AL.getVideoConfig().vsyncEnabled() == true ? "Vsync on" : "Vsync off";
         btVsync = new TextButton(vsyncText, skin, "default");
         btVsync.setWidth(250);
         btVsync.setHeight(50);
@@ -137,8 +137,8 @@ public class SettingsScreen implements IAssetScreen, InputProcessor {
             }
         });
 
-        TextureRegion backgroundTexture = new TextureRegion(AL.asset.get(Assets.PT_BACKGROUND_TEXTBUTTON));
-        BitmapFont font = AL.asset.get(Assets.PT_BOCKLIN_FNT);
+        TextureRegion backgroundTexture = new TextureRegion(AL.getAssetManager().get(Assets.PT_BACKGROUND_TEXTBUTTON));
+        BitmapFont font = AL.getAssetManager().get(Assets.PT_BOCKLIN_FNT);
         font.getData().setScale(0.5f, 0.5f);
         ScrollPane.ScrollPaneStyle scrollPaneStyle = new ScrollPane.ScrollPaneStyle();
         com.badlogic.gdx.scenes.scene2d.ui.List.ListStyle listStyle = new com.badlogic.gdx.scenes.scene2d.ui.List.ListStyle(font, Color.BLACK, new Color(255, 244, 0, 255), selection);
@@ -190,32 +190,32 @@ public class SettingsScreen implements IAssetScreen, InputProcessor {
         Label lbMasterVolume = new Label("Master Volume", skin);
         lbMasterVolume.setAlignment(Align.center);
         volumeSlider = new Slider(0, 100, 1, false, skin);
-        volumeSlider.setValue(AL.caudio.masterVolume());
+        volumeSlider.setValue(AL.getAudioConfig().masterVolume());
         volumeSlider.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                AL.cedit.setValue(IAudioConfig.AudioKeys.masterVolume, volumeSlider.getValue());
-                AL.cedit.flush();
+                AL.getConfigEditor().setValue(IAudioConfig.AudioKeys.masterVolume, volumeSlider.getValue());
+                AL.getConfigEditor().flush();
             }
         });
 
         TextButton musicOnOff = new TextButton("Music on", skin);
         musicOnOff.center();
         musicSlider = new Slider(0, 100, 1, false, skin);
-        musicSlider.setValue(AL.caudio.musicVolume());
+        musicSlider.setValue(AL.getAudioConfig().musicVolume());
         musicSlider.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                AL.cedit.setValue(IAudioConfig.AudioKeys.musicVolume, musicSlider.getValue());
+                AL.getConfigEditor().setValue(IAudioConfig.AudioKeys.musicVolume, musicSlider.getValue());
                 if (musicSlider.getValue() > 0) {
                     musicOnOff.setText("Music on");
                 } else {
                     musicOnOff.setText("Music off");
                 }
-                AL.cedit.flush();
+                AL.getConfigEditor().flush();
             }
         });
-        musicOnOff.setText(AL.caudio.musicVolume() == 0 ? "Music off" : "Music on");
+        musicOnOff.setText(AL.getAudioConfig().musicVolume() == 0 ? "Music off" : "Music on");
 
         musicOnOff.addListener(new ClickListener() {
             @Override
@@ -223,15 +223,15 @@ public class SettingsScreen implements IAssetScreen, InputProcessor {
                 switch (musicOnOff.getText().toString()) {
                     case "Music on":
                         musicOnOff.setText("Music off");
-                        AL.cedit.setValue(IAudioConfig.AudioKeys.musicVolume, 0);
+                        AL.getConfigEditor().setValue(IAudioConfig.AudioKeys.musicVolume, 0);
                         musicSlider.setValue(0);
-                        AL.cedit.flush();
+                        AL.getConfigEditor().flush();
                         break;
                     case "Music off":
                         musicOnOff.setText("Music on");
-                        AL.cedit.setValue(IAudioConfig.AudioKeys.musicVolume, 100);
+                        AL.getConfigEditor().setValue(IAudioConfig.AudioKeys.musicVolume, 100);
                         musicSlider.setValue(100);
-                        AL.cedit.flush();
+                        AL.getConfigEditor().flush();
                         break;
                 }
             }
@@ -240,12 +240,12 @@ public class SettingsScreen implements IAssetScreen, InputProcessor {
         Label lbEffects = new Label("Effects", skin);
         lbEffects.setAlignment(Align.center);
         effectSlider = new Slider(0, 100, 1, false, skin);
-        effectSlider.setValue(AL.caudio.effectVolume());
+        effectSlider.setValue(AL.getAudioConfig().effectVolume());
         effectSlider.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                AL.cedit.setValue(IAudioConfig.AudioKeys.effectVolume, effectSlider.getValue());
-                AL.cedit.flush();
+                AL.getConfigEditor().setValue(IAudioConfig.AudioKeys.effectVolume, effectSlider.getValue());
+                AL.getConfigEditor().flush();
             }
         });
         tableAudio = new Table();
@@ -300,16 +300,16 @@ public class SettingsScreen implements IAssetScreen, InputProcessor {
 
     @Override
     public void dispose() {
-        AL.asset.unload(Assets.PT_STYLES_JSON.fileName);
-        AL.asset.unload(Assets.PT_TESTMAINSCREEN.fileName);
-        AL.asset.unload(Assets.PT_BACKGROUND_TEXTBUTTON.fileName);
-        AL.asset.unload(Assets.PT_BOCKLIN_FNT.fileName);
+        AL.getAssetManager().unload(Assets.PT_STYLES_JSON.fileName);
+        AL.getAssetManager().unload(Assets.PT_TESTMAINSCREEN.fileName);
+        AL.getAssetManager().unload(Assets.PT_BACKGROUND_TEXTBUTTON.fileName);
+        AL.getAssetManager().unload(Assets.PT_BOCKLIN_FNT.fileName);
     }
 
     private void vsyncOnOff() {
-        AL.cedit.setValue(IVideoConfig.VideoKeys.vsyncEnabled, !AL.cvideo.vsyncEnabled());
-        AL.cedit.flush();
-        btVsync.setText(AL.cvideo.vsyncEnabled() == true ? "Vsync on" : "Vsync off");
+        AL.getConfigEditor().setValue(IVideoConfig.VideoKeys.vsyncEnabled, !AL.getVideoConfig().vsyncEnabled());
+        AL.getConfigEditor().flush();
+        btVsync.setText(AL.getVideoConfig().vsyncEnabled() == true ? "Vsync on" : "Vsync off");
     }
 
     private void setResolution() {
@@ -317,48 +317,48 @@ public class SettingsScreen implements IAssetScreen, InputProcessor {
         log.debug(resolution);
         switch (resolution) {
             case "Fullscreen":
-                AL.cedit.setValue(IVideoConfig.VideoKeys.screenmode, IVideoConfig.ScreenMode.Fullscreen);
-                AL.cedit.flush();
+                AL.getConfigEditor().setValue(IVideoConfig.VideoKeys.screenmode, IVideoConfig.ScreenMode.Fullscreen);
+                AL.getConfigEditor().flush();
                 break;
             case "Borderless":
-                AL.cedit.setValue(IVideoConfig.VideoKeys.width, (int) Toolkit.getDefaultToolkit().getScreenSize().getWidth());
-                AL.cedit.setValue(IVideoConfig.VideoKeys.height, (int) Toolkit.getDefaultToolkit().getScreenSize().getHeight());
-                AL.cedit.setValue(IVideoConfig.VideoKeys.screenmode, IVideoConfig.ScreenMode.Borderless);
-                AL.cedit.flush();
+                AL.getConfigEditor().setValue(IVideoConfig.VideoKeys.width, (int) Toolkit.getDefaultToolkit().getScreenSize().getWidth());
+                AL.getConfigEditor().setValue(IVideoConfig.VideoKeys.height, (int) Toolkit.getDefaultToolkit().getScreenSize().getHeight());
+                AL.getConfigEditor().setValue(IVideoConfig.VideoKeys.screenmode, IVideoConfig.ScreenMode.Borderless);
+                AL.getConfigEditor().flush();
                 break;
             default:
                 int xSize = Integer.parseInt(resolution.split("x")[0]);
                 int ySize = Integer.parseInt(resolution.split("x")[1]);
-                AL.cedit.setValue(IVideoConfig.VideoKeys.width, xSize);
-                AL.cedit.setValue(IVideoConfig.VideoKeys.height, ySize);
-                AL.cedit.setValue(IVideoConfig.VideoKeys.screenmode, IVideoConfig.ScreenMode.Windowed);
-                AL.cedit.flush();
+                AL.getConfigEditor().setValue(IVideoConfig.VideoKeys.width, xSize);
+                AL.getConfigEditor().setValue(IVideoConfig.VideoKeys.height, ySize);
+                AL.getConfigEditor().setValue(IVideoConfig.VideoKeys.screenmode, IVideoConfig.ScreenMode.Windowed);
+                AL.getConfigEditor().flush();
                 break;
         }
     }
 
     private String getResolution() {
-        return AL.cvideo.width() + "x" + AL.cvideo.height();
+        return AL.getVideoConfig().width() + "x" + AL.getVideoConfig().height();
     }
 
     private void setFps() {
         int fps = (int) sbFps.getSelected();
         switch (fps) {
             case 30:
-                AL.cedit.setValue(IVideoConfig.VideoKeys.foregroundFPS, fps);
+                AL.getConfigEditor().setValue(IVideoConfig.VideoKeys.foregroundFPS, fps);
                 break;
             case 60:
-                AL.cedit.setValue(IVideoConfig.VideoKeys.foregroundFPS, fps);
+                AL.getConfigEditor().setValue(IVideoConfig.VideoKeys.foregroundFPS, fps);
                 break;
             case 144:
-                AL.cedit.setValue(IVideoConfig.VideoKeys.foregroundFPS, fps);
+                AL.getConfigEditor().setValue(IVideoConfig.VideoKeys.foregroundFPS, fps);
                 break;
         }
-        AL.cedit.flush();
+        AL.getConfigEditor().flush();
     }
 
     private int getCurrentFPS() {
-        return AL.cvideo.foregroundFPS();
+        return AL.getVideoConfig().foregroundFPS();
     }
 
 
@@ -370,7 +370,7 @@ public class SettingsScreen implements IAssetScreen, InputProcessor {
     @Override
     public boolean keyDown(int keycode) {
         if (keycode == Input.Keys.ESCAPE)
-            AL.game.setScreen(AL.screen.get(MainMenuScreen.class));
+            AL.getGame().setScreen(AL.getScreenManager().get(MainMenuScreen.class));
         return false;
     }
 

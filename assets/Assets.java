@@ -59,6 +59,10 @@ public abstract class Assets {
 			assetMap.put("PT_TOWER", PT_TOWER);
 			assetMap.put("PT_TOWERFULL", PT_TOWERFULL);
 			assetMap.put("PT_TOWERTOP", PT_TOWERTOP);
+			assetMap.put("PT_AUTOATTACK", PT_AUTOATTACK);
+			assetMap.put("PT_FRONTWALK", PT_FRONTWALK);
+			assetMap.put("PT_LEFTSIDEWALK", PT_LEFTSIDEWALK);
+			assetMap.put("PT_RIGHTSIDEWALK", PT_RIGHTSIDEWALK);
 			assetMap.put("PT_SIDEVIEWSHEET", PT_SIDEVIEWSHEET);
 			assetMap.put("PT_SQUATSHEET", PT_SQUATSHEET);
 			assetMap.put("PT_DLGBACKGROUND", PT_DLGBACKGROUND);
@@ -116,6 +120,10 @@ public abstract class Assets {
 	public static AssetDescriptor<Texture> PT_TOWER = new AssetDescriptor<>("assets/prototype/sprites/tower.png", Texture.class);
 	public static AssetDescriptor<Texture> PT_TOWERFULL = new AssetDescriptor<>("assets/prototype/sprites/towerfull.png", Texture.class);
 	public static AssetDescriptor<Texture> PT_TOWERTOP = new AssetDescriptor<>("assets/prototype/sprites/towertop.png", Texture.class);
+	public static AssetDescriptor<Texture> PT_AUTOATTACK = new AssetDescriptor<>("assets/prototype/sprites/walksprites/autoattack.png", Texture.class);
+	public static AssetDescriptor<Texture> PT_FRONTWALK = new AssetDescriptor<>("assets/prototype/sprites/walksprites/frontwalk.png", Texture.class);
+	public static AssetDescriptor<Texture> PT_LEFTSIDEWALK = new AssetDescriptor<>("assets/prototype/sprites/walksprites/leftsidewalk.png", Texture.class);
+	public static AssetDescriptor<Texture> PT_RIGHTSIDEWALK = new AssetDescriptor<>("assets/prototype/sprites/walksprites/rightsidewalk.png", Texture.class);
 	public static AssetDescriptor<Texture> PT_SIDEVIEWSHEET = new AssetDescriptor<>("assets/prototype/sprites/walksprites/sideviewsheet.png", Texture.class);
 	public static AssetDescriptor<Texture> PT_SQUATSHEET = new AssetDescriptor<>("assets/prototype/sprites/walksprites/squatsheet.png", Texture.class);
 	public static AssetDescriptor<Texture> PT_DLGBACKGROUND = new AssetDescriptor<>("assets/prototype/styles/dlgstyle/dlgbackground.png", Texture.class);

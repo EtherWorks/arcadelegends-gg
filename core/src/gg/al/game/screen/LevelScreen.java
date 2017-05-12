@@ -19,8 +19,8 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import gg.al.game.AL;
 import gg.al.logic.ArcadeWorld;
 import gg.al.logic.component.*;
-import gg.al.logic.data.Damage;
-import gg.al.logic.data.StatusEffect;
+import gg.al.logic.component.data.Damage;
+import gg.al.logic.component.data.StatusEffect;
 import gg.al.logic.entity.Entities;
 import gg.al.logic.entity.EntityArguments;
 import gg.al.logic.entity.EntityUtil;
@@ -29,6 +29,7 @@ import gg.al.util.Assets;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -60,7 +61,18 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
 
     @Override
     public List<AssetDescriptor> assets() {
-        return Arrays.asList(mapDesc, Assets.PT_SIDEVIEWSHEET);
+        List<AssetDescriptor> assets = new ArrayList<>(6);
+        assets.add(mapDesc);
+        try {
+            EntityArguments arguments = EntityArguments.fromFile("player.json");
+            for(RenderComponent.RenderTemplate.AnimationTemplate template :
+                    arguments.get(RenderComponent.class.getSimpleName(), RenderComponent.RenderTemplate.class)
+                            .animationTemplates.values())
+                assets.add(Assets.get(template.texture));
+        } catch (IOException e) {
+            log.error("Couldn´t load player", e);
+        }
+        return assets;
     }
 
     @Override
@@ -82,7 +94,7 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
         viewport = new ExtendViewport(1920, 1080, camera);
         viewport.apply();
 
-        map = AL.asset.get(mapDesc);
+        map = AL.getAssetManager().get(mapDesc);
 
         arcadeWorld = new ArcadeWorld(map, rot, camera);
 
@@ -119,8 +131,8 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
     @Override
     public void hide() {
         fpsBatch.dispose();
-        AL.asset.unload(mapDesc.fileName);
-        AL.asset.unload(Assets.PT_SIDEVIEWSHEET.fileName);
+        AL.getAssetManager().unload(mapDesc.fileName);
+        AL.getAssetManager().unload(Assets.PT_SIDEVIEWSHEET.fileName);
         arcadeWorld.dispose();
     }
 
@@ -145,77 +157,80 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
                 camera.translate(0, 1, 0);
                 break;
             case Input.Keys.W:
-                gg.al.logic.component.Input input = arcadeWorld.getEntityWorld().getComponentOf(playerEnt, gg.al.logic.component.Input.class);
+                InputComponent input = arcadeWorld.getEntityWorld().getComponentOf(playerEnt, InputComponent.class);
 
-                Position position = arcadeWorld.getEntityWorld().getComponentOf(playerEnt, Position.class);
+                PositionComponent position = arcadeWorld.getEntityWorld().getComponentOf(playerEnt, PositionComponent.class);
                 if (!input.move.equals(position.position))
                     break;
                 input.move.set(position.position.x, position.position.y + 1);
                 break;
             case Input.Keys.S:
-                input = arcadeWorld.getEntityWorld().getComponentOf(playerEnt, gg.al.logic.component.Input.class);
+                input = arcadeWorld.getEntityWorld().getComponentOf(playerEnt, InputComponent.class);
 
-                position = arcadeWorld.getEntityWorld().getComponentOf(playerEnt, Position.class);
+                position = arcadeWorld.getEntityWorld().getComponentOf(playerEnt, PositionComponent.class);
                 if (!input.move.equals(position.position))
                     break;
                 input.move.set(position.position.x, position.position.y - 1);
                 break;
             case Input.Keys.A:
-                input = arcadeWorld.getEntityWorld().getComponentOf(playerEnt, gg.al.logic.component.Input.class);
+                input = arcadeWorld.getEntityWorld().getComponentOf(playerEnt, InputComponent.class);
 
-                position = arcadeWorld.getEntityWorld().getComponentOf(playerEnt, Position.class);
+                position = arcadeWorld.getEntityWorld().getComponentOf(playerEnt, PositionComponent.class);
                 if (!input.move.equals(position.position))
                     break;
                 input.move.set(position.position.x - 1, position.position.y);
                 break;
             case Input.Keys.D:
-                input = arcadeWorld.getEntityWorld().getComponentOf(playerEnt, gg.al.logic.component.Input.class);
-                position = arcadeWorld.getEntityWorld().getComponentOf(playerEnt, Position.class);
+                input = arcadeWorld.getEntityWorld().getComponentOf(playerEnt, InputComponent.class);
+                position = arcadeWorld.getEntityWorld().getComponentOf(playerEnt, PositionComponent.class);
                 if (!input.move.equals(position.position))
                     break;
                 input.move.set(position.position.x + 1, position.position.y);
                 break;
             case Input.Keys.K:
-                Damages dmg = arcadeWorld.getEntityWorld().getMapper(Damages.class).get(playerEnt);
-                dmg.damages.add(new Damage(Damage.DamageType.Normal, 100, 10));
+                StatComponent statComponent = arcadeWorld.getEntityWorld().getMapper(StatComponent.class).get(playerEnt);
+                statComponent.damages.add(new Damage(Damage.DamageType.Normal, 10, 10));
                 break;
             case Input.Keys.J:
-                Stats stats = arcadeWorld.getEntityWorld().getMapper(Stats.class).get(playerEnt);
-                stats.level += 1;
+                statComponent = arcadeWorld.getEntityWorld().getMapper(StatComponent.class).get(playerEnt);
+                statComponent.addRuntimeStat(StatComponent.RuntimeStat.level, 1);
                 break;
 
             case Input.Keys.Z:
-                StatusEffects statusEffects = arcadeWorld.getEntityWorld().getMapper(StatusEffects.class).create(playerEnt);
-                statusEffects.statusEffects.put("ARP1", StatusEffect.builder().effectTime(10).valueHealthRegen(10).build());
+                statComponent = arcadeWorld.getEntityWorld().getMapper(StatComponent.class).get(playerEnt);
+                statComponent.statusEffects.put("ARP1", StatusEffect.builder()
+                        .effectTime(10)
+                        .flatStat(StatComponent.BaseStat.healthRegen,10f)
+                        .build());
                 break;
 
             case Input.Keys.O:
                 EntityArguments arguments = null;
                 try {
-                    arguments = EntityArguments.fromFile("test.json");
-                    int id = EntityUtil.spawn(Entities.Test, arcadeWorld, arguments);
-                    stats = arcadeWorld.getEntityWorld().getMapper(Stats.class).get(id);
-                    stats.deleteOnDeath = true;
+                    arguments = EntityArguments.fromFile("player.json");
+                    int id =arcadeWorld.spawn(Entities.Player, arguments);
+                    statComponent = arcadeWorld.getEntityWorld().getMapper(StatComponent.class).get(id);
+                    statComponent.setFlagStat(StatComponent.FlagStat.deleteOnDeath, true);
                 } catch (IOException e) {
                     log.error("Couldn´t load player", e);
                 }
                 break;
-            case Input.Keys.Q:
-                Abilities abilities = arcadeWorld.getEntityWorld().getMapper(Abilities.class).get(playerEnt);
-                abilities.ability1.cast(arcadeWorld);
-                break;
-            case Input.Keys.E:
-                abilities = arcadeWorld.getEntityWorld().getMapper(Abilities.class).get(playerEnt);
-                abilities.ability2.cast(arcadeWorld);
-                break;
-            case Input.Keys.R:
-                abilities = arcadeWorld.getEntityWorld().getMapper(Abilities.class).get(playerEnt);
-                abilities.ability4.cast(arcadeWorld);
-                break;
-            case Input.Keys.F:
-                abilities = arcadeWorld.getEntityWorld().getMapper(Abilities.class).get(playerEnt);
-                abilities.ability3.cast(arcadeWorld);
-                break;
+//            case Input.Keys.Q:
+//                Abilities abilities = arcadeWorld.getEntityWorld().getMapper(Abilities.class).get(playerEnt);
+//                abilities.ability1.cast(arcadeWorld);
+//                break;
+//            case Input.Keys.E:
+//                abilities = arcadeWorld.getEntityWorld().getMapper(Abilities.class).get(playerEnt);
+//                abilities.ability2.cast(arcadeWorld);
+//                break;
+//            case Input.Keys.R:
+//                abilities = arcadeWorld.getEntityWorld().getMapper(Abilities.class).get(playerEnt);
+//                abilities.ability4.cast(arcadeWorld);
+//                break;
+//            case Input.Keys.F:
+//                abilities = arcadeWorld.getEntityWorld().getMapper(Abilities.class).get(playerEnt);
+//                abilities.ability3.cast(arcadeWorld);
+//                break;
         }
         camera.update();
         return false;
@@ -243,18 +258,16 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
                 if (playerEnt == -1) {
                     EntityArguments arguments = null;
                     try {
-                        arguments = EntityArguments.fromFile("test.json");
-                        Position.PositionDef positionDef = arguments.get("Position", Position.PositionDef.class);
+                        arguments = EntityArguments.fromFile("player.json");
+                        PositionComponent.PositionTemplate positionDef = arguments.get("PositionComponent", PositionComponent.PositionTemplate.class);
                         positionDef.x = (int) mapCoord.x;
                         positionDef.y = (int) mapCoord.y;
-                        playerEnt = EntityUtil.spawn(Entities.Test, arcadeWorld, arguments);
-                        Stats stats = arcadeWorld.getEntityWorld().getMapper(Stats.class).get(playerEnt);
-                        stats.level = 2;
+                        playerEnt = arcadeWorld.spawn(Entities.Player, arguments);
                     } catch (IOException e) {
                         log.error("Couldn´t load player", e);
                     }
                 } else {
-                    gg.al.logic.component.Input input = arcadeWorld.getEntityWorld().getComponentOf(playerEnt, gg.al.logic.component.Input.class);
+                    InputComponent input = arcadeWorld.getEntityWorld().getComponentOf(playerEnt, InputComponent.class);
                     input.move.set((int) mapCoord.x, (int) mapCoord.y);
                 }
                 break;
@@ -262,7 +275,7 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
                 Tile t = arcadeWorld.getTile(mapCoord);
                 try {
                     int id = t.getEntities().first();
-                    gg.al.logic.component.Input input = arcadeWorld.getEntityWorld().getMapper(gg.al.logic.component.Input.class).get(playerEnt);
+                    InputComponent input = arcadeWorld.getEntityWorld().getMapper(InputComponent.class).get(playerEnt);
                     input.targetId = id;
                     log.debug("{}", id);
                 } catch (IllegalStateException ex) {

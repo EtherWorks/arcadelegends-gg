@@ -3,8 +3,9 @@ package gg.al.logic.system;
 import com.artemis.Aspect;
 import com.artemis.BaseEntitySystem;
 import com.artemis.ComponentMapper;
-import com.artemis.systems.IteratingSystem;
 import com.artemis.utils.IntBag;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.assets.AssetDescriptor;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.Animation;
@@ -15,16 +16,20 @@ import com.badlogic.gdx.graphics.g3d.decals.Decal;
 import com.badlogic.gdx.graphics.g3d.decals.DecalBatch;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.BufferUtils;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import gg.al.game.AL;
-import gg.al.logic.component.DynamicPhysic;
-import gg.al.logic.component.Position;
-import gg.al.logic.component.Render;
-import gg.al.logic.component.Stats;
+import gg.al.logic.component.PhysicComponent;
+import gg.al.logic.component.PositionComponent;
+import gg.al.logic.component.RenderComponent;
+import gg.al.logic.component.StatComponent;
 import gg.al.util.Assets;
 import lombok.extern.slf4j.Slf4j;
+
+import java.nio.IntBuffer;
+import java.util.Map;
 
 /**
  * Created by Thomas Neumann on 30.03.2017.<br />
@@ -46,13 +51,13 @@ public class RenderSystem extends BaseEntitySystem {
     private final ObjectMap<Integer, Decal> uiMap;
     private final DecalBatch decalBatch;
     private final AssetManager assetManager;
-    private ComponentMapper<Render> mapperRender;
-    private ComponentMapper<Position> mapperPosition;
-    private ComponentMapper<DynamicPhysic> mapperDynamicPhysic;
-    private ComponentMapper<Stats> mapperStats;
+    private ComponentMapper<RenderComponent> mapperRender;
+    private ComponentMapper<PositionComponent> mapperPosition;
+    private ComponentMapper<PhysicComponent> mapperPhysic;
+    private ComponentMapper<StatComponent> mapperStats;
 
     public RenderSystem(DecalBatch decalBatch, AssetManager assetManager, float worldDegree) {
-        super(Aspect.all(Render.class, Position.class));
+        super(Aspect.all(RenderComponent.class, PositionComponent.class));
         decalMap = new ObjectMap<>();
         uiMap = new ObjectMap<>();
         this.decalBatch = decalBatch;
@@ -74,16 +79,18 @@ public class RenderSystem extends BaseEntitySystem {
 
 
     protected void process(int entityId) {
-        DynamicPhysic dynamicPhysic = mapperDynamicPhysic.get(entityId);
-        Position position = mapperPosition.get(entityId);
-        Render render = mapperRender.get(entityId);
+        PhysicComponent physic = mapperPhysic.get(entityId);
+        PositionComponent position = mapperPosition.get(entityId);
+        RenderComponent render = mapperRender.get(entityId);
 
-        Stats stats = mapperStats.get(entityId);
+        StatComponent stats = mapperStats.get(entityId);
         Decal decal = decalMap.get(entityId);
-        decal.setTextureRegion(render.animation.getKeyFrame(stateTime));
+        TextureRegion region = render.animations.get(render.renderState).getKeyFrame(stateTime);
+        region.flip(region.isFlipX() ^ render.flipX, region.isFlipY() ^ render.flipY);
+        decal.setTextureRegion(region);
 
-        if (dynamicPhysic != null)
-            decal.setPosition(dynamicPhysic.getBody().getPosition().x, dynamicPhysic.getBody().getPosition().y, decal.getZ());
+        if (physic != null)
+            decal.setPosition(physic.body.getPosition().x, physic.body.getPosition().y, decal.getZ());
         else
             decal.setPosition(position.position.x, position.position.y, decal.getZ());
         decalBatch.add(decal);
@@ -95,30 +102,13 @@ public class RenderSystem extends BaseEntitySystem {
             AL.graphics.getGL20().glClear(GL20.GL_COLOR_BUFFER_BIT);
             spriteBatch.setProjectionMatrix(uiCamera.combined);
             spriteBatch.begin();
-
-//            font.draw(spriteBatch, String.format("%1.1fap", stats.spellPower), 10, 30);
-//            font.draw(spriteBatch, String.format("%1.1fad", stats.attackDamage), 10, 60);
-//            font.draw(spriteBatch, String.format("%1.1fms", stats.moveSpeed), 10, 90);
-//
-//            font.draw(spriteBatch, String.format("%1.1fcd", stats.cooldownReduction), 130, 30);
-//            font.draw(spriteBatch, String.format("%1.1fh/s", stats.healthRegen), 130, 60);
-//            font.draw(spriteBatch, String.format("%1.1fr/s", stats.resourceRegen), 130, 90);
-//
-//            font.draw(spriteBatch, String.format("%1.1fexp", stats.experience), 230, 30);
-//            font.draw(spriteBatch, String.format("%1dlvl", stats.level), 230, 60);
-//            font.draw(spriteBatch, String.format("%1.1fcr", stats.criticalStrikeChance), 230, 90);
-//
-//            font.draw(spriteBatch, String.format("%d/%dAP", (int) stats.actionPoints, stats.maxActionPoints), 10, 170);
-//            font.draw(spriteBatch, String.format("%dRP/%dRP", (int) stats.resource, stats.maxResource), 110, 130);
-//            font.draw(spriteBatch, String.format("%dHP/%dHP", (int) stats.health, stats.maxHealth), 110, 170);
             font.draw(spriteBatch, stats.toString(), 0, buffHeight);
-            //log.debug("{}: {}", entityId, stats.toString());
             spriteBatch.end();
             buffer.end();
 
             Decal uiDecal = uiMap.get(entityId);
-            if (dynamicPhysic != null)
-                uiDecal.setPosition(dynamicPhysic.getBody().getPosition().x + 2, dynamicPhysic.getBody().getPosition().y - 3, uiDecal.getZ());
+            if (physic != null)
+                uiDecal.setPosition(physic.body.getPosition().x + 2, physic.body.getPosition().y - 3, uiDecal.getZ());
             else
                 uiDecal.setPosition(position.position.x + 2, position.position.y - 3, uiDecal.getZ());
             decalBatch.add(uiDecal);
@@ -127,24 +117,27 @@ public class RenderSystem extends BaseEntitySystem {
 
     @Override
     protected void inserted(int entityId) {
-        Render render = mapperRender.get(entityId);
-        Position position = mapperPosition.get(entityId);
-        if (render.texture == null) {
-            render.texture = Assets.get(render.textureName);
-            Texture texture = assetManager.get(render.texture);
-            TextureRegion[][] tmp = TextureRegion.split(texture,
-                    +texture.getWidth() / render.frameColumns,
-                    +texture.getHeight() / render.frameRows);
-            TextureRegion[] frames = new TextureRegion[render.frameColumns * render.frameRows];
-            int index = 0;
-            for (int i = 0; i < render.frameRows; i++) {
-                for (int j = 0; j < render.frameColumns; j++) {
-                    frames[index++] = tmp[i][j];
+        RenderComponent render = mapperRender.get(entityId);
+        PositionComponent position = mapperPosition.get(entityId);
+        if (render.textures.size == 0) {
+            for (Map.Entry<RenderComponent.RenderState, RenderComponent.RenderTemplate.AnimationTemplate> entry : render.renderTemplate.animationTemplates.entrySet()) {
+                Texture texture = assetManager.get((AssetDescriptor<Texture>) Assets.get(entry.getValue().texture));
+                render.textures.put(entry.getKey(), Assets.get(entry.getValue().texture));
+
+                TextureRegion[][] tmp = TextureRegion.split(texture,
+                        +texture.getWidth() / entry.getValue().frameColumns,
+                        +texture.getHeight() / entry.getValue().frameRows);
+                TextureRegion[] frames = new TextureRegion[entry.getValue().frameColumns * entry.getValue().frameRows];
+                int index = 0;
+                for (int i = 0; i < entry.getValue().frameRows; i++) {
+                    for (int j = 0; j < entry.getValue().frameColumns; j++) {
+                        frames[index++] = tmp[i][j];
+                    }
                 }
+                render.animations.put(entry.getKey(), new Animation<TextureRegion>(entry.getValue().frameDuration, new Array<>(frames), Animation.PlayMode.LOOP));
             }
-            render.animation = new Animation<>(render.frameDuration, new Array<>(frames), Animation.PlayMode.LOOP);
         }
-        Decal decal = Decal.newDecal(render.width, render.height, render.animation.getKeyFrame(stateTime), render.transparent);
+        Decal decal = Decal.newDecal(render.width, render.height, render.animations.get(render.renderState).getKeyFrame(stateTime), render.transparent);
         decal.rotateX(worldDegree);
         decal.setPosition(position.position.x, position.position.y, 0);
         decalMap.put(entityId, decal);
@@ -158,7 +151,6 @@ public class RenderSystem extends BaseEntitySystem {
         Decal uiDecal = Decal.newDecal(3, 5, uiTextureRegion, true);
         uiDecal.setPosition(position.position.x, position.position.y, 1);
         uiMap.put(entityId, uiDecal);
-
     }
 
     @Override
@@ -171,7 +163,7 @@ public class RenderSystem extends BaseEntitySystem {
 
     @Override
     protected void processSystem() {
-        if(stateTime == Float.MAX_VALUE)
+        if (stateTime == Float.MAX_VALUE)
             stateTime = 0;
         stateTime += getWorld().getDelta();
         IntBag actives = subscription.getEntities();

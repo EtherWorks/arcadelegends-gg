@@ -3,39 +3,51 @@ package gg.al.logic.system;
 import com.artemis.Aspect;
 import com.artemis.ComponentMapper;
 import com.artemis.systems.IntervalIteratingSystem;
-import gg.al.logic.component.Stats;
+import gg.al.logic.component.StatComponent;
 
 /**
  * Created by Thomas Neumann on 26.04.2017.<br />
  */
 public class RegenSystem extends IntervalIteratingSystem {
 
-    private ComponentMapper<Stats> mapperStats;
+    private ComponentMapper<StatComponent> mapperStatComponent;
 
     public RegenSystem(float interval) {
-        super(Aspect.all(Stats.class), interval);
+        super(Aspect.all(StatComponent.class), interval);
     }
 
     @Override
     protected void process(int entityId) {
-        Stats stats = mapperStats.get(entityId);
+        StatComponent stats = mapperStatComponent.get(entityId);
         float interval = getIntervalDelta();
-        if (stats.dead)
+        if (stats.getFlagStat(StatComponent.FlagStat.dead))
             return;
 
-        if (stats.actionPoints + stats.actionPointRegen * interval <= stats.maxActionPoints)
-            stats.actionPoints += stats.actionPointRegen * interval;
-        else
-            stats.actionPoints = stats.maxActionPoints;
+        regen(stats, StatComponent.RuntimeStat.actionPoints,
+                StatComponent.BaseStat.actionPointsRegen,
+                StatComponent.BaseStat.maxActionPoints,
+                interval);
 
-        if (stats.health + stats.healthRegen * interval <= stats.maxHealth)
-            stats.health += stats.healthRegen * interval;
-        else
-            stats.health = stats.maxHealth;
+        regen(stats, StatComponent.RuntimeStat.health,
+                StatComponent.BaseStat.healthRegen,
+                StatComponent.BaseStat.maxHealth,
+                interval);
 
-        if (stats.resource + stats.resourceRegen * interval <= stats.maxResource)
-            stats.resource += stats.resourceRegen * interval;
+        regen(stats, StatComponent.RuntimeStat.resource,
+                StatComponent.BaseStat.resourceRegen,
+                StatComponent.BaseStat.maxResource,
+                interval);
+
+    }
+
+    private static void regen(StatComponent stats, StatComponent.RuntimeStat stat, StatComponent.BaseStat regen, StatComponent.BaseStat max, float interval) {
+        if (stats.getRuntimeStat(stat) +
+                stats.getCurrentStat(regen) *
+                        interval <= stats.getCurrentStat(max))
+            stats.addRuntimeStat(stat,
+                    stats.getCurrentStat(regen) * interval);
         else
-            stats.resource = stats.maxResource;
+            stats.setRuntimeStat(stat,
+                    stats.getCurrentStat(max));
     }
 }

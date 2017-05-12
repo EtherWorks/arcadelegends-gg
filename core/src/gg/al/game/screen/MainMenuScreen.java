@@ -44,20 +44,20 @@ public class MainMenuScreen implements IAssetScreen {
 
     @Override
     public void show() {
-        AL.audioManager.registerMusics(Assets.PT_BITRUSH);
-        AL.audioManager.playMusic(Assets.PT_BITRUSH);
+        AL.getAudioManager().registerMusics(Assets.PT_BITRUSH);
+        AL.getAudioManager().playMusic(Assets.PT_BITRUSH);
         // Inits:
         cam = new OrthographicCamera();
         viewport = new FitViewport(1920, 1080);
         viewport.setCamera(cam);
         stage = new Stage(viewport);
         stage.setViewport(viewport);
-        skin = AL.asset.get(Assets.PT_STYLES_JSON);
+        skin = AL.getAssetManager().get(Assets.PT_STYLES_JSON);
         skin.getFont("bocklin").getData().setScale(0.8f, 0.8f);
         int x = 1920;
         int y = 1080;
         spriteBatch = new SpriteBatch();
-        mainbackground = AL.asset.get(Assets.PT_TESTMAINSCREEN);
+        mainbackground = AL.getAssetManager().get(Assets.PT_TESTMAINSCREEN);
 
 
         // Buttons:
@@ -67,9 +67,9 @@ public class MainMenuScreen implements IAssetScreen {
         btPlay.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                if (!AL.screen.isRegistered(LevelScreen.class))
-                    AL.screen.register(new LevelScreen(Assets.PT_TEST), LevelScreen.class);
-                AL.game.setScreen(AL.screen.get(LevelScreen.class));
+                if (!AL.getScreenManager().isRegistered(LevelScreen.class))
+                    AL.getScreenManager().register(new LevelScreen(Assets.PT_TEST), LevelScreen.class);
+                AL.getGame().setScreen(AL.getScreenManager().get(LevelScreen.class));
             }
         });
 
@@ -80,9 +80,9 @@ public class MainMenuScreen implements IAssetScreen {
         btSettings.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                if (!AL.screen.isRegistered(SettingsScreen.class))
-                    AL.screen.register(new SettingsScreen(), SettingsScreen.class);
-                AL.game.setScreen(AL.screen.get(SettingsScreen.class));
+                if (!AL.getScreenManager().isRegistered(SettingsScreen.class))
+                    AL.getScreenManager().register(new SettingsScreen(), SettingsScreen.class);
+                AL.getGame().setScreen(AL.getScreenManager().get(SettingsScreen.class));
             }
         });
 
@@ -143,22 +143,22 @@ public class MainMenuScreen implements IAssetScreen {
     @Override
     public void hide() {
         AL.input.setInputProcessor(null);
-        AL.audioManager.stopMusic(Assets.PT_BITRUSH);
-        AL.audioManager.unregisterMusics(Assets.PT_BITRUSH);
+        AL.getAudioManager().stopMusic(Assets.PT_BITRUSH);
+        AL.getAudioManager().unregisterMusics(Assets.PT_BITRUSH);
         stage.dispose();
         spriteBatch.dispose();
     }
 
     @Override
     public void dispose() {
-        AL.asset.unload(Assets.PT_STYLES_JSON.fileName);
-        AL.asset.unload(Assets.PT_BITRUSH.fileName);
+        AL.getAssetManager().unload(Assets.PT_STYLES_JSON.fileName);
+        AL.getAssetManager().unload(Assets.PT_BITRUSH.fileName);
     }
 
     private void changeSize() {
-        AL.cedit.setValue(IVideoConfig.VideoKeys.height, AL.cvideo.height() + 10);
-        AL.cedit.setValue(IVideoConfig.VideoKeys.width, AL.cvideo.width() + 10);
-        AL.cedit.flush();
+        AL.getConfigEditor().setValue(IVideoConfig.VideoKeys.height, AL.getVideoConfig().height() + 10);
+        AL.getConfigEditor().setValue(IVideoConfig.VideoKeys.width, AL.getVideoConfig().width() + 10);
+        AL.getConfigEditor().flush();
     }
 
     @Override
