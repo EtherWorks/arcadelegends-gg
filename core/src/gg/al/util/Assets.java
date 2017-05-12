@@ -83,6 +83,7 @@ public abstract class Assets {
             assetMap.put("PT_STYLES_ATLAS", PT_STYLES_ATLAS);
             assetMap.put("PT_STYLES_JSON", PT_STYLES_JSON);
             assetMap.put("PT_STYLES_PNG", PT_STYLES_PNG);
+            assetMap.put("PT_DLGBACKGROUND", PT_DLGBACKGROUND);
             return assetMap;
         }
     }
@@ -139,4 +140,5 @@ public abstract class Assets {
     public static AssetDescriptor<TextureAtlas> PT_STYLES_ATLAS = new AssetDescriptor<>("assets/prototype/styles/styles/styles.atlas", TextureAtlas.class);
     public static AssetDescriptor<Skin> PT_STYLES_JSON = new AssetDescriptor<>("assets/prototype/styles/styles/styles.json", Skin.class);
     public static AssetDescriptor<Texture> PT_STYLES_PNG = new AssetDescriptor<>("assets/prototype/styles/styles/styles.png", Texture.class);
+    public static AssetDescriptor<Texture> PT_DLGBACKGROUND = new AssetDescriptor<>("assets/prototype/styles/dlgstyle/dlgbackground.png", Texture.class);
 }

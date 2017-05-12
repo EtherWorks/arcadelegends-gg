@@ -5,6 +5,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.assets.AssetDescriptor;
+import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -16,12 +17,15 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
+import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import gg.al.config.IInputConfig;
 import gg.al.game.AL;
+import gg.al.game.ui.ALDialog;
 import gg.al.util.Assets;
 
 import java.util.Arrays;
@@ -42,6 +46,8 @@ public class InputSettingsScreen implements IAssetScreen, InputProcessor {
 
     private ScrollPane scrollPane;
     private Table inputTable;
+
+    private ALDialog dialog;
 
 
     @Override
@@ -95,13 +101,12 @@ public class InputSettingsScreen implements IAssetScreen, InputProcessor {
 
     private void showDialog(BitmapFont font, TextureRegion textureRegion)
     {
-        Dialog dialog = new Dialog("Inputkey Selection",new Window.WindowStyle(font, Color.BLACK, new TextureRegionDrawable(textureRegion)));
-        Table table = new Table();
-        Label lbKey = new Label("Key:", skin);
-        table.row();
-        table.add(lbKey);
-        dialog.add(table);
-        dialog.show(stage);
+        Drawable dlgBackground = new TextureRegionDrawable(new TextureRegion(AL.asset.get(Assets.PT_DLGBACKGROUND)));
+        dialog = new ALDialog("", new Window.WindowStyle(font, Color.BLACK, new TextureRegionDrawable(new TextureRegion(textureRegion))),skin, stage, font);
+        dialog.initDefaultDialog(dlgBackground);
+
+
+
     }
 
     @Override
@@ -146,6 +151,7 @@ public class InputSettingsScreen implements IAssetScreen, InputProcessor {
         AL.asset.unload(Assets.PT_TESTMAINSCREEN.fileName);
         AL.asset.unload(Assets.PT_BACKGROUND_TEXTBUTTON.fileName);
         AL.asset.unload(Assets.PT_BOCKLIN_FNT.fileName);
+        AL.asset.unload(Assets.PT_DLGBACKGROUND.fileName);
     }
 
     @Override
@@ -192,7 +198,8 @@ public class InputSettingsScreen implements IAssetScreen, InputProcessor {
 
     @Override
     public List<AssetDescriptor> assets() {
-        return Arrays.asList(Assets.PT_STYLES_JSON, Assets.PT_TESTMAINSCREEN, Assets.PT_BACKGROUND_TEXTBUTTON, Assets.PT_BOCKLIN_FNT);
+        return Arrays.asList(Assets.PT_STYLES_JSON, Assets.PT_TESTMAINSCREEN, Assets.PT_BACKGROUND_TEXTBUTTON, Assets.PT_BOCKLIN_FNT,
+                Assets.PT_DLGBACKGROUND);
     }
 
     @Override
