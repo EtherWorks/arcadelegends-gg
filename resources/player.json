@@ -66,6 +66,10 @@
     "y": 0,
     "type": "PositionTemplate"
   },
+  "CharacterComponent": {
+    "characterName": "Kevin",
+    "type": "CharacterTemplate"
+  },
   "RenderComponent": {
     "width": 3.0,
     "height": 3.0,

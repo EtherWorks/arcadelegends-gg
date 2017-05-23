@@ -101,7 +101,7 @@ public class InputSettingsScreen implements IAssetScreen, InputProcessor {
 
     private void showDialog(BitmapFont font, TextureRegion textureRegion)
     {
-        Drawable dlgBackground = new TextureRegionDrawable(new TextureRegion(AL.asset.get(Assets.PT_DLGBACKGROUND)));
+        Drawable dlgBackground = new TextureRegionDrawable(new TextureRegion(AL.getAssetManager().get(Assets.PT_DLGBACKGROUND)));
         dialog = new ALDialog("", new Window.WindowStyle(font, Color.BLACK, new TextureRegionDrawable(new TextureRegion(textureRegion))),skin, stage, font);
         dialog.initDefaultDialog(dlgBackground);
 

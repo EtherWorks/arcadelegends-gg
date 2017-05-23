@@ -17,6 +17,7 @@ import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import gg.al.character.Kevin;
 import gg.al.game.AL;
 import gg.al.graphics.CameraLayerGroupStrategy;
 import gg.al.logic.component.*;
@@ -114,6 +115,7 @@ public class ArcadeWorld implements Disposable {
         WorldConfiguration worldConfiguration = new WorldConfigurationBuilder()
                 .with(1,
                         new StatSystem(this),
+                        new CharacterSystem(),
                         new RegenSystem(.5f)
                 )
                 .with(0,
@@ -243,6 +245,16 @@ public class ArcadeWorld implements Disposable {
                 shape.dispose();
                 body.setUserData(entityID);
                 physicComponent.body = body;
+            }
+            else if (CharacterComponent.class.isAssignableFrom(componentType)) {
+               //set character
+                CharacterComponent characterComponent = entityWorld.getMapper(CharacterComponent.class).get(entityID);
+                switch (arguments.get(CharacterComponent.class.getSimpleName(), CharacterComponent.CharacterTemplate.class).characterName)
+                {
+                    case "Kevin":
+                        characterComponent.character = new Kevin();
+                        break;
+                }
             }
         }
         return entityID;

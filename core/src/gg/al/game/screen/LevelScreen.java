@@ -65,7 +65,7 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
         assets.add(mapDesc);
         try {
             EntityArguments arguments = EntityArguments.fromFile("player.json");
-            for(RenderComponent.RenderTemplate.AnimationTemplate template :
+            for (RenderComponent.RenderTemplate.AnimationTemplate template :
                     arguments.get(RenderComponent.class.getSimpleName(), RenderComponent.RenderTemplate.class)
                             .animationTemplates.values())
                 assets.add(Assets.get(template.texture));
@@ -200,7 +200,7 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
                 statComponent = arcadeWorld.getEntityWorld().getMapper(StatComponent.class).get(playerEnt);
                 statComponent.statusEffects.put("ARP1", StatusEffect.builder()
                         .effectTime(10)
-                        .flatStat(StatComponent.BaseStat.healthRegen,10f)
+                        .flatStat(StatComponent.BaseStat.healthRegen, 10f)
                         .build());
                 break;
 
@@ -208,29 +208,29 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
                 EntityArguments arguments = null;
                 try {
                     arguments = EntityArguments.fromFile("player.json");
-                    int id =arcadeWorld.spawn(Entities.Player, arguments);
+                    int id = arcadeWorld.spawn(Entities.Player, arguments);
                     statComponent = arcadeWorld.getEntityWorld().getMapper(StatComponent.class).get(id);
                     statComponent.setFlagStat(StatComponent.FlagStat.deleteOnDeath, true);
                 } catch (IOException e) {
                     log.error("Couldn´t load player", e);
                 }
                 break;
-//            case Input.Keys.Q:
-//                Abilities abilities = arcadeWorld.getEntityWorld().getMapper(Abilities.class).get(playerEnt);
-//                abilities.ability1.cast(arcadeWorld);
-//                break;
-//            case Input.Keys.E:
-//                abilities = arcadeWorld.getEntityWorld().getMapper(Abilities.class).get(playerEnt);
-//                abilities.ability2.cast(arcadeWorld);
-//                break;
-//            case Input.Keys.R:
-//                abilities = arcadeWorld.getEntityWorld().getMapper(Abilities.class).get(playerEnt);
-//                abilities.ability4.cast(arcadeWorld);
-//                break;
-//            case Input.Keys.F:
-//                abilities = arcadeWorld.getEntityWorld().getMapper(Abilities.class).get(playerEnt);
-//                abilities.ability3.cast(arcadeWorld);
-//                break;
+            case Input.Keys.Q:
+                CharacterComponent characterComponent = arcadeWorld.getEntityWorld().getMapper(CharacterComponent.class).get(playerEnt);
+                characterComponent.character.castAbility1();
+                break;
+            case Input.Keys.E:
+                characterComponent = arcadeWorld.getEntityWorld().getMapper(CharacterComponent.class).get(playerEnt);
+                characterComponent.character.castAbility2();
+                break;
+            case Input.Keys.R:
+                characterComponent = arcadeWorld.getEntityWorld().getMapper(CharacterComponent.class).get(playerEnt);
+                characterComponent.character.castAbility3();
+                break;
+            case Input.Keys.F:
+                characterComponent = arcadeWorld.getEntityWorld().getMapper(CharacterComponent.class).get(playerEnt);
+                characterComponent.character.castAbility4();
+                break;
         }
         camera.update();
         return false;

@@ -5,6 +5,7 @@ import com.artemis.ComponentMapper;
 import com.artemis.systems.IteratingSystem;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.ObjectMap;
+import gg.al.character.Character;
 import gg.al.logic.ArcadeWorld;
 import gg.al.logic.component.*;
 import gg.al.logic.component.data.Damage;
@@ -16,6 +17,7 @@ import gg.al.logic.component.data.StatusEffect;
 public class StatSystem extends IteratingSystem {
 
     private ComponentMapper<StatComponent> mapperStatComponent;
+    private ComponentMapper<CharacterComponent> mapperCharacterComponent;
 
     private ArcadeWorld arcadeWorld;
 
@@ -27,6 +29,8 @@ public class StatSystem extends IteratingSystem {
     @Override
     protected void process(int entityId) {
         StatComponent stats = mapperStatComponent.get(entityId);
+        CharacterComponent characterComponent = mapperCharacterComponent.get(entityId);
+
         if (stats.getFlagStat(StatComponent.FlagStat.dead)) {
             if (stats.getFlagStat(StatComponent.FlagStat.deleteOnDeath)) {
                 arcadeWorld.delete(entityId);
@@ -50,6 +54,9 @@ public class StatSystem extends IteratingSystem {
         }
 
         stats.recalculateCurrent();
+        if (characterComponent != null) {
+            characterComponent.character.affectStats(stats);
+        }
 
         if (!stats.getFlagStat(StatComponent.FlagStat.dead) &&
                 !stats.getFlagStat(StatComponent.FlagStat.invulnerable)) {

@@ -85,6 +85,11 @@ public class RenderSystem extends BaseEntitySystem {
 
         StatComponent stats = mapperStats.get(entityId);
         Decal decal = decalMap.get(entityId);
+        float stateTime = this.stateTime;
+        if (stats != null && render.renderState == RenderComponent.RenderState.ATTACK) {
+            stateTime = render.animations.get(RenderComponent.RenderState.ATTACK).getAnimationDuration()
+                    * (stats.getRuntimeStat(StatComponent.RuntimeStat.attackSpeedTimer) / (1 / stats.getCurrentStat(StatComponent.BaseStat.attackSpeed)));
+        }
         TextureRegion region = render.animations.get(render.renderState).getKeyFrame(stateTime);
         region.flip(region.isFlipX() ^ render.flipX, region.isFlipY() ^ render.flipY);
         decal.setTextureRegion(region);

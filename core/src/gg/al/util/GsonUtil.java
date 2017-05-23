@@ -20,7 +20,8 @@ public class GsonUtil {
     private static final Set<Class<? extends Template>> TEMPLATES = ImmutableSet.of(
             StatComponent.StatTemplate.class,
             PositionComponent.PositionTemplate.class,
-            RenderComponent.RenderTemplate.class
+            RenderComponent.RenderTemplate.class,
+            CharacterComponent.CharacterTemplate.class
     );
     private static Gson GSON;
 

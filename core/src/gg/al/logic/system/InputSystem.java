@@ -113,6 +113,8 @@ public class InputSystem extends IteratingSystem {
             } else {
                 input.targetId = -1;
                 stats.setRuntimeStat(StatComponent.RuntimeStat.attackSpeedTimer, 0);
+                if (renderComponent != null)
+                    renderComponent.renderState = RenderComponent.RenderState.IDLE;
             }
         }
 
