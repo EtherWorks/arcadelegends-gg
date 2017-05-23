@@ -49,6 +49,8 @@ public class RenderSystem extends BaseEntitySystem {
 
     private final ObjectMap<Integer, Decal> decalMap;
     private final ObjectMap<Integer, Decal> uiMap;
+    private final Array<Decal> tempDecals;
+
     private final DecalBatch decalBatch;
     private final AssetManager assetManager;
     private ComponentMapper<RenderComponent> mapperRender;
@@ -59,6 +61,7 @@ public class RenderSystem extends BaseEntitySystem {
     public RenderSystem(DecalBatch decalBatch, AssetManager assetManager, float worldDegree) {
         super(Aspect.all(RenderComponent.class, PositionComponent.class));
         decalMap = new ObjectMap<>();
+        tempDecals = new Array<>(100);
         uiMap = new ObjectMap<>();
         this.decalBatch = decalBatch;
         this.assetManager = assetManager;
@@ -98,7 +101,6 @@ public class RenderSystem extends BaseEntitySystem {
             decal.setPosition(physic.body.getPosition().x, physic.body.getPosition().y, decal.getZ());
         else
             decal.setPosition(position.position.x, position.position.y, decal.getZ());
-        decalBatch.add(decal);
 
         if (stats != null) {
             FrameBuffer buffer = buffers.get(entityId);
@@ -116,7 +118,6 @@ public class RenderSystem extends BaseEntitySystem {
                 uiDecal.setPosition(physic.body.getPosition().x + 2, physic.body.getPosition().y - 3, uiDecal.getZ());
             else
                 uiDecal.setPosition(position.position.x + 2, position.position.y - 3, uiDecal.getZ());
-            decalBatch.add(uiDecal);
         }
     }
 
@@ -185,5 +186,14 @@ public class RenderSystem extends BaseEntitySystem {
             buffs.next().dispose();
         spriteBatch.dispose();
         font.dispose();
+    }
+
+    public Array<Decal> getDecals() {
+        tempDecals.clear();
+        for (Decal decal : uiMap.values())
+            tempDecals.add(decal);
+        for (Decal decal : decalMap.values())
+            tempDecals.add(decal);
+        return tempDecals;
     }
 }

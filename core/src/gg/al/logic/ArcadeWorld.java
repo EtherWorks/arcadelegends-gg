@@ -169,14 +169,17 @@ public class ArcadeWorld implements Disposable {
 
         if (deltaAccumulator >= step) {
             physicsWorld.step(Math.min(delta, step), 6, 2);
+            entityWorld.setDelta(Math.min(delta, step));
+            entityWorld.process();
             deltaAccumulator -= step;
         }
         do {
             physicsWorld.step(Math.min(delta, step), 6, 2);
+            entityWorld.setDelta(Math.min(delta, step));
+            entityWorld.process();
             accumulator -= step;
         } while (accumulator >= step);
-        entityWorld.setDelta(Math.min(delta, step));
-        entityWorld.process();
+
         deltaAccumulator += accumulator;
     }
 
@@ -187,6 +190,8 @@ public class ArcadeWorld implements Disposable {
         mapRenderer.render();
         mapBuffer.end();
 
+        for(Decal decal : renderSystem.getDecals())
+            decalBatch.add(decal);
         decalBatch.add(mapDecal);
         decalBatch.flush();
 

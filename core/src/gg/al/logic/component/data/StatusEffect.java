@@ -32,8 +32,8 @@ public class StatusEffect {
 
     public void applyPercentage(StatComponent stats) {
         for (Map.Entry<StatComponent.BaseStat, Float> percentageChange : percentageStats.entrySet()) {
-            float value = stats.getBaseStat(percentageChange.getKey());
-            stats.setBaseStat(percentageChange.getKey(), value + value * percentageChange.getValue());
+            float value = stats.getCurrentStat(percentageChange.getKey());
+            stats.setCurrentStat(percentageChange.getKey(), value + value * percentageChange.getValue());
         }
     }
 

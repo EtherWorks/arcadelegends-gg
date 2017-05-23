@@ -194,7 +194,13 @@ public class StatComponent extends PooledComponent implements ITemplateable {
 
         cooldownReduction,
 
-        moveSpeed
+        moveSpeed,
+
+        cooldownAbility1,
+        cooldownAbility2,
+        cooldownAbility3,
+        cooldownAbility4,
+        cooldownPassive,
     }
 
     public enum RuntimeStat {
