@@ -217,19 +217,19 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
                 break;
             case Input.Keys.Q:
                 CharacterComponent characterComponent = arcadeWorld.getEntityWorld().getMapper(CharacterComponent.class).get(playerEnt);
-                characterComponent.character.castAbility1();
+                characterComponent.character.cast(1);
                 break;
             case Input.Keys.E:
                 characterComponent = arcadeWorld.getEntityWorld().getMapper(CharacterComponent.class).get(playerEnt);
-                characterComponent.character.castAbility2();
+                characterComponent.character.cast(2);
                 break;
             case Input.Keys.R:
                 characterComponent = arcadeWorld.getEntityWorld().getMapper(CharacterComponent.class).get(playerEnt);
-                characterComponent.character.castAbility3();
+                characterComponent.character.cast(3);
                 break;
             case Input.Keys.F:
                 characterComponent = arcadeWorld.getEntityWorld().getMapper(CharacterComponent.class).get(playerEnt);
-                characterComponent.character.castAbility4();
+                characterComponent.character.cast(4);
                 break;
         }
         camera.update();

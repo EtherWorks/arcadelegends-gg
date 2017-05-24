@@ -57,7 +57,22 @@
       "cooldownReduction_Growth": 0.0,
       "maxHealth_Growth": 0.0,
       "healthRegen_Growth": 0.0,
-      "armorPenetration_GrowthPercentage": 0.0
+      "armorPenetration_GrowthPercentage": 0.0,
+      "cooldownPassive_Base": 0.0,
+      "cooldownAbility1_Base": 6.0,
+      "cooldownAbility2_Base": 0.0,
+      "cooldownAbility3_Base": 0.0,
+      "cooldownAbility4_Base": 0.0,
+      "cooldownPassive_Growth": 0.0,
+      "cooldownAbility1_Growth": 0.0,
+      "cooldownAbility2_Growth": 0.0,
+      "cooldownAbility3_Growth": 0.0,
+      "cooldownAbility4_Growth": 0.0,
+      "cooldownPassive_GrowthPercentage": 0.0,
+      "cooldownAbility1_GrowthPercentage": 0.0,
+      "cooldownAbility2_GrowthPercentage": 0.0,
+      "cooldownAbility3_GrowthPercentage": 0.0,
+      "cooldownAbility4_GrowthPercentage": 0.0
     },
     "type": "StatTemplate"
   },

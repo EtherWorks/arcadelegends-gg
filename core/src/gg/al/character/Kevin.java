@@ -1,5 +1,6 @@
 package gg.al.character;
 
+
 import gg.al.logic.component.StatComponent;
 import gg.al.logic.component.data.StatusEffect;
 
@@ -8,43 +9,28 @@ import gg.al.logic.component.data.StatusEffect;
  */
 public class Kevin extends Character {
 
-    private StatusEffect effect;
+    private StatusEffect.StatusEffectBuilder effect = StatusEffect.builder().effectTime(2).percentageStat(StatComponent.BaseStat.attackSpeed, .6f);
+    private boolean abil1 = false;
 
     @Override
-    public void castAbility1() {
-    /*
-        PLAY ANIM
-        ON KEYPOINT
-        GET ENEMIES THREE TILES BEFORE
-        APPLY DAMAGE
-     */
-    }
-
-    @Override
-    public void castAbility2() {
-        effect = StatusEffect.builder().effectTime(2).percentageStat(StatComponent.BaseStat.attackSpeed, 1f).build();
-    }
-
-    @Override
-    public void castAbility3() {
+    protected void onTick(float delta) {
 
     }
 
     @Override
-    public void castAbility4() {
-
-    }
-
-    @Override
-    public void tick(float delta) {
-
+    protected void onCast(int abilityInd) {
+        switch (abilityInd) {
+            case ABILITY_1:
+                abil1 = true;
+                break;
+        }
     }
 
     @Override
     public void affectStats(StatComponent statComponent) {
-        if (effect != null) {
-            statComponent.statusEffects.put("KevBoost", effect);
-            effect = null;
+        if (abil1) {
+            statComponent.statusEffects.put("KevBoost", effect.build());
+            abil1 = false;
         }
     }
 }

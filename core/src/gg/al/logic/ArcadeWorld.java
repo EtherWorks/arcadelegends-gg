@@ -260,6 +260,8 @@ public class ArcadeWorld implements Disposable {
                         characterComponent.character = new Kevin();
                         break;
                 }
+                characterComponent.character.setEntityID(entityID);
+                characterComponent.character.setArcadeWorld(this);
             }
         }
         return entityID;
