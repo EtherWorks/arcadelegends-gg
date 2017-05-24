@@ -40,8 +40,11 @@ public class StatSystem extends IteratingSystem {
         for (ObjectMap.Values<StatusEffect> values = stats.statusEffects.values();
              values.hasNext(); ) {
             StatusEffect effect = values.next();
-            if (effect.effectTime == 0)
+            if (effect.effectTime == 0) {
+                if (effect.tickHandler != null)
+                    effect.tickHandler.onTick(getWorld().getDelta(), stats, effect);
                 continue;
+            }
             if (effect.remainingTime == -1)
                 effect.remainingTime = effect.effectTime;
 

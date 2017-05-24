@@ -8,7 +8,7 @@ import gg.al.logic.component.data.ITemplateable;
 import gg.al.logic.component.data.StatusEffect;
 import gg.al.logic.component.data.Template;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
@@ -269,13 +269,13 @@ public class StatComponent extends PooledComponent implements ITemplateable {
     }
 
     public class StatTemplate extends Template {
-        private Map<String, Float> values;
+        private LinkedHashMap<String, Float> values;
 
-        private Map<String, Float> customValues;
+        private LinkedHashMap<String, Float> customValues;
 
         public StatTemplate() {
-            this.values = new HashMap<>();
-            this.customValues = new HashMap<>();
+            this.values = new LinkedHashMap<>();
+            this.customValues = new LinkedHashMap<>();
             for (BaseStat baseStat : BaseStat.values()) {
                 values.put(baseStat.name() + DELIM + BASE, 0.0f);
                 values.put(baseStat.name() + DELIM + GROWTH, 0.0f);

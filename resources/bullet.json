@@ -1,0 +1,55 @@
+{
+  "PositionComponent": {
+    "x": 0,
+    "y": 0,
+    "type": "PositionTemplate"
+  },
+  "PhysicComponent": {
+    "bodyType": "KinematicBody",
+    "type": "PhysicTemplate"
+  },
+  "RenderComponent": {
+    "width": 0.0,
+    "height": 0.0,
+    "transparent": false,
+    "animationTemplates": {
+      "MOVE_UP": {
+        "frameColumns": 0,
+        "frameRows": 0,
+        "frameDuration": 0.0,
+        "texture": ""
+      },
+      "IDLE": {
+        "frameColumns": 0,
+        "frameRows": 0,
+        "frameDuration": 0.0,
+        "texture": ""
+      },
+      "TAUNT": {
+        "frameColumns": 0,
+        "frameRows": 0,
+        "frameDuration": 0.0,
+        "texture": ""
+      },
+      "MOVE_SIDE": {
+        "frameColumns": 0,
+        "frameRows": 0,
+        "frameDuration": 0.0,
+        "texture": ""
+      },
+      "MOVE_DOWN": {
+        "frameColumns": 0,
+        "frameRows": 0,
+        "frameDuration": 0.0,
+        "texture": ""
+      },
+      "ATTACK": {
+        "frameColumns": 0,
+        "frameRows": 0,
+        "frameDuration": 0.0,
+        "texture": ""
+      }
+    },
+    "type": "RenderTemplate"
+  }
+}

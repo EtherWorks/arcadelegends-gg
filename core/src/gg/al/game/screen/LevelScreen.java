@@ -205,7 +205,7 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
             case Input.Keys.O:
                 EntityArguments arguments = null;
                 try {
-                    arguments = EntityArguments.fromFile("player.json");
+                    arguments = arcadeWorld.getArguments("player.json");
                     int id = arcadeWorld.spawn(Entities.Player, arguments);
                     statComponent = arcadeWorld.getEntityWorld().getMapper(StatComponent.class).get(id);
                     statComponent.setFlag(StatComponent.FlagStat.deleteOnDeath, true);
@@ -254,13 +254,17 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
         switch (button) {
             case Input.Buttons.LEFT:
                 if (playerEnt == -1) {
-                    EntityArguments arguments = null;
+                    EntityArguments arguments;
                     try {
-                        arguments = EntityArguments.fromFile("player.json");
+                        arguments = arcadeWorld.getArguments("player.json");
                         PositionComponent.PositionTemplate positionDef = arguments.get("PositionComponent", PositionComponent.PositionTemplate.class);
+                        int posX = positionDef.x;
+                        int posY = positionDef.y;
                         positionDef.x = (int) mapCoord.x;
                         positionDef.y = (int) mapCoord.y;
                         playerEnt = arcadeWorld.spawn(Entities.Player, arguments);
+                        positionDef.x = posX;
+                        positionDef.y = posY;
                     } catch (IOException e) {
                         log.error("Couldn´t load player", e);
                     }

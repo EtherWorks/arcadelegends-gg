@@ -16,10 +16,11 @@ public class Kevin extends Character {
 
     public float ABILITY_2_RANGE = 1.5f;
     public float ABILITY_4_BOOST = .6f;
-
+    public String BLEED_NAME = "KevBleed";
+    public String BOOST_NAME = "KevBoost";
 
     private StatusEffect.StatusEffectBuilder boost = StatusEffect.builder()
-            .effectTime(2)
+            .effectTime(0)
             .percentageStat(StatComponent.BaseStat.attackSpeed, ABILITY_4_BOOST)
             .percentageStat(StatComponent.BaseStat.armor, -.5f);
     private StatusEffect.StatusEffectBuilder bleed = StatusEffect.builder()
@@ -59,7 +60,7 @@ public class Kevin extends Character {
                 if (checkRange(entityID, controlComponent.targetId, ABILITY_2_RANGE)) {
                     StatComponent statComponent = getComponent(controlComponent.targetId, StatComponent.class);
                     statComponent.damages.add(new Damage(Damage.DamageType.True, 10 + casterStat.getCurrentStat(StatComponent.BaseStat.spellPower) * .4f, 0));
-                    statComponent.statusEffects.put("KevBleed", bleed.tickHandler(
+                    statComponent.statusEffects.put(BLEED_NAME, bleed.tickHandler(
                             new StatusEffect.TickHandler() {
                                 private float time;
 
@@ -89,7 +90,10 @@ public class Kevin extends Character {
     @Override
     public void affectStats(StatComponent statComponent) {
         if (ability4_activate) {
-            statComponent.statusEffects.put("KevBoost", boost.build());
+            if (statComponent.statusEffects.containsKey(BOOST_NAME))
+                statComponent.statusEffects.remove(BOOST_NAME);
+            else
+                statComponent.statusEffects.put(BOOST_NAME, boost.build());
             ability4_activate = false;
         }
     }

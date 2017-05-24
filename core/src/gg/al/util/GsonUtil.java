@@ -1,7 +1,6 @@
 package gg.al.util;
 
 import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Sets;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -10,7 +9,7 @@ import gg.al.logic.component.data.Template;
 import io.gsonfire.GsonFireBuilder;
 import io.gsonfire.PostProcessor;
 
-import java.util.*;
+import java.util.Set;
 
 /**
  * Created by Thomas Neumann on 26.04.2017.<br />
@@ -21,7 +20,8 @@ public class GsonUtil {
             StatComponent.StatTemplate.class,
             PositionComponent.PositionTemplate.class,
             RenderComponent.RenderTemplate.class,
-            CharacterComponent.CharacterTemplate.class
+            CharacterComponent.CharacterTemplate.class,
+            PhysicComponent.PhysicTemplate.class
     );
     private static Gson GSON;
 

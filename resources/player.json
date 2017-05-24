@@ -102,6 +102,10 @@
     "characterName": "Kevin",
     "type": "CharacterTemplate"
   },
+  "PhysicComponent": {
+    "bodyType": "DynamicBody",
+    "type": "PhysicTemplate"
+  },
   "RenderComponent": {
     "width": 3.0,
     "height": 3.0,

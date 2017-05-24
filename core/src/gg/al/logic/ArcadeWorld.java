@@ -32,49 +32,44 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Created by Thomas Neumann on 23.03.2017.<br />
  */
 @Slf4j
 public class ArcadeWorld implements Disposable {
     @Getter
+    private final Map<String, EntityArguments> loadedEntityArguments;
+    @Getter
     private World physicsWorld;
     private Box2DDebugRenderer debugPhysicrender;
-
     @Getter
     private EntityWorld entityWorld;
-
     @Getter
     private TiledMap tiledMap;
     @Getter
     private int mapWidth, mapHeight, mapTileHeight, mapTileWidth;
     @Getter
     private float worldViewRotation;
-
     @Getter
     @Setter
     private float delta;
-
     private float deltaAccumulator;
-
-
     private FrameBuffer mapBuffer;
     private OrthogonalTiledMapRenderer mapRenderer;
     private Decal mapDecal;
-
     private DecalBatch decalBatch;
     private RenderSystem renderSystem;
-
     @Getter
     private Plane mapHitbox;
-
     @Getter
     @Setter
     private Camera cam;
-
     @Getter
     private float step = 1.0f / 60;
-
     @Getter
     private LogicMap logicMap;
 
@@ -82,7 +77,7 @@ public class ArcadeWorld implements Disposable {
         this.tiledMap = map;
         this.worldViewRotation = worldViewRotation;
         this.cam = cam;
-
+        this.loadedEntityArguments = new HashMap<>();
         this.mapWidth = map.getProperties().get("width", Integer.class);
         this.mapHeight = map.getProperties().get("height", Integer.class);
         this.mapTileWidth = map.getProperties().get("tilewidth", Integer.class);
@@ -189,7 +184,7 @@ public class ArcadeWorld implements Disposable {
         mapRenderer.render();
         mapBuffer.end();
 
-        for(Decal decal : renderSystem.getDecals())
+        for (Decal decal : renderSystem.getDecals())
             decalBatch.add(decal);
         decalBatch.add(mapDecal);
         decalBatch.flush();
@@ -232,9 +227,10 @@ public class ArcadeWorld implements Disposable {
                 PositionComponent.PositionTemplate pos = arguments.get("PositionComponent", PositionComponent.PositionTemplate.class);
                 controlComponent.move.set(pos.x, pos.y);
             } else if (PhysicComponent.class.isAssignableFrom(componentType)) {
+                PhysicComponent.PhysicTemplate physicTemplate = arguments.get(PhysicComponent.class.getSimpleName(), PhysicComponent.PhysicTemplate.class);
                 PhysicComponent physicComponent = entityWorld.getMapper(PhysicComponent.class).get(entityID);
                 BodyDef bodyDef = new BodyDef();
-                bodyDef.type = BodyDef.BodyType.DynamicBody;
+                bodyDef.type = physicTemplate.bodyType;
                 PositionComponent.PositionTemplate pos = arguments.get("PositionComponent", PositionComponent.PositionTemplate.class);
                 bodyDef.position.set(pos.x, pos.y);
                 Body body = physicsWorld.createBody(bodyDef);
@@ -249,12 +245,10 @@ public class ArcadeWorld implements Disposable {
                 shape.dispose();
                 body.setUserData(entityID);
                 physicComponent.body = body;
-            }
-            else if (CharacterComponent.class.isAssignableFrom(componentType)) {
-               //set character
+            } else if (CharacterComponent.class.isAssignableFrom(componentType)) {
+                //set character
                 CharacterComponent characterComponent = entityWorld.getMapper(CharacterComponent.class).get(entityID);
-                switch (arguments.get(CharacterComponent.class.getSimpleName(), CharacterComponent.CharacterTemplate.class).characterName)
-                {
+                switch (arguments.get(CharacterComponent.class.getSimpleName(), CharacterComponent.CharacterTemplate.class).characterName) {
                     case "Kevin":
                         characterComponent.character = new Kevin();
                         break;
@@ -275,5 +269,17 @@ public class ArcadeWorld implements Disposable {
         position.tile.removeEntity(id);
 
         entityWorld.delete(id);
+    }
+
+    public EntityArguments loadArguments(String fileName) throws IOException {
+        EntityArguments arguments = EntityArguments.fromFile(fileName);
+        loadedEntityArguments.put(fileName, arguments);
+        return arguments;
+    }
+
+    public EntityArguments getArguments(String fileName) throws IOException {
+        if (!loadedEntityArguments.containsKey(fileName))
+            return loadArguments(fileName);
+        return loadedEntityArguments.get(fileName);
     }
 }
