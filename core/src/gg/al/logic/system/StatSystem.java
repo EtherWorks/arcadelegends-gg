@@ -3,11 +3,10 @@ package gg.al.logic.system;
 import com.artemis.Aspect;
 import com.artemis.ComponentMapper;
 import com.artemis.systems.IteratingSystem;
-import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.ObjectMap;
-import gg.al.character.Character;
 import gg.al.logic.ArcadeWorld;
-import gg.al.logic.component.*;
+import gg.al.logic.component.CharacterComponent;
+import gg.al.logic.component.StatComponent;
 import gg.al.logic.component.data.Damage;
 import gg.al.logic.component.data.StatusEffect;
 
@@ -31,8 +30,8 @@ public class StatSystem extends IteratingSystem {
         StatComponent stats = mapperStatComponent.get(entityId);
         CharacterComponent characterComponent = mapperCharacterComponent.get(entityId);
 
-        if (stats.getFlagStat(StatComponent.FlagStat.dead)) {
-            if (stats.getFlagStat(StatComponent.FlagStat.deleteOnDeath)) {
+        if (stats.getFlag(StatComponent.FlagStat.dead)) {
+            if (stats.getFlag(StatComponent.FlagStat.deleteOnDeath)) {
                 arcadeWorld.delete(entityId);
             }
             return;
@@ -50,6 +49,8 @@ public class StatSystem extends IteratingSystem {
                 values.remove();
             } else {
                 effect.remainingTime -= getWorld().getDelta();
+                if (effect.tickHandler != null)
+                    effect.tickHandler.onTick(getWorld().getDelta(), stats, effect);
             }
         }
 
@@ -58,8 +59,8 @@ public class StatSystem extends IteratingSystem {
             characterComponent.character.affectStats(stats);
         }
 
-        if (!stats.getFlagStat(StatComponent.FlagStat.dead) &&
-                !stats.getFlagStat(StatComponent.FlagStat.invulnerable)) {
+        if (!stats.getFlag(StatComponent.FlagStat.dead) &&
+                !stats.getFlag(StatComponent.FlagStat.invulnerable)) {
 
             for (Damage damage : stats.damages) {
                 float amount = damage.amount;
@@ -79,7 +80,7 @@ public class StatSystem extends IteratingSystem {
                     stats.setRuntimeStat(StatComponent.RuntimeStat.health, 0);
                     stats.setRuntimeStat(StatComponent.RuntimeStat.resource, 0);
                     stats.setRuntimeStat(StatComponent.RuntimeStat.actionPoints, 0);
-                    stats.setFlagStat(StatComponent.FlagStat.dead, true);
+                    stats.setFlag(StatComponent.FlagStat.dead, true);
                 } else
                     stats.addRuntimeStat(StatComponent.RuntimeStat.health, -amount);
                 stats.damages.removeValue(damage, true);

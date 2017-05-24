@@ -41,7 +41,7 @@ import java.util.HashMap;
 @Slf4j
 /**
  * Created by Patrick Windegger on 16.03.2017.
- * Class responsible for the different Settings (Video, Audio, InputComponent) in the game
+ * Class responsible for the different Settings (Video, Audio, ControlComponent) in the game
  */
 public class SettingsScreen implements IAssetScreen, InputProcessor {
 
@@ -103,7 +103,7 @@ public class SettingsScreen implements IAssetScreen, InputProcessor {
         btTabAudio.setSize(300, 50);
         tabbedPane.addTab(btTabAudio);
 
-        btTabInput = new TextButton("InputComponent", skin);
+        btTabInput = new TextButton("ControlComponent", skin);
         btTabInput.setSize(300, 50);
         btTabInput.addListener(new ClickListener() {
             @Override

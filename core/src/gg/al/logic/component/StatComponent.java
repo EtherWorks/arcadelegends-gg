@@ -20,37 +20,43 @@ public class StatComponent extends PooledComponent implements ITemplateable {
     private final static String BASE = "Base";
     private final static String GROWTH = "Growth";
     private final static String GROWTH_PERCENTAGE = "GrowthPercentage";
-
-    private final ObjectMap<FlagStat, Boolean> flagStats;
+    public final ObjectMap<String, StatusEffect> statusEffects;
+    public final Array<Damage> damages;
+    private final ObjectMap<FlagStat, Boolean> flags;
     private final ObjectMap<RuntimeStat, Float> runtimeStats;
-    private final ObjectMap<BaseStat, Float> currentStat;
+    private final ObjectMap<BaseStat, Float> currentStats;
     private final ObjectMap<BaseStat, Float> baseStats;
     private final ObjectMap<BaseStat, Float> growthStats;
     private final ObjectMap<BaseStat, Float> growthPercentageStats;
-    public final ObjectMap<String, StatusEffect> statusEffects;
-    public final Array<Damage> damages;
+    private final ObjectMap<String, Float> customStats;
+    private final ObjectMap<String, Boolean> customFlags;
 
     public StatComponent() {
         runtimeStats = new ObjectMap<>();
-        currentStat = new ObjectMap<>();
-        flagStats = new ObjectMap<>();
+        currentStats = new ObjectMap<>();
+        flags = new ObjectMap<>();
         baseStats = new ObjectMap<>();
         growthStats = new ObjectMap<>();
         growthPercentageStats = new ObjectMap<>();
         statusEffects = new ObjectMap<>();
         damages = new Array<>();
+
+        customStats = new ObjectMap<>();
+        customFlags = new ObjectMap<>();
     }
 
     @Override
     protected void reset() {
         runtimeStats.clear();
-        currentStat.clear();
-        flagStats.clear();
+        currentStats.clear();
+        flags.clear();
         baseStats.clear();
         growthStats.clear();
         growthPercentageStats.clear();
         statusEffects.clear();
         damages.clear();
+        customFlags.clear();
+        customStats.clear();
     }
 
     public void recalculateCurrent() {
@@ -58,7 +64,7 @@ public class StatComponent extends PooledComponent implements ITemplateable {
             float value = baseStats.get(stat);
             value += runtimeStats.get(RuntimeStat.level) * growthStats.get(stat);
             value += value * growthPercentageStats.get(stat);
-            currentStat.put(stat, value);
+            currentStats.put(stat, value);
         }
         for (StatusEffect effect : statusEffects.values()) {
             effect.applyValue(this);
@@ -68,12 +74,33 @@ public class StatComponent extends PooledComponent implements ITemplateable {
         }
     }
 
-    public void setFlagStat(FlagStat stat, boolean flag) {
-        flagStats.put(stat, flag);
+    public void setCustomStat(String stat, float value) {
+        this.customStats.put(stat, value);
     }
 
-    public boolean getFlagStat(FlagStat stat) {
-        return flagStats.get(stat);
+    public void addCustomStat(String stat, float value) {
+        this.customStats.put(stat, this.customStats.get(stat) + value);
+    }
+
+    public float getCustomStat(String stat) {
+        return customStats.get(stat);
+    }
+
+    public void setCustomFlag(String stat, boolean flag) {
+        customFlags.put(stat, flag);
+    }
+
+    public boolean getCustomFlag(String stat) {
+        return customFlags.get(stat);
+    }
+
+
+    public void setFlag(FlagStat stat, boolean flag) {
+        flags.put(stat, flag);
+    }
+
+    public boolean getFlag(FlagStat stat) {
+        return flags.get(stat);
     }
 
 
@@ -91,15 +118,15 @@ public class StatComponent extends PooledComponent implements ITemplateable {
     }
 
     public void setCurrentStat(BaseStat stat, float value) {
-        currentStat.put(stat, value);
+        currentStats.put(stat, value);
     }
 
     public void addCurrentStat(BaseStat stat, float value) {
-        currentStat.put(stat, currentStat.get(stat) + value);
+        currentStats.put(stat, currentStats.get(stat) + value);
     }
 
     public float getCurrentStat(BaseStat stat) {
-        return currentStat.get(stat);
+        return currentStats.get(stat);
     }
 
     public void setBaseStat(BaseStat stat, float value) {
@@ -140,7 +167,7 @@ public class StatComponent extends PooledComponent implements ITemplateable {
         }
 
         for (FlagStat flagStat : FlagStat.values()) {
-            this.flagStats.put(flagStat, false);
+            this.flags.put(flagStat, false);
         }
 
         for (Map.Entry<String, Float> key : statTemplate.getValues().entrySet()) {
@@ -149,7 +176,7 @@ public class StatComponent extends PooledComponent implements ITemplateable {
             switch (parts[1]) {
                 case BASE:
                     baseStats.put(stat, key.getValue());
-                    currentStat.put(stat, key.getValue());
+                    currentStats.put(stat, key.getValue());
                     break;
                 case GROWTH:
                     growthStats.put(stat, key.getValue());
@@ -160,9 +187,28 @@ public class StatComponent extends PooledComponent implements ITemplateable {
             }
         }
 
+        for (Map.Entry<String, Float> key : statTemplate.getCustomValues().entrySet()) {
+            customStats.put(key.getKey(), key.getValue());
+        }
+
         this.setRuntimeStat(RuntimeStat.health, getBaseStat(BaseStat.maxHealth));
         this.setRuntimeStat(RuntimeStat.resource, getBaseStat(BaseStat.maxResource));
         this.setRuntimeStat(RuntimeStat.actionPoints, getBaseStat(BaseStat.maxActionPoints));
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder();
+        for (RuntimeStat stat : RuntimeStat.values()) {
+            builder.append(stat.name()).append(": ").append(String.format("%1.2f", runtimeStats.get(stat))).append("\n");
+        }
+        for (BaseStat stat : BaseStat.values()) {
+            builder.append(stat.name()).append(": ").append(String.format("%1.2f", currentStats.get(stat))).append("\n");
+        }
+        for (FlagStat stat : FlagStat.values()) {
+            builder.append(stat.name()).append(": ").append(flags.get(stat)).append("\n");
+        }
+        return builder.toString();
     }
 
     public enum BaseStat {
@@ -200,7 +246,13 @@ public class StatComponent extends PooledComponent implements ITemplateable {
         cooldownAbility2,
         cooldownAbility3,
         cooldownAbility4,
-        cooldownPassive,
+        cooldownTrait,
+
+        costAbility1,
+        costAbility2,
+        costAbility3,
+        costAbility4,
+        costTrait
     }
 
     public enum RuntimeStat {
@@ -216,26 +268,14 @@ public class StatComponent extends PooledComponent implements ITemplateable {
         dead, deleteOnDeath, invulnerable
     }
 
-    @Override
-    public String toString() {
-        StringBuilder builder = new StringBuilder();
-        for (RuntimeStat stat : RuntimeStat.values()) {
-            builder.append(stat.name()).append(": ").append(String.format("%1.2f", runtimeStats.get(stat))).append("\n");
-        }
-        for (BaseStat stat : BaseStat.values()) {
-            builder.append(stat.name()).append(": ").append(String.format("%1.2f", currentStat.get(stat))).append("\n");
-        }
-        for (FlagStat stat : FlagStat.values()) {
-            builder.append(stat.name()).append(": ").append(flagStats.get(stat)).append("\n");
-        }
-        return builder.toString();
-    }
-
     public class StatTemplate extends Template {
         private Map<String, Float> values;
 
+        private Map<String, Float> customValues;
+
         public StatTemplate() {
             this.values = new HashMap<>();
+            this.customValues = new HashMap<>();
             for (BaseStat baseStat : BaseStat.values()) {
                 values.put(baseStat.name() + DELIM + BASE, 0.0f);
                 values.put(baseStat.name() + DELIM + GROWTH, 0.0f);
@@ -245,6 +285,10 @@ public class StatComponent extends PooledComponent implements ITemplateable {
 
         public Map<String, Float> getValues() {
             return values;
+        }
+
+        public Map<String, Float> getCustomValues() {
+            return customValues;
         }
     }
 

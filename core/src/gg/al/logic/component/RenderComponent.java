@@ -17,22 +17,27 @@ import java.util.Map;
  */
 public class RenderComponent extends PooledComponent implements ITemplateable {
 
+    public final ObjectMap<RenderState, AssetDescriptor<Texture>> textures;
+    public final ObjectMap<RenderState, Animation<TextureRegion>> animations;
     public RenderTemplate renderTemplate;
-
     public float width;
     public float height;
     public boolean transparent;
     public boolean flipX;
     public boolean flipY;
-
     public RenderState renderState;
-
-    public final ObjectMap<RenderState, AssetDescriptor<Texture>> textures;
-    public final ObjectMap<RenderState, Animation<TextureRegion>> animations;
 
     public RenderComponent() {
         textures = new ObjectMap<>();
         animations = new ObjectMap<>();
+    }
+
+    public boolean facingRight() {
+        return !flipX;
+    }
+
+    public boolean facingLeft() {
+        return flipX;
     }
 
     @Override

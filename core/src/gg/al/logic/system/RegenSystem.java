@@ -16,11 +16,22 @@ public class RegenSystem extends IntervalIteratingSystem {
         super(Aspect.all(StatComponent.class), interval);
     }
 
+    private static void regen(StatComponent stats, StatComponent.RuntimeStat stat, StatComponent.BaseStat regen, StatComponent.BaseStat max, float interval) {
+        if (stats.getRuntimeStat(stat) +
+                stats.getCurrentStat(regen) *
+                        interval <= stats.getCurrentStat(max))
+            stats.addRuntimeStat(stat,
+                    stats.getCurrentStat(regen) * interval);
+        else
+            stats.setRuntimeStat(stat,
+                    stats.getCurrentStat(max));
+    }
+
     @Override
     protected void process(int entityId) {
         StatComponent stats = mapperStatComponent.get(entityId);
         float interval = getIntervalDelta();
-        if (stats.getFlagStat(StatComponent.FlagStat.dead))
+        if (stats.getFlag(StatComponent.FlagStat.dead))
             return;
 
         regen(stats, StatComponent.RuntimeStat.actionPoints,
@@ -38,16 +49,5 @@ public class RegenSystem extends IntervalIteratingSystem {
                 StatComponent.BaseStat.maxResource,
                 interval);
 
-    }
-
-    private static void regen(StatComponent stats, StatComponent.RuntimeStat stat, StatComponent.BaseStat regen, StatComponent.BaseStat max, float interval) {
-        if (stats.getRuntimeStat(stat) +
-                stats.getCurrentStat(regen) *
-                        interval <= stats.getCurrentStat(max))
-            stats.addRuntimeStat(stat,
-                    stats.getCurrentStat(regen) * interval);
-        else
-            stats.setRuntimeStat(stat,
-                    stats.getCurrentStat(max));
     }
 }

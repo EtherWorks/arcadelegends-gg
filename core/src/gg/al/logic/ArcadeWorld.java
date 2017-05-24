@@ -28,7 +28,6 @@ import gg.al.logic.entity.EntityWorld;
 import gg.al.logic.map.LogicMap;
 import gg.al.logic.map.Tile;
 import gg.al.logic.system.*;
-import gg.al.util.Assets;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -121,7 +120,7 @@ public class ArcadeWorld implements Disposable {
                 .with(0,
                         new PhysicPositionSystem(),
                         new PositionTileSystem(logicMap),
-                        new InputSystem(physicsWorld),
+                        new ControlSystem(physicsWorld),
                         renderSystem = new RenderSystem(decalBatch, AL.getAssetManager(), worldViewRotation)
                 )
                 .build();
@@ -132,8 +131,8 @@ public class ArcadeWorld implements Disposable {
             public void beginContact(Contact contact) {
                 int entityIdA = (int) contact.getFixtureA().getBody().getUserData();
                 int entityIdB = (int) contact.getFixtureB().getBody().getUserData();
-                InputComponent inputA = entityWorld.getMapper(InputComponent.class).get(entityIdA);
-                InputComponent inputB = entityWorld.getMapper(InputComponent.class).get(entityIdB);
+                ControlComponent inputA = entityWorld.getMapper(ControlComponent.class).get(entityIdA);
+                ControlComponent inputB = entityWorld.getMapper(ControlComponent.class).get(entityIdB);
 
                 if (inputA != null && inputB != null) {
                     PositionComponent positionA = entityWorld.getMapper(PositionComponent.class).get(entityIdA);
@@ -228,10 +227,10 @@ public class ArcadeWorld implements Disposable {
             } else if (RenderComponent.class.isAssignableFrom(componentType)) {
                 RenderComponent renderComponent = entityWorld.getMapper(RenderComponent.class).get(entityID);
                 renderComponent.fromTemplate((Template) arguments.get(RenderComponent.class.getSimpleName()));
-            } else if (InputComponent.class.isAssignableFrom(componentType)) {
-                InputComponent inputComponent = entityWorld.getMapper(InputComponent.class).get(entityID);
+            } else if (ControlComponent.class.isAssignableFrom(componentType)) {
+                ControlComponent controlComponent = entityWorld.getMapper(ControlComponent.class).get(entityID);
                 PositionComponent.PositionTemplate pos = arguments.get("PositionComponent", PositionComponent.PositionTemplate.class);
-                inputComponent.move.set(pos.x, pos.y);
+                controlComponent.move.set(pos.x, pos.y);
             } else if (PhysicComponent.class.isAssignableFrom(componentType)) {
                 PhysicComponent physicComponent = entityWorld.getMapper(PhysicComponent.class).get(entityID);
                 BodyDef bodyDef = new BodyDef();

@@ -1,15 +1,8 @@
 package gg.al.logic.entity;
 
 import com.artemis.Component;
-import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.*;
-import gg.al.exception.EntityException;
-import gg.al.logic.ArcadeWorld;
-import gg.al.logic.component.*;
-import gg.al.logic.component.data.Template;
 import gg.al.logic.component.data.ITemplateable;
-import gg.al.logic.component.data.IPhysic;
-import gg.al.logic.map.Tile;
+import gg.al.logic.component.data.Template;
 import gg.al.util.GsonUtil;
 
 import java.io.File;
@@ -56,7 +49,7 @@ public class EntityUtil {
 //                Stats stats = entityWorld.getComponentOf(id, Stats.class);
 //                RenderComponent render = entityWorld.getComponentOf(id, RenderComponent.class);
 //                DynamicPhysic dynamicPhysic = entityWorld.getComponentOf(id, DynamicPhysic.class);
-//                InputComponent input = entityWorld.getComponentOf(id, InputComponent.class);
+//                ControlComponent input = entityWorld.getComponentOf(id, ControlComponent.class);
 //                Abilities abilities = entityWorld.getComponentOf(id, Abilities.class);
 //
 //                setup(abilities, arguments);
@@ -98,7 +91,7 @@ public class EntityUtil {
 //        abilities.fromDef(arguments.get("Abilities", Abilities.AbilitiesTemplate.class));
 //    }
 //
-//    private static void setup(int entityId, InputComponent input, ArcadeWorld arcadeWorld, EntityArguments arguments) {
+//    private static void setup(int entityId, ControlComponent input, ArcadeWorld arcadeWorld, EntityArguments arguments) {
 //        PositionComponent.PositionTemplate pos = arguments.get("PositionComponent", PositionComponent.PositionTemplate.class);
 //        input.move.set(pos.x, pos.y);
 //    }

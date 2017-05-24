@@ -14,19 +14,19 @@ import lombok.extern.slf4j.Slf4j;
  * Created by Thomas Neumann on 30.03.2017.<br />
  */
 @Slf4j
-public class InputSystem extends IteratingSystem {
+public class ControlSystem extends IteratingSystem {
 
     private final World world;
     private ComponentMapper<PositionComponent> mapperPosition;
-    private ComponentMapper<InputComponent> mapperInput;
+    private ComponentMapper<ControlComponent> mapperInput;
     private ComponentMapper<PhysicComponent> mapperPhysicComponent;
     private ComponentMapper<StatComponent> mapperStatComponent;
     private ComponentMapper<RenderComponent> mapperRenderComponent;
 
     private Pool<Vector2> vectorPool;
 
-    public InputSystem(World world) {
-        super(Aspect.all(InputComponent.class, PositionComponent.class, PhysicComponent.class, StatComponent.class));
+    public ControlSystem(World world) {
+        super(Aspect.all(ControlComponent.class, PositionComponent.class, PhysicComponent.class, StatComponent.class));
         this.world = world;
         vectorPool = new Pool<Vector2>() {
             @Override
@@ -45,13 +45,13 @@ public class InputSystem extends IteratingSystem {
     @Override
     protected void process(int entityId) {
         PositionComponent pos = mapperPosition.get(entityId);
-        InputComponent input = mapperInput.get(entityId);
+        ControlComponent input = mapperInput.get(entityId);
         StatComponent stats = mapperStatComponent.get(entityId);
         PhysicComponent physicComponent = mapperPhysicComponent.get(entityId);
         RenderComponent renderComponent = mapperRenderComponent.get(entityId);
 
 
-        if (input.move.dst(pos.position) != 0 && physicComponent.body.getLinearVelocity().equals(Vector2.Zero) && !stats.getFlagStat(StatComponent.FlagStat.dead)) {
+        if (input.move.dst(pos.position) != 0 && physicComponent.body.getLinearVelocity().equals(Vector2.Zero) && !stats.getFlag(StatComponent.FlagStat.dead)) {
             if (stats.getRuntimeStat(StatComponent.RuntimeStat.actionPoints) >= 1 && (renderComponent == null || renderComponent.renderState == RenderComponent.RenderState.IDLE
                     || renderComponent.renderState == RenderComponent.RenderState.ATTACK)) {
                 //anfangen sich zu bewegen

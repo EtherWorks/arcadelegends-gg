@@ -6,7 +6,7 @@ import com.badlogic.gdx.math.Vector2;
 /**
  * Created by Thomas Neumann on 30.03.2017.<br />
  */
-public class InputComponent extends PooledComponent {
+public class ControlComponent extends PooledComponent {
 
     public final Vector2 move;
     public final Vector2 stepMove;
@@ -15,7 +15,7 @@ public class InputComponent extends PooledComponent {
 
     public int targetId;
 
-    public InputComponent() {
+    public ControlComponent() {
         move = new Vector2();
         stepMove = new Vector2();
         startToEnd = new Vector2();

@@ -23,6 +23,8 @@ public class StatusEffect {
     @Singular
     public Map<StatComponent.BaseStat, Float> percentageStats = new HashMap<>();
 
+    public TickHandler tickHandler;
+
 
     public void applyValue(StatComponent stats) {
         for (Map.Entry<StatComponent.BaseStat, Float> flatChange : flatStats.entrySet()) {
@@ -37,5 +39,8 @@ public class StatusEffect {
         }
     }
 
-
+    @FunctionalInterface
+    public interface TickHandler {
+        void onTick(float delta, StatComponent statComponent, StatusEffect effect);
+    }
 }

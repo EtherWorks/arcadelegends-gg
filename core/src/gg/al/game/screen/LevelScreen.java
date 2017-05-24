@@ -23,14 +23,12 @@ import gg.al.logic.component.data.Damage;
 import gg.al.logic.component.data.StatusEffect;
 import gg.al.logic.entity.Entities;
 import gg.al.logic.entity.EntityArguments;
-import gg.al.logic.entity.EntityUtil;
 import gg.al.logic.map.Tile;
 import gg.al.util.Assets;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -157,7 +155,7 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
                 camera.translate(0, 1, 0);
                 break;
             case Input.Keys.W:
-                InputComponent input = arcadeWorld.getEntityWorld().getComponentOf(playerEnt, InputComponent.class);
+                ControlComponent input = arcadeWorld.getEntityWorld().getComponentOf(playerEnt, ControlComponent.class);
 
                 PositionComponent position = arcadeWorld.getEntityWorld().getComponentOf(playerEnt, PositionComponent.class);
                 if (!input.move.equals(position.position))
@@ -165,7 +163,7 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
                 input.move.set(position.position.x, position.position.y + 1);
                 break;
             case Input.Keys.S:
-                input = arcadeWorld.getEntityWorld().getComponentOf(playerEnt, InputComponent.class);
+                input = arcadeWorld.getEntityWorld().getComponentOf(playerEnt, ControlComponent.class);
 
                 position = arcadeWorld.getEntityWorld().getComponentOf(playerEnt, PositionComponent.class);
                 if (!input.move.equals(position.position))
@@ -173,7 +171,7 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
                 input.move.set(position.position.x, position.position.y - 1);
                 break;
             case Input.Keys.A:
-                input = arcadeWorld.getEntityWorld().getComponentOf(playerEnt, InputComponent.class);
+                input = arcadeWorld.getEntityWorld().getComponentOf(playerEnt, ControlComponent.class);
 
                 position = arcadeWorld.getEntityWorld().getComponentOf(playerEnt, PositionComponent.class);
                 if (!input.move.equals(position.position))
@@ -181,7 +179,7 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
                 input.move.set(position.position.x - 1, position.position.y);
                 break;
             case Input.Keys.D:
-                input = arcadeWorld.getEntityWorld().getComponentOf(playerEnt, InputComponent.class);
+                input = arcadeWorld.getEntityWorld().getComponentOf(playerEnt, ControlComponent.class);
                 position = arcadeWorld.getEntityWorld().getComponentOf(playerEnt, PositionComponent.class);
                 if (!input.move.equals(position.position))
                     break;
@@ -210,7 +208,7 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
                     arguments = EntityArguments.fromFile("player.json");
                     int id = arcadeWorld.spawn(Entities.Player, arguments);
                     statComponent = arcadeWorld.getEntityWorld().getMapper(StatComponent.class).get(id);
-                    statComponent.setFlagStat(StatComponent.FlagStat.deleteOnDeath, true);
+                    statComponent.setFlag(StatComponent.FlagStat.deleteOnDeath, true);
                 } catch (IOException e) {
                     log.error("Couldn´t load player", e);
                 }
@@ -267,7 +265,7 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
                         log.error("Couldn´t load player", e);
                     }
                 } else {
-                    InputComponent input = arcadeWorld.getEntityWorld().getComponentOf(playerEnt, InputComponent.class);
+                    ControlComponent input = arcadeWorld.getEntityWorld().getComponentOf(playerEnt, ControlComponent.class);
                     input.move.set((int) mapCoord.x, (int) mapCoord.y);
                 }
                 break;
@@ -275,7 +273,7 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
                 Tile t = arcadeWorld.getTile(mapCoord);
                 try {
                     int id = t.getEntities().first();
-                    InputComponent input = arcadeWorld.getEntityWorld().getMapper(InputComponent.class).get(playerEnt);
+                    ControlComponent input = arcadeWorld.getEntityWorld().getMapper(ControlComponent.class).get(playerEnt);
                     input.targetId = id;
                     log.debug("{}", id);
                 } catch (IllegalStateException ex) {
