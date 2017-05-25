@@ -8,14 +8,24 @@ public interface IInputConfig {
     String PREFIX = "input";
 
     int up();
+
     int down();
+
     int left();
+
     int right();
+
     int ability1();
+
     int ability2();
+
     int ability3();
+
     int ability4();
+
     int inventory();
+
+    int trait();
 
 
     enum InputKeys implements IConfigKey {
@@ -27,9 +37,8 @@ public interface IInputConfig {
         ability2("0"),
         ability3("0"),
         ability4("0"),
-        inventory("0")
-
-        ;
+        inventory("0"),
+        trait("0");
 
         private final String defaultValue;
 
@@ -53,18 +62,29 @@ public interface IInputConfig {
         }
 
         public static int getFromKey(InputKeys key, IInputConfig cfg) {
-            switch (key)
-            {
-                case up: return cfg.up();
-                case down: return cfg.down();
-                case left: return cfg.left();
-                case right: return cfg.right();
-                case ability1: return cfg.ability1();
-                case ability2: return cfg.ability2();
-                case ability3: return cfg.ability3();
-                case ability4: return cfg.ability4();
-                case inventory: return cfg.inventory();
-                default: throw new IllegalArgumentException("Key does not exist");
+            switch (key) {
+                case up:
+                    return cfg.up();
+                case down:
+                    return cfg.down();
+                case left:
+                    return cfg.left();
+                case right:
+                    return cfg.right();
+                case ability1:
+                    return cfg.ability1();
+                case ability2:
+                    return cfg.ability2();
+                case ability3:
+                    return cfg.ability3();
+                case ability4:
+                    return cfg.ability4();
+                case inventory:
+                    return cfg.inventory();
+                case trait:
+                    return cfg.trait();
+                default:
+                    throw new IllegalArgumentException("Key does not exist");
             }
         }
 

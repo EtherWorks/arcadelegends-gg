@@ -25,14 +25,18 @@ import gg.al.config.IInputConfig;
 import gg.al.game.AL;
 import gg.al.game.ui.ALDialog;
 import gg.al.util.Assets;
+import lombok.extern.slf4j.Slf4j;
 
+import javax.xml.soap.Text;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 /**
  * Created by Patrick Windegger on 24.04.2017.
  * Class responsible for managing ControlComponent Settings with UI
  */
+@Slf4j
 public class InputSettingsScreen implements IAssetScreen, InputProcessor {
 
     private Stage stage;
@@ -46,6 +50,9 @@ public class InputSettingsScreen implements IAssetScreen, InputProcessor {
     private Table inputTable;
 
     private ALDialog dialog;
+
+    private IInputConfig.InputKeys[] keys;
+    private HashMap<String, Integer> keyMap;
 
 
     @Override
@@ -64,20 +71,24 @@ public class InputSettingsScreen implements IAssetScreen, InputProcessor {
         TextureRegion backgroundTexture = new TextureRegion(AL.getAssetManager().get(Assets.PT_BACKGROUND_TEXTBUTTON));
 
         inputTable = new Table();
-        IInputConfig.InputKeys[] keys = IInputConfig.InputKeys.values();
+        keys = IInputConfig.InputKeys.values();
+        keyMap = new HashMap<>();
+
         for (int i = 0; i < keys.length; i++) {
             Label lbKey = new Label(keys[i].getKeyName().substring(0, 1).toUpperCase() + keys[i].getKeyName().substring(1), skin);
             lbKey.setAlignment(Align.center);
+            keyMap.put(keys[i].getKeyName(), i);
 
-            TextButton btKey = new TextButton(IInputConfig.InputKeys.getFromKey(keys[i], AL.getConfig().input) + "", skin);
+
+            TextButton btKey = new TextButton((char) IInputConfig.InputKeys.getFromKey(keys[i], AL.getConfig().input) + "", skin);
+            btKey.setText(btKey.getText().toString().toUpperCase());
             btKey.center();
-            btKey.addListener(new ClickListener(){
+            btKey.setName(keys[i].getKeyName());
+
+            btKey.addListener(new ClickListener() {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
-                    // Setzen der Inputs. Warten auf InputManager
-
-                    // Dialog:
-                    showDialog(font, backgroundTexture);
+                    showDialog(font, backgroundTexture, btKey.getName(), btKey);
 
 
                 }
@@ -86,6 +97,7 @@ public class InputSettingsScreen implements IAssetScreen, InputProcessor {
             inputTable.add(btKey).pad(10).fill();
             inputTable.row();
         }
+
 
         scrollPane = new ScrollPane(inputTable, skin);
         scrollPane.setSize(450, 500);
@@ -97,14 +109,11 @@ public class InputSettingsScreen implements IAssetScreen, InputProcessor {
 
     }
 
-    private void showDialog(BitmapFont font, TextureRegion textureRegion)
-    {
+    private void showDialog(BitmapFont font, TextureRegion textureRegion, String name, TextButton button) {
         Drawable dlgBackground = new TextureRegionDrawable(new TextureRegion(AL.getAssetManager().get(Assets.PT_DLGBACKGROUND)));
-        dialog = new ALDialog("", new Window.WindowStyle(font, Color.BLACK, new TextureRegionDrawable(new TextureRegion(textureRegion))),skin, stage, font);
+        dialog = new ALDialog("", new Window.WindowStyle(font, Color.BLACK, new TextureRegionDrawable(new TextureRegion(textureRegion))), skin, stage, font,
+                (char) IInputConfig.InputKeys.getFromKey(keys[keyMap.get(name)], AL.getConfig().input) + "", keys[keyMap.get(name)].getKeyName(), button);
         dialog.initDefaultDialog(dlgBackground);
-
-
-
     }
 
     @Override
