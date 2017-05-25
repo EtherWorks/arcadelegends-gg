@@ -141,6 +141,7 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
 
     @Override
     public boolean keyDown(int keycode) {
+
         switch (keycode) {
             case Input.Keys.LEFT:
                 camera.translate(-1, 0, 0);

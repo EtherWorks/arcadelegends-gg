@@ -27,14 +27,13 @@ import gg.al.game.ui.ALDialog;
 import gg.al.util.Assets;
 import lombok.extern.slf4j.Slf4j;
 
-import javax.xml.soap.Text;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
 /**
  * Created by Patrick Windegger on 24.04.2017.
- * Class responsible for managing ControlComponent Settings with UI
+ * Class responsible for managing Input Settings with UI
  */
 @Slf4j
 public class InputSettingsScreen implements IAssetScreen, InputProcessor {
