@@ -23,7 +23,7 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import gg.al.config.IInputConfig;
 import gg.al.game.AL;
-import gg.al.game.ui.ALDialog;
+import gg.al.game.ui.ALInputDialog;
 import gg.al.util.Assets;
 import lombok.extern.slf4j.Slf4j;
 
@@ -48,7 +48,7 @@ public class InputSettingsScreen implements IAssetScreen, InputProcessor {
     private ScrollPane scrollPane;
     private Table inputTable;
 
-    private ALDialog dialog;
+    private ALInputDialog dialog;
 
     private IInputConfig.InputKeys[] keys;
     private HashMap<String, Integer> keyMap;
@@ -79,7 +79,7 @@ public class InputSettingsScreen implements IAssetScreen, InputProcessor {
             keyMap.put(keys[i].getKeyName(), i);
 
 
-            TextButton btKey = new TextButton((char) IInputConfig.InputKeys.getFromKey(keys[i], AL.getConfig().input) + "", skin);
+            TextButton btKey = new TextButton(Input.Keys.toString(IInputConfig.InputKeys.getFromKey(keys[i], AL.getInputConfig())), skin);
             btKey.setText(btKey.getText().toString().toUpperCase());
             btKey.center();
             btKey.setName(keys[i].getKeyName());
@@ -110,9 +110,10 @@ public class InputSettingsScreen implements IAssetScreen, InputProcessor {
 
     private void showDialog(BitmapFont font, TextureRegion textureRegion, String name, TextButton button) {
         Drawable dlgBackground = new TextureRegionDrawable(new TextureRegion(AL.getAssetManager().get(Assets.PT_DLGBACKGROUND)));
-        dialog = new ALDialog("", new Window.WindowStyle(font, Color.BLACK, new TextureRegionDrawable(new TextureRegion(textureRegion))), skin, stage, font,
-                (char) IInputConfig.InputKeys.getFromKey(keys[keyMap.get(name)], AL.getConfig().input) + "", keys[keyMap.get(name)].getKeyName(), button);
-        dialog.initDefaultDialog(dlgBackground);
+        dialog = new ALInputDialog("", new Window.WindowStyle(font, Color.BLACK, new TextureRegionDrawable(new TextureRegion(textureRegion))), skin, stage, font,
+                Input.Keys.toString(IInputConfig.InputKeys.getFromKey(keys[keyMap.get(name)], AL.getInputConfig())), keys[keyMap.get(name)].getKeyName(), button);
+        dialog.initDialog(dlgBackground);
+
     }
 
     @Override

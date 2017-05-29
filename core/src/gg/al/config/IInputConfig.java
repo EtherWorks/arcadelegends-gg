@@ -29,16 +29,16 @@ public interface IInputConfig {
 
 
     enum InputKeys implements IConfigKey {
-        up("0"),
-        down("0"),
-        left("0"),
-        right("0"),
-        ability1("0"),
-        ability2("0"),
-        ability3("0"),
-        ability4("0"),
-        inventory("0"),
-        trait("0");
+        up("51"),
+        down("47"),
+        left("29"),
+        right("32"),
+        ability1("8"),
+        ability2("9"),
+        ability3("10"),
+        ability4("11"),
+        inventory("37"),
+        trait("48");
 
         private final String defaultValue;
 

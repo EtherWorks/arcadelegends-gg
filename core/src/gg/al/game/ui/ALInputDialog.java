@@ -30,7 +30,7 @@ import java.security.Key;
  * Created by Patrick Windegger on 12.05.2017.
  */
 @Slf4j
-public class ALDialog extends Dialog {
+public class ALInputDialog extends Dialog {
 
     private Table table;
     private Skin skin;
@@ -38,11 +38,11 @@ public class ALDialog extends Dialog {
     private BitmapFont font;
     private String currentKey;
     private String inputKey;
-    private char key;
     private TextButton button;
+    private boolean keyExists;
 
 
-    public ALDialog(String title, WindowStyle windowStyle, Skin skin, Stage stage, BitmapFont font, String inputKey, String currentKey, TextButton button) {
+    public ALInputDialog(String title, WindowStyle windowStyle, Skin skin, Stage stage, BitmapFont font, String inputKey, String currentKey, TextButton button) {
         super(title, windowStyle);
         table = new Table();
         this.skin = skin;
@@ -52,23 +52,34 @@ public class ALDialog extends Dialog {
         this.inputKey = inputKey;
         this.button = button;
         this.setSize(300, 300);
+        keyExists = false;
     }
 
-    public void initDefaultDialog(Drawable background) {
+    public void initDialog(Drawable background) {
         this.setBackground(background);
         Label lbKey = new Label("Key:", skin);
         table.add(new com.badlogic.gdx.scenes.scene2d.ui.Label("Input Selection", new Label.LabelStyle(font, com.badlogic.gdx.graphics.Color.BLACK))).fill().center();
         table.row();
         table.add(lbKey);
-
         TextField tfKey = new TextField("", skin);
         tfKey.setText(inputKey.toUpperCase());
         tfKey.addListener(new InputListener() {
             @Override
             public boolean keyTyped(InputEvent event, char character) {
-                tfKey.setText(String.format("%c", character));
-                key = tfKey.getText().charAt(0);
-                int keyCode = KeyStroke.getKeyStroke(key, 0).getKeyCode();
+                int keyCode = event.getKeyCode();
+                if (keyCode == Input.Keys.ESCAPE) {
+                    return false;
+                }
+                IInputConfig.InputKeys[] allKeys = IInputConfig.InputKeys.values();
+                for (int i = 0; i < allKeys.length; i++) {
+
+                    if (IInputConfig.InputKeys.getFromKey(allKeys[i], AL.getInputConfig()) == keyCode) {
+                        tfKey.setText(inputKey.toUpperCase());
+                        hide();
+                        return false;
+                    }
+                }
+                tfKey.setText(Input.Keys.toString(keyCode));
                 switch (currentKey) {
                     case "up":
                         AL.getConfigEditor().setValue(IInputConfig.InputKeys.up, keyCode);
@@ -103,13 +114,10 @@ public class ALDialog extends Dialog {
                     default:
                         log.debug("Unkown Key");
                         break;
-
                 }
                 AL.getConfigEditor().flush();
                 hide();
-                button.setText(key + "");
-                button.setText(button.getText().toString().toUpperCase());
-
+                button.setText(Input.Keys.toString(keyCode));
                 return super.keyTyped(event, character);
             }
         });
@@ -129,7 +137,5 @@ public class ALDialog extends Dialog {
         this.show(stage);
     }
 
-    public char getKey() {
-        return key;
-    }
+
 }

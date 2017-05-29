@@ -39,6 +39,7 @@ public class DesktopConfigUtil {
         File file = new File(getCurrentConfigPath());
         if (!file.exists()) {
             try {
+                file.getParentFile().mkdirs();
                 FileOutputStream fos = new FileOutputStream(file);
                 Config.defaultConfig().store(fos, "Default config for ArcadeLegends");
                 fos.close();
