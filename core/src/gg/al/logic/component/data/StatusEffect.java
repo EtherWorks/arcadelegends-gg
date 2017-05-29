@@ -28,7 +28,7 @@ public class StatusEffect {
 
     public void applyValue(StatComponent stats) {
         for (Map.Entry<StatComponent.BaseStat, Float> flatChange : flatStats.entrySet()) {
-            stats.setBaseStat(flatChange.getKey(), stats.getBaseStat(flatChange.getKey()) + flatChange.getValue());
+            stats.setCurrentStat(flatChange.getKey(), stats.getBaseStat(flatChange.getKey()) + flatChange.getValue());
         }
     }
 

@@ -124,8 +124,6 @@ public class ArcadeWorld implements Disposable {
 
         physicsWorld.setContactListener(new ContactListener() {
 
-            private BulletComponent[] tmpBullet = new BulletComponent[2];
-
             @Override
             public void beginContact(Contact contact) {
                 int entityIdA = (int) contact.getFixtureA().getBody().getUserData();
@@ -144,20 +142,7 @@ public class ArcadeWorld implements Disposable {
                     inputB.move.set(positionB.position);
                 }
 
-                BulletComponent bulletA = entityWorld.getMapper(BulletComponent.class).get(entityIdA);
-                BulletComponent bulletB = entityWorld.getMapper(BulletComponent.class).get(entityIdB);
 
-                tmpBullet[0] = bulletA;
-                tmpBullet[1] = bulletB;
-
-                for (int i = 0; i < 2; i++)
-                {
-                    BulletComponent bullet = tmpBullet[i];
-                    if(bullet != null && bullet.callback != null)
-                    {
-                        bullet.callback.onCollision(entityIdA, entityIdB, contact);
-                    }
-                }
             }
 
             @Override
@@ -167,7 +152,15 @@ public class ArcadeWorld implements Disposable {
 
             @Override
             public void preSolve(Contact contact, Manifold oldManifold) {
+                int entityIdA = (int) contact.getFixtureA().getBody().getUserData();
+                int entityIdB = (int) contact.getFixtureB().getBody().getUserData();
+                BulletComponent bulletA = entityWorld.getMapper(BulletComponent.class).get(entityIdA);
+                BulletComponent bulletB = entityWorld.getMapper(BulletComponent.class).get(entityIdB);
 
+                if (bulletA != null && bulletA.callback != null)
+                    bulletA.callback.onCollision(entityIdA, entityIdB, contact.getFixtureA(), contact.getFixtureB(), contact);
+                if (bulletB != null && bulletB.callback != null)
+                    bulletB.callback.onCollision(entityIdB, entityIdA, contact.getFixtureB(), contact.getFixtureA(), contact);
             }
 
             @Override
@@ -256,7 +249,7 @@ public class ArcadeWorld implements Disposable {
 
                 FixtureDef fixtureDef = new FixtureDef();
                 CircleShape shape = new CircleShape();
-                shape.setRadius(.47f);
+                shape.setRadius(physicTemplate.radius);
 
                 fixtureDef.shape = shape;
                 body.createFixture(fixtureDef);

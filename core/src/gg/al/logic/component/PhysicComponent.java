@@ -24,5 +24,6 @@ public class PhysicComponent extends Component implements ITemplateable {
 
     public static class PhysicTemplate extends Template {
         public BodyDef.BodyType bodyType = BodyDef.BodyType.DynamicBody;
+        public float radius = .47f;
     }
 }

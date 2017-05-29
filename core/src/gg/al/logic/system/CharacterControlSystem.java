@@ -110,6 +110,7 @@ public class CharacterControlSystem extends IteratingSystem {
                         stats.addRuntimeStat(StatComponent.RuntimeStat.attackSpeedTimer, getWorld().getDelta());
                 } else {
                     stats.setRuntimeStat(StatComponent.RuntimeStat.attackSpeedTimer, 0);
+                    input.targetId = -1;
                 }
                 vectorPool.free(vector);
             } else {

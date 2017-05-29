@@ -126,7 +126,7 @@ public class SettingsScreen implements IAssetScreen, InputProcessor {
     }
 
     private void createVideoTable() {
-        String vsyncText = AL.getVideoConfig().vsyncEnabled() == true ? "Vsync on" : "Vsync off";
+        String vsyncText = AL.getVideoConfig().vsyncEnabled() ? "Vsync on" : "Vsync off";
         btVsync = new TextButton(vsyncText, skin, "default");
         btVsync.setWidth(250);
         btVsync.setHeight(50);

@@ -6,6 +6,7 @@
   },
   "PhysicComponent": {
     "bodyType": "DynamicBody",
+    "radius": 0.2,
     "type": "PhysicTemplate"
   },
   "RenderComponent": {

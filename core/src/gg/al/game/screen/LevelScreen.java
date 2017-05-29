@@ -207,6 +207,9 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
                 EntityArguments arguments = null;
                 try {
                     arguments = arcadeWorld.getArguments("player.json");
+                    PositionComponent.PositionTemplate pos = arguments.get(PositionComponent.class.getSimpleName(), PositionComponent.PositionTemplate.class);
+                    pos.x = 5;
+                    pos.y = 5;
                     int id = arcadeWorld.spawn(Entities.Player, arguments);
                     statComponent = arcadeWorld.getEntityWorld().getMapper(StatComponent.class).get(id);
                     statComponent.setFlag(StatComponent.FlagStat.deleteOnDeath, true);
@@ -259,8 +262,8 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
                     try {
                         arguments = arcadeWorld.getArguments("player.json");
                         PositionComponent.PositionTemplate positionDef = arguments.get("PositionComponent", PositionComponent.PositionTemplate.class);
-                        int posX = positionDef.x;
-                        int posY = positionDef.y;
+                        float posX = positionDef.x;
+                        float posY = positionDef.y;
                         positionDef.x = (int) mapCoord.x;
                         positionDef.y = (int) mapCoord.y;
                         playerEnt = arcadeWorld.spawn(Entities.Player, arguments);

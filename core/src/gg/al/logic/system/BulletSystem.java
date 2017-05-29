@@ -27,6 +27,10 @@ public class BulletSystem extends IteratingSystem {
     @Override
     protected void process(int entityId) {
         BulletComponent bCon = mapperBulletControlComponent.get(entityId);
+        if (bCon.delete) {
+            arcadeWorld.delete(entityId);
+            return;
+        }
         PhysicComponent phys = mapperPhysicComponent.get(entityId);
         bCon.currentDistance += phys.body.getPosition().dst(bCon.old);
         if (bCon.maxDistance <= bCon.currentDistance) {

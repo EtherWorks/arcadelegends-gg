@@ -1,10 +1,15 @@
 package gg.al.character;
 
 import com.artemis.Component;
+import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.math.collision.Ray;
 import com.badlogic.gdx.utils.IntArray;
 import com.badlogic.gdx.utils.Pool;
+import gg.al.game.AL;
 import gg.al.logic.ArcadeWorld;
+import gg.al.logic.component.PhysicComponent;
 import gg.al.logic.component.PositionComponent;
 import gg.al.logic.component.StatComponent;
 import gg.al.logic.component.data.Damage;
@@ -82,9 +87,10 @@ public abstract class Character {
                     break;
             }
             if (statComponent.getRuntimeStat(StatComponent.RuntimeStat.resource) - cost >= 0) {
-                cooldowns[abilityInd] = cooldown;
-                statComponent.addRuntimeStat(StatComponent.RuntimeStat.resource, -cost);
-                onCast(abilityInd);
+                if (onCast(abilityInd)) {
+                    cooldowns[abilityInd] = cooldown;
+                    statComponent.addRuntimeStat(StatComponent.RuntimeStat.resource, -cost);
+                }
             }
         }
     }
@@ -99,7 +105,7 @@ public abstract class Character {
 
     protected abstract void onTick(float delta);
 
-    protected abstract void onCast(int abilityInd);
+    protected abstract boolean onCast(int abilityInd);
 
     public abstract void affectStats(StatComponent statComponent);
 
@@ -153,5 +159,30 @@ public abstract class Character {
 
     public void delete(int id) {
         arcadeWorld.delete(id);
+    }
+
+    public Vector2 getMousePos() {
+        Ray ray = arcadeWorld.getCam().getPickRay(AL.input.getX(), AL.input.getY());
+        Vector3 vec = new Vector3();
+        Intersector.intersectRayPlane(ray, arcadeWorld.getMapHitbox(), vec);
+        return new Vector2(vec.x, vec.y);
+    }
+
+    public Vector2 getCharacterPosition() {
+
+        PhysicComponent phys = getComponent(entityID, PhysicComponent.class);
+
+        if (phys != null)
+            return phys.body.getPosition();
+        PositionComponent pos = getComponent(entityID, PositionComponent.class);
+        return pos.position;
+    }
+
+    public Tile getTile(Vector2 vec) {
+        return arcadeWorld.getTile(vec);
+    }
+
+    public Tile getTile(int x, int y) {
+        return arcadeWorld.getLogicMap().getTile(x, y);
     }
 }

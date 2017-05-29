@@ -2,16 +2,13 @@ package gg.al.character;
 
 
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.utils.IntArray;
-import gg.al.logic.component.BulletComponent;
-import gg.al.logic.component.CharacterControlComponent;
-import gg.al.logic.component.RenderComponent;
-import gg.al.logic.component.StatComponent;
+import gg.al.logic.component.*;
 import gg.al.logic.component.data.Damage;
 import gg.al.logic.component.data.StatusEffect;
 import gg.al.logic.entity.Entities;
 import gg.al.logic.entity.EntityArguments;
+import gg.al.logic.map.Tile;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
@@ -41,7 +38,7 @@ public class Kevin extends Character {
     }
 
     @Override
-    protected void onCast(int abilityInd) {
+    protected boolean onCast(int abilityInd) {
 
         StatComponent casterStat = getComponent(entityID, StatComponent.class);
         switch (abilityInd) {
@@ -62,11 +59,15 @@ public class Kevin extends Character {
 
                 vectorPool.free(start);
                 vectorPool.free(end);
-                break;
+                return true;
             case ABILITY_2:
-                CharacterControlComponent controlComponent = getComponent(entityID, CharacterControlComponent.class);
-                if (checkRange(entityID, controlComponent.targetId, ABILITY_2_RANGE)) {
-                    StatComponent statComponent = getComponent(controlComponent.targetId, StatComponent.class);
+                Vector2 mousePos = getMousePos();
+                Tile t = getTile(mousePos);
+                if (t.getEntities().size == 0)
+                    return false;
+                int targetId = t.getEntities().first();
+                if (checkRange(entityID, targetId, ABILITY_2_RANGE)) {
+                    StatComponent statComponent = getComponent(targetId, StatComponent.class);
                     statComponent.damages.add(new Damage(Damage.DamageType.True, 10 + casterStat.getCurrentStat(StatComponent.BaseStat.spellPower) * .4f, 0));
                     statComponent.statusEffects.put(BLEED_NAME, bleed.tickHandler(
                             new StatusEffect.TickHandler() {
@@ -84,27 +85,41 @@ public class Kevin extends Character {
                                 }
                             }
                     ).build());
+                    return true;
                 }
                 break;
             case ABILITY_3:
                 try {
                     EntityArguments arguments = getArguments("bullet.json");
+                    PositionComponent.PositionTemplate pos = arguments.get(PositionComponent.class.getSimpleName(), PositionComponent.PositionTemplate.class);
+                    mousePos = getMousePos();
+                    Vector2 charPos = getCharacterPosition();
+
+                    Vector2 dir = new Vector2(mousePos).sub(charPos).nor();
+                    pos.x = charPos.x + dir.x;
+                    pos.y = charPos.y + dir.y;
                     int entity = spawn(Entities.Bullet, arguments);
                     BulletComponent bCon = getComponent(entity, BulletComponent.class);
-                    bCon.move.set(20, 0);
+                    getComponent(entity, PhysicComponent.class).body.setBullet(true);
+                    bCon.move.set(dir.scl(10));
                     bCon.maxDistance = 20;
-                    bCon.callback = (entityIdA, entityIdB, contact) -> {
+                    bCon.callback = (bullet, hit, bFix, hFix, contact) -> {
                         log.debug("hit");
-                        //delete(entityIdB);
+                        getComponent(bullet, BulletComponent.class).delete = true;
+                        bFix.getBody().setLinearVelocity(Vector2.Zero);
+                        StatComponent statComponent = getComponent(hit, StatComponent.class);
+                        statComponent.damages.add(new Damage(Damage.DamageType.Magic, 600, 0));
                     };
+                    return true;
                 } catch (IOException e) {
                     log.error("KevinSpawnError", e);
                 }
                 break;
             case ABILITY_4:
                 ability4_activate = true;
-                break;
+                return true;
         }
+        return false;
     }
 
     @Override
@@ -116,5 +131,8 @@ public class Kevin extends Character {
                 statComponent.statusEffects.put(BOOST_NAME, boost.build());
             ability4_activate = false;
         }
+        statComponent.addCurrentStat(StatComponent.BaseStat.attackSpeed,
+                statComponent.getCurrentStat(StatComponent.BaseStat.attackSpeed) *
+                        (1 - (statComponent.getRuntimeStat(StatComponent.RuntimeStat.health) / statComponent.getCurrentStat(StatComponent.BaseStat.maxHealth))));
     }
 }

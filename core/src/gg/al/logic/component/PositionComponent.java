@@ -51,8 +51,8 @@ public class PositionComponent extends PooledComponent implements ITemplateable 
     }
 
     public static class PositionTemplate extends Template {
-        public int x;
-        public int y;
+        public float x;
+        public float y;
     }
 
 }
