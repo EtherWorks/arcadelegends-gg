@@ -26,6 +26,7 @@ import gg.al.logic.component.PositionComponent;
 import gg.al.logic.component.RenderComponent;
 import gg.al.logic.component.StatComponent;
 import gg.al.util.Assets;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
 import java.nio.IntBuffer;
@@ -37,25 +38,38 @@ import java.util.Map;
 @Slf4j
 public class RenderSystem extends BaseEntitySystem {
 
+    @Getter
     private ObjectMap<Integer, FrameBuffer> buffers;
+    @Getter
     private int buffHeight = 256 * 5;
+    @Getter
     private int buffWidth = 256 * 3;
+    @Getter
     private SpriteBatch spriteBatch;
+    @Getter
     private BitmapFont font;
+    @Getter
     private Camera uiCamera;
-
+    @Getter
     private float stateTime;
+    @Getter
     private float worldDegree;
-
+    @Getter
     private final ObjectMap<Integer, Decal> decalMap;
+    @Getter
     private final ObjectMap<Integer, Decal> uiMap;
     private final Array<Decal> tempDecals;
-
+    @Getter
     private final DecalBatch decalBatch;
+    @Getter
     private final AssetManager assetManager;
+    @Getter
     private ComponentMapper<RenderComponent> mapperRender;
+    @Getter
     private ComponentMapper<PositionComponent> mapperPosition;
+    @Getter
     private ComponentMapper<PhysicComponent> mapperPhysic;
+    @Getter
     private ComponentMapper<StatComponent> mapperStats;
 
     public RenderSystem(DecalBatch decalBatch, AssetManager assetManager, float worldDegree) {
@@ -82,89 +96,18 @@ public class RenderSystem extends BaseEntitySystem {
 
 
     protected void process(int entityId) {
-        PhysicComponent physic = mapperPhysic.get(entityId);
-        PositionComponent position = mapperPosition.get(entityId);
-        RenderComponent render = mapperRender.get(entityId);
-
-        StatComponent stats = mapperStats.get(entityId);
-        Decal decal = decalMap.get(entityId);
-        float stateTime = this.stateTime;
-        if (stats != null && render.renderState == RenderComponent.RenderState.ATTACK) {
-            stateTime = render.animations.get(RenderComponent.RenderState.ATTACK).getAnimationDuration()
-                    * (stats.getRuntimeStat(StatComponent.RuntimeStat.attackSpeedTimer) / (1 / stats.getCurrentStat(StatComponent.BaseStat.attackSpeed)));
-        }
-        TextureRegion region = render.animations.get(render.renderState).getKeyFrame(stateTime);
-        region.flip(region.isFlipX() ^ render.flipX, region.isFlipY() ^ render.flipY);
-        decal.setTextureRegion(region);
-
-        if (physic != null)
-            decal.setPosition(physic.body.getPosition().x, physic.body.getPosition().y, decal.getZ());
-        else
-            decal.setPosition(position.position.x, position.position.y, decal.getZ());
-
-        if (stats != null) {
-            FrameBuffer buffer = buffers.get(entityId);
-            buffer.begin();
-            AL.graphics.getGL20().glClearColor(0, 0, 0, 0);
-            AL.graphics.getGL20().glClear(GL20.GL_COLOR_BUFFER_BIT);
-            spriteBatch.setProjectionMatrix(uiCamera.combined);
-            spriteBatch.begin();
-            font.draw(spriteBatch, stats.toString(), 0, buffHeight);
-            spriteBatch.end();
-            buffer.end();
-
-            Decal uiDecal = uiMap.get(entityId);
-            if (physic != null)
-                uiDecal.setPosition(physic.body.getPosition().x + 2, physic.body.getPosition().y - 3, uiDecal.getZ());
-            else
-                uiDecal.setPosition(position.position.x + 2, position.position.y - 3, uiDecal.getZ());
-        }
+        RenderComponent renderComponent = mapperRender.get(entityId);
+        renderComponent.renderDelegate.process(entityId, this);
     }
 
     @Override
     protected void inserted(int entityId) {
-        RenderComponent render = mapperRender.get(entityId);
-        PositionComponent position = mapperPosition.get(entityId);
-        if (render.textures.size == 0) {
-            for (Map.Entry<RenderComponent.RenderState, RenderComponent.RenderTemplate.AnimationTemplate> entry : render.renderTemplate.animationTemplates.entrySet()) {
-                Texture texture = assetManager.get((AssetDescriptor<Texture>) Assets.get(entry.getValue().texture));
-                render.textures.put(entry.getKey(), Assets.get(entry.getValue().texture));
-
-                TextureRegion[][] tmp = TextureRegion.split(texture,
-                        +texture.getWidth() / entry.getValue().frameColumns,
-                        +texture.getHeight() / entry.getValue().frameRows);
-                TextureRegion[] frames = new TextureRegion[entry.getValue().frameColumns * entry.getValue().frameRows];
-                int index = 0;
-                for (int i = 0; i < entry.getValue().frameRows; i++) {
-                    for (int j = 0; j < entry.getValue().frameColumns; j++) {
-                        frames[index++] = tmp[i][j];
-                    }
-                }
-                render.animations.put(entry.getKey(), new Animation<TextureRegion>(entry.getValue().frameDuration, new Array<>(frames), Animation.PlayMode.LOOP));
-            }
-        }
-        Decal decal = Decal.newDecal(render.width, render.height, render.animations.get(render.renderState).getKeyFrame(stateTime), render.transparent);
-        decal.rotateX(worldDegree);
-        decal.setPosition(position.position.x, position.position.y, 0);
-        decalMap.put(entityId, decal);
-
-        FrameBuffer buffer = new FrameBuffer(Pixmap.Format.RGBA8888, buffWidth, buffHeight, false);
-        buffer.getColorBufferTexture().setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
-        buffers.put(entityId, buffer);
-
-        TextureRegion uiTextureRegion = new TextureRegion(buffer.getColorBufferTexture());
-        uiTextureRegion.flip(false, true);
-        Decal uiDecal = Decal.newDecal(3, 5, uiTextureRegion, true);
-        uiDecal.setPosition(position.position.x, position.position.y, 1);
-        uiMap.put(entityId, uiDecal);
+        mapperRender.get(entityId).renderDelegate.inserted(entityId, this);
     }
 
     @Override
     protected void removed(int entityId) {
-        buffers.get(entityId).dispose();
-        buffers.remove(entityId);
-        decalMap.remove(entityId);
-        uiMap.remove(entityId);
+        mapperRender.get(entityId).renderDelegate.removed(entityId, this);
     }
 
     @Override

@@ -156,7 +156,7 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
                 camera.translate(0, 1, 0);
                 break;
             case Input.Keys.W:
-                ControlComponent input = arcadeWorld.getEntityWorld().getComponentOf(playerEnt, ControlComponent.class);
+                CharacterControlComponent input = arcadeWorld.getEntityWorld().getComponentOf(playerEnt, CharacterControlComponent.class);
 
                 PositionComponent position = arcadeWorld.getEntityWorld().getComponentOf(playerEnt, PositionComponent.class);
                 if (!input.move.equals(position.position))
@@ -164,7 +164,7 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
                 input.move.set(position.position.x, position.position.y + 1);
                 break;
             case Input.Keys.S:
-                input = arcadeWorld.getEntityWorld().getComponentOf(playerEnt, ControlComponent.class);
+                input = arcadeWorld.getEntityWorld().getComponentOf(playerEnt, CharacterControlComponent.class);
 
                 position = arcadeWorld.getEntityWorld().getComponentOf(playerEnt, PositionComponent.class);
                 if (!input.move.equals(position.position))
@@ -172,7 +172,7 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
                 input.move.set(position.position.x, position.position.y - 1);
                 break;
             case Input.Keys.A:
-                input = arcadeWorld.getEntityWorld().getComponentOf(playerEnt, ControlComponent.class);
+                input = arcadeWorld.getEntityWorld().getComponentOf(playerEnt, CharacterControlComponent.class);
 
                 position = arcadeWorld.getEntityWorld().getComponentOf(playerEnt, PositionComponent.class);
                 if (!input.move.equals(position.position))
@@ -180,7 +180,7 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
                 input.move.set(position.position.x - 1, position.position.y);
                 break;
             case Input.Keys.D:
-                input = arcadeWorld.getEntityWorld().getComponentOf(playerEnt, ControlComponent.class);
+                input = arcadeWorld.getEntityWorld().getComponentOf(playerEnt, CharacterControlComponent.class);
                 position = arcadeWorld.getEntityWorld().getComponentOf(playerEnt, PositionComponent.class);
                 if (!input.move.equals(position.position))
                     break;
@@ -270,7 +270,7 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
                         log.error("Couldn´t load player", e);
                     }
                 } else {
-                    ControlComponent input = arcadeWorld.getEntityWorld().getComponentOf(playerEnt, ControlComponent.class);
+                    CharacterControlComponent input = arcadeWorld.getEntityWorld().getComponentOf(playerEnt, CharacterControlComponent.class);
                     input.move.set((int) mapCoord.x, (int) mapCoord.y);
                 }
                 break;
@@ -278,7 +278,7 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
                 Tile t = arcadeWorld.getTile(mapCoord);
                 try {
                     int id = t.getEntities().first();
-                    ControlComponent input = arcadeWorld.getEntityWorld().getMapper(ControlComponent.class).get(playerEnt);
+                    CharacterControlComponent input = arcadeWorld.getEntityWorld().getMapper(CharacterControlComponent.class).get(playerEnt);
                     input.targetId = id;
                     log.debug("{}", id);
                 } catch (IllegalStateException ex) {

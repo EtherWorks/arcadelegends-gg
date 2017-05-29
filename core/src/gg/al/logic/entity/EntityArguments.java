@@ -5,9 +5,7 @@ import com.google.gson.reflect.TypeToken;
 import gg.al.logic.component.data.Template;
 import gg.al.util.GsonUtil;
 
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.lang.reflect.Type;
 import java.net.URISyntaxException;
 import java.util.Iterator;
@@ -27,23 +25,18 @@ public class EntityArguments {
     }
 
     public static EntityArguments fromFile(String name) throws IOException {
-        try {
-            EntityArguments arguments = new EntityArguments();
-            File argumentFile = new File(EntityArguments.class.getResource("/" + name).toURI());
-            FileReader reader = new FileReader(argumentFile);
-            Type type = new TypeToken<Map<String, Template>>() {
-            }.getType();
-            Map<String, Template> defs = GsonUtil.getGSON().fromJson(reader, type);
-            reader.close();
+        EntityArguments arguments = new EntityArguments();
+        InputStream is = EntityArguments.class.getResourceAsStream("/" + name);
+        InputStreamReader reader = new InputStreamReader(is);
+        Type type = new TypeToken<Map<String, Template>>() {
+        }.getType();
+        Map<String, Template> defs = GsonUtil.getGSON().fromJson(reader, type);
+        reader.close();
 
-            for (Map.Entry<String, Template> entries : defs.entrySet()) {
-                arguments.put(entries.getKey(), entries.getValue());
-            }
-            return arguments;
-        } catch (URISyntaxException e) {
-            throw new IOException("URI exception");
+        for (Map.Entry<String, Template> entries : defs.entrySet()) {
+            arguments.put(entries.getKey(), entries.getValue());
         }
-
+        return arguments;
     }
 
     /**

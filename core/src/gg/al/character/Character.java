@@ -9,7 +9,11 @@ import gg.al.logic.component.PositionComponent;
 import gg.al.logic.component.StatComponent;
 import gg.al.logic.component.data.Damage;
 import gg.al.logic.component.data.StatusEffect;
+import gg.al.logic.entity.Entities;
+import gg.al.logic.entity.EntityArguments;
 import gg.al.logic.map.Tile;
+
+import java.io.IOException;
 
 /**
  * Created by Thomas Neumann on 23.05.2017.<br />
@@ -137,5 +141,17 @@ public abstract class Character {
             }
         }
         return array;
+    }
+
+    protected int spawn(Entities entity, EntityArguments arguments) {
+        return arcadeWorld.spawn(entity, arguments);
+    }
+
+    public EntityArguments getArguments(String fileName) throws IOException {
+        return arcadeWorld.getArguments(fileName);
+    }
+
+    public void delete(int id) {
+        arcadeWorld.delete(id);
     }
 }

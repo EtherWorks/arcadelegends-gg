@@ -49,7 +49,7 @@ public class EntityUtil {
 //                Stats stats = entityWorld.getComponentOf(id, Stats.class);
 //                RenderComponent render = entityWorld.getComponentOf(id, RenderComponent.class);
 //                DynamicPhysic dynamicPhysic = entityWorld.getComponentOf(id, DynamicPhysic.class);
-//                ControlComponent input = entityWorld.getComponentOf(id, ControlComponent.class);
+//                CharacterControlComponent input = entityWorld.getComponentOf(id, CharacterControlComponent.class);
 //                Abilities abilities = entityWorld.getComponentOf(id, Abilities.class);
 //
 //                setup(abilities, arguments);
@@ -91,7 +91,7 @@ public class EntityUtil {
 //        abilities.fromDef(arguments.get("Abilities", Abilities.AbilitiesTemplate.class));
 //    }
 //
-//    private static void setup(int entityId, ControlComponent input, ArcadeWorld arcadeWorld, EntityArguments arguments) {
+//    private static void setup(int entityId, CharacterControlComponent input, ArcadeWorld arcadeWorld, EntityArguments arguments) {
 //        PositionComponent.PositionTemplate pos = arguments.get("PositionComponent", PositionComponent.PositionTemplate.class);
 //        input.move.set(pos.x, pos.y);
 //    }

@@ -115,19 +115,23 @@ public class ArcadeWorld implements Disposable {
                 .with(0,
                         new PhysicPositionSystem(),
                         new PositionTileSystem(logicMap),
-                        new ControlSystem(physicsWorld),
+                        new CharacterControlSystem(physicsWorld),
+                        new BulletSystem(this),
                         renderSystem = new RenderSystem(decalBatch, AL.getAssetManager(), worldViewRotation)
                 )
                 .build();
         entityWorld = new EntityWorld(worldConfiguration);
 
         physicsWorld.setContactListener(new ContactListener() {
+
+            private BulletComponent[] tmpBullet = new BulletComponent[2];
+
             @Override
             public void beginContact(Contact contact) {
                 int entityIdA = (int) contact.getFixtureA().getBody().getUserData();
                 int entityIdB = (int) contact.getFixtureB().getBody().getUserData();
-                ControlComponent inputA = entityWorld.getMapper(ControlComponent.class).get(entityIdA);
-                ControlComponent inputB = entityWorld.getMapper(ControlComponent.class).get(entityIdB);
+                CharacterControlComponent inputA = entityWorld.getMapper(CharacterControlComponent.class).get(entityIdA);
+                CharacterControlComponent inputB = entityWorld.getMapper(CharacterControlComponent.class).get(entityIdB);
 
                 if (inputA != null && inputB != null) {
                     PositionComponent positionA = entityWorld.getMapper(PositionComponent.class).get(entityIdA);
@@ -138,6 +142,21 @@ public class ArcadeWorld implements Disposable {
                     positionB.resetPos = true;
                     inputA.move.set(positionA.position);
                     inputB.move.set(positionB.position);
+                }
+
+                BulletComponent bulletA = entityWorld.getMapper(BulletComponent.class).get(entityIdA);
+                BulletComponent bulletB = entityWorld.getMapper(BulletComponent.class).get(entityIdB);
+
+                tmpBullet[0] = bulletA;
+                tmpBullet[1] = bulletB;
+
+                for (int i = 0; i < 2; i++)
+                {
+                    BulletComponent bullet = tmpBullet[i];
+                    if(bullet != null && bullet.callback != null)
+                    {
+                        bullet.callback.onCollision(entityIdA, entityIdB, contact);
+                    }
                 }
             }
 
@@ -222,8 +241,8 @@ public class ArcadeWorld implements Disposable {
             } else if (RenderComponent.class.isAssignableFrom(componentType)) {
                 RenderComponent renderComponent = entityWorld.getMapper(RenderComponent.class).get(entityID);
                 renderComponent.fromTemplate((Template) arguments.get(RenderComponent.class.getSimpleName()));
-            } else if (ControlComponent.class.isAssignableFrom(componentType)) {
-                ControlComponent controlComponent = entityWorld.getMapper(ControlComponent.class).get(entityID);
+            } else if (CharacterControlComponent.class.isAssignableFrom(componentType)) {
+                CharacterControlComponent controlComponent = entityWorld.getMapper(CharacterControlComponent.class).get(entityID);
                 PositionComponent.PositionTemplate pos = arguments.get("PositionComponent", PositionComponent.PositionTemplate.class);
                 controlComponent.move.set(pos.x, pos.y);
             } else if (PhysicComponent.class.isAssignableFrom(componentType)) {

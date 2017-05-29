@@ -13,12 +13,13 @@ public enum Entities {
             PositionComponent.class,
             StatComponent.class,
             PhysicComponent.class,
-            ControlComponent.class,
+            CharacterControlComponent.class,
             CharacterComponent.class),
     Bullet(1,
             RenderComponent.class,
             PositionComponent.class,
-            PhysicComponent.class);
+            PhysicComponent.class,
+            BulletComponent.class);
 
     private final int entityId;
     private final Class<? extends Component>[] components;

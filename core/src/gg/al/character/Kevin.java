@@ -2,16 +2,24 @@ package gg.al.character;
 
 
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.utils.IntArray;
-import gg.al.logic.component.ControlComponent;
+import gg.al.logic.component.BulletComponent;
+import gg.al.logic.component.CharacterControlComponent;
 import gg.al.logic.component.RenderComponent;
 import gg.al.logic.component.StatComponent;
 import gg.al.logic.component.data.Damage;
 import gg.al.logic.component.data.StatusEffect;
+import gg.al.logic.entity.Entities;
+import gg.al.logic.entity.EntityArguments;
+import lombok.extern.slf4j.Slf4j;
+
+import java.io.IOException;
 
 /**
  * Created by Thomas Neumann on 23.05.2017.<br />
  */
+@Slf4j
 public class Kevin extends Character {
 
     public float ABILITY_2_RANGE = 1.5f;
@@ -56,7 +64,7 @@ public class Kevin extends Character {
                 vectorPool.free(end);
                 break;
             case ABILITY_2:
-                ControlComponent controlComponent = getComponent(entityID, ControlComponent.class);
+                CharacterControlComponent controlComponent = getComponent(entityID, CharacterControlComponent.class);
                 if (checkRange(entityID, controlComponent.targetId, ABILITY_2_RANGE)) {
                     StatComponent statComponent = getComponent(controlComponent.targetId, StatComponent.class);
                     statComponent.damages.add(new Damage(Damage.DamageType.True, 10 + casterStat.getCurrentStat(StatComponent.BaseStat.spellPower) * .4f, 0));
@@ -79,7 +87,19 @@ public class Kevin extends Character {
                 }
                 break;
             case ABILITY_3:
-
+                try {
+                    EntityArguments arguments = getArguments("bullet.json");
+                    int entity = spawn(Entities.Bullet, arguments);
+                    BulletComponent bCon = getComponent(entity, BulletComponent.class);
+                    bCon.move.set(20, 0);
+                    bCon.maxDistance = 20;
+                    bCon.callback = (entityIdA, entityIdB, contact) -> {
+                        log.debug("hit");
+                        //delete(entityIdB);
+                    };
+                } catch (IOException e) {
+                    log.error("KevinSpawnError", e);
+                }
                 break;
             case ABILITY_4:
                 ability4_activate = true;

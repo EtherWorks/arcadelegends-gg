@@ -10,23 +10,25 @@ import gg.al.logic.component.*;
 import gg.al.logic.component.data.Damage;
 import lombok.extern.slf4j.Slf4j;
 
+import static gg.al.graphics.renderer.PlayerRenderer.PlayerRenderState.*;
+
 /**
  * Created by Thomas Neumann on 30.03.2017.<br />
  */
 @Slf4j
-public class ControlSystem extends IteratingSystem {
+public class CharacterControlSystem extends IteratingSystem {
 
     private final World world;
     private ComponentMapper<PositionComponent> mapperPosition;
-    private ComponentMapper<ControlComponent> mapperInput;
+    private ComponentMapper<CharacterControlComponent> mapperInput;
     private ComponentMapper<PhysicComponent> mapperPhysicComponent;
     private ComponentMapper<StatComponent> mapperStatComponent;
     private ComponentMapper<RenderComponent> mapperRenderComponent;
 
     private Pool<Vector2> vectorPool;
 
-    public ControlSystem(World world) {
-        super(Aspect.all(ControlComponent.class, PositionComponent.class, PhysicComponent.class, StatComponent.class));
+    public CharacterControlSystem(World world) {
+        super(Aspect.all(CharacterControlComponent.class, PositionComponent.class, PhysicComponent.class, StatComponent.class));
         this.world = world;
         vectorPool = new Pool<Vector2>() {
             @Override
@@ -45,15 +47,15 @@ public class ControlSystem extends IteratingSystem {
     @Override
     protected void process(int entityId) {
         PositionComponent pos = mapperPosition.get(entityId);
-        ControlComponent input = mapperInput.get(entityId);
+        CharacterControlComponent input = mapperInput.get(entityId);
         StatComponent stats = mapperStatComponent.get(entityId);
         PhysicComponent physicComponent = mapperPhysicComponent.get(entityId);
         RenderComponent renderComponent = mapperRenderComponent.get(entityId);
 
 
         if (input.move.dst(pos.position) != 0 && physicComponent.body.getLinearVelocity().equals(Vector2.Zero) && !stats.getFlag(StatComponent.FlagStat.dead)) {
-            if (stats.getRuntimeStat(StatComponent.RuntimeStat.actionPoints) >= 1 && (renderComponent == null || renderComponent.renderState == RenderComponent.RenderState.IDLE
-                    || renderComponent.renderState == RenderComponent.RenderState.ATTACK)) {
+            if (stats.getRuntimeStat(StatComponent.RuntimeStat.actionPoints) >= 1 && (renderComponent == null || renderComponent.isInState(IDLE)
+                    || renderComponent.isInState(ATTACK))) {
                 //anfangen sich zu bewegen
                 Vector2 dir = vectorPool.obtain();
                 Vector2 speed = vectorPool.obtain();
@@ -63,8 +65,8 @@ public class ControlSystem extends IteratingSystem {
                     dir.set(0, Math.signum(input.move.y - pos.position.y));
 
                 if (renderComponent != null) {
-                    renderComponent.renderState = dir.y == 0 ? RenderComponent.RenderState.MOVE_SIDE :
-                            dir.y < 0 ? RenderComponent.RenderState.MOVE_DOWN : RenderComponent.RenderState.MOVE_UP;
+                    renderComponent.setRenderState(dir.y == 0 ? MOVE_SIDE :
+                            dir.y < 0 ? MOVE_DOWN : MOVE_UP);
                     renderComponent.flipX = dir.x < 0;
                 }
                 physicComponent.body.setLinearVelocity(speed.set(dir).scl(stats.getCurrentStat(StatComponent.BaseStat.moveSpeed)));
@@ -84,7 +86,7 @@ public class ControlSystem extends IteratingSystem {
             if (curr.dot(input.startToEnd) < 0) {
                 physicComponent.body.setLinearVelocity(Vector2.Zero);
                 physicComponent.body.setTransform(pos.position, physicComponent.body.getAngle());
-                renderComponent.renderState = RenderComponent.RenderState.IDLE;
+                renderComponent.setRenderState(IDLE);
             }
             vectorPool.free(curr);
         }
@@ -97,7 +99,7 @@ public class ControlSystem extends IteratingSystem {
                 Vector2 vector = vectorPool.obtain();
                 if (Math.abs(vector.set(pos.position).dst(otherPos.position)) <= stats.getCurrentStat(StatComponent.BaseStat.attackRange)) {
                     if (renderComponent != null)
-                        renderComponent.renderState = RenderComponent.RenderState.ATTACK;
+                        renderComponent.setRenderState(ATTACK);
                     if (stats.getRuntimeStat(StatComponent.RuntimeStat.attackSpeedTimer) >= 1 / stats.getCurrentStat(StatComponent.BaseStat.attackSpeed)) {
                         stats.setRuntimeStat(StatComponent.RuntimeStat.attackSpeedTimer, 0);
                         Damage dmg = new Damage(Damage.DamageType.Normal,
@@ -114,7 +116,7 @@ public class ControlSystem extends IteratingSystem {
                 input.targetId = -1;
                 stats.setRuntimeStat(StatComponent.RuntimeStat.attackSpeedTimer, 0);
                 if (renderComponent != null)
-                    renderComponent.renderState = RenderComponent.RenderState.IDLE;
+                    renderComponent.setRenderState(IDLE);
             }
         }
 
