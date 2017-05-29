@@ -39,7 +39,6 @@ public class ALInputDialog extends Dialog {
     private String currentKey;
     private String inputKey;
     private TextButton button;
-    private boolean keyExists;
 
 
     public ALInputDialog(String title, WindowStyle windowStyle, Skin skin, Stage stage, BitmapFont font, String inputKey, String currentKey, TextButton button) {
@@ -52,7 +51,6 @@ public class ALInputDialog extends Dialog {
         this.inputKey = inputKey;
         this.button = button;
         this.setSize(300, 300);
-        keyExists = false;
     }
 
     public void initDialog(Drawable background) {
