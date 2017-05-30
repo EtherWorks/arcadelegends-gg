@@ -2,21 +2,15 @@ package gg.al.logic.component;
 
 import com.artemis.PooledComponent;
 import com.badlogic.gdx.assets.AssetDescriptor;
-import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.graphics.g3d.decals.Decal;
-import com.badlogic.gdx.graphics.glutils.FrameBuffer;
-import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap;
-import gg.al.game.AL;
-import gg.al.graphics.renderer.PlayerRenderer;
+import gg.al.graphics.renderer.CharacterRenderer;
 import gg.al.logic.component.data.ITemplateable;
 import gg.al.logic.component.data.Template;
 import gg.al.logic.system.RenderSystem;
-import gg.al.util.Assets;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
@@ -29,7 +23,7 @@ import java.util.Map;
 @Slf4j
 public class RenderComponent extends PooledComponent implements ITemplateable {
 
-    public static final PlayerRenderer PLAYER_RENDERER = new PlayerRenderer();
+    public static final CharacterRenderer PLAYER_RENDERER = new CharacterRenderer();
     public static final RenderDelegate NULL_RENDERER = new RenderDelegate() {
         @Override
         public void inserted(int entity, RenderSystem renderSystem) {
@@ -51,7 +45,8 @@ public class RenderComponent extends PooledComponent implements ITemplateable {
             return null;
         }
     };
-
+    @Getter(lazy = true)
+    private final static TextureRegion NULL_FRAME = new TextureRegion(new Texture(new Pixmap(1, 1, Pixmap.Format.RGBA8888)));
     public final ObjectMap<String, AssetDescriptor<Texture>> textures;
     public final ObjectMap<String, Animation<TextureRegion>> animations;
     public RenderTemplate renderTemplate;
@@ -62,8 +57,6 @@ public class RenderComponent extends PooledComponent implements ITemplateable {
     public boolean flipY;
     public String renderState;
     public RenderDelegate renderDelegate;
-    @Getter(lazy = true)
-    private final static TextureRegion NULL_FRAME = new TextureRegion(new Texture(new Pixmap(1, 1, Pixmap.Format.RGBA8888)));
 
     public RenderComponent() {
         textures = new ObjectMap<>();
@@ -152,6 +145,16 @@ public class RenderComponent extends PooledComponent implements ITemplateable {
         public Map<String, AnimationTemplate> animationTemplates = new HashMap();
         public String renderType = "";
 
+        @Override
+        public String toString() {
+            return "RenderTemplate{" +
+                    "width=" + width +
+                    ", height=" + height +
+                    ", transparent=" + transparent +
+                    ", animationTemplates=" + animationTemplates +
+                    '}';
+        }
+
         public static class AnimationTemplate {
             public int frameColumns;
             public int frameRows;
@@ -167,16 +170,6 @@ public class RenderComponent extends PooledComponent implements ITemplateable {
                         ", texture='" + texture + '\'' +
                         '}';
             }
-        }
-
-        @Override
-        public String toString() {
-            return "RenderTemplate{" +
-                    "width=" + width +
-                    ", height=" + height +
-                    ", transparent=" + transparent +
-                    ", animationTemplates=" + animationTemplates +
-                    '}';
         }
     }
 }

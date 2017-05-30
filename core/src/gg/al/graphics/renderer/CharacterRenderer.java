@@ -22,7 +22,7 @@ import java.util.Map;
 /**
  * Created by Thomas Neumann on 29.05.2017.<br />
  */
-public class PlayerRenderer implements RenderComponent.RenderDelegate {
+public class CharacterRenderer implements RenderComponent.RenderDelegate {
 
     @Override
     public void inserted(int entityId, RenderSystem renderSystem) {

@@ -10,7 +10,7 @@ import gg.al.logic.component.*;
 import gg.al.logic.component.data.Damage;
 import lombok.extern.slf4j.Slf4j;
 
-import static gg.al.graphics.renderer.PlayerRenderer.PlayerRenderState.*;
+import static gg.al.graphics.renderer.CharacterRenderer.PlayerRenderState.*;
 
 /**
  * Created by Thomas Neumann on 30.03.2017.<br />
