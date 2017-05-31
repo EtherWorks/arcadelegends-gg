@@ -8,20 +8,19 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Created by Thomas Neumann on 26.04.2017.<br />
+ * Created by Thomas Neumann on 31.05.2017.<br />
  */
 @Builder
-public class StatusEffect implements IStatAffect, ITickable {
-
-    public float effectTime;
-    @Builder.Default
-    public float remainingTime = -1;
+public class Item implements IStatAffect, ITickable {
 
     @Singular
     public Map<StatComponent.BaseStat, Float> flatStats = new HashMap<>();
 
     @Singular
     public Map<StatComponent.BaseStat, Float> percentageStats = new HashMap<>();
+
+    @Builder.Default
+    public String name = "";
 
     public TickHandler tickHandler;
 

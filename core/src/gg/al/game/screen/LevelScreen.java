@@ -20,6 +20,7 @@ import gg.al.game.AL;
 import gg.al.logic.ArcadeWorld;
 import gg.al.logic.component.*;
 import gg.al.logic.component.data.Damage;
+import gg.al.logic.component.data.Item;
 import gg.al.logic.component.data.StatusEffect;
 import gg.al.logic.entity.Entities;
 import gg.al.logic.entity.EntityArguments;
@@ -205,7 +206,6 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
 
             case Input.Keys.O:
                 EntityArguments arguments = null;
-                try {
                     arguments = arcadeWorld.getArguments("player.json");
                     PositionComponent.PositionTemplate pos = arguments.get(PositionComponent.class.getSimpleName(), PositionComponent.PositionTemplate.class);
                     pos.x = 5;
@@ -213,9 +213,8 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
                     int id = arcadeWorld.spawn(Entities.Player, arguments);
                     statComponent = arcadeWorld.getEntityWorld().getMapper(StatComponent.class).get(id);
                     statComponent.setFlag(StatComponent.FlagStat.deleteOnDeath, true);
-                } catch (IOException e) {
-                    log.error("Couldn´t load player", e);
-                }
+                    CharacterControlComponent characterControlComponent = arcadeWorld.getEntityWorld().getMapper(CharacterControlComponent.class).get(id);
+                    characterControlComponent.targetId = 0;
                 break;
             case Input.Keys.Q:
                 CharacterComponent characterComponent = arcadeWorld.getEntityWorld().getMapper(CharacterComponent.class).get(playerEnt);
@@ -259,7 +258,6 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
             case Input.Buttons.LEFT:
                 if (playerEnt == -1) {
                     EntityArguments arguments;
-                    try {
                         arguments = arcadeWorld.getArguments("player.json");
                         PositionComponent.PositionTemplate positionDef = arguments.get("PositionComponent", PositionComponent.PositionTemplate.class);
                         float posX = positionDef.x;
@@ -269,9 +267,8 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
                         playerEnt = arcadeWorld.spawn(Entities.Player, arguments);
                         positionDef.x = posX;
                         positionDef.y = posY;
-                    } catch (IOException e) {
-                        log.error("Couldn´t load player", e);
-                    }
+                        InventoryComponent inventoryComponent = arcadeWorld.getEntityWorld().getMapper(InventoryComponent.class).get(playerEnt);
+                        inventoryComponent.items[0] = Item.builder().name("Armor").flatStat(StatComponent.BaseStat.armor, 100f).build();
                 } else {
                     CharacterControlComponent input = arcadeWorld.getEntityWorld().getComponentOf(playerEnt, CharacterControlComponent.class);
                     input.move.set((int) mapCoord.x, (int) mapCoord.y);

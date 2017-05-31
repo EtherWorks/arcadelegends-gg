@@ -3,9 +3,11 @@ package gg.al.logic.system;
 import com.artemis.Aspect;
 import com.artemis.ComponentMapper;
 import com.artemis.systems.IteratingSystem;
+import com.badlogic.gdx.math.Vector2;
 import gg.al.logic.ArcadeWorld;
 import gg.al.logic.component.BulletComponent;
 import gg.al.logic.component.PhysicComponent;
+import gg.al.logic.component.PositionComponent;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -16,6 +18,7 @@ public class BulletSystem extends IteratingSystem {
 
     private ComponentMapper<BulletComponent> mapperBulletControlComponent;
     private ComponentMapper<PhysicComponent> mapperPhysicComponent;
+    private ComponentMapper<PositionComponent> mapperPositionComponent;
 
     private ArcadeWorld arcadeWorld;
 
@@ -38,6 +41,17 @@ public class BulletSystem extends IteratingSystem {
             return;
         }
         bCon.old.set(phys.body.getPosition());
-        phys.body.setLinearVelocity(bCon.move);
+
+        if (bCon.target != -1) {
+            PositionComponent positionComponent = mapperPositionComponent.get(bCon.target);
+            if(positionComponent != null) {
+                Vector2 targetPos = positionComponent.position;
+                Vector2 bulPos = phys.body.getPosition();
+                bCon.move.set(targetPos).sub(bulPos).nor();
+            }
+            else
+                bCon.target = -1;
+        }
+        phys.body.setLinearVelocity(bCon.move.x * bCon.speed, bCon.move.y * bCon.speed);
     }
 }

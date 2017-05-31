@@ -20,6 +20,10 @@ public class BulletComponent extends PooledComponent {
 
     public boolean delete;
 
+    public int target;
+
+    public float speed;
+
     public OnCollisionCallback callback;
 
     public BulletComponent() {

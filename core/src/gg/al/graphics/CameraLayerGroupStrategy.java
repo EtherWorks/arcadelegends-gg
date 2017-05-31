@@ -7,6 +7,8 @@ import com.badlogic.gdx.graphics.g3d.decals.Decal;
 import com.badlogic.gdx.graphics.g3d.decals.DecalMaterial;
 import com.badlogic.gdx.graphics.g3d.decals.GroupStrategy;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.ObjectMap;
@@ -107,6 +109,11 @@ public class CameraLayerGroupStrategy implements GroupStrategy, Disposable {
         shader.begin();
         shader.setUniformMatrix("u_projectionViewMatrix", camera.combined);
         shader.setUniformi("u_texture", 0);
+
+//        shader.setUniformf("u_viewportInverse", new Vector2(1f / camera.viewportWidth, 1f / camera.viewportHeight));
+//        shader.setUniformf("u_offset", 1.0f);
+//        shader.setUniformf("u_step", Math.min(1f, camera.viewportWidth / 70f));
+//        shader.setUniformf("u_color", new Vector3(1, 0, 0));
     }
 
     @Override
@@ -140,6 +147,71 @@ public class CameraLayerGroupStrategy implements GroupStrategy, Disposable {
                 + "{\n" //
                 + "  gl_FragColor = v_color * texture2D(u_texture, v_texCoords);\n" //
                 + "}";
+//        String fragmentShader = "#ifdef GL_ES\n" +
+//                "precision mediump float;\n" +
+//                "precision mediump int;\n" +
+//                "#endif\n" +
+//                "\n" +
+//                "uniform sampler2D u_texture;\n" +
+//                "\n" +
+//                "// The inverse of the viewport dimensions along X and Y\n" +
+//                "uniform vec2 u_viewportInverse;\n" +
+//                "\n" +
+//                "// Color of the outline\n" +
+//                "uniform vec3 u_color;\n" +
+//                "\n" +
+//                "// Thickness of the outline\n" +
+//                "uniform float u_offset;\n" +
+//                "\n" +
+//                "// Step to check for neighbors\n" +
+//                "uniform float u_step;\n" +
+//                "\n" +
+//                "varying vec4 v_color;\n" +
+//                "varying vec2 v_texCoord;\n" +
+//                "\n" +
+//                "#define ALPHA_VALUE_BORDER 0.5\n" +
+//                "\n" +
+//                "void main() {\n" +
+//                "   vec2 T = v_texCoord.xy;\n" +
+//                "\n" +
+//                "   float alpha = 0.0;\n" +
+//                "   bool allin = true;\n" +
+//                "   for( float ix = -u_offset; ix < u_offset; ix += u_step )\n" +
+//                "   {\n" +
+//                "      for( float iy = -u_offset; iy < u_offset; iy += u_step )\n" +
+//                "       {\n" +
+//                "          float newAlpha = texture2D(u_texture, T + vec2(ix, iy) * u_viewportInverse).a;\n" +
+//                "          allin = allin && newAlpha > ALPHA_VALUE_BORDER;\n" +
+//                "          if (newAlpha > ALPHA_VALUE_BORDER && newAlpha >= alpha)\n" +
+//                "          {\n" +
+//                "             alpha = newAlpha;\n" +
+//                "          }\n" +
+//                "      }\n" +
+//                "   }\n" +
+//                "   if (allin)\n" +
+//                "   {\n" +
+//                "      alpha = 0.0;\n" +
+//                "   }\n" +
+//                "\n" +
+//                "   gl_FragColor = vec4(u_color,alpha);\n" +
+//                "}";
+//
+//        String vertexShader = "uniform mat4 u_projectionViewMatrix;\n" +
+//                "\n" +
+//                "attribute vec4 a_position;\n" +
+//                "attribute vec2 a_texCoord0;\n" +
+//                "attribute vec4 a_color;\n" +
+//                "\n" +
+//                "varying vec4 v_color;\n" +
+//                "varying vec2 v_texCoord;\n" +
+//                "\n" +
+//                "uniform vec2 u_viewportInverse;\n" +
+//                "\n" +
+//                "void main() {\n" +
+//                "    gl_Position = u_projectionViewMatrix * a_position;\n" +
+//                "    v_texCoord = a_texCoord0;\n" +
+//                "    v_color = a_color;\n" +
+//                "}";
 
         shader = new ShaderProgram(vertexShader, fragmentShader);
         if (shader.isCompiled() == false)

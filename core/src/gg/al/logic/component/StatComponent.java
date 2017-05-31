@@ -64,8 +64,12 @@ public class StatComponent extends PooledComponent implements ITemplateable {
             float value = baseStats.get(stat);
             value += runtimeStats.get(RuntimeStat.level) * growthStats.get(stat);
             value += value * growthPercentageStats.get(stat);
-            currentStats.put(stat, value);
+            setCurrentStat(stat, value);
         }
+    }
+
+    public void applyStatusEffects()
+    {
         for (StatusEffect effect : statusEffects.values()) {
             effect.applyValue(this);
         }
@@ -118,11 +122,12 @@ public class StatComponent extends PooledComponent implements ITemplateable {
     }
 
     public void setCurrentStat(BaseStat stat, float value) {
-        currentStats.put(stat, value);
+        currentStats.put(stat, value >= stat.max ? stat.max : value <= stat.min ? stat.min : value);
     }
 
-    public void addCurrentStat(BaseStat stat, float value) {
-        currentStats.put(stat, currentStats.get(stat) + value);
+    public void addCurrentStat(BaseStat stat, float add) {
+        float value = currentStats.get(stat) + add;
+        currentStats.put(stat, value >= stat.max ? stat.max : value <= stat.min ? stat.min : value);
     }
 
     public float getCurrentStat(BaseStat stat) {
@@ -130,7 +135,7 @@ public class StatComponent extends PooledComponent implements ITemplateable {
     }
 
     public void setBaseStat(BaseStat stat, float value) {
-        baseStats.put(stat, value);
+        baseStats.put(stat,  value >= stat.max ? stat.max : value <= stat.min ? stat.min : value);
     }
 
     public float getBaseStat(BaseStat stat) {
@@ -173,10 +178,11 @@ public class StatComponent extends PooledComponent implements ITemplateable {
         for (Map.Entry<String, Float> key : statTemplate.getValues().entrySet()) {
             String[] parts = key.getKey().split(DELIM);
             BaseStat stat = BaseStat.valueOf(parts[0]);
+            float value = key.getValue();
             switch (parts[1]) {
                 case BASE:
-                    baseStats.put(stat, key.getValue());
-                    currentStats.put(stat, key.getValue());
+                    baseStats.put(stat, value >= stat.max ? stat.max : value <= stat.min ? stat.min : value);
+                    currentStats.put(stat, value >= stat.max ? stat.max : value <= stat.min ? stat.min : value);
                     break;
                 case GROWTH:
                     growthStats.put(stat, key.getValue());
@@ -212,47 +218,55 @@ public class StatComponent extends PooledComponent implements ITemplateable {
     }
 
     public enum BaseStat {
-        maxHealth,
-        healthRegen,
+        maxHealth(0, Float.MAX_VALUE),
+        healthRegen(0, Float.MAX_VALUE),
 
-        maxActionPoints,
-        actionPointsRegen,
+        maxActionPoints(0, Float.MAX_VALUE),
+        actionPointsRegen(0, Float.MAX_VALUE),
 
-        maxResource,
-        resourceRegen,
+        maxResource(0, Float.MAX_VALUE),
+        resourceRegen(0, Float.MAX_VALUE),
 
-        attackDamage,
-        attackRange,
-        attackSpeed,
+        attackDamage(0, Float.MAX_VALUE),
+        attackRange(0, Float.MAX_VALUE),
+        attackSpeed(0, 2.5f),
 
-        spellPower,
+        spellPower(0, Float.MAX_VALUE),
 
-        armor,
-        armorPenetration,
+        armor(0, Float.MAX_VALUE),
+        armorPenetration(0, Float.MAX_VALUE),
 
-        magicResist,
-        magicResistPenetration,
+        magicResist(0, Float.MAX_VALUE),
+        magicResistPenetration(0, Float.MAX_VALUE),
 
-        criticalStrikeChance,
-        criticalStrikeDamage,
+        criticalStrikeChance(0, Float.MAX_VALUE),
+        criticalStrikeDamage(0, Float.MAX_VALUE),
 
-        tenacity,
+        tenacity(0, Float.MAX_VALUE),
 
-        cooldownReduction,
+        cooldownReduction(0, .45f),
 
-        moveSpeed,
+        moveSpeed(0, Float.MAX_VALUE),
 
-        cooldownAbility1,
-        cooldownAbility2,
-        cooldownAbility3,
-        cooldownAbility4,
-        cooldownTrait,
+        cooldownAbility1(0, Float.MAX_VALUE),
+        cooldownAbility2(0, Float.MAX_VALUE),
+        cooldownAbility3(0, Float.MAX_VALUE),
+        cooldownAbility4(0, Float.MAX_VALUE),
+        cooldownTrait(0, Float.MAX_VALUE),
 
-        costAbility1,
-        costAbility2,
-        costAbility3,
-        costAbility4,
-        costTrait
+        costAbility1(0, Float.MAX_VALUE),
+        costAbility2(0, Float.MAX_VALUE),
+        costAbility3(0, Float.MAX_VALUE),
+        costAbility4(0, Float.MAX_VALUE),
+        costTrait(0, Float.MAX_VALUE);
+
+        public final float min;
+        public final float max;
+
+        BaseStat(float min, float max) {
+            this.max = max;
+            this.min = min;
+        }
     }
 
     public enum RuntimeStat {

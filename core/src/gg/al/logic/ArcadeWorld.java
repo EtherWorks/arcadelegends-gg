@@ -248,6 +248,8 @@ public class ArcadeWorld implements Disposable {
                 Body body = physicsWorld.createBody(bodyDef);
 
                 FixtureDef fixtureDef = new FixtureDef();
+                fixtureDef.filter.categoryBits = physicTemplate.collisionCategory.getCategory();
+                fixtureDef.filter.maskBits = physicTemplate.collisionCategory.getMask();
                 CircleShape shape = new CircleShape();
                 shape.setRadius(physicTemplate.radius);
 
@@ -289,9 +291,13 @@ public class ArcadeWorld implements Disposable {
         return arguments;
     }
 
-    public EntityArguments getArguments(String fileName) throws IOException {
+    public EntityArguments getArguments(String fileName) {
         if (!loadedEntityArguments.containsKey(fileName))
-            return loadArguments(fileName);
+            try {
+                return loadArguments(fileName);
+            } catch (IOException e) {
+                throw new IllegalArgumentException(e);
+            }
         return loadedEntityArguments.get(fileName);
     }
 }

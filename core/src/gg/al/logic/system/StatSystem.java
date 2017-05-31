@@ -6,8 +6,10 @@ import com.artemis.systems.IteratingSystem;
 import com.badlogic.gdx.utils.ObjectMap;
 import gg.al.logic.ArcadeWorld;
 import gg.al.logic.component.CharacterComponent;
+import gg.al.logic.component.InventoryComponent;
 import gg.al.logic.component.StatComponent;
 import gg.al.logic.component.data.Damage;
+import gg.al.logic.component.data.Item;
 import gg.al.logic.component.data.StatusEffect;
 
 /**
@@ -17,6 +19,7 @@ public class StatSystem extends IteratingSystem {
 
     private ComponentMapper<StatComponent> mapperStatComponent;
     private ComponentMapper<CharacterComponent> mapperCharacterComponent;
+    private ComponentMapper<InventoryComponent> mapperInventoryComponent;
 
     private ArcadeWorld arcadeWorld;
 
@@ -58,6 +61,19 @@ public class StatSystem extends IteratingSystem {
         }
 
         stats.recalculateCurrent();
+
+        InventoryComponent inventoryComponent = mapperInventoryComponent.get(entityId);
+        if (inventoryComponent != null) {
+            for (Item item : inventoryComponent.items) {
+                if (item != null)
+                    item.applyValue(stats);
+            }
+            for (Item item : inventoryComponent.items) {
+                if (item != null)
+                    item.applyPercentage(stats);
+            }
+        }
+        stats.applyStatusEffects();
         if (characterComponent != null) {
             characterComponent.character.affectStats(stats);
         }

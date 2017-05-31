@@ -24,6 +24,7 @@ public class CharacterControlSystem extends IteratingSystem {
     private ComponentMapper<PhysicComponent> mapperPhysicComponent;
     private ComponentMapper<StatComponent> mapperStatComponent;
     private ComponentMapper<RenderComponent> mapperRenderComponent;
+    private ComponentMapper<CharacterComponent> mapperCharacterComponent;
 
     private Pool<Vector2> vectorPool;
 
@@ -48,6 +49,7 @@ public class CharacterControlSystem extends IteratingSystem {
     protected void process(int entityId) {
         PositionComponent pos = mapperPosition.get(entityId);
         CharacterControlComponent input = mapperInput.get(entityId);
+        CharacterComponent characterComponent = mapperCharacterComponent.get(entityId);
         StatComponent stats = mapperStatComponent.get(entityId);
         PhysicComponent physicComponent = mapperPhysicComponent.get(entityId);
         RenderComponent renderComponent = mapperRenderComponent.get(entityId);
@@ -102,10 +104,14 @@ public class CharacterControlSystem extends IteratingSystem {
                         renderComponent.setRenderState(ATTACK);
                     if (stats.getRuntimeStat(StatComponent.RuntimeStat.attackSpeedTimer) >= 1 / stats.getCurrentStat(StatComponent.BaseStat.attackSpeed)) {
                         stats.setRuntimeStat(StatComponent.RuntimeStat.attackSpeedTimer, 0);
-                        Damage dmg = new Damage(Damage.DamageType.Normal,
-                                stats.getCurrentStat(StatComponent.BaseStat.attackDamage),
-                                stats.getCurrentStat(StatComponent.BaseStat.armorPenetration));
-                        mapperStatComponent.get(input.targetId).damages.add(dmg);
+                        if (characterComponent.character != null)
+                            characterComponent.character.attack(input.targetId);
+                        else {
+                            Damage dmg = new Damage(Damage.DamageType.Normal,
+                                    stats.getCurrentStat(StatComponent.BaseStat.attackDamage),
+                                    stats.getCurrentStat(StatComponent.BaseStat.armorPenetration));
+                            mapperStatComponent.get(input.targetId).damages.add(dmg);
+                        }
                     } else
                         stats.addRuntimeStat(StatComponent.RuntimeStat.attackSpeedTimer, getWorld().getDelta());
                 } else {

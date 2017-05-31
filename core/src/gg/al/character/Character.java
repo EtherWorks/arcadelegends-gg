@@ -32,12 +32,16 @@ public abstract class Character {
     public final int ABILITY_4 = 4;
 
     protected final float[] cooldowns;
+    protected final float[] castTimer;
+
+
     protected final Pool<Vector2> vectorPool;
     protected int entityID;
     private ArcadeWorld arcadeWorld;
 
     public Character() {
         this.cooldowns = new float[5];
+        this.castTimer = new float[5];
         vectorPool = new Pool<Vector2>() {
             @Override
             protected Vector2 newObject() {
@@ -103,6 +107,15 @@ public abstract class Character {
         onTick(delta);
     }
 
+    public void attack(int enemyId)
+    {
+        StatComponent stats = getComponent(entityID, StatComponent.class);
+        Damage dmg = new Damage(Damage.DamageType.Normal,
+                stats.getCurrentStat(StatComponent.BaseStat.attackDamage),
+                stats.getCurrentStat(StatComponent.BaseStat.armorPenetration));
+        getComponent(enemyId, StatComponent.class).damages.add(dmg);
+    }
+
     protected abstract void onTick(float delta);
 
     protected abstract boolean onCast(int abilityInd);
@@ -153,7 +166,7 @@ public abstract class Character {
         return arcadeWorld.spawn(entity, arguments);
     }
 
-    public EntityArguments getArguments(String fileName) throws IOException {
+    public EntityArguments getArguments(String fileName) {
         return arcadeWorld.getArguments(fileName);
     }
 

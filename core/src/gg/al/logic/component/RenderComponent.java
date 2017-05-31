@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.ObjectMap;
+import gg.al.graphics.renderer.BulletRenderer;
 import gg.al.graphics.renderer.CharacterRenderer;
 import gg.al.logic.component.data.ITemplateable;
 import gg.al.logic.component.data.Template;
@@ -23,7 +24,8 @@ import java.util.Map;
 @Slf4j
 public class RenderComponent extends PooledComponent implements ITemplateable {
 
-    public static final CharacterRenderer PLAYER_RENDERER = new CharacterRenderer();
+    public static final CharacterRenderer CHARACTER_RENDERER = new CharacterRenderer();
+    public static final BulletRenderer BULLET_RENDERER = new BulletRenderer();
     public static final RenderDelegate NULL_RENDERER = new RenderDelegate() {
         @Override
         public void inserted(int entity, RenderSystem renderSystem) {
@@ -119,7 +121,10 @@ public class RenderComponent extends PooledComponent implements ITemplateable {
         this.renderTemplate = renderTemplate;
         switch (renderTemplate.renderType) {
             case "PLAYER":
-                this.renderDelegate = PLAYER_RENDERER;
+                this.renderDelegate = CHARACTER_RENDERER;
+                break;
+            case "BULLET":
+                this.renderDelegate = BULLET_RENDERER;
                 break;
             default:
                 renderDelegate = NULL_RENDERER;

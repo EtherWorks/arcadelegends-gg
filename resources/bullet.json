@@ -7,14 +7,22 @@
   "PhysicComponent": {
     "bodyType": "DynamicBody",
     "radius": 0.2,
+    "collisionCategory": "PROJECTILE",
     "type": "PhysicTemplate"
   },
   "RenderComponent": {
-    "width": 0.0,
-    "height": 0.0,
-    "transparent": false,
-    "animationTemplates": {},
-    "renderType": "",
+    "width": 0.5,
+    "height": 0.5,
+    "transparent": true,
+    "animationTemplates": {
+      "BULLET": {
+        "frameColumns": 1,
+        "frameRows": 1,
+        "frameDuration": 1,
+        "texture": "PT_EZREAL"
+      }
+    },
+    "renderType": "BULLET",
     "type": "RenderTemplate"
   }
 }

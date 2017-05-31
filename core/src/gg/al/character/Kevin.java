@@ -89,32 +89,34 @@ public class Kevin extends Character {
                 }
                 break;
             case ABILITY_3:
-                try {
-                    EntityArguments arguments = getArguments("bullet.json");
-                    PositionComponent.PositionTemplate pos = arguments.get(PositionComponent.class.getSimpleName(), PositionComponent.PositionTemplate.class);
-                    mousePos = getMousePos();
-                    Vector2 charPos = getCharacterPosition();
+                EntityArguments arguments = getArguments("bullet.json");
+                PositionComponent.PositionTemplate pos = arguments.get(PositionComponent.class.getSimpleName(), PositionComponent.PositionTemplate.class);
+                mousePos = getMousePos();
+                Vector2 charPos = getCharacterPosition();
 
-                    Vector2 dir = new Vector2(mousePos).sub(charPos).nor();
-                    pos.x = charPos.x + dir.x;
-                    pos.y = charPos.y + dir.y;
-                    int entity = spawn(Entities.Bullet, arguments);
-                    BulletComponent bCon = getComponent(entity, BulletComponent.class);
-                    getComponent(entity, PhysicComponent.class).body.setBullet(true);
-                    bCon.move.set(dir.scl(10));
-                    bCon.maxDistance = 20;
-                    bCon.callback = (bullet, hit, bFix, hFix, contact) -> {
-                        log.debug("hit");
+                Vector2 dir = new Vector2(mousePos).sub(charPos).nor();
+                pos.x = charPos.x + dir.x;
+                pos.y = charPos.y + dir.y;
+                int entity = spawn(Entities.Bullet, arguments);
+                BulletComponent bCon = getComponent(entity, BulletComponent.class);
+                getComponent(entity, PhysicComponent.class).body.setBullet(true);
+                bCon.speed = 2;
+                bCon.move.set(dir);
+                bCon.old.set(pos.x, pos.y);
+                bCon.target = 1;
+                bCon.maxDistance = 20;
+                final float damage = 600;
+                final int caster = entityID;
+                bCon.callback = (bullet, hit, bFix, hFix, contact) -> {
+                    StatComponent statComponent = getComponent(hit, StatComponent.class);
+                    if (statComponent != null && hit != caster) {
+                        statComponent.damages.add(new Damage(Damage.DamageType.Normal, damage, 0));
                         getComponent(bullet, BulletComponent.class).delete = true;
                         bFix.getBody().setLinearVelocity(Vector2.Zero);
-                        StatComponent statComponent = getComponent(hit, StatComponent.class);
-                        statComponent.damages.add(new Damage(Damage.DamageType.Magic, 600, 0));
-                    };
-                    return true;
-                } catch (IOException e) {
-                    log.error("KevinSpawnError", e);
-                }
-                break;
+                    }
+                    contact.setEnabled(false);
+                };
+                return true;
             case ABILITY_4:
                 ability4_activate = true;
                 return true;
@@ -132,7 +134,38 @@ public class Kevin extends Character {
             ability4_activate = false;
         }
         statComponent.addCurrentStat(StatComponent.BaseStat.attackSpeed,
-                statComponent.getCurrentStat(StatComponent.BaseStat.attackSpeed) *
+                statComponent.getCurrentStat(StatComponent.BaseStat.attackSpeed) * 2 *
                         (1 - (statComponent.getRuntimeStat(StatComponent.RuntimeStat.health) / statComponent.getCurrentStat(StatComponent.BaseStat.maxHealth))));
+    }
+
+    @Override
+    public void attack(int enemyId) {
+        StatComponent stats = getComponent(entityID, StatComponent.class);
+        EntityArguments arguments = getArguments("bullet.json");
+        PositionComponent.PositionTemplate pos = arguments.get(PositionComponent.class.getSimpleName(), PositionComponent.PositionTemplate.class);
+        Vector2 enemyPos = getComponent(enemyId, PositionComponent.class).position;
+        Vector2 charPos = getCharacterPosition();
+
+        Vector2 dir = new Vector2(enemyPos).sub(charPos).nor();
+        pos.x = charPos.x + dir.x;
+        pos.y = charPos.y + dir.y;
+        int entity = spawn(Entities.Bullet, arguments);
+        BulletComponent bCon = getComponent(entity, BulletComponent.class);
+        getComponent(entity, PhysicComponent.class).body.setBullet(true);
+        bCon.speed = 10;
+        bCon.move.set(dir);
+        bCon.old.set(pos.x, pos.y);
+        bCon.target = enemyId;
+        bCon.maxDistance = Float.MAX_VALUE;
+        final float damage = stats.getCurrentStat(StatComponent.BaseStat.attackDamage);
+        final int caster = entityID;
+        bCon.callback = (bullet, hit, bFix, hFix, contact) -> {
+            getComponent(bullet, BulletComponent.class).delete = true;
+            bFix.getBody().setLinearVelocity(Vector2.Zero);
+            StatComponent statComponent = getComponent(hit, StatComponent.class);
+            if (statComponent != null && hit != caster)
+                statComponent.damages.add(new Damage(Damage.DamageType.Normal, damage, 0));
+            contact.setEnabled(false);
+        };
     }
 }
