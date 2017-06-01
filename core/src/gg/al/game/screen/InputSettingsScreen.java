@@ -100,7 +100,8 @@ public class InputSettingsScreen implements IAssetScreen, InputProcessor {
 
         scrollPane = new ScrollPane(inputTable, skin);
         scrollPane.setSize(450, 500);
-        scrollPane.setPosition(x / 2 - 225, y / 2 - 250);
+        scrollPane.setPosition(x / 2 - 225, y / 2 - 150);
+
         stage.addActor(scrollPane);
 
 

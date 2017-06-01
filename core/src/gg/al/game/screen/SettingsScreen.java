@@ -120,6 +120,7 @@ public class SettingsScreen implements IAssetScreen, InputProcessor {
 
         componentMap.put(btTabVideo, tableVideo);
         componentMap.put(btTabAudio, tableAudio);
+        tabbedPane.currentTable(btTabVideo);
         stage.addActor(tabbedPane);
         AL.input.setInputProcessor(new InputMultiplexer(stage, this));
 

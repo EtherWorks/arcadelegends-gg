@@ -52,15 +52,10 @@ public class ALTabbedPane extends Container {
     }
 
     public void centerBaseTable() {
-
-
         this.setPosition(x / 2, y / 1.3f);
-
-
-
     }
 
-    public  void currentTable(TextButton btnTab)
+    public void currentTable(TextButton btnTab)
     {
         Table currentTable = componentMap.get(btnTab);
         contentTable.clear();
