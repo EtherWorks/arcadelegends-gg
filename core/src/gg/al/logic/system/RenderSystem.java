@@ -41,7 +41,7 @@ public class RenderSystem extends BaseEntitySystem {
     @Getter
     private ObjectMap<Integer, FrameBuffer> buffers;
     @Getter
-    private int buffHeight = 256 * 5;
+    private int buffHeight = 256 * 6;
     @Getter
     private int buffWidth = 256 * 3;
     @Getter

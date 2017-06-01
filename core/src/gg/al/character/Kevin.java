@@ -37,8 +37,33 @@ public class Kevin extends Character {
 
     }
 
+
+    protected boolean checkOnCast(int abilityInd) {
+        switch (abilityInd) {
+            case ABILITY_1:
+                return true;
+            case ABILITY_2:
+                Vector2 mousePos = getMousePos();
+                Tile t = getTile(mousePos);
+                if (t.getEntities().size == 0)
+                    return false;
+                int targetId = t.getEntities().first();
+                if (checkRange(entityID, targetId, ABILITY_2_RANGE)) {
+                    extraData[ABILITY_2] = targetId;
+                    return true;
+                }
+            case ABILITY_3:
+                return true;
+            case ABILITY_4:
+                return true;
+            case TRAIT:
+                return true;
+        }
+        return false;
+    }
+
     @Override
-    protected boolean onCast(int abilityInd) {
+    protected void onCast(int abilityInd) {
 
         StatComponent casterStat = getComponent(entityID, StatComponent.class);
         switch (abilityInd) {
@@ -59,39 +84,32 @@ public class Kevin extends Character {
 
                 vectorPool.free(start);
                 vectorPool.free(end);
-                return true;
+                break;
             case ABILITY_2:
-                Vector2 mousePos = getMousePos();
-                Tile t = getTile(mousePos);
-                if (t.getEntities().size == 0)
-                    return false;
-                int targetId = t.getEntities().first();
-                if (checkRange(entityID, targetId, ABILITY_2_RANGE)) {
-                    StatComponent statComponent = getComponent(targetId, StatComponent.class);
-                    statComponent.damages.add(new Damage(Damage.DamageType.True, 10 + casterStat.getCurrentStat(StatComponent.BaseStat.spellPower) * .4f, 0));
-                    statComponent.statusEffects.put(BLEED_NAME, bleed.tickHandler(
-                            new StatusEffect.TickHandler() {
-                                private float time;
+                int targetId = (int) extraData[ABILITY_2];
+                StatComponent statComponent = getComponent(targetId, StatComponent.class);
+                statComponent.damages.add(new Damage(Damage.DamageType.True, 10 + casterStat.getCurrentStat(StatComponent.BaseStat.spellPower) * .4f, 0));
+                statComponent.statusEffects.put(BLEED_NAME, bleed.tickHandler(
+                        new StatusEffect.TickHandler() {
+                            private float time;
 
-                                @Override
-                                public void onTick(float delta, StatComponent statComponent, StatusEffect effect) {
-                                    if (time == -1)
-                                        return;
-                                    time += delta;
-                                    if (time >= .5f || effect.remainingTime <= .5f) {
-                                        statComponent.damages.add(new Damage(Damage.DamageType.Normal, statComponent.getCurrentStat(StatComponent.BaseStat.attackDamage), 0));
-                                        time = effect.remainingTime <= .5f ? -1 : 0;
-                                    }
+                            @Override
+                            public void onTick(float delta, StatComponent statComponent, StatusEffect effect) {
+                                if (time == -1)
+                                    return;
+                                time += delta;
+                                if (time >= .5f || effect.remainingTime <= .5f) {
+                                    statComponent.damages.add(new Damage(Damage.DamageType.Normal, statComponent.getCurrentStat(StatComponent.BaseStat.attackDamage), 0));
+                                    time = effect.remainingTime <= .5f ? -1 : 0;
                                 }
                             }
-                    ).build());
-                    return true;
-                }
+                        }
+                ).build());
                 break;
             case ABILITY_3:
                 EntityArguments arguments = getArguments("bullet.json");
                 PositionComponent.PositionTemplate pos = arguments.get(PositionComponent.class.getSimpleName(), PositionComponent.PositionTemplate.class);
-                mousePos = getMousePos();
+                Vector2 mousePos = getMousePos();
                 Vector2 charPos = getCharacterPosition();
 
                 Vector2 dir = new Vector2(mousePos).sub(charPos).nor();
@@ -108,20 +126,19 @@ public class Kevin extends Character {
                 final float damage = 600;
                 final int caster = entityID;
                 bCon.callback = (bullet, hit, bFix, hFix, contact) -> {
-                    StatComponent statComponent = getComponent(hit, StatComponent.class);
-                    if (statComponent != null && hit != caster) {
-                        statComponent.damages.add(new Damage(Damage.DamageType.Normal, damage, 0));
+                    StatComponent hitStat = getComponent(hit, StatComponent.class);
+                    if (hitStat != null && hit != caster) {
+                        hitStat.damages.add(new Damage(Damage.DamageType.Normal, damage, 0));
                         getComponent(bullet, BulletComponent.class).delete = true;
                         bFix.getBody().setLinearVelocity(Vector2.Zero);
                     }
                     contact.setEnabled(false);
                 };
-                return true;
+                break;
             case ABILITY_4:
                 ability4_activate = true;
-                return true;
+                break;
         }
-        return false;
     }
 
     @Override

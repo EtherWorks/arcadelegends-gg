@@ -258,7 +258,13 @@ public class StatComponent extends PooledComponent implements ITemplateable {
         costAbility2(0, Float.MAX_VALUE),
         costAbility3(0, Float.MAX_VALUE),
         costAbility4(0, Float.MAX_VALUE),
-        costTrait(0, Float.MAX_VALUE);
+        costTrait(0, Float.MAX_VALUE),
+
+        castTimeAbility1(0, Float.MAX_VALUE),
+        castTimeAbility2(0, Float.MAX_VALUE),
+        castTimeAbility3(0, Float.MAX_VALUE),
+        castTimeAbility4(0, Float.MAX_VALUE),
+        castTimeTrait(0, Float.MAX_VALUE);
 
         public final float min;
         public final float max;

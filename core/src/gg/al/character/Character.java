@@ -6,6 +6,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.Ray;
 import com.badlogic.gdx.utils.IntArray;
+import com.badlogic.gdx.utils.ObjectMap;
 import com.badlogic.gdx.utils.Pool;
 import gg.al.game.AL;
 import gg.al.logic.ArcadeWorld;
@@ -17,8 +18,6 @@ import gg.al.logic.component.data.StatusEffect;
 import gg.al.logic.entity.Entities;
 import gg.al.logic.entity.EntityArguments;
 import gg.al.logic.map.Tile;
-
-import java.io.IOException;
 
 /**
  * Created by Thomas Neumann on 23.05.2017.<br />
@@ -33,7 +32,8 @@ public abstract class Character {
 
     protected final float[] cooldowns;
     protected final float[] castTimer;
-
+    protected final boolean[] casting;
+    protected final Object[] extraData;
 
     protected final Pool<Vector2> vectorPool;
     protected int entityID;
@@ -42,6 +42,9 @@ public abstract class Character {
     public Character() {
         this.cooldowns = new float[5];
         this.castTimer = new float[5];
+        this.casting = new boolean[5];
+        this.extraData = new Object[5];
+
         vectorPool = new Pool<Vector2>() {
             @Override
             protected Vector2 newObject() {
@@ -53,6 +56,14 @@ public abstract class Character {
                 object.setZero();
             }
         };
+    }
+
+    public boolean isCasting() {
+        return casting[TRAIT] || casting[ABILITY_1] || casting[ABILITY_2] || casting[ABILITY_3] || casting[ABILITY_4];
+    }
+
+    public boolean isCasting(int ability) {
+        return casting[ability];
     }
 
     public void setEntityID(int entityID) {
@@ -68,32 +79,40 @@ public abstract class Character {
         if (cooldowns[abilityInd] == 0) {
             float cooldown = 0;
             float cost = 0;
+            float castTime = 0;
             switch (abilityInd) {
                 case TRAIT:
                     cooldown = statComponent.getCurrentStat(StatComponent.BaseStat.cooldownTrait);
                     cost = statComponent.getCurrentStat(StatComponent.BaseStat.costTrait);
+                    castTime = statComponent.getCurrentStat(StatComponent.BaseStat.castTimeTrait);
                     break;
                 case ABILITY_1:
                     cooldown = statComponent.getCurrentStat(StatComponent.BaseStat.cooldownAbility1);
                     cost = statComponent.getCurrentStat(StatComponent.BaseStat.costAbility1);
+                    castTime = statComponent.getCurrentStat(StatComponent.BaseStat.castTimeAbility1);
                     break;
                 case ABILITY_2:
                     cooldown = statComponent.getCurrentStat(StatComponent.BaseStat.cooldownAbility2);
                     cost = statComponent.getCurrentStat(StatComponent.BaseStat.costAbility2);
+                    castTime = statComponent.getCurrentStat(StatComponent.BaseStat.castTimeAbility2);
                     break;
                 case ABILITY_3:
                     cooldown = statComponent.getCurrentStat(StatComponent.BaseStat.cooldownAbility3);
                     cost = statComponent.getCurrentStat(StatComponent.BaseStat.costAbility3);
+                    castTime = statComponent.getCurrentStat(StatComponent.BaseStat.castTimeAbility3);
                     break;
                 case ABILITY_4:
                     cooldown = statComponent.getCurrentStat(StatComponent.BaseStat.cooldownAbility4);
                     cost = statComponent.getCurrentStat(StatComponent.BaseStat.costAbility4);
+                    castTime = statComponent.getCurrentStat(StatComponent.BaseStat.castTimeAbility4);
                     break;
             }
-            if (statComponent.getRuntimeStat(StatComponent.RuntimeStat.resource) - cost >= 0) {
-                if (onCast(abilityInd)) {
+            if (!isCasting() && statComponent.getRuntimeStat(StatComponent.RuntimeStat.resource) - cost >= 0) {
+                if (checkOnCast(abilityInd)) {
                     cooldowns[abilityInd] = cooldown;
                     statComponent.addRuntimeStat(StatComponent.RuntimeStat.resource, -cost);
+                    casting[abilityInd] = true;
+                    castTimer[abilityInd] = castTime;
                 }
             }
         }
@@ -103,12 +122,19 @@ public abstract class Character {
         for (int i = 0; i < cooldowns.length; i++) {
             if (cooldowns[i] != 0)
                 cooldowns[i] = cooldowns[i] - delta <= 0 ? 0 : cooldowns[i] - delta;
+            if (casting[i]) {
+                castTimer[i] -= delta;
+                if (castTimer[i] <= 0) {
+                    castTimer[i] = 0;
+                    casting[i] = false;
+                    onCast(i);
+                }
+            }
         }
         onTick(delta);
     }
 
-    public void attack(int enemyId)
-    {
+    public void attack(int enemyId) {
         StatComponent stats = getComponent(entityID, StatComponent.class);
         Damage dmg = new Damage(Damage.DamageType.Normal,
                 stats.getCurrentStat(StatComponent.BaseStat.attackDamage),
@@ -118,7 +144,9 @@ public abstract class Character {
 
     protected abstract void onTick(float delta);
 
-    protected abstract boolean onCast(int abilityInd);
+    protected abstract boolean checkOnCast(int abilityInd);
+
+    protected abstract void onCast(int abilityInd);
 
     public abstract void affectStats(StatComponent statComponent);
 

@@ -20,6 +20,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import gg.al.character.Kevin;
 import gg.al.game.AL;
 import gg.al.graphics.CameraLayerGroupStrategy;
+import gg.al.graphics.renderer.CharacterRenderer;
 import gg.al.logic.component.*;
 import gg.al.logic.component.data.Template;
 import gg.al.logic.entity.Entities;
@@ -140,6 +141,10 @@ public class ArcadeWorld implements Disposable {
                     positionB.resetPos = true;
                     inputA.move.set(positionA.position);
                     inputB.move.set(positionB.position);
+                    RenderComponent renderComponentA = entityWorld.getMapper(RenderComponent.class).get(entityIdA);
+                    RenderComponent renderComponentB = entityWorld.getMapper(RenderComponent.class).get(entityIdB);
+                    renderComponentA.setRenderState(CharacterRenderer.PlayerRenderState.IDLE);
+                    renderComponentB.setRenderState(CharacterRenderer.PlayerRenderState.IDLE);
                 }
 
 

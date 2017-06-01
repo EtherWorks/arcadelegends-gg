@@ -60,7 +60,6 @@ public class BulletRenderer implements RenderComponent.RenderDelegate {
 
 
         float deg = (float) (Math.atan2(physic.body.getLinearVelocity().y, physic.body.getLinearVelocity().x)*180.0/Math.PI);
-        log.debug("{}: {}", entityId, deg);
         Decal decal = renderSystem.getDecalMap().get(entityId);
         decal.setRotationZ(deg);
         float stateTime = renderSystem.getStateTime();
