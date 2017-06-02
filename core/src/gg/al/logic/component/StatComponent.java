@@ -7,6 +7,7 @@ import gg.al.logic.component.data.Damage;
 import gg.al.logic.component.data.ITemplateable;
 import gg.al.logic.component.data.StatusEffect;
 import gg.al.logic.component.data.Template;
+import gg.al.util.Constants;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -229,7 +230,7 @@ public class StatComponent extends PooledComponent implements ITemplateable {
 
         attackDamage(0, Float.MAX_VALUE),
         attackRange(0, Float.MAX_VALUE),
-        attackSpeed(0, 2.5f),
+        attackSpeed(0, Constants.MAX_ATTACKSPEED),
 
         spellPower(0, Float.MAX_VALUE),
 
@@ -244,7 +245,7 @@ public class StatComponent extends PooledComponent implements ITemplateable {
 
         tenacity(0, Float.MAX_VALUE),
 
-        cooldownReduction(0, .45f),
+        cooldownReduction(0, Constants.MAX_CDR),
 
         moveSpeed(0, Float.MAX_VALUE),
 
@@ -264,7 +265,8 @@ public class StatComponent extends PooledComponent implements ITemplateable {
         castTimeAbility2(0, Float.MAX_VALUE),
         castTimeAbility3(0, Float.MAX_VALUE),
         castTimeAbility4(0, Float.MAX_VALUE),
-        castTimeTrait(0, Float.MAX_VALUE);
+        castTimeTrait(0, Float.MAX_VALUE),
+        attackPrepTime(0, Float.MAX_VALUE);
 
         public final float min;
         public final float max;
@@ -281,7 +283,6 @@ public class StatComponent extends PooledComponent implements ITemplateable {
         resource,
         level,
         experience,
-        attackSpeedTimer,
     }
 
     public enum FlagStat {

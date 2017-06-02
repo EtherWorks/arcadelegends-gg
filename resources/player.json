@@ -13,7 +13,7 @@
       "attackDamage_Base": 10.0,
       "attackDamage_Growth": 0.0,
       "attackDamage_GrowthPercentage": 0.0,
-      "attackRange_Base": 20.0,
+      "attackRange_Base": 1.5,
       "attackRange_Growth": 0.0,
       "attackRange_GrowthPercentage": 0.0,
       "attackSpeed_Base": 0.8,
@@ -102,7 +102,10 @@
       "spellPower_GrowthPercentage": 0.0,
       "tenacity_Base": 0.0,
       "tenacity_Growth": 0.0,
-      "tenacity_GrowthPercentage": 0.0
+      "tenacity_GrowthPercentage": 0.0,
+      "attackPrepTime_Base": 0.25,
+      "attackPrepTime_Growth": 0.0,
+      "attackPrepTime_GrowthPercentage": 0.0
     },
     "customValues": {
     },

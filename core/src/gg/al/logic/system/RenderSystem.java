@@ -4,33 +4,23 @@ import com.artemis.Aspect;
 import com.artemis.BaseEntitySystem;
 import com.artemis.ComponentMapper;
 import com.artemis.utils.IntBag;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.assets.AssetDescriptor;
 import com.badlogic.gdx.assets.AssetManager;
-import com.badlogic.gdx.graphics.*;
-import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.Camera;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g3d.decals.Decal;
 import com.badlogic.gdx.graphics.g3d.decals.DecalBatch;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.BufferUtils;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import gg.al.game.AL;
-import gg.al.logic.component.PhysicComponent;
-import gg.al.logic.component.PositionComponent;
-import gg.al.logic.component.RenderComponent;
-import gg.al.logic.component.StatComponent;
+import gg.al.logic.component.*;
 import gg.al.util.Assets;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-
-import java.nio.IntBuffer;
-import java.util.Map;
 
 /**
  * Created by Thomas Neumann on 30.03.2017.<br />
@@ -38,6 +28,15 @@ import java.util.Map;
 @Slf4j
 public class RenderSystem extends BaseEntitySystem {
 
+    @Getter
+    private final ObjectMap<Integer, Decal> decalMap;
+    @Getter
+    private final ObjectMap<Integer, Decal> uiMap;
+    private final Array<Decal> tempDecals;
+    @Getter
+    private final DecalBatch decalBatch;
+    @Getter
+    private final AssetManager assetManager;
     @Getter
     private ObjectMap<Integer, FrameBuffer> buffers;
     @Getter
@@ -55,15 +54,6 @@ public class RenderSystem extends BaseEntitySystem {
     @Getter
     private float worldDegree;
     @Getter
-    private final ObjectMap<Integer, Decal> decalMap;
-    @Getter
-    private final ObjectMap<Integer, Decal> uiMap;
-    private final Array<Decal> tempDecals;
-    @Getter
-    private final DecalBatch decalBatch;
-    @Getter
-    private final AssetManager assetManager;
-    @Getter
     private ComponentMapper<RenderComponent> mapperRender;
     @Getter
     private ComponentMapper<PositionComponent> mapperPosition;
@@ -71,6 +61,8 @@ public class RenderSystem extends BaseEntitySystem {
     private ComponentMapper<PhysicComponent> mapperPhysic;
     @Getter
     private ComponentMapper<StatComponent> mapperStats;
+    @Getter
+    private ComponentMapper<CharacterComponent> mapperCharacterComponent;
     @Getter
     private Assets.LevelAssets levelAssets;
 

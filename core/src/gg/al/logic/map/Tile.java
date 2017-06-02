@@ -59,6 +59,7 @@ public class Tile {
         return "Tile{" +
                 "x=" + x +
                 ", y=" + y +
+                ", e=" + entities +
                 '}';
     }
 }

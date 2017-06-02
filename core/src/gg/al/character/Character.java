@@ -9,6 +9,7 @@ import com.badlogic.gdx.utils.IntArray;
 import com.badlogic.gdx.utils.Pool;
 import gg.al.game.AL;
 import gg.al.logic.ArcadeWorld;
+import gg.al.logic.component.CharacterComponent;
 import gg.al.logic.component.PhysicComponent;
 import gg.al.logic.component.PositionComponent;
 import gg.al.logic.component.StatComponent;
@@ -33,8 +34,13 @@ public abstract class Character {
     protected final float[] castTimer;
     protected final boolean[] casting;
     protected final Object[] extraData;
-
     protected final Pool<Vector2> vectorPool;
+    protected boolean preparingAttack;
+    protected boolean finishedAttack;
+    protected boolean attackAccomplished;
+    protected float castAttackSpeed;
+    protected float attackTimer;
+    protected float prepTime;
     protected int entityID;
     private ArcadeWorld arcadeWorld;
 
@@ -106,6 +112,7 @@ public abstract class Character {
                     castTime = statComponent.getCurrentStat(StatComponent.BaseStat.castTimeAbility4);
                     break;
             }
+            cooldown -= cooldown * statComponent.getCurrentStat(StatComponent.BaseStat.cooldownReduction);
             if (!isCasting() && statComponent.getRuntimeStat(StatComponent.RuntimeStat.resource) - cost >= 0) {
                 if (checkOnCast(abilityInd)) {
                     cooldowns[abilityInd] = cooldown;
@@ -130,7 +137,53 @@ public abstract class Character {
                 }
             }
         }
+        if (!finishedAttack && (preparingAttack || attackAccomplished)) {
+            attackTimer -= delta;
+            if (attackTimer <= prepTime * (1 / castAttackSpeed) && !attackAccomplished) {
+                CharacterComponent character = getComponent(entityID, CharacterComponent.class);
+                if (character.targetId != -1) {
+                    StatComponent stats = getComponent(entityID, StatComponent.class);
+                    PositionComponent otherPos = getComponent(character.targetId, PositionComponent.class);
+                    if (otherPos != null) {
+                        if (checkRange(entityID, character.targetId, stats.getCurrentStat(StatComponent.BaseStat.attackRange))) {
+                            attack(character.targetId);
+                            preparingAttack = false;
+                            attackAccomplished = true;
+                        }
+                    }
+                } else {
+                    stopAttack();
+                }
+            }
+            if (attackTimer <= 0) {
+                attackTimer = 0;
+                finishedAttack = true;
+            }
+        }
         onTick(delta);
+    }
+
+    public void startAttack() {
+        if (!preparingAttack) {
+            StatComponent stats = getComponent(entityID, StatComponent.class);
+            preparingAttack = true;
+            finishedAttack = false;
+            attackAccomplished = false;
+            attackTimer = 1 / stats.getCurrentStat(StatComponent.BaseStat.attackSpeed);
+            castAttackSpeed = stats.getCurrentStat(StatComponent.BaseStat.attackSpeed);
+            prepTime = stats.getCurrentStat(StatComponent.BaseStat.attackPrepTime);
+        }
+    }
+
+    public void stopAttack() {
+        if (preparingAttack) {
+            preparingAttack = false;
+            attackTimer = 0;
+            castAttackSpeed = 0;
+            finishedAttack = true;
+            attackAccomplished = false;
+            prepTime = 0;
+        }
     }
 
     public void attack(int enemyId) {
@@ -139,7 +192,9 @@ public abstract class Character {
                 stats.getCurrentStat(StatComponent.BaseStat.attackDamage),
                 stats.getCurrentStat(StatComponent.BaseStat.armorPenetration));
         getComponent(enemyId, StatComponent.class).damages.add(dmg);
+
     }
+
 
     protected abstract void onTick(float delta);
 
@@ -148,6 +203,14 @@ public abstract class Character {
     protected abstract void onCast(int abilityInd);
 
     public abstract void affectStats(StatComponent statComponent);
+
+    public float getRenderMultiplicator() {
+        return ((1 / castAttackSpeed) - attackTimer) / (1 / castAttackSpeed);
+    }
+
+    public boolean hasFinishedAttack() {
+        return finishedAttack;
+    }
 
     protected <T extends Component> T getComponent(int entityID, Class<T> type) {
         return arcadeWorld.getEntityWorld().getMapper(type).get(entityID);

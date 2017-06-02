@@ -19,7 +19,10 @@ import gg.al.character.Character;
 import gg.al.config.IInputConfig;
 import gg.al.game.AL;
 import gg.al.logic.ArcadeWorld;
-import gg.al.logic.component.*;
+import gg.al.logic.component.CharacterComponent;
+import gg.al.logic.component.InventoryComponent;
+import gg.al.logic.component.PositionComponent;
+import gg.al.logic.component.StatComponent;
 import gg.al.logic.component.data.Damage;
 import gg.al.logic.component.data.Item;
 import gg.al.logic.component.data.StatusEffect;
@@ -113,7 +116,7 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
                 int id = arcadeWorld.spawn(Entities.Player, arguments);
                 statComponent = arcadeWorld.getEntityWorld().getMapper(StatComponent.class).get(id);
                 statComponent.setFlag(StatComponent.FlagStat.deleteOnDeath, true);
-                CharacterControlComponent characterControlComponent = arcadeWorld.getEntityWorld().getMapper(CharacterControlComponent.class).get(id);
+                CharacterComponent characterControlComponent = arcadeWorld.getEntityWorld().getMapper(CharacterComponent.class).get(id);
                 characterControlComponent.targetId = 0;
                 break;
             case Input.Keys.ESCAPE:
@@ -146,6 +149,10 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
     @Override
     public void show() {
         if (arcadeWorld == null || reInit) {
+            AL.getAudioManager().registerSound("sword_1", levelAssets.sword_1);
+            AL.getAudioManager().registerSound("sword_2", levelAssets.sword_2);
+            AL.getAudioManager().registerSound("sword_3", levelAssets.sword_3);
+            AL.getAudioManager().registerSound("sword_4", levelAssets.sword_4);
             fpsBatch = new SpriteBatch();
             font = new BitmapFont();
 
@@ -202,6 +209,10 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
             fpsBatch.dispose();
             arcadeWorld.dispose();
             AL.getAssetManager().unloadAssetFields(levelAssets);
+            AL.getAudioManager().unregisterSound("sword_1");
+            AL.getAudioManager().unregisterSound("sword_2");
+            AL.getAudioManager().unregisterSound("sword_3");
+            AL.getAudioManager().unregisterSound("sword_4");
         }
     }
 
@@ -242,9 +253,12 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
                     positionDef.x = posX;
                     positionDef.y = posY;
                     InventoryComponent inventoryComponent = arcadeWorld.getEntityWorld().getMapper(InventoryComponent.class).get(playerEnt);
-                    inventoryComponent.items[0] = Item.builder().name("Armor").flatStat(StatComponent.BaseStat.armor, 100f).build();
+                    inventoryComponent.items[0] = Item.builder().name("Armor")
+                            .flatStat(StatComponent.BaseStat.armor, 50f)
+                            .flatStat(StatComponent.BaseStat.cooldownReduction, 0.1f)
+                            .build();
                 } else {
-                    CharacterControlComponent input = arcadeWorld.getEntityWorld().getComponentOf(playerEnt, CharacterControlComponent.class);
+                    CharacterComponent input = arcadeWorld.getEntityWorld().getComponentOf(playerEnt, CharacterComponent.class);
                     input.move.set((int) mapCoord.x, (int) mapCoord.y);
                 }
                 break;
@@ -252,7 +266,7 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
                 Tile t = arcadeWorld.getTile(mapCoord);
                 try {
                     int id = t.getEntities().first();
-                    CharacterControlComponent input = arcadeWorld.getEntityWorld().getMapper(CharacterControlComponent.class).get(playerEnt);
+                    CharacterComponent input = arcadeWorld.getEntityWorld().getMapper(CharacterComponent.class).get(playerEnt);
                     input.targetId = id;
                     log.debug("{}", id);
                 } catch (IllegalStateException ex) {
@@ -297,7 +311,7 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
 
         @Override
         public void onInput() {
-            CharacterControlComponent input = arcadeWorld.getEntityWorld().getComponentOf(playerEnt, CharacterControlComponent.class);
+            CharacterComponent input = arcadeWorld.getEntityWorld().getComponentOf(playerEnt, CharacterComponent.class);
 
             PositionComponent position = arcadeWorld.getEntityWorld().getComponentOf(playerEnt, PositionComponent.class);
             if (!input.move.equals(position.position))

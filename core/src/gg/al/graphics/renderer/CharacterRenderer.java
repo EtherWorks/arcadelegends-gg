@@ -9,10 +9,7 @@ import com.badlogic.gdx.graphics.g3d.decals.Decal;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.utils.Array;
 import gg.al.game.AL;
-import gg.al.logic.component.PhysicComponent;
-import gg.al.logic.component.PositionComponent;
-import gg.al.logic.component.RenderComponent;
-import gg.al.logic.component.StatComponent;
+import gg.al.logic.component.*;
 import gg.al.logic.system.RenderSystem;
 
 import java.util.Map;
@@ -64,13 +61,13 @@ public class CharacterRenderer implements RenderComponent.RenderDelegate {
         PhysicComponent physic = renderSystem.getMapperPhysic().get(entityId);
         PositionComponent position = renderSystem.getMapperPosition().get(entityId);
         RenderComponent render = renderSystem.getMapperRender().get(entityId);
-
         StatComponent stats = renderSystem.getMapperStats().get(entityId);
+
+        CharacterComponent character = renderSystem.getMapperCharacterComponent().get(entityId);
         Decal decal = renderSystem.getDecalMap().get(entityId);
         float stateTime = renderSystem.getStateTime();
-        if (stats != null && render.isInState(PlayerRenderState.ATTACK)) {
-            stateTime = render.animations.get(PlayerRenderState.ATTACK.name()).getAnimationDuration()
-                    * (stats.getRuntimeStat(StatComponent.RuntimeStat.attackSpeedTimer) / (1 / stats.getCurrentStat(StatComponent.BaseStat.attackSpeed)));
+        if (character != null && render.isInState(PlayerRenderState.ATTACK)) {
+            stateTime = render.animations.get(PlayerRenderState.ATTACK.name()).getAnimationDuration() * character.getRenderMultiplicator();
         }
         TextureRegion region = render.getCurrentKeyFrame(stateTime);
         region.flip(region.isFlipX() ^ render.flipX, region.isFlipY() ^ render.flipY);
@@ -84,23 +81,18 @@ public class CharacterRenderer implements RenderComponent.RenderDelegate {
         else
             decal.setPosition(position.position.x, position.position.y, decal.getZ());
 
-        if (stats != null) {
-            FrameBuffer buffer = renderSystem.getBuffers().get(entityId);
-            buffer.begin();
-            AL.graphics.getGL20().glClearColor(0, 0, 0, 0);
-            AL.graphics.getGL20().glClear(GL20.GL_COLOR_BUFFER_BIT);
-            renderSystem.getSpriteBatch().setProjectionMatrix(renderSystem.getUiCamera().combined);
-            renderSystem.getSpriteBatch().begin();
-            renderSystem.getFont().draw(renderSystem.getSpriteBatch(), stats.toString(), 0, renderSystem.getBuffHeight());
-            renderSystem.getSpriteBatch().end();
-            buffer.end();
+        FrameBuffer buffer = renderSystem.getBuffers().get(entityId);
+        buffer.begin();
+        AL.graphics.getGL20().glClearColor(0, 0, 0, 0);
+        AL.graphics.getGL20().glClear(GL20.GL_COLOR_BUFFER_BIT);
+        renderSystem.getSpriteBatch().setProjectionMatrix(renderSystem.getUiCamera().combined);
+        renderSystem.getSpriteBatch().begin();
+        renderSystem.getFont().draw(renderSystem.getSpriteBatch(), stats.toString(), 0, renderSystem.getBuffHeight());
+        renderSystem.getSpriteBatch().end();
+        buffer.end();
 
-            Decal uiDecal = renderSystem.getUiMap().get(entityId);
-            if (physic != null)
-                uiDecal.setPosition(physic.body.getPosition().x + 2, physic.body.getPosition().y - 3, uiDecal.getZ());
-            else
-                uiDecal.setPosition(position.position.x + 2, position.position.y - 3, uiDecal.getZ());
-        }
+        Decal uiDecal = renderSystem.getUiMap().get(entityId);
+        uiDecal.setPosition(physic.body.getPosition().x + 2, physic.body.getPosition().y - 3, uiDecal.getZ());
     }
 
     @Override
@@ -116,8 +108,7 @@ public class CharacterRenderer implements RenderComponent.RenderDelegate {
         return PlayerRenderState.IDLE.name();
     }
 
-    public enum PlayerRenderState
-    {
+    public enum PlayerRenderState {
         IDLE, MOVE_SIDE, ATTACK, MOVE_UP, MOVE_DOWN, TAUNT
     }
 }

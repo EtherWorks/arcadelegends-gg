@@ -115,13 +115,12 @@ public class ArcadeWorld implements Disposable {
         WorldConfiguration worldConfiguration = new WorldConfigurationBuilder()
                 .with(1,
                         new StatSystem(this),
-                        new CharacterSystem(),
+                        new CharacterSystem(physicsWorld),
                         new RegenSystem(.5f)
                 )
                 .with(0,
                         new PhysicPositionSystem(),
                         new PositionTileSystem(logicMap),
-                        new CharacterControlSystem(physicsWorld),
                         new BulletSystem(this),
                         renderSystem = new RenderSystem(decalBatch, AL.getAssetManager(), worldViewRotation, levelAssets)
                 )
@@ -134,8 +133,8 @@ public class ArcadeWorld implements Disposable {
             public void beginContact(Contact contact) {
                 int entityIdA = (int) contact.getFixtureA().getBody().getUserData();
                 int entityIdB = (int) contact.getFixtureB().getBody().getUserData();
-                CharacterControlComponent inputA = entityWorld.getMapper(CharacterControlComponent.class).get(entityIdA);
-                CharacterControlComponent inputB = entityWorld.getMapper(CharacterControlComponent.class).get(entityIdB);
+                CharacterComponent inputA = entityWorld.getMapper(CharacterComponent.class).get(entityIdA);
+                CharacterComponent inputB = entityWorld.getMapper(CharacterComponent.class).get(entityIdB);
 
                 if (inputA != null && inputB != null) {
                     PositionComponent positionA = entityWorld.getMapper(PositionComponent.class).get(entityIdA);
@@ -242,10 +241,17 @@ public class ArcadeWorld implements Disposable {
             } else if (RenderComponent.class.isAssignableFrom(componentType)) {
                 RenderComponent renderComponent = entityWorld.getMapper(RenderComponent.class).get(entityID);
                 renderComponent.fromTemplate((Template) arguments.get(RenderComponent.class.getSimpleName()));
-            } else if (CharacterControlComponent.class.isAssignableFrom(componentType)) {
-                CharacterControlComponent controlComponent = entityWorld.getMapper(CharacterControlComponent.class).get(entityID);
+            } else if (CharacterComponent.class.isAssignableFrom(componentType)) {
+                CharacterComponent controlComponent = entityWorld.getMapper(CharacterComponent.class).get(entityID);
                 PositionComponent.PositionTemplate pos = arguments.get("PositionComponent", PositionComponent.PositionTemplate.class);
                 controlComponent.move.set(pos.x, pos.y);
+                switch (arguments.get(CharacterComponent.class.getSimpleName(), CharacterComponent.CharacterTemplate.class).characterName) {
+                    case "Kevin":
+                        controlComponent.character = new Kevin();
+                        break;
+                }
+                controlComponent.character.setEntityID(entityID);
+                controlComponent.character.setArcadeWorld(this);
             } else if (PhysicComponent.class.isAssignableFrom(componentType)) {
                 PhysicComponent.PhysicTemplate physicTemplate = arguments.get(PhysicComponent.class.getSimpleName(), PhysicComponent.PhysicTemplate.class);
                 PhysicComponent physicComponent = entityWorld.getMapper(PhysicComponent.class).get(entityID);
@@ -269,16 +275,6 @@ public class ArcadeWorld implements Disposable {
                 shape.dispose();
                 body.setUserData(entityID);
                 physicComponent.body = body;
-            } else if (CharacterComponent.class.isAssignableFrom(componentType)) {
-                //set character
-                CharacterComponent characterComponent = entityWorld.getMapper(CharacterComponent.class).get(entityID);
-                switch (arguments.get(CharacterComponent.class.getSimpleName(), CharacterComponent.CharacterTemplate.class).characterName) {
-                    case "Kevin":
-                        characterComponent.character = new Kevin();
-                        break;
-                }
-                characterComponent.character.setEntityID(entityID);
-                characterComponent.character.setArcadeWorld(this);
             }
         }
         return entityID;

@@ -1,6 +1,7 @@
 package gg.al.util;
 
 import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -44,6 +45,16 @@ public class Assets {
         public TextureRegion squatsheet;
         @AssignmentAssetManager.Asset("assets/map/tileMap.tmx")
         public TiledMap tileMap;
+
+        @AssignmentAssetManager.Asset("assets/audio/sword_1.wav")
+        public Sound sword_1;
+        @AssignmentAssetManager.Asset("assets/audio/sword_2.wav")
+        public Sound sword_2;
+        @AssignmentAssetManager.Asset("assets/audio/sword_3.wav")
+        public Sound sword_3;
+        @AssignmentAssetManager.Asset("assets/audio/sword_4.wav")
+        public Sound sword_4;
+
         private BiMap<String, Object> assetMap;
 
         public <T> T get(String name) {

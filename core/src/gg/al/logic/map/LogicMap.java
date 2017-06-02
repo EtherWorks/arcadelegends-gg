@@ -5,6 +5,8 @@ import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.math.Vector2;
 import lombok.Getter;
 
+import java.util.Arrays;
+
 /**
  * Created by Thomas Neumann on 30.03.2017.<br />
  */
@@ -51,5 +53,10 @@ public class LogicMap {
 
     public boolean inBounds(Vector2 pos, Vector2 translate) {
         return inBounds((int) pos.x, (int) pos.y, (int) translate.x, (int) translate.y);
+    }
+
+    @Override
+    public String toString() {
+        return Arrays.deepToString(map);
     }
 }

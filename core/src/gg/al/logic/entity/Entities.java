@@ -13,7 +13,6 @@ public enum Entities {
             PositionComponent.class,
             StatComponent.class,
             PhysicComponent.class,
-            CharacterControlComponent.class,
             CharacterComponent.class,
             InventoryComponent.class),
     Bullet(1,

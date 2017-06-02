@@ -88,11 +88,11 @@ public class StatSystem extends IteratingSystem {
                         break;
                     case Magic:
                         float mr = stats.getCurrentStat(StatComponent.BaseStat.magicResist) - stats.getCurrentStat(StatComponent.BaseStat.magicResist) * damage.penetration / 100;
-                        amount = amount - amount * mr / 100;
+                        amount *= 100 / (100 + mr);
                         break;
                     case Normal:
                         float ar = stats.getCurrentStat(StatComponent.BaseStat.armor) - stats.getCurrentStat(StatComponent.BaseStat.armor) * damage.penetration / 100;
-                        amount = amount - amount * ar / 100;
+                        amount *= 100 / (100 + ar);
                         break;
                 }
                 if ((int) (stats.getRuntimeStat(StatComponent.RuntimeStat.health) - amount) <= 0) {
