@@ -1,0 +1,60 @@
+
+char.png
+size: 8192,8192
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+kevin/autoattack
+  rotate: false
+  xy: 2, 36
+  size: 3990, 6384
+  orig: 3990, 6384
+  offset: 0, 0
+  index: -1
+kevin/ezreal
+  rotate: false
+  xy: 2, 2
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+kevin/frontwalk
+  rotate: false
+  xy: 3994, 36
+  size: 3990, 6384
+  orig: 3990, 6384
+  offset: 0, 0
+  index: -1
+
+char2.png
+size: 8192,8192
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+kevin/rightsidewalk
+  rotate: false
+  xy: 2, 2
+  size: 3990, 6384
+  orig: 3990, 6384
+  offset: 0, 0
+  index: -1
+kevin/sideviewsheet
+  rotate: false
+  xy: 3994, 886
+  size: 3208, 5500
+  orig: 3208, 5500
+  offset: 0, 0
+  index: -1
+
+char3.png
+size: 8192,4096
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+kevin/squatsheet
+  rotate: false
+  xy: 2, 2
+  size: 5640, 2435
+  orig: 5640, 2435
+  offset: 0, 0
+  index: -1

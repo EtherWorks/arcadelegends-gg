@@ -5,6 +5,7 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
+import com.cyphercove.gdx.covetools.assets.AssignmentAssetManager;
 import com.github.drapostolos.typeparser.TypeParser;
 import gg.al.config.Config;
 import gg.al.config.IAudioConfig;
@@ -28,7 +29,7 @@ public class ArcadeLegendsGame extends Game {
     private final Config config;
 
     @Getter
-    private final AssetManager assetManager;
+    private final AssignmentAssetManager assetManager;
 
     @Getter
     private final ScreenManager screenManager;
@@ -37,7 +38,7 @@ public class ArcadeLegendsGame extends Game {
 
     public ArcadeLegendsGame(Config config) {
         this.config = config;
-        this.assetManager = new AssetManager();
+        this.assetManager = new AssignmentAssetManager();
         this.screenManager = new ScreenManager();
         this.audioManager = new AudioManager(config.audio.masterVolume(), config.audio.musicVolume(), config.audio.effectVolume());
     }

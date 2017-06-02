@@ -49,7 +49,6 @@ public class RenderComponent extends PooledComponent implements ITemplateable {
     };
     @Getter(lazy = true)
     private final static TextureRegion NULL_FRAME = new TextureRegion(new Texture(new Pixmap(1, 1, Pixmap.Format.RGBA8888)));
-    public final ObjectMap<String, AssetDescriptor<Texture>> textures;
     public final ObjectMap<String, Animation<TextureRegion>> animations;
     public RenderTemplate renderTemplate;
     public float width;
@@ -61,7 +60,6 @@ public class RenderComponent extends PooledComponent implements ITemplateable {
     public RenderDelegate renderDelegate;
 
     public RenderComponent() {
-        textures = new ObjectMap<>();
         animations = new ObjectMap<>();
         renderState = "";
     }
@@ -91,13 +89,17 @@ public class RenderComponent extends PooledComponent implements ITemplateable {
         return anim == null ? getNULL_FRAME() : anim.getKeyFrame(stateTime);
     }
 
+    public RenderTemplate.AnimationTemplate getCurrentAnimation()
+    {
+        return renderTemplate.animationTemplates.get(renderState);
+    }
+
     @Override
     protected void reset() {
         width = 0;
         height = 0;
         transparent = false;
         animations.clear();
-        textures.clear();
         renderState = "";
         renderTemplate = null;
         renderDelegate = null;
@@ -165,16 +167,8 @@ public class RenderComponent extends PooledComponent implements ITemplateable {
             public int frameRows;
             public float frameDuration;
             public String texture = "";
-
-            @Override
-            public String toString() {
-                return "AnimationTemplate{" +
-                        "frameColumns=" + frameColumns +
-                        ", frameRows=" + frameRows +
-                        ", frameDuration=" + frameDuration +
-                        ", texture='" + texture + '\'' +
-                        '}';
-            }
+            public float width = 1;
+            public float height = 1;
         }
     }
 }

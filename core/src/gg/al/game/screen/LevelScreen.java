@@ -39,7 +39,7 @@ import java.util.List;
 @Slf4j
 public class LevelScreen implements IAssetScreen, InputProcessor {
 
-    private final AssetDescriptor<TiledMap> mapDesc;
+    private final String mapName;
     private final float rot;
     private int playerEnt = -1;
     private TiledMap map;
@@ -50,32 +50,20 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
     private BitmapFont font;
     private boolean reInit;
 
-    public LevelScreen(AssetDescriptor<TiledMap> mapDesc) {
-        this(mapDesc, 15);
+    private Assets.LevelAssets levelAssets;
+
+    public LevelScreen(String mapName) {
+        this(mapName, 15);
     }
 
-    public LevelScreen(AssetDescriptor<TiledMap> mapDesc, float rot) {
+    public LevelScreen(String mapName, float rot) {
         this.rot = rot;
-        this.mapDesc = mapDesc;
+        this.mapName = mapName;
     }
 
     @Override
-    public List<AssetDescriptor> assets() {
-
-        List<AssetDescriptor> assets = new ArrayList<>(6);
-        if (arcadeWorld == null || reInit) {
-            assets.add(mapDesc);
-            try {
-                EntityArguments arguments = EntityArguments.fromFile("player.json");
-                for (RenderComponent.RenderTemplate.AnimationTemplate template :
-                        arguments.get(RenderComponent.class.getSimpleName(), RenderComponent.RenderTemplate.class)
-                                .animationTemplates.values())
-                    assets.add(Assets.get(template.texture));
-            } catch (IOException e) {
-                log.error("Couldn´t load player", e);
-            }
-        }
-        return assets;
+    public Object assets() {
+        return levelAssets = new Assets.LevelAssets();
     }
 
     @Override
@@ -102,9 +90,9 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
             viewport = new ExtendViewport(1920, 1080, camera);
             viewport.apply();
 
-            map = AL.getAssetManager().get(mapDesc);
+            map = levelAssets.get(mapName);
 
-            arcadeWorld = new ArcadeWorld(map, rot, camera);
+            arcadeWorld = new ArcadeWorld(map, rot, camera, levelAssets);
             reInit = false;
         }
 
@@ -142,9 +130,8 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
     public void hide() {
         if (reInit) {
             fpsBatch.dispose();
-            AL.getAssetManager().unload(mapDesc.fileName);
-            AL.getAssetManager().unload(Assets.PT_SIDEVIEWSHEET.fileName);
             arcadeWorld.dispose();
+            AL.getAssetManager().unloadAssetFields(levelAssets);
         }
     }
 

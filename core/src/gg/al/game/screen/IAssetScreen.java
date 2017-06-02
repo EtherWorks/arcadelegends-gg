@@ -12,6 +12,6 @@ import java.util.List;
  * to use to display while loading.
  */
 public interface IAssetScreen extends Screen {
-    List<AssetDescriptor> assets();
+    Object assets();
     ILoadingScreen customLoadingScreen();
 }

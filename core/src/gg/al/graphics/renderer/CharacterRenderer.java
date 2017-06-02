@@ -28,10 +28,9 @@ public class CharacterRenderer implements RenderComponent.RenderDelegate {
     public void inserted(int entityId, RenderSystem renderSystem) {
         RenderComponent render = renderSystem.getMapperRender().get(entityId);
         PositionComponent position = renderSystem.getMapperPosition().get(entityId);
-        if (render.textures.size == 0) {
+        if (render.animations.size == 0) {
             for (Map.Entry<String, RenderComponent.RenderTemplate.AnimationTemplate> entry : render.renderTemplate.animationTemplates.entrySet()) {
-                Texture texture = renderSystem.getAssetManager().get((AssetDescriptor<Texture>) Assets.get(entry.getValue().texture));
-                render.textures.put(entry.getKey(), Assets.get(entry.getValue().texture));
+                Texture texture =  renderSystem.getLevelAssets().get(entry.getValue().texture);
 
                 TextureRegion[][] tmp = TextureRegion.split(texture,
                         +texture.getWidth() / entry.getValue().frameColumns,
@@ -78,6 +77,9 @@ public class CharacterRenderer implements RenderComponent.RenderDelegate {
         TextureRegion region = render.getCurrentKeyFrame(stateTime);
         region.flip(region.isFlipX() ^ render.flipX, region.isFlipY() ^ render.flipY);
         decal.setTextureRegion(region);
+        RenderComponent.RenderTemplate.AnimationTemplate template = render.getCurrentAnimation();
+        decal.setWidth(template.width);
+        decal.setHeight(template.height);
 
         if (physic != null)
             decal.setPosition(physic.body.getPosition().x, physic.body.getPosition().y, decal.getZ());

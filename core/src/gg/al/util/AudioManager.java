@@ -55,30 +55,6 @@ public class AudioManager {
         }
     }
 
-    public void registerSounds(AssetDescriptor<Sound>... sounds) {
-        for (AssetDescriptor<Sound> sound : sounds) {
-            registerSound(Assets.getName(sound), assetManager.get(sound));
-        }
-    }
-
-    public void registerMusics(AssetDescriptor<Music>... musics) {
-        for (AssetDescriptor<Music> music : musics) {
-            registerMusic(Assets.getName(music), assetManager.get(music));
-        }
-    }
-
-    public void unregisterSounds(AssetDescriptor<Sound>... sounds) {
-        for (AssetDescriptor<Sound> sound : sounds) {
-            unregisterSound(Assets.getName(sound));
-        }
-    }
-
-    public void unregisterMusics(AssetDescriptor<Music>... musics) {
-        for (AssetDescriptor<Music> music : musics) {
-            unregisterMusic(Assets.getName(music));
-        }
-    }
-
     public void registerSound(String name, Sound sound) {
         sounds.put(name, sound);
     }
@@ -105,32 +81,16 @@ public class AudioManager {
         musics.get(name).play();
     }
 
-    public void playMusic(AssetDescriptor<Music> musicAssetDescriptor) {
-        playMusic(Assets.getName(musicAssetDescriptor));
-    }
-
     public void stopMusic(String name) {
         musics.get(name).stop();
-    }
-
-    public void stopMusic(AssetDescriptor<Music> musicAssetDescriptor) {
-        stopMusic(Assets.getName(musicAssetDescriptor));
     }
 
     public void pauseMusic(String name) {
         musics.get(name).pause();
     }
 
-    public void pauseMusic(AssetDescriptor<Music> musicAssetDescriptor) {
-        pauseMusic(Assets.getName(musicAssetDescriptor));
-    }
-
     public void setMusicLooping(String name, boolean looping) {
         musics.get(name).setLooping(looping);
-    }
-
-    public void setMusicLooping(AssetDescriptor<Music> musicAssetDescriptor, boolean looping) {
-        setMusicLooping(Assets.getName(musicAssetDescriptor), looping);
     }
 
 }

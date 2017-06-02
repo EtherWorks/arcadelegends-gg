@@ -41,23 +41,24 @@ public class MainMenuScreen implements IAssetScreen {
     private TextButton btSettings;
     private TextButton btExit;
 
+    private Assets.MenuAssets menuAssets;
 
     @Override
     public void show() {
-        AL.getAudioManager().registerMusics(Assets.PT_BITRUSH);
-        AL.getAudioManager().playMusic(Assets.PT_BITRUSH);
+        AL.getAudioManager().registerMusic("bitrush", menuAssets.bitrush);
+        AL.getAudioManager().playMusic("bitrush");
         // Inits:
         cam = new OrthographicCamera();
         viewport = new FitViewport(1920, 1080);
         viewport.setCamera(cam);
         stage = new Stage(viewport);
         stage.setViewport(viewport);
-        skin = AL.getAssetManager().get(Assets.PT_STYLES_JSON);
+        skin = menuAssets.styles_json;
         skin.getFont("bocklin").getData().setScale(0.8f, 0.8f);
         int x = 1920;
         int y = 1080;
         spriteBatch = new SpriteBatch();
-        mainbackground = AL.getAssetManager().get(Assets.PT_TESTMAINSCREEN);
+        mainbackground = menuAssets.testmainscreen;
 
 
         // Buttons:
@@ -68,7 +69,7 @@ public class MainMenuScreen implements IAssetScreen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 if (!AL.getScreenManager().isRegistered(LevelScreen.class))
-                    AL.getScreenManager().register(new LevelScreen(Assets.PT_TEST), LevelScreen.class);
+                    AL.getScreenManager().register(new LevelScreen("tileMap"), LevelScreen.class);
                 AL.getGame().setScreen(AL.getScreenManager().get(LevelScreen.class));
             }
         });
@@ -144,17 +145,14 @@ public class MainMenuScreen implements IAssetScreen {
     @Override
     public void hide() {
         AL.input.setInputProcessor(null);
-        AL.getAudioManager().stopMusic(Assets.PT_BITRUSH);
-        AL.getAudioManager().unregisterMusics(Assets.PT_BITRUSH);
+        AL.getAudioManager().stopMusic("bitrush");
         stage.dispose();
         spriteBatch.dispose();
     }
 
     @Override
     public void dispose() {
-        AL.getAssetManager().unload(Assets.PT_STYLES_JSON.fileName);
-        AL.getAssetManager().unload(Assets.PT_BITRUSH.fileName);
-        AL.getAssetManager().unload(Assets.PT_TESTMAINSCREEN.fileName);
+        AL.getAssetManager().unloadAssetFields(menuAssets);
     }
 
     private void changeSize() {
@@ -164,8 +162,8 @@ public class MainMenuScreen implements IAssetScreen {
     }
 
     @Override
-    public List<AssetDescriptor> assets() {
-        return Arrays.asList(Assets.PT_STYLES_JSON, Assets.PT_TESTMAINSCREEN, Assets.PT_BITRUSH);
+    public Object assets() {
+        return menuAssets = new Assets.MenuAssets();
     }
 
     @Override

@@ -77,7 +77,8 @@ public class CharacterControlSystem extends IteratingSystem {
                 vectorPool.free(dir);
                 vectorPool.free(speed);
                 stats.addRuntimeStat(StatComponent.RuntimeStat.actionPoints, -1);
-
+                stats.setRuntimeStat(StatComponent.RuntimeStat.attackSpeedTimer, 0);
+                input.targetId = -1;
             }
         } else if (!physicComponent.body.getLinearVelocity().equals(Vector2.Zero)) {
             //Testen ob an oder über stepmove, dann stoppen

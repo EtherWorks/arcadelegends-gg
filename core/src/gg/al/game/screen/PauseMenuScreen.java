@@ -41,30 +41,31 @@ public class PauseMenuScreen implements IAssetScreen, InputProcessor {
     private TextButton btSettings;
     private TextButton btExitGame;
 
+    private Assets.MenuAssets menuAssets;
 
 
     @Override
     public void show() {
-        AL.getAudioManager().registerMusics(Assets.PT_BITRUSH);
-        AL.getAudioManager().playMusic(Assets.PT_BITRUSH);
+        AL.getAudioManager().registerMusic("bitrush", menuAssets.bitrush);
+        AL.getAudioManager().playMusic("bitrush");
         // Inits:
         cam = new OrthographicCamera();
         viewport = new FitViewport(1920, 1080);
         viewport.setCamera(cam);
         stage = new Stage(viewport);
         stage.setViewport(viewport);
-        skin = AL.getAssetManager().get(Assets.PT_STYLES_JSON);
+        skin = menuAssets.styles_json;
         skin.getFont("bocklin").getData().setScale(0.8f, 0.8f);
         int x = 1920;
         int y = 1080;
         spriteBatch = new SpriteBatch();
-        mainbackground = AL.getAssetManager().get(Assets.PT_TESTMAINSCREEN);
+        mainbackground = menuAssets.testmainscreen;
 
         btBackToGame = new TextButton("Back to game", skin);
         btBackToGame.center();
         btBackToGame.setWidth(600);
         btBackToGame.setHeight(100);
-        btBackToGame.addListener(new ClickListener(){
+        btBackToGame.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 AL.getGame().setScreen(AL.getScreenManager().get(LevelScreen.class));
@@ -76,7 +77,7 @@ public class PauseMenuScreen implements IAssetScreen, InputProcessor {
         btBackToMainMenu.center();
         btBackToMainMenu.setWidth(600);
         btBackToMainMenu.setHeight(100);
-        btBackToMainMenu.addListener(new ClickListener(){
+        btBackToMainMenu.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 AL.getScreenManager().get(LevelScreen.class).setReInit(true);
@@ -89,7 +90,7 @@ public class PauseMenuScreen implements IAssetScreen, InputProcessor {
         btSettings.center();
         btSettings.setWidth(600);
         btSettings.setHeight(100);
-        btSettings.addListener(new ClickListener(){
+        btSettings.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 SettingsScreen s = AL.getScreenManager().get(SettingsScreen.class, true);
@@ -103,7 +104,7 @@ public class PauseMenuScreen implements IAssetScreen, InputProcessor {
         btExitGame.center();
         btExitGame.setWidth(600);
         btExitGame.setHeight(100);
-        btExitGame.addListener(new ClickListener(){
+        btExitGame.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 AL.app.exit();
@@ -120,7 +121,6 @@ public class PauseMenuScreen implements IAssetScreen, InputProcessor {
         table.row();
         table.add(btExitGame).width(600).pad(10);
         table.setPosition(x / 2, y / 2 + 50);
-
 
 
         stage.addActor(table);
@@ -161,23 +161,19 @@ public class PauseMenuScreen implements IAssetScreen, InputProcessor {
     @Override
     public void hide() {
         AL.input.setInputProcessor(null);
-        AL.getAudioManager().stopMusic(Assets.PT_BITRUSH);
-        AL.getAudioManager().unregisterMusics(Assets.PT_BITRUSH);
+        AL.getAudioManager().stopMusic("bitrush");
         stage.dispose();
         spriteBatch.dispose();
+        AL.getAssetManager().unloadAssetFields(menuAssets);
     }
 
     @Override
     public void dispose() {
-        AL.getAssetManager().unload(Assets.PT_STYLES_JSON.fileName);
-        AL.getAssetManager().unload(Assets.PT_BITRUSH.fileName);
-        AL.getAssetManager().unload(Assets.PT_TESTMAINSCREEN.fileName);
     }
 
     @Override
-    public List<AssetDescriptor> assets() {
-        return Arrays.asList(Assets.PT_STYLES_JSON, Assets.PT_TESTMAINSCREEN, Assets.PT_BITRUSH);
-
+    public Object assets() {
+        return menuAssets = new Assets.MenuAssets();
     }
 
     @Override
@@ -188,8 +184,7 @@ public class PauseMenuScreen implements IAssetScreen, InputProcessor {
 
     @Override
     public boolean keyDown(int keycode) {
-        if(keycode == Input.Keys.ESCAPE)
-        {
+        if (keycode == Input.Keys.ESCAPE) {
 
         }
         return false;

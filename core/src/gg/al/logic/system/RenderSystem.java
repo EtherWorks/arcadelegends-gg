@@ -71,9 +71,12 @@ public class RenderSystem extends BaseEntitySystem {
     private ComponentMapper<PhysicComponent> mapperPhysic;
     @Getter
     private ComponentMapper<StatComponent> mapperStats;
+    @Getter
+    private Assets.LevelAssets levelAssets;
 
-    public RenderSystem(DecalBatch decalBatch, AssetManager assetManager, float worldDegree) {
+    public RenderSystem(DecalBatch decalBatch, AssetManager assetManager, float worldDegree, Assets.LevelAssets assets) {
         super(Aspect.all(RenderComponent.class, PositionComponent.class));
+        this.levelAssets = assets;
         decalMap = new ObjectMap<>();
         tempDecals = new Array<>(100);
         uiMap = new ObjectMap<>();

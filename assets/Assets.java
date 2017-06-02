@@ -1,136 +1,221 @@
-public abstract class Assets {
-	private static BiMap<String, AssetDescriptor> assetMap;
+public class Assets {
+	private BiMap<String, Object> assetMap;
 
-	public static AssetDescriptor get(String name) {
-		return getAssetMap().get(name);
+	public <T> T get(String name) {
+		return (T) getAssetMap().get(name);
 	}
 
-	public static String getName(AssetDescriptor descriptor) {
-		return getAssetMap().inverse().get(descriptor);
+	public String getName(Object obj) {
+		return getAssetMap().inverse().get(obj);
 	}
-	private static BiMap<String, AssetDescriptor> getAssetMap() {
-		if(assetMap != null)
-			return assetMap;
-		else
+	private BiMap<String, Object> getAssetMap() {
+		if(assetMap == null)
 		{
 			assetMap = HashBiMap.create();
-			assetMap.put("PT_BITRUSH", PT_BITRUSH);
-			assetMap.put("PT_TEST", PT_TEST);
-			assetMap.put("PT_BG", PT_BG);
-			assetMap.put("PT_BOOTH", PT_BOOTH);
-			assetMap.put("PT_BUTTON_BG", PT_BUTTON_BG);
-			assetMap.put("PT_BUTTON_PRESSED", PT_BUTTON_PRESSED);
-			assetMap.put("PT_BUTTON", PT_BUTTON);
-			assetMap.put("PT_FONT_EXPORT_FNT", PT_FONT_EXPORT_FNT);
-			assetMap.put("PT_FONT_EXPORT_PNG", PT_FONT_EXPORT_PNG);
-			assetMap.put("PT_FONT", PT_FONT);
-			assetMap.put("PT_JOYSTICK_BG", PT_JOYSTICK_BG);
-			assetMap.put("PT_JOYSTICK_D", PT_JOYSTICK_D);
-			assetMap.put("PT_JOYSTICK_DL", PT_JOYSTICK_DL);
-			assetMap.put("PT_JOYSTICK_DR", PT_JOYSTICK_DR);
-			assetMap.put("PT_JOYSTICK_L", PT_JOYSTICK_L);
-			assetMap.put("PT_JOYSTICK_R", PT_JOYSTICK_R);
-			assetMap.put("PT_JOYSTICK_U", PT_JOYSTICK_U);
-			assetMap.put("PT_JOYSTICK_UL", PT_JOYSTICK_UL);
-			assetMap.put("PT_JOYSTICK_UR", PT_JOYSTICK_UR);
-			assetMap.put("PT_JOYSTICK", PT_JOYSTICK);
-			assetMap.put("PT_SCREEN_EXPORT_FNT", PT_SCREEN_EXPORT_FNT);
-			assetMap.put("PT_SCREEN_EXPORT_PNG", PT_SCREEN_EXPORT_PNG);
-			assetMap.put("PT_SCREEN", PT_SCREEN);
-			assetMap.put("PT_TITLE_EXPORT_FNT", PT_TITLE_EXPORT_FNT);
-			assetMap.put("PT_TITLE_EXPORT_PNG", PT_TITLE_EXPORT_PNG);
-			assetMap.put("PT_TITLE", PT_TITLE);
-			assetMap.put("PT_WHITE", PT_WHITE);
-			assetMap.put("PT_AWDSTILESET", PT_AWDSTILESET);
-			assetMap.put("PT_EZREAL", PT_EZREAL);
-			assetMap.put("PT_EZ_IDLE", PT_EZ_IDLE);
-			assetMap.put("PT_FACTIONS", PT_FACTIONS);
-			assetMap.put("PT_KNIGHTTEMPLATE", PT_KNIGHTTEMPLATE);
-			assetMap.put("PT_LAWBRINGER", PT_LAWBRINGER);
-			assetMap.put("PT_LAWBRINGER32", PT_LAWBRINGER32);
-			assetMap.put("PT_LOGO16", PT_LOGO16);
-			assetMap.put("PT_LOGO32", PT_LOGO32);
-			assetMap.put("PT_RETICLE", PT_RETICLE);
-			assetMap.put("PT_RIPPEDTILESET", PT_RIPPEDTILESET);
-			assetMap.put("PT_BACKGROUND", PT_BACKGROUND);
-			assetMap.put("PT_SPLASH", PT_SPLASH);
-			assetMap.put("PT_TESTMAINSCREEN", PT_TESTMAINSCREEN);
-			assetMap.put("PT_TILESET", PT_TILESET);
-			assetMap.put("PT_TOWER", PT_TOWER);
-			assetMap.put("PT_TOWERFULL", PT_TOWERFULL);
-			assetMap.put("PT_TOWERTOP", PT_TOWERTOP);
-			assetMap.put("PT_AUTOATTACK", PT_AUTOATTACK);
-			assetMap.put("PT_FRONTWALK", PT_FRONTWALK);
-			assetMap.put("PT_LEFTSIDEWALK", PT_LEFTSIDEWALK);
-			assetMap.put("PT_RIGHTSIDEWALK", PT_RIGHTSIDEWALK);
-			assetMap.put("PT_SIDEVIEWSHEET", PT_SIDEVIEWSHEET);
-			assetMap.put("PT_SQUATSHEET", PT_SQUATSHEET);
-			assetMap.put("PT_DLGBACKGROUND", PT_DLGBACKGROUND);
-			assetMap.put("PT_BACKGROUND_TEXTBUTTON", PT_BACKGROUND_TEXTBUTTON);
-			assetMap.put("PT_BOCKLIN_FNT", PT_BOCKLIN_FNT);
-			assetMap.put("PT_BOCKLIN_PNG", PT_BOCKLIN_PNG);
-			assetMap.put("PT_STYLES_ATLAS", PT_STYLES_ATLAS);
-			assetMap.put("PT_STYLES_JSON", PT_STYLES_JSON);
-			assetMap.put("PT_STYLES_PNG", PT_STYLES_PNG);
-			return assetMap;
+			assetMap.put("bitrush", bitrush);
+			assetMap.put("autoattack", autoattack);
+			assetMap.put("ezreal", ezreal);
+			assetMap.put("frontwalk", frontwalk);
+			assetMap.put("leftsidewalk", leftsidewalk);
+			assetMap.put("rightsidewalk", rightsidewalk);
+			assetMap.put("sideviewsheet", sideviewsheet);
+			assetMap.put("squatsheet", squatsheet);
+			assetMap.put("rippedtileset", rippedtileset);
+			assetMap.put("tileMap", tileMap);
+			assetMap.put("tileset", tileset);
+			assetMap.put("bg", bg);
+			assetMap.put("booth", booth);
+			assetMap.put("button_bg", button_bg);
+			assetMap.put("button_pressed", button_pressed);
+			assetMap.put("button", button);
+			assetMap.put("font_export_fnt", font_export_fnt);
+			assetMap.put("font_export_png", font_export_png);
+			assetMap.put("font", font);
+			assetMap.put("joystick_bg", joystick_bg);
+			assetMap.put("joystick_d", joystick_d);
+			assetMap.put("joystick_dl", joystick_dl);
+			assetMap.put("joystick_dr", joystick_dr);
+			assetMap.put("joystick_l", joystick_l);
+			assetMap.put("joystick_r", joystick_r);
+			assetMap.put("joystick_u", joystick_u);
+			assetMap.put("joystick_ul", joystick_ul);
+			assetMap.put("joystick_ur", joystick_ur);
+			assetMap.put("joystick", joystick);
+			assetMap.put("screen_export_fnt", screen_export_fnt);
+			assetMap.put("screen_export_png", screen_export_png);
+			assetMap.put("screen", screen);
+			assetMap.put("title_export_fnt", title_export_fnt);
+			assetMap.put("title_export_png", title_export_png);
+			assetMap.put("title", title);
+			assetMap.put("white", white);
+			assetMap.put("awdstileset", awdstileset);
+			assetMap.put("ez_back", ez_back);
+			assetMap.put("ez_idle", ez_idle);
+			assetMap.put("Factions", Factions);
+			assetMap.put("knighttemplate", knighttemplate);
+			assetMap.put("lawbringer", lawbringer);
+			assetMap.put("lawbringer32", lawbringer32);
+			assetMap.put("logo16", logo16);
+			assetMap.put("logo32", logo32);
+			assetMap.put("reticle", reticle);
+			assetMap.put("background", background);
+			assetMap.put("splash", splash);
+			assetMap.put("testmainscreen", testmainscreen);
+			assetMap.put("tower", tower);
+			assetMap.put("towerfull", towerfull);
+			assetMap.put("towertop", towertop);
+			assetMap.put("dlgbackground", dlgbackground);
+			assetMap.put("background_textbutton", background_textbutton);
+			assetMap.put("bocklin_fnt", bocklin_fnt);
+			assetMap.put("bocklin_png", bocklin_png);
+			assetMap.put("styles_atlas", styles_atlas);
+			assetMap.put("styles_json", styles_json);
+			assetMap.put("styles_png", styles_png);
 		}
+		return assetMap;
 	}
-	public static AssetDescriptor<Music> PT_BITRUSH = new AssetDescriptor<>("assets/prototype/audio/bitrush.mp3", Music.class);
-	public static AssetDescriptor<TiledMap> PT_TEST = new AssetDescriptor<>("assets/prototype/map/test.tmx", TiledMap.class);
-	public static AssetDescriptor<Texture> PT_BG = new AssetDescriptor<>("assets/prototype/raw/bg.png", Texture.class);
-	public static AssetDescriptor<Texture> PT_BOOTH = new AssetDescriptor<>("assets/prototype/raw/booth.png", Texture.class);
-	public static AssetDescriptor<Texture> PT_BUTTON_BG = new AssetDescriptor<>("assets/prototype/raw/button-bg.png", Texture.class);
-	public static AssetDescriptor<Texture> PT_BUTTON_PRESSED = new AssetDescriptor<>("assets/prototype/raw/button-pressed.png", Texture.class);
-	public static AssetDescriptor<Texture> PT_BUTTON = new AssetDescriptor<>("assets/prototype/raw/button.png", Texture.class);
-	public static AssetDescriptor<BitmapFont> PT_FONT_EXPORT_FNT = new AssetDescriptor<>("assets/prototype/raw/font-export.fnt", BitmapFont.class);
-	public static AssetDescriptor<Texture> PT_FONT_EXPORT_PNG = new AssetDescriptor<>("assets/prototype/raw/font-export.png", Texture.class);
-	public static AssetDescriptor<Texture> PT_FONT = new AssetDescriptor<>("assets/prototype/raw/font.png", Texture.class);
-	public static AssetDescriptor<Texture> PT_JOYSTICK_BG = new AssetDescriptor<>("assets/prototype/raw/joystick-bg.png", Texture.class);
-	public static AssetDescriptor<Texture> PT_JOYSTICK_D = new AssetDescriptor<>("assets/prototype/raw/joystick-d.png", Texture.class);
-	public static AssetDescriptor<Texture> PT_JOYSTICK_DL = new AssetDescriptor<>("assets/prototype/raw/joystick-dl.png", Texture.class);
-	public static AssetDescriptor<Texture> PT_JOYSTICK_DR = new AssetDescriptor<>("assets/prototype/raw/joystick-dr.png", Texture.class);
-	public static AssetDescriptor<Texture> PT_JOYSTICK_L = new AssetDescriptor<>("assets/prototype/raw/joystick-l.png", Texture.class);
-	public static AssetDescriptor<Texture> PT_JOYSTICK_R = new AssetDescriptor<>("assets/prototype/raw/joystick-r.png", Texture.class);
-	public static AssetDescriptor<Texture> PT_JOYSTICK_U = new AssetDescriptor<>("assets/prototype/raw/joystick-u.png", Texture.class);
-	public static AssetDescriptor<Texture> PT_JOYSTICK_UL = new AssetDescriptor<>("assets/prototype/raw/joystick-ul.png", Texture.class);
-	public static AssetDescriptor<Texture> PT_JOYSTICK_UR = new AssetDescriptor<>("assets/prototype/raw/joystick-ur.png", Texture.class);
-	public static AssetDescriptor<Texture> PT_JOYSTICK = new AssetDescriptor<>("assets/prototype/raw/joystick.png", Texture.class);
-	public static AssetDescriptor<BitmapFont> PT_SCREEN_EXPORT_FNT = new AssetDescriptor<>("assets/prototype/raw/screen-export.fnt", BitmapFont.class);
-	public static AssetDescriptor<Texture> PT_SCREEN_EXPORT_PNG = new AssetDescriptor<>("assets/prototype/raw/screen-export.png", Texture.class);
-	public static AssetDescriptor<Texture> PT_SCREEN = new AssetDescriptor<>("assets/prototype/raw/screen.png", Texture.class);
-	public static AssetDescriptor<BitmapFont> PT_TITLE_EXPORT_FNT = new AssetDescriptor<>("assets/prototype/raw/title-export.fnt", BitmapFont.class);
-	public static AssetDescriptor<Texture> PT_TITLE_EXPORT_PNG = new AssetDescriptor<>("assets/prototype/raw/title-export.png", Texture.class);
-	public static AssetDescriptor<Texture> PT_TITLE = new AssetDescriptor<>("assets/prototype/raw/title.png", Texture.class);
-	public static AssetDescriptor<Texture> PT_WHITE = new AssetDescriptor<>("assets/prototype/raw/white.png", Texture.class);
-	public static AssetDescriptor<Texture> PT_AWDSTILESET = new AssetDescriptor<>("assets/prototype/sprites/awdstileset.png", Texture.class);
-	public static AssetDescriptor<Texture> PT_EZREAL = new AssetDescriptor<>("assets/prototype/sprites/ezreal.png", Texture.class);
-	public static AssetDescriptor<Texture> PT_EZ_IDLE = new AssetDescriptor<>("assets/prototype/sprites/ez_idle.png", Texture.class);
-	public static AssetDescriptor<Texture> PT_FACTIONS = new AssetDescriptor<>("assets/prototype/sprites/Factions.png", Texture.class);
-	public static AssetDescriptor<Texture> PT_KNIGHTTEMPLATE = new AssetDescriptor<>("assets/prototype/sprites/knighttemplate.png", Texture.class);
-	public static AssetDescriptor<Texture> PT_LAWBRINGER = new AssetDescriptor<>("assets/prototype/sprites/lawbringer.png", Texture.class);
-	public static AssetDescriptor<Texture> PT_LAWBRINGER32 = new AssetDescriptor<>("assets/prototype/sprites/lawbringer32.png", Texture.class);
-	public static AssetDescriptor<Texture> PT_LOGO16 = new AssetDescriptor<>("assets/prototype/sprites/logo16.png", Texture.class);
-	public static AssetDescriptor<Texture> PT_LOGO32 = new AssetDescriptor<>("assets/prototype/sprites/logo32.png", Texture.class);
-	public static AssetDescriptor<Texture> PT_RETICLE = new AssetDescriptor<>("assets/prototype/sprites/reticle.png", Texture.class);
-	public static AssetDescriptor<Texture> PT_RIPPEDTILESET = new AssetDescriptor<>("assets/prototype/sprites/rippedtileset.png", Texture.class);
-	public static AssetDescriptor<Texture> PT_BACKGROUND = new AssetDescriptor<>("assets/prototype/sprites/splash/background.jpg", Texture.class);
-	public static AssetDescriptor<Texture> PT_SPLASH = new AssetDescriptor<>("assets/prototype/sprites/splash/splash.png", Texture.class);
-	public static AssetDescriptor<Texture> PT_TESTMAINSCREEN = new AssetDescriptor<>("assets/prototype/sprites/testmainscreen.jpg", Texture.class);
-	public static AssetDescriptor<Texture> PT_TILESET = new AssetDescriptor<>("assets/prototype/sprites/tileset.png", Texture.class);
-	public static AssetDescriptor<Texture> PT_TOWER = new AssetDescriptor<>("assets/prototype/sprites/tower.png", Texture.class);
-	public static AssetDescriptor<Texture> PT_TOWERFULL = new AssetDescriptor<>("assets/prototype/sprites/towerfull.png", Texture.class);
-	public static AssetDescriptor<Texture> PT_TOWERTOP = new AssetDescriptor<>("assets/prototype/sprites/towertop.png", Texture.class);
-	public static AssetDescriptor<Texture> PT_AUTOATTACK = new AssetDescriptor<>("assets/prototype/sprites/walksprites/autoattack.png", Texture.class);
-	public static AssetDescriptor<Texture> PT_FRONTWALK = new AssetDescriptor<>("assets/prototype/sprites/walksprites/frontwalk.png", Texture.class);
-	public static AssetDescriptor<Texture> PT_LEFTSIDEWALK = new AssetDescriptor<>("assets/prototype/sprites/walksprites/leftsidewalk.png", Texture.class);
-	public static AssetDescriptor<Texture> PT_RIGHTSIDEWALK = new AssetDescriptor<>("assets/prototype/sprites/walksprites/rightsidewalk.png", Texture.class);
-	public static AssetDescriptor<Texture> PT_SIDEVIEWSHEET = new AssetDescriptor<>("assets/prototype/sprites/walksprites/sideviewsheet.png", Texture.class);
-	public static AssetDescriptor<Texture> PT_SQUATSHEET = new AssetDescriptor<>("assets/prototype/sprites/walksprites/squatsheet.png", Texture.class);
-	public static AssetDescriptor<Texture> PT_DLGBACKGROUND = new AssetDescriptor<>("assets/prototype/styles/dlgstyle/dlgbackground.png", Texture.class);
-	public static AssetDescriptor<Texture> PT_BACKGROUND_TEXTBUTTON = new AssetDescriptor<>("assets/prototype/styles/styles/background_textbutton.png", Texture.class);
-	public static AssetDescriptor<BitmapFont> PT_BOCKLIN_FNT = new AssetDescriptor<>("assets/prototype/styles/styles/bocklin.fnt", BitmapFont.class);
-	public static AssetDescriptor<Texture> PT_BOCKLIN_PNG = new AssetDescriptor<>("assets/prototype/styles/styles/bocklin.png", Texture.class);
-	public static AssetDescriptor<TextureAtlas> PT_STYLES_ATLAS = new AssetDescriptor<>("assets/prototype/styles/styles/styles.atlas", TextureAtlas.class);
-	public static AssetDescriptor<?> PT_STYLES_JSON = new AssetDescriptor<>("assets/prototype/styles/styles/styles.json", ?.class);
-	public static AssetDescriptor<Texture> PT_STYLES_PNG = new AssetDescriptor<>("assets/prototype/styles/styles/styles.png", Texture.class);
+
+
+	@AssignmentAssetManager.Asset("assets/map/rippedtileset.png")
+	public Texture rippedtileset;
+
+	@AssignmentAssetManager.Asset("assets/map/tileMap.tmx")
+	public TiledMap tileMap;
+
+	@AssignmentAssetManager.Asset("assets/map/tileset.png")
+	public Texture tileset;
+
+	@AssignmentAssetManager.Asset("assets/raw/bg.png")
+	public Texture bg;
+
+	@AssignmentAssetManager.Asset("assets/raw/booth.png")
+	public Texture booth;
+
+	@AssignmentAssetManager.Asset("assets/raw/button-bg.png")
+	public Texture button_bg;
+
+	@AssignmentAssetManager.Asset("assets/raw/button-pressed.png")
+	public Texture button_pressed;
+
+	@AssignmentAssetManager.Asset("assets/raw/button.png")
+	public Texture button;
+
+	@AssignmentAssetManager.Asset("assets/raw/font-export.fnt")
+	public BitmapFont font_export_fnt;
+
+	@AssignmentAssetManager.Asset("assets/raw/font-export.png")
+	public Texture font_export_png;
+
+	@AssignmentAssetManager.Asset("assets/raw/font.png")
+	public Texture font;
+
+	@AssignmentAssetManager.Asset("assets/raw/joystick-bg.png")
+	public Texture joystick_bg;
+
+	@AssignmentAssetManager.Asset("assets/raw/joystick-d.png")
+	public Texture joystick_d;
+
+	@AssignmentAssetManager.Asset("assets/raw/joystick-dl.png")
+	public Texture joystick_dl;
+
+	@AssignmentAssetManager.Asset("assets/raw/joystick-dr.png")
+	public Texture joystick_dr;
+
+	@AssignmentAssetManager.Asset("assets/raw/joystick-l.png")
+	public Texture joystick_l;
+
+	@AssignmentAssetManager.Asset("assets/raw/joystick-r.png")
+	public Texture joystick_r;
+
+	@AssignmentAssetManager.Asset("assets/raw/joystick-u.png")
+	public Texture joystick_u;
+
+	@AssignmentAssetManager.Asset("assets/raw/joystick-ul.png")
+	public Texture joystick_ul;
+
+	@AssignmentAssetManager.Asset("assets/raw/joystick-ur.png")
+	public Texture joystick_ur;
+
+	@AssignmentAssetManager.Asset("assets/raw/joystick.png")
+	public Texture joystick;
+
+	@AssignmentAssetManager.Asset("assets/raw/screen-export.fnt")
+	public BitmapFont screen_export_fnt;
+
+	@AssignmentAssetManager.Asset("assets/raw/screen-export.png")
+	public Texture screen_export_png;
+
+	@AssignmentAssetManager.Asset("assets/raw/screen.png")
+	public Texture screen;
+
+	@AssignmentAssetManager.Asset("assets/raw/title-export.fnt")
+	public BitmapFont title_export_fnt;
+
+	@AssignmentAssetManager.Asset("assets/raw/title-export.png")
+	public Texture title_export_png;
+
+	@AssignmentAssetManager.Asset("assets/raw/title.png")
+	public Texture title;
+
+	@AssignmentAssetManager.Asset("assets/raw/white.png")
+	public Texture white;
+
+	@AssignmentAssetManager.Asset("assets/sprites/awdstileset.png")
+	public Texture awdstileset;
+
+	@AssignmentAssetManager.Asset("assets/sprites/ez_back.png")
+	public Texture ez_back;
+
+	@AssignmentAssetManager.Asset("assets/sprites/ez_idle.png")
+	public Texture ez_idle;
+
+	@AssignmentAssetManager.Asset("assets/sprites/Factions.png")
+	public Texture Factions;
+
+	@AssignmentAssetManager.Asset("assets/sprites/knighttemplate.png")
+	public Texture knighttemplate;
+
+	@AssignmentAssetManager.Asset("assets/sprites/lawbringer.png")
+	public Texture lawbringer;
+
+	@AssignmentAssetManager.Asset("assets/sprites/lawbringer32.png")
+	public Texture lawbringer32;
+
+	@AssignmentAssetManager.Asset("assets/sprites/logo16.png")
+	public Texture logo16;
+
+	@AssignmentAssetManager.Asset("assets/sprites/logo32.png")
+	public Texture logo32;
+
+	@AssignmentAssetManager.Asset("assets/sprites/reticle.png")
+	public Texture reticle;
+
+	@AssignmentAssetManager.Asset("assets/sprites/splash/background.jpg")
+	public Texture background;
+
+	@AssignmentAssetManager.Asset("assets/sprites/splash/splash.png")
+	public Texture splash;
+
+	@AssignmentAssetManager.Asset("assets/sprites/tower.png")
+	public Texture tower;
+
+	@AssignmentAssetManager.Asset("assets/sprites/towerfull.png")
+	public Texture towerfull;
+
+	@AssignmentAssetManager.Asset("assets/sprites/towertop.png")
+	public Texture towertop;
+
+	@AssignmentAssetManager.Asset("assets/styles/dlgstyle/dlgbackground.png")
+	public Texture dlgbackground;
+
+	@AssignmentAssetManager.Asset("assets/styles/styles/bocklin.png")
+	public Texture bocklin_png;
+
+	@AssignmentAssetManager.Asset("assets/styles/styles/styles.atlas")
+	public TextureAtlas styles_atlas;
+
+
+	@AssignmentAssetManager.Asset("assets/styles/styles/styles.png")
+	public Texture styles_png;
+
 }

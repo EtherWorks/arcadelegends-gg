@@ -29,6 +29,7 @@ import gg.al.logic.entity.EntityWorld;
 import gg.al.logic.map.LogicMap;
 import gg.al.logic.map.Tile;
 import gg.al.logic.system.*;
+import gg.al.util.Assets;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -74,7 +75,11 @@ public class ArcadeWorld implements Disposable {
     @Getter
     private LogicMap logicMap;
 
-    public ArcadeWorld(TiledMap map, float worldViewRotation, Camera cam) {
+    @Getter
+    private Assets.LevelAssets levelAssets;
+
+    public ArcadeWorld(TiledMap map, float worldViewRotation, Camera cam, Assets.LevelAssets assets) {
+        this.levelAssets = assets;
         this.tiledMap = map;
         this.worldViewRotation = worldViewRotation;
         this.cam = cam;
@@ -118,7 +123,7 @@ public class ArcadeWorld implements Disposable {
                         new PositionTileSystem(logicMap),
                         new CharacterControlSystem(physicsWorld),
                         new BulletSystem(this),
-                        renderSystem = new RenderSystem(decalBatch, AL.getAssetManager(), worldViewRotation)
+                        renderSystem = new RenderSystem(decalBatch, AL.getAssetManager(), worldViewRotation, levelAssets)
                 )
                 .build();
         entityWorld = new EntityWorld(worldConfiguration);

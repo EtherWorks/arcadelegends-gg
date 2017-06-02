@@ -70,7 +70,9 @@ public class SettingsScreen implements IAssetScreen, InputProcessor {
     private SpriteDrawable selection;
     private Texture selectionTexture;
 
-    private Screen previousScreen;
+    private Assets.SettingsAssets settingsAssets;
+
+    private IAssetScreen previousScreen;
 
     @Override
     public void show() {
@@ -79,13 +81,13 @@ public class SettingsScreen implements IAssetScreen, InputProcessor {
         viewport.setCamera(cam);
         stage = new Stage(viewport);
         stage.setViewport(viewport);
-        skin = AL.getAssetManager().get(Assets.PT_STYLES_JSON);
+        skin = settingsAssets.styles_json;
         int x = 1920;
         int y = 1080;
         spriteBatch = new SpriteBatch();
-        mainbackground = AL.getAssetManager().get(Assets.PT_TESTMAINSCREEN);
+        mainbackground = settingsAssets.testmainscreen;
         componentMap = new HashMap<>();
-        selectionTexture = AL.getAssetManager().get(Assets.PT_BACKGROUND_TEXTBUTTON);
+        selectionTexture = settingsAssets.background_textbutton;
         Sprite sprite = new Sprite(selectionTexture);
         selection = new SpriteDrawable(sprite);
 
@@ -136,8 +138,8 @@ public class SettingsScreen implements IAssetScreen, InputProcessor {
             }
         });
 
-        TextureRegion backgroundTexture = new TextureRegion(AL.getAssetManager().get(Assets.PT_BACKGROUND_TEXTBUTTON));
-        BitmapFont font = AL.getAssetManager().get(Assets.PT_BOCKLIN_FNT);
+        TextureRegion backgroundTexture = new TextureRegion(settingsAssets.background_textbutton);
+        BitmapFont font = settingsAssets.bocklin_fnt;
         font.getData().setScale(0.5f, 0.5f);
         ScrollPane.ScrollPaneStyle scrollPaneStyle = new ScrollPane.ScrollPaneStyle();
         com.badlogic.gdx.scenes.scene2d.ui.List.ListStyle listStyle = new com.badlogic.gdx.scenes.scene2d.ui.List.ListStyle(font, Color.BLACK, new Color(255, 244, 0, 255), selection);
@@ -299,10 +301,7 @@ public class SettingsScreen implements IAssetScreen, InputProcessor {
 
     @Override
     public void dispose() {
-        AL.getAssetManager().unload(Assets.PT_STYLES_JSON.fileName);
-        AL.getAssetManager().unload(Assets.PT_TESTMAINSCREEN.fileName);
-        AL.getAssetManager().unload(Assets.PT_BACKGROUND_TEXTBUTTON.fileName);
-        AL.getAssetManager().unload(Assets.PT_BOCKLIN_FNT.fileName);
+        AL.getAssetManager().unloadAssetFields(settingsAssets);
     }
 
     private void vsyncOnOff() {
@@ -342,17 +341,7 @@ public class SettingsScreen implements IAssetScreen, InputProcessor {
 
     private void setFps() {
         int fps = (int) sbFps.getSelected();
-        switch (fps) {
-            case 30:
-                AL.getConfigEditor().setValue(IVideoConfig.VideoKeys.foregroundFPS, fps);
-                break;
-            case 60:
-                AL.getConfigEditor().setValue(IVideoConfig.VideoKeys.foregroundFPS, fps);
-                break;
-            case 144:
-                AL.getConfigEditor().setValue(IVideoConfig.VideoKeys.foregroundFPS, fps);
-                break;
-        }
+        AL.getConfigEditor().setValue(IVideoConfig.VideoKeys.foregroundFPS, fps);
         AL.getConfigEditor().flush();
     }
 
@@ -362,8 +351,8 @@ public class SettingsScreen implements IAssetScreen, InputProcessor {
 
 
     @Override
-    public java.util.List<AssetDescriptor> assets() {
-        return Arrays.asList(Assets.PT_STYLES_JSON, Assets.PT_TESTMAINSCREEN, Assets.PT_BACKGROUND_TEXTBUTTON, Assets.PT_BOCKLIN_FNT);
+    public Object assets() {
+        return settingsAssets = new Assets.SettingsAssets();
     }
 
     @Override
@@ -413,11 +402,11 @@ public class SettingsScreen implements IAssetScreen, InputProcessor {
         return null;
     }
 
-    public void setPreviousScreen(Screen previousScreen) {
+    public void setPreviousScreen(IAssetScreen previousScreen) {
         this.previousScreen = previousScreen;
     }
 
-    public Screen getPreviousScreen() {
+    public IAssetScreen getPreviousScreen() {
         return previousScreen;
     }
 }

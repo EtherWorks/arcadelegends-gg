@@ -53,6 +53,8 @@ public class InputSettingsScreen implements IAssetScreen, InputProcessor {
     private IInputConfig.InputKeys[] keys;
     private HashMap<String, Integer> keyMap;
 
+    private Assets.SettingsAssets settingsAssets;
+
 
     @Override
     public void show() {
@@ -61,13 +63,13 @@ public class InputSettingsScreen implements IAssetScreen, InputProcessor {
         viewport.setCamera(cam);
         stage = new Stage(viewport);
         stage.setViewport(viewport);
-        skin = AL.getAssetManager().get(Assets.PT_STYLES_JSON);
+        skin = settingsAssets.styles_json;
         int x = 1920;
         int y = 1080;
         spriteBatch = new SpriteBatch();
-        mainbackground = AL.getAssetManager().get(Assets.PT_TESTMAINSCREEN);
-        BitmapFont font = AL.getAssetManager().get(Assets.PT_BOCKLIN_FNT);
-        TextureRegion backgroundTexture = new TextureRegion(AL.getAssetManager().get(Assets.PT_BACKGROUND_TEXTBUTTON));
+        mainbackground = settingsAssets.testmainscreen;
+        BitmapFont font = settingsAssets.bocklin_fnt;
+        TextureRegion backgroundTexture = new TextureRegion(settingsAssets.background_textbutton);
 
         inputTable = new Table();
         keys = IInputConfig.InputKeys.values();
@@ -110,7 +112,7 @@ public class InputSettingsScreen implements IAssetScreen, InputProcessor {
     }
 
     private void showDialog(BitmapFont font, TextureRegion textureRegion, String name, TextButton button) {
-        Drawable dlgBackground = new TextureRegionDrawable(new TextureRegion(AL.getAssetManager().get(Assets.PT_DLGBACKGROUND)));
+        Drawable dlgBackground = new TextureRegionDrawable(new TextureRegion(settingsAssets.dlgbackground));
         dialog = new ALInputDialog("", new Window.WindowStyle(font, Color.BLACK, new TextureRegionDrawable(new TextureRegion(textureRegion))), skin, stage, font,
                 Input.Keys.toString(IInputConfig.InputKeys.getFromKey(keys[keyMap.get(name)], AL.getInputConfig())), keys[keyMap.get(name)].getKeyName(), button);
         dialog.initDialog(dlgBackground);
@@ -155,11 +157,7 @@ public class InputSettingsScreen implements IAssetScreen, InputProcessor {
 
     @Override
     public void dispose() {
-        AL.getAssetManager().unload(Assets.PT_DLGBACKGROUND.fileName);
-        AL.getAssetManager().unload(Assets.PT_STYLES_JSON.fileName);
-        AL.getAssetManager().unload(Assets.PT_TESTMAINSCREEN.fileName);
-        AL.getAssetManager().unload(Assets.PT_BACKGROUND_TEXTBUTTON.fileName);
-        AL.getAssetManager().unload(Assets.PT_BOCKLIN_FNT.fileName);
+       AL.getAssetManager().unloadAssetFields(settingsAssets);
     }
 
     @Override
@@ -205,9 +203,8 @@ public class InputSettingsScreen implements IAssetScreen, InputProcessor {
     }
 
     @Override
-    public List<AssetDescriptor> assets() {
-        return Arrays.asList(Assets.PT_STYLES_JSON, Assets.PT_TESTMAINSCREEN, Assets.PT_BACKGROUND_TEXTBUTTON, Assets.PT_BOCKLIN_FNT,
-                Assets.PT_DLGBACKGROUND);
+    public Object assets() {
+        return settingsAssets = new Assets.SettingsAssets();
     }
 
     @Override

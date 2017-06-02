@@ -2,6 +2,7 @@ package gg.al.game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
+import com.cyphercove.gdx.covetools.assets.AssignmentAssetManager;
 import gg.al.config.*;
 import gg.al.util.AudioManager;
 import gg.al.util.ScreenManager;
@@ -21,7 +22,7 @@ public class AL extends Gdx {
     private static IMiscellaneousConfig miscellaneousConfig;
     private static IGameplayConfig gameplayConfig;
     private static IInputConfig inputConfig;
-    private static AssetManager assetManager;
+    private static AssignmentAssetManager assetManager;
     private static ScreenManager screenManager;
     private static AudioManager audioManager;
 
@@ -39,7 +40,7 @@ public class AL extends Gdx {
         AL.configEditor = config.editor;
     }
 
-    public static void provideAssetManager(AssetManager assetManager) {
+    public static void provideAssetManager(AssignmentAssetManager assetManager) {
         AL.assetManager = assetManager;
     }
 
@@ -83,7 +84,7 @@ public class AL extends Gdx {
         return inputConfig;
     }
 
-    public static AssetManager getAssetManager() {
+    public static AssignmentAssetManager getAssetManager() {
         return assetManager;
     }
 

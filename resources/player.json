@@ -124,45 +124,45 @@
     "type": "PhysicTemplate"
   },
   "RenderComponent": {
-    "width": 3.0,
-    "height": 3.0,
+    "width": 1.0,
+    "height": 1.0,
     "transparent": true,
     "animationTemplates": {
       "MOVE_UP": {
         "frameColumns": 5,
         "frameRows": 8,
         "frameDuration": 0.025,
-        "texture": "PT_SIDEVIEWSHEET"
+        "texture": "sideviewsheet"
       },
       "IDLE": {
         "frameColumns": 10,
         "frameRows": 4,
         "frameDuration": 0.025,
-        "texture": "PT_SQUATSHEET"
+        "texture": "squatsheet"
       },
       "TAUNT": {
         "frameColumns": 1,
         "frameRows": 1,
         "frameDuration": 1,
-        "texture": "PT_EZREAL"
+        "texture": "ezreal"
       },
       "MOVE_SIDE": {
         "frameColumns": 5,
         "frameRows": 8,
         "frameDuration": 0.025,
-        "texture": "PT_RIGHTSIDEWALK"
+        "texture": "rightsidewalk"
       },
       "MOVE_DOWN": {
         "frameColumns": 5,
         "frameRows": 8,
         "frameDuration": 0.025,
-        "texture": "PT_FRONTWALK"
+        "texture": "frontwalk"
       },
       "ATTACK": {
         "frameColumns": 5,
         "frameRows": 8,
         "frameDuration": 0.025,
-        "texture": "PT_AUTOATTACK"
+        "texture": "autoattack"
       }
     },
     "renderType": "PLAYER",

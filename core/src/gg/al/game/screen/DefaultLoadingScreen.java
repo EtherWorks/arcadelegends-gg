@@ -21,7 +21,6 @@ import java.util.List;
 @Slf4j
 public class DefaultLoadingScreen implements ILoadingScreen {
 
-    private final List<AssetDescriptor> toLoad;
     private boolean init;
     private BitmapFont font;
     private SpriteBatch batch;
@@ -31,7 +30,7 @@ public class DefaultLoadingScreen implements ILoadingScreen {
     private Screen next;
 
     public DefaultLoadingScreen() {
-        this.toLoad = new ArrayList<>();
+
     }
 
     public DefaultLoadingScreen(Screen next) {
@@ -41,33 +40,9 @@ public class DefaultLoadingScreen implements ILoadingScreen {
 
     @Override
     public Screen withAssetScreen(IAssetScreen screen) {
-        boolean loaded = true;
-        for (AssetDescriptor desc : screen.assets())
-            if (!AL.getAssetManager().isLoaded(desc.fileName, desc.type)) {
-                loaded = false;
-                break;
-            }
-        if (loaded) {
-            for (AssetDescriptor desc : screen.assets())
-                AL.getAssetManager().setReferenceCount(desc.fileName, AL.getAssetManager().getReferenceCount(desc.fileName) + 1);
-            return screen;
-        }
-        toLoad.clear();
-        toLoad.addAll(screen.assets());
+        AL.getAssetManager().loadAssetFields(screen.assets());
         next = screen;
         return this;
-    }
-
-    public boolean addToLoad(Collection<? extends AssetDescriptor> collection) {
-        return toLoad.addAll(collection);
-    }
-
-    public boolean addToLoad(AssetDescriptor assetDescriptor) {
-        return toLoad.add(assetDescriptor);
-    }
-
-    public void resetToLoad() {
-        toLoad.clear();
     }
 
     @Override
@@ -77,9 +52,6 @@ public class DefaultLoadingScreen implements ILoadingScreen {
             batch = new SpriteBatch();
         }
         init = true;
-        for (AssetDescriptor desc : toLoad) {
-            AL.getAssetManager().load(desc);
-        }
     }
 
     @Override
@@ -111,7 +83,6 @@ public class DefaultLoadingScreen implements ILoadingScreen {
 
     @Override
     public void hide() {
-        toLoad.clear();
     }
 
     @Override

@@ -1,0 +1,55 @@
+
+styles.png
+size: 1024,1024
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+background_slider
+  rotate: false
+  xy: 537, 567
+  size: 1, 10
+  orig: 1, 10
+  offset: 0, 0
+  index: -1
+background_textbutton
+  rotate: false
+  xy: 38, 62
+  size: 1, 1
+  orig: 1, 1
+  offset: 0, 0
+  index: -1
+bocklin
+  rotate: false
+  xy: 1, 65
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+knob_slider
+  rotate: false
+  xy: 1, 28
+  size: 35, 35
+  orig: 35, 35
+  offset: 0, 0
+  index: -1
+over_textbutton
+  rotate: false
+  xy: 515, 554
+  size: 1, 1
+  orig: 1, 1
+  offset: 0, 0
+  index: -1
+tfcursor
+  rotate: false
+  xy: 1, 1
+  size: 5, 25
+  orig: 5, 25
+  offset: 0, 0
+  index: -1
+vertical_scrollbar
+  rotate: false
+  xy: 515, 557
+  size: 20, 20
+  orig: 20, 20
+  offset: 0, 0
+  index: -1

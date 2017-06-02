@@ -26,6 +26,7 @@ allprojects {
         cfg4jVersion = '4.4.0'
         gsonVersion = '2.8.0'
         gsonFireVersion = '1.8.0'
+        coveToolsVersion = '1.0'
     }
 
     repositories {
@@ -87,6 +88,7 @@ project(":core") {
         compile "org.cfg4j:cfg4j-core:$cfg4jVersion"
         compile "com.google.code.gson:gson:$gsonVersion"
         compile "io.gsonfire:gson-fire:$gsonFireVersion"
+        compile "com.cyphercove.gdx:covetools:$coveToolsVersion"
 
     }
 
