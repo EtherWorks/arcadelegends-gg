@@ -36,7 +36,7 @@ public class ALTabbedPane extends Container {
         baseTable.row();
         baseTable.add(contentTable);
 
-        this.setPosition(x / 2, y / 1.3f); // y / 1.3f
+        this.setPosition(x / 2, y / 1.3f);
         this.setActor(baseTable);
     }
 

@@ -101,8 +101,8 @@ public class InputSettingsScreen implements IAssetScreen, InputProcessor {
 
 
         scrollPane = new ScrollPane(inputTable, skin);
-        scrollPane.setSize(450, 500);
-        scrollPane.setPosition(x / 2 - 225, y / 2 - 150);
+        scrollPane.setSize(500, 900);
+        scrollPane.setPosition(x / 2 - 250, y / 2 - 400);
 
         stage.addActor(scrollPane);
 
@@ -116,7 +116,6 @@ public class InputSettingsScreen implements IAssetScreen, InputProcessor {
         dialog = new ALInputDialog("", new Window.WindowStyle(font, Color.BLACK, new TextureRegionDrawable(new TextureRegion(textureRegion))), skin, stage, font,
                 Input.Keys.toString(IInputConfig.InputKeys.getFromKey(keys[keyMap.get(name)], AL.getInputConfig())), keys[keyMap.get(name)].getKeyName(), button);
         dialog.initDialog(dlgBackground);
-
     }
 
     @Override
