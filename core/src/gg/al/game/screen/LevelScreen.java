@@ -48,6 +48,7 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
     private ArcadeWorld arcadeWorld;
     private SpriteBatch fpsBatch;
     private BitmapFont font;
+    private boolean reInit;
 
     public LevelScreen(AssetDescriptor<TiledMap> mapDesc) {
         this(mapDesc, 15);
@@ -60,16 +61,19 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
 
     @Override
     public List<AssetDescriptor> assets() {
+
         List<AssetDescriptor> assets = new ArrayList<>(6);
-        assets.add(mapDesc);
-        try {
-            EntityArguments arguments = EntityArguments.fromFile("player.json");
-            for (RenderComponent.RenderTemplate.AnimationTemplate template :
-                    arguments.get(RenderComponent.class.getSimpleName(), RenderComponent.RenderTemplate.class)
-                            .animationTemplates.values())
-                assets.add(Assets.get(template.texture));
-        } catch (IOException e) {
-            log.error("Couldn´t load player", e);
+        if (arcadeWorld == null || reInit) {
+            assets.add(mapDesc);
+            try {
+                EntityArguments arguments = EntityArguments.fromFile("player.json");
+                for (RenderComponent.RenderTemplate.AnimationTemplate template :
+                        arguments.get(RenderComponent.class.getSimpleName(), RenderComponent.RenderTemplate.class)
+                                .animationTemplates.values())
+                    assets.add(Assets.get(template.texture));
+            } catch (IOException e) {
+                log.error("Couldn´t load player", e);
+            }
         }
         return assets;
     }
@@ -79,23 +83,29 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
         return null;
     }
 
+    public void setReInit(boolean reInit) {
+        this.reInit = reInit;
+    }
+
     @Override
     public void show() {
-        fpsBatch = new SpriteBatch();
-        font = new BitmapFont();
+        if (arcadeWorld == null || reInit) {
+            fpsBatch = new SpriteBatch();
+            font = new BitmapFont();
 
-        camera = new PerspectiveCamera();
-        camera.far = 1000;
-        camera.position.set(new Vector3(-.5f, -.5f, 50));
-        camera.rotateAround(new Vector3(-.5f, -.5f, 0), Vector3.X, rot);
-        camera.fieldOfView = 15;
-        camera.update();
-        viewport = new ExtendViewport(1920, 1080, camera);
-        viewport.apply();
+            camera = new PerspectiveCamera();
+            camera.far = 1000;
+            camera.position.set(new Vector3(-.5f, -.5f, 50));
+            camera.rotateAround(new Vector3(-.5f, -.5f, 0), Vector3.X, rot);
+            camera.fieldOfView = 15;
+            camera.update();
+            viewport = new ExtendViewport(1920, 1080, camera);
+            viewport.apply();
 
-        map = AL.getAssetManager().get(mapDesc);
+            map = AL.getAssetManager().get(mapDesc);
 
-        arcadeWorld = new ArcadeWorld(map, rot, camera);
+            arcadeWorld = new ArcadeWorld(map, rot, camera);
+        }
 
         Gdx.input.setInputProcessor(this);
     }
@@ -129,10 +139,12 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
 
     @Override
     public void hide() {
-        fpsBatch.dispose();
-        AL.getAssetManager().unload(mapDesc.fileName);
-        AL.getAssetManager().unload(Assets.PT_SIDEVIEWSHEET.fileName);
-        arcadeWorld.dispose();
+        if (reInit) {
+            fpsBatch.dispose();
+            AL.getAssetManager().unload(mapDesc.fileName);
+            AL.getAssetManager().unload(Assets.PT_SIDEVIEWSHEET.fileName);
+            arcadeWorld.dispose();
+        }
     }
 
     @Override
@@ -206,15 +218,15 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
 
             case Input.Keys.O:
                 EntityArguments arguments = null;
-                    arguments = arcadeWorld.getArguments("player.json");
-                    PositionComponent.PositionTemplate pos = arguments.get(PositionComponent.class.getSimpleName(), PositionComponent.PositionTemplate.class);
-                    pos.x = 5;
-                    pos.y = 5;
-                    int id = arcadeWorld.spawn(Entities.Player, arguments);
-                    statComponent = arcadeWorld.getEntityWorld().getMapper(StatComponent.class).get(id);
-                    statComponent.setFlag(StatComponent.FlagStat.deleteOnDeath, true);
-                    CharacterControlComponent characterControlComponent = arcadeWorld.getEntityWorld().getMapper(CharacterControlComponent.class).get(id);
-                    characterControlComponent.targetId = 0;
+                arguments = arcadeWorld.getArguments("player.json");
+                PositionComponent.PositionTemplate pos = arguments.get(PositionComponent.class.getSimpleName(), PositionComponent.PositionTemplate.class);
+                pos.x = 5;
+                pos.y = 5;
+                int id = arcadeWorld.spawn(Entities.Player, arguments);
+                statComponent = arcadeWorld.getEntityWorld().getMapper(StatComponent.class).get(id);
+                statComponent.setFlag(StatComponent.FlagStat.deleteOnDeath, true);
+                CharacterControlComponent characterControlComponent = arcadeWorld.getEntityWorld().getMapper(CharacterControlComponent.class).get(id);
+                characterControlComponent.targetId = 0;
                 break;
             case Input.Keys.Q:
                 CharacterComponent characterComponent = arcadeWorld.getEntityWorld().getMapper(CharacterComponent.class).get(playerEnt);
@@ -263,17 +275,17 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
             case Input.Buttons.LEFT:
                 if (playerEnt == -1) {
                     EntityArguments arguments;
-                        arguments = arcadeWorld.getArguments("player.json");
-                        PositionComponent.PositionTemplate positionDef = arguments.get("PositionComponent", PositionComponent.PositionTemplate.class);
-                        float posX = positionDef.x;
-                        float posY = positionDef.y;
-                        positionDef.x = (int) mapCoord.x;
-                        positionDef.y = (int) mapCoord.y;
-                        playerEnt = arcadeWorld.spawn(Entities.Player, arguments);
-                        positionDef.x = posX;
-                        positionDef.y = posY;
-                        InventoryComponent inventoryComponent = arcadeWorld.getEntityWorld().getMapper(InventoryComponent.class).get(playerEnt);
-                        inventoryComponent.items[0] = Item.builder().name("Armor").flatStat(StatComponent.BaseStat.armor, 100f).build();
+                    arguments = arcadeWorld.getArguments("player.json");
+                    PositionComponent.PositionTemplate positionDef = arguments.get("PositionComponent", PositionComponent.PositionTemplate.class);
+                    float posX = positionDef.x;
+                    float posY = positionDef.y;
+                    positionDef.x = (int) mapCoord.x;
+                    positionDef.y = (int) mapCoord.y;
+                    playerEnt = arcadeWorld.spawn(Entities.Player, arguments);
+                    positionDef.x = posX;
+                    positionDef.y = posY;
+                    InventoryComponent inventoryComponent = arcadeWorld.getEntityWorld().getMapper(InventoryComponent.class).get(playerEnt);
+                    inventoryComponent.items[0] = Item.builder().name("Armor").flatStat(StatComponent.BaseStat.armor, 100f).build();
                 } else {
                     CharacterControlComponent input = arcadeWorld.getEntityWorld().getComponentOf(playerEnt, CharacterControlComponent.class);
                     input.move.set((int) mapCoord.x, (int) mapCoord.y);
