@@ -1,6 +1,5 @@
 package gg.al.graphics.renderer;
 
-import com.badlogic.gdx.assets.AssetDescriptor;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
@@ -15,7 +14,6 @@ import gg.al.logic.component.PositionComponent;
 import gg.al.logic.component.RenderComponent;
 import gg.al.logic.component.StatComponent;
 import gg.al.logic.system.RenderSystem;
-import gg.al.util.Assets;
 
 import java.util.Map;
 
@@ -30,11 +28,11 @@ public class CharacterRenderer implements RenderComponent.RenderDelegate {
         PositionComponent position = renderSystem.getMapperPosition().get(entityId);
         if (render.animations.size == 0) {
             for (Map.Entry<String, RenderComponent.RenderTemplate.AnimationTemplate> entry : render.renderTemplate.animationTemplates.entrySet()) {
-                Texture texture =  renderSystem.getLevelAssets().get(entry.getValue().texture);
+                TextureRegion texture = renderSystem.getLevelAssets().get(entry.getValue().texture);
 
-                TextureRegion[][] tmp = TextureRegion.split(texture,
-                        +texture.getWidth() / entry.getValue().frameColumns,
-                        +texture.getHeight() / entry.getValue().frameRows);
+                TextureRegion[][] tmp = texture.split(
+                        +texture.getRegionWidth() / entry.getValue().frameColumns,
+                        +texture.getRegionHeight() / entry.getValue().frameRows);
                 TextureRegion[] frames = new TextureRegion[entry.getValue().frameColumns * entry.getValue().frameRows];
                 int index = 0;
                 for (int i = 0; i < entry.getValue().frameRows; i++) {

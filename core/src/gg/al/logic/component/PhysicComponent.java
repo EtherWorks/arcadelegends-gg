@@ -3,7 +3,6 @@ package gg.al.logic.component;
 import com.artemis.Component;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
-import com.google.gson.annotations.SerializedName;
 import gg.al.logic.component.data.ITemplateable;
 import gg.al.logic.component.data.Template;
 
@@ -27,6 +26,8 @@ public class PhysicComponent extends Component implements ITemplateable {
         public BodyDef.BodyType bodyType = BodyDef.BodyType.DynamicBody;
         public float radius = .47f;
         public CollisionCategory collisionCategory;
+        public boolean isBullet = false;
+        public boolean isSensor = false;
 
         public enum CollisionCategory {
             CHARACTER,

@@ -15,7 +15,35 @@ import com.google.common.collect.HashBiMap;
  * Created by Thomas Neumann on 02.06.2017.<br />
  */
 public class Assets {
-    public static class LevelAssets implements AssignmentAssetManager.AssetContainer{
+    public static class LevelAssets implements AssignmentAssetManager.AssetContainer {
+        @AssignmentAssetManager.Asset("assets/characters/kevin/char.atlas")
+        public TextureAtlas textureAtlas;
+        public TextureRegion autoattack;
+        public TextureRegion ezreal;
+        public TextureRegion frontwalk;
+        public TextureRegion rightsidewalk;
+
+        //        @AssignmentAssetManager.Asset("assets/characters/kevin/autoattack.png")
+//        public Texture autoattack;
+//
+//        @AssignmentAssetManager.Asset("assets/characters/kevin/ezreal.png")
+//        public Texture ezreal;
+//
+//        @AssignmentAssetManager.Asset("assets/characters/kevin/frontwalk.png")
+//        public Texture frontwalk;
+//
+//        @AssignmentAssetManager.Asset("assets/characters/kevin/rightsidewalk.png")
+//        public Texture rightsidewalk;
+//
+//        @AssignmentAssetManager.Asset("assets/characters/kevin/sideviewsheet.png")
+//        public Texture sideviewsheet;
+//
+//        @AssignmentAssetManager.Asset("assets/characters/kevin/squatsheet.png")
+//        public Texture squatsheet;
+        public TextureRegion sideviewsheet;
+        public TextureRegion squatsheet;
+        @AssignmentAssetManager.Asset("assets/map/tileMap.tmx")
+        public TiledMap tileMap;
         private BiMap<String, Object> assetMap;
 
         public <T> T get(String name) {
@@ -29,52 +57,36 @@ public class Assets {
         private BiMap<String, Object> getAssetMap() {
             if (assetMap == null) {
                 assetMap = HashBiMap.create();
-                assetMap.put("autoattack", autoattack);
-                assetMap.put("ezreal", ezreal);
-                assetMap.put("frontwalk", frontwalk);
-                assetMap.put("rightsidewalk", rightsidewalk);
-                assetMap.put("sideviewsheet", sideviewsheet);
-                assetMap.put("squatsheet", squatsheet);
                 assetMap.put("tileMap", tileMap);
-//                assetMap.put("tileMap", textureAtlas);
+                assetMap.put("textureAtlas", textureAtlas);
             }
             return assetMap;
         }
 
-//        @AssignmentAssetManager.Asset("assets/characters/kevin/char.atlas")
-//        public TextureAtlas textureAtlas;
+        @Override
+        public String getAssetPathPrefix() {
+            return "";
+        }
 
-        @AssignmentAssetManager.Asset("assets/characters/kevin/autoattack.png")
-        public TextureRegion autoattack;
+        @Override
+        public void onAssetsLoaded() {
+            autoattack = textureAtlas.findRegion("kevin/autoattack");
+            ezreal = textureAtlas.findRegion("kevin/ezreal");
+            frontwalk = textureAtlas.findRegion("kevin/frontwalk");
+            rightsidewalk = textureAtlas.findRegion("kevin/rightsidewalk");
+            sideviewsheet = textureAtlas.findRegion("kevin/sideviewsheet");
+            squatsheet = textureAtlas.findRegion("kevin/squatsheet");
 
-        @AssignmentAssetManager.Asset("assets/characters/kevin/ezreal.png")
-        public Texture ezreal;
+            assetMap = getAssetMap();
 
-        @AssignmentAssetManager.Asset("assets/characters/kevin/frontwalk.png")
-        public Texture frontwalk;
-
-        @AssignmentAssetManager.Asset("assets/characters/kevin/rightsidewalk.png")
-        public Texture rightsidewalk;
-
-        @AssignmentAssetManager.Asset("assets/characters/kevin/sideviewsheet.png")
-        public Texture sideviewsheet;
-
-        @AssignmentAssetManager.Asset("assets/characters/kevin/squatsheet.png")
-        public Texture squatsheet;
-
-        @AssignmentAssetManager.Asset("assets/map/tileMap.tmx")
-        public TiledMap tileMap;
-
-//        @Override
-//        public String getAssetPathPrefix() {
-//            return "";
-//        }
-//
-//        @Override
-//        public void onAssetsLoaded() {
-//                autoattack = textureAtlas.findRegion("autoattack");
-//        }
-//    }
+            assetMap.put("autoattack", autoattack);
+            assetMap.put("ezreal", ezreal);
+            assetMap.put("frontwalk", frontwalk);
+            assetMap.put("rightsidewalk", rightsidewalk);
+            assetMap.put("sideviewsheet", sideviewsheet);
+            assetMap.put("squatsheet", squatsheet);
+        }
+    }
 
     public static class MenuAssets {
 

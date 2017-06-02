@@ -252,12 +252,14 @@ public class ArcadeWorld implements Disposable {
                 PhysicComponent.PhysicTemplate physicTemplate = arguments.get(PhysicComponent.class.getSimpleName(), PhysicComponent.PhysicTemplate.class);
                 PhysicComponent physicComponent = entityWorld.getMapper(PhysicComponent.class).get(entityID);
                 BodyDef bodyDef = new BodyDef();
+                bodyDef.bullet = physicTemplate.isBullet;
                 bodyDef.type = physicTemplate.bodyType;
                 PositionComponent.PositionTemplate pos = arguments.get("PositionComponent", PositionComponent.PositionTemplate.class);
                 bodyDef.position.set(pos.x, pos.y);
                 Body body = physicsWorld.createBody(bodyDef);
 
                 FixtureDef fixtureDef = new FixtureDef();
+                fixtureDef.isSensor = physicTemplate.isSensor;
                 fixtureDef.filter.categoryBits = physicTemplate.collisionCategory.getCategory();
                 fixtureDef.filter.maskBits = physicTemplate.collisionCategory.getMask();
                 CircleShape shape = new CircleShape();
