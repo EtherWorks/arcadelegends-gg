@@ -232,6 +232,11 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
                 characterComponent = arcadeWorld.getEntityWorld().getMapper(CharacterComponent.class).get(playerEnt);
                 characterComponent.character.cast(4);
                 break;
+            case Input.Keys.ESCAPE:
+                if (!AL.getScreenManager().isRegistered(PauseMenuScreen.class))
+                    AL.getScreenManager().register(new PauseMenuScreen(), PauseMenuScreen.class);
+                AL.getGame().setScreen(AL.getScreenManager().get(PauseMenuScreen.class));
+                break;
         }
         camera.update();
         return false;

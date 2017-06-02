@@ -14,21 +14,16 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import gg.al.config.IVideoConfig;
 import gg.al.game.AL;
 import gg.al.util.Assets;
-import lombok.extern.slf4j.Slf4j;
 
 import java.util.Arrays;
 import java.util.List;
 
-
 /**
- * Created by Patrick Windegger on 16.03.2017.
- * Class responsible for the Main-Menu in the game
+ * Created by Patrick Windegger on 02.06.2017.
  */
-@Slf4j
-public class MainMenuScreen implements IAssetScreen {
+public class PauseMenuScreen implements IAssetScreen {
 
     private Stage stage;
     private Skin skin;
@@ -37,9 +32,11 @@ public class MainMenuScreen implements IAssetScreen {
     private Texture mainbackground;
     private OrthographicCamera cam;
 
-    private TextButton btPlay;
+    private TextButton btBackToGame;
+    private TextButton btBackToMainMenu;
     private TextButton btSettings;
-    private TextButton btExit;
+    private TextButton btExitGame;
+
 
 
     @Override
@@ -59,50 +56,65 @@ public class MainMenuScreen implements IAssetScreen {
         spriteBatch = new SpriteBatch();
         mainbackground = AL.getAssetManager().get(Assets.PT_TESTMAINSCREEN);
 
-
-        // Buttons:
-        btPlay = new TextButton("Play", skin, "default");
-        btPlay.setWidth(400);
-        btPlay.setHeight(100);
-        btPlay.addListener(new ClickListener() {
+        btBackToGame = new TextButton("Back to game", skin);
+        btBackToGame.center();
+        btBackToGame.setWidth(600);
+        btBackToGame.setHeight(100);
+        btBackToGame.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                if (!AL.getScreenManager().isRegistered(LevelScreen.class))
-                    AL.getScreenManager().register(new LevelScreen(Assets.PT_TEST), LevelScreen.class);
                 AL.getGame().setScreen(AL.getScreenManager().get(LevelScreen.class));
+                super.clicked(event, x, y);
             }
         });
 
-        btSettings = new TextButton("Settings", skin, "default");
-        btSettings.setWidth(400);
-        btSettings.setHeight(100);
-
-        btSettings.addListener(new ClickListener() {
+        btBackToMainMenu = new TextButton("Back to main menu", skin);
+        btBackToMainMenu.center();
+        btBackToMainMenu.setWidth(600);
+        btBackToMainMenu.setHeight(100);
+        btBackToMainMenu.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                if (!AL.getScreenManager().isRegistered(SettingsScreen.class))
-                    AL.getScreenManager().register(new SettingsScreen(false), SettingsScreen.class);
-                AL.getGame().setScreen(AL.getScreenManager().get(SettingsScreen.class));
+                AL.getGame().setScreen(AL.getScreenManager().get(MainMenuScreen.class));
+                super.clicked(event, x, y);
             }
         });
 
-        btExit = new TextButton("Exit Game", skin, "default");
-        btExit.setWidth(400);
-        btExit.setHeight(100);
-        btExit.addListener(new ClickListener() {
+        btSettings = new TextButton("Settings", skin);
+        btSettings.center();
+        btSettings.setWidth(600);
+        btSettings.setHeight(100);
+        btSettings.addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                AL.getGame().setScreen(AL.getScreenManager().get(SettingsScreen.class, true));
+                super.clicked(event, x, y);
+            }
+        });
+
+        btExitGame = new TextButton("Exit game", skin);
+        btExitGame.center();
+        btExitGame.setWidth(600);
+        btExitGame.setHeight(100);
+        btExitGame.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 AL.app.exit();
+                super.clicked(event, x, y);
             }
         });
 
         Table table = new Table();
-        table.add(btPlay).width(400).pad(10);
+        table.add(btBackToGame).width(600).pad(10);
         table.row();
-        table.add(btSettings).width(400).pad(10);
+        table.add(btBackToMainMenu).width(600).pad(10);
         table.row();
-        table.add(btExit).width(400).pad(10);
+        table.add(btSettings).width(600).pad(10);
+        table.row();
+        table.add(btExitGame).width(600).pad(10);
         table.setPosition(x / 2, y / 2 + 50);
+
+
 
         stage.addActor(table);
 
@@ -126,7 +138,6 @@ public class MainMenuScreen implements IAssetScreen {
 
     @Override
     public void resize(int width, int height) {
-
         viewport.update(width, height, true);
     }
 
@@ -156,26 +167,14 @@ public class MainMenuScreen implements IAssetScreen {
         AL.getAssetManager().unload(Assets.PT_TESTMAINSCREEN.fileName);
     }
 
-    private void changeSize() {
-        AL.getConfigEditor().setValue(IVideoConfig.VideoKeys.height, AL.getVideoConfig().height() + 10);
-        AL.getConfigEditor().setValue(IVideoConfig.VideoKeys.width, AL.getVideoConfig().width() + 10);
-        AL.getConfigEditor().flush();
-    }
-
     @Override
     public List<AssetDescriptor> assets() {
         return Arrays.asList(Assets.PT_STYLES_JSON, Assets.PT_TESTMAINSCREEN, Assets.PT_BITRUSH);
+
     }
 
     @Override
     public ILoadingScreen customLoadingScreen() {
         return null;
-    }
-
-    // Sets the position of all TextButtons on the Screen
-    private void setButtonPosition(int x, int y) {
-        btPlay.setPosition(x / 2 - 200, y / 5 + y / 2);
-        btSettings.setPosition(x / 2 - 200, y / 5 + y / 2.6f);
-        btExit.setPosition(x / 2 - 200, y / 5 + y / 5);
     }
 }

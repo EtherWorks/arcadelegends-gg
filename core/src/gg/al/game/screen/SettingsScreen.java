@@ -73,6 +73,13 @@ public class SettingsScreen implements IAssetScreen, InputProcessor {
     private SpriteDrawable selection;
     private Texture selectionTexture;
 
+    private boolean alreadyInGame;
+
+
+    public SettingsScreen(boolean alreadyInGame)
+    {
+        this.alreadyInGame = alreadyInGame;
+    }
 
     @Override
     public void show() {
