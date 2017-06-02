@@ -4,7 +4,6 @@ import com.artemis.Aspect;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
-import com.badlogic.gdx.assets.AssetDescriptor;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -27,10 +26,6 @@ import gg.al.logic.entity.EntityArguments;
 import gg.al.logic.map.Tile;
 import gg.al.util.Assets;
 import lombok.extern.slf4j.Slf4j;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by Thomas Neumann on 20.03.2017.<br />
@@ -94,6 +89,7 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
 
             arcadeWorld = new ArcadeWorld(map, rot, camera, levelAssets);
             reInit = false;
+            playerEnt = -1;
         }
 
         Gdx.input.setInputProcessor(this);
