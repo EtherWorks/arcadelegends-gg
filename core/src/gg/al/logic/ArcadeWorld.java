@@ -152,7 +152,13 @@ public class ArcadeWorld implements Disposable {
                     renderComponentB.setRenderState(CharacterRenderer.PlayerRenderState.IDLE);
                 }
 
+                BulletComponent bulletA = entityWorld.getMapper(BulletComponent.class).get(entityIdA);
+                BulletComponent bulletB = entityWorld.getMapper(BulletComponent.class).get(entityIdB);
 
+                if (bulletA != null && bulletA.callback != null)
+                    bulletA.callback.onCollision(entityIdA, entityIdB, contact.getFixtureA(), contact.getFixtureB(), contact);
+                if (bulletB != null && bulletB.callback != null)
+                    bulletB.callback.onCollision(entityIdB, entityIdA, contact.getFixtureB(), contact.getFixtureA(), contact);
             }
 
             @Override
@@ -162,15 +168,7 @@ public class ArcadeWorld implements Disposable {
 
             @Override
             public void preSolve(Contact contact, Manifold oldManifold) {
-                int entityIdA = (int) contact.getFixtureA().getBody().getUserData();
-                int entityIdB = (int) contact.getFixtureB().getBody().getUserData();
-                BulletComponent bulletA = entityWorld.getMapper(BulletComponent.class).get(entityIdA);
-                BulletComponent bulletB = entityWorld.getMapper(BulletComponent.class).get(entityIdB);
 
-                if (bulletA != null && bulletA.callback != null)
-                    bulletA.callback.onCollision(entityIdA, entityIdB, contact.getFixtureA(), contact.getFixtureB(), contact);
-                if (bulletB != null && bulletB.callback != null)
-                    bulletB.callback.onCollision(entityIdB, entityIdA, contact.getFixtureB(), contact.getFixtureA(), contact);
             }
 
             @Override

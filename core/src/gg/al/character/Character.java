@@ -6,7 +6,6 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.Ray;
 import com.badlogic.gdx.utils.IntArray;
-import com.badlogic.gdx.utils.ObjectMap;
 import com.badlogic.gdx.utils.Pool;
 import gg.al.game.AL;
 import gg.al.logic.ArcadeWorld;
@@ -24,11 +23,11 @@ import gg.al.logic.map.Tile;
  */
 public abstract class Character {
 
-    public final int TRAIT = 0;
-    public final int ABILITY_1 = 1;
-    public final int ABILITY_2 = 2;
-    public final int ABILITY_3 = 3;
-    public final int ABILITY_4 = 4;
+    public static final int TRAIT = 0;
+    public static final int ABILITY_1 = 1;
+    public static final int ABILITY_2 = 2;
+    public static final int ABILITY_3 = 3;
+    public static final int ABILITY_4 = 4;
 
     protected final float[] cooldowns;
     protected final float[] castTimer;

@@ -1,7 +1,6 @@
 package gg.al.game;
 
 import com.badlogic.gdx.Game;
-import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
@@ -9,7 +8,6 @@ import com.cyphercove.gdx.covetools.assets.AssignmentAssetManager;
 import com.github.drapostolos.typeparser.TypeParser;
 import gg.al.config.Config;
 import gg.al.config.IAudioConfig;
-import gg.al.config.IInputConfig;
 import gg.al.game.screen.DefaultLoadingScreen;
 import gg.al.game.screen.IAssetScreen;
 import gg.al.game.screen.MainMenuScreen;

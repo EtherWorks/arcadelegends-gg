@@ -8,7 +8,7 @@
     "bodyType": "DynamicBody",
     "radius": 0.2,
     "isBullet": true,
-    "isSensor": false,
+    "isSensor": true,
     "collisionCategory": "PROJECTILE",
     "type": "PhysicTemplate"
   },

@@ -15,6 +15,8 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.Ray;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import gg.al.character.Character;
+import gg.al.config.IInputConfig;
 import gg.al.game.AL;
 import gg.al.logic.ArcadeWorld;
 import gg.al.logic.component.*;
@@ -25,6 +27,7 @@ import gg.al.logic.entity.Entities;
 import gg.al.logic.entity.EntityArguments;
 import gg.al.logic.map.Tile;
 import gg.al.util.Assets;
+import gg.al.util.InputMapper;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -36,6 +39,7 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
 
     private final String mapName;
     private final float rot;
+    private final InputMapper inputMapper;
     private int playerEnt = -1;
     private TiledMap map;
     private PerspectiveCamera camera;
@@ -44,7 +48,6 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
     private SpriteBatch fpsBatch;
     private BitmapFont font;
     private boolean reInit;
-
     private Assets.LevelAssets levelAssets;
 
     public LevelScreen(String mapName) {
@@ -54,6 +57,76 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
     public LevelScreen(String mapName, float rot) {
         this.rot = rot;
         this.mapName = mapName;
+        this.inputMapper = new InputMapper(AL.getInputConfig());
+
+        inputMapper.registerInputHanlder(IInputConfig.InputKeys.up, new MoveEventHandler(new Vector2(0, 1)));
+        inputMapper.registerInputHanlder(IInputConfig.InputKeys.down, new MoveEventHandler(new Vector2(0, -1)));
+        inputMapper.registerInputHanlder(IInputConfig.InputKeys.right, new MoveEventHandler(new Vector2(1, 0)));
+        inputMapper.registerInputHanlder(IInputConfig.InputKeys.left, new MoveEventHandler(new Vector2(-1, 0)));
+
+        inputMapper.registerInputHanlder(IInputConfig.InputKeys.ability1, new AbillityEventHandler(Character.ABILITY_1));
+        inputMapper.registerInputHanlder(IInputConfig.InputKeys.ability2, new AbillityEventHandler(Character.ABILITY_2));
+        inputMapper.registerInputHanlder(IInputConfig.InputKeys.ability3, new AbillityEventHandler(Character.ABILITY_3));
+        inputMapper.registerInputHanlder(IInputConfig.InputKeys.ability4, new AbillityEventHandler(Character.ABILITY_4));
+        inputMapper.registerInputHanlder(IInputConfig.InputKeys.trait, new AbillityEventHandler(Character.TRAIT));
+    }
+
+    @Override
+    public boolean keyDown(int keycode) {
+
+        switch (keycode) {
+            case Input.Keys.LEFT:
+                camera.translate(-1, 0, 0);
+                break;
+            case Input.Keys.RIGHT:
+                camera.translate(1, 0, 0);
+                break;
+            case Input.Keys.DOWN:
+                camera.translate(0, -1, 0);
+                break;
+            case Input.Keys.UP:
+                camera.translate(0, 1, 0);
+                break;
+            case Input.Keys.K:
+                StatComponent statComponent = arcadeWorld.getEntityWorld().getMapper(StatComponent.class).get(playerEnt);
+                statComponent.damages.add(new Damage(Damage.DamageType.Normal, 10, 10));
+                break;
+            case Input.Keys.J:
+                statComponent = arcadeWorld.getEntityWorld().getMapper(StatComponent.class).get(playerEnt);
+                statComponent.addRuntimeStat(StatComponent.RuntimeStat.level, 1);
+                break;
+
+            case Input.Keys.Z:
+                statComponent = arcadeWorld.getEntityWorld().getMapper(StatComponent.class).get(playerEnt);
+                statComponent.statusEffects.put("ARP1", StatusEffect.builder()
+                        .effectTime(10)
+                        .flatStat(StatComponent.BaseStat.healthRegen, 10f)
+                        .build());
+                break;
+
+            case Input.Keys.O:
+                EntityArguments arguments = null;
+                arguments = arcadeWorld.getArguments("player.json");
+                PositionComponent.PositionTemplate pos = arguments.get(PositionComponent.class.getSimpleName(), PositionComponent.PositionTemplate.class);
+                pos.x = 5;
+                pos.y = 5;
+                int id = arcadeWorld.spawn(Entities.Player, arguments);
+                statComponent = arcadeWorld.getEntityWorld().getMapper(StatComponent.class).get(id);
+                statComponent.setFlag(StatComponent.FlagStat.deleteOnDeath, true);
+                CharacterControlComponent characterControlComponent = arcadeWorld.getEntityWorld().getMapper(CharacterControlComponent.class).get(id);
+                characterControlComponent.targetId = 0;
+                break;
+            case Input.Keys.ESCAPE:
+                if (!AL.getScreenManager().isRegistered(PauseMenuScreen.class))
+                    AL.getScreenManager().register(new PauseMenuScreen(), PauseMenuScreen.class);
+                AL.getGame().setScreen(AL.getScreenManager().get(PauseMenuScreen.class));
+                break;
+            default:
+                inputMapper.handleInput(keycode);
+                break;
+        }
+        camera.update();
+        return false;
     }
 
     @Override
@@ -88,6 +161,7 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
             map = levelAssets.get(mapName);
 
             arcadeWorld = new ArcadeWorld(map, rot, camera, levelAssets);
+
             reInit = false;
             playerEnt = -1;
         }
@@ -136,107 +210,6 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
 
     }
 
-    @Override
-    public boolean keyDown(int keycode) {
-
-        switch (keycode) {
-            case Input.Keys.LEFT:
-                camera.translate(-1, 0, 0);
-                break;
-            case Input.Keys.RIGHT:
-                camera.translate(1, 0, 0);
-                break;
-            case Input.Keys.DOWN:
-                camera.translate(0, -1, 0);
-                break;
-            case Input.Keys.UP:
-                camera.translate(0, 1, 0);
-                break;
-            case Input.Keys.W:
-                CharacterControlComponent input = arcadeWorld.getEntityWorld().getComponentOf(playerEnt, CharacterControlComponent.class);
-
-                PositionComponent position = arcadeWorld.getEntityWorld().getComponentOf(playerEnt, PositionComponent.class);
-                if (!input.move.equals(position.position))
-                    break;
-                input.move.set(position.position.x, position.position.y + 1);
-                break;
-            case Input.Keys.S:
-                input = arcadeWorld.getEntityWorld().getComponentOf(playerEnt, CharacterControlComponent.class);
-
-                position = arcadeWorld.getEntityWorld().getComponentOf(playerEnt, PositionComponent.class);
-                if (!input.move.equals(position.position))
-                    break;
-                input.move.set(position.position.x, position.position.y - 1);
-                break;
-            case Input.Keys.A:
-                input = arcadeWorld.getEntityWorld().getComponentOf(playerEnt, CharacterControlComponent.class);
-
-                position = arcadeWorld.getEntityWorld().getComponentOf(playerEnt, PositionComponent.class);
-                if (!input.move.equals(position.position))
-                    break;
-                input.move.set(position.position.x - 1, position.position.y);
-                break;
-            case Input.Keys.D:
-                input = arcadeWorld.getEntityWorld().getComponentOf(playerEnt, CharacterControlComponent.class);
-                position = arcadeWorld.getEntityWorld().getComponentOf(playerEnt, PositionComponent.class);
-                if (!input.move.equals(position.position))
-                    break;
-                input.move.set(position.position.x + 1, position.position.y);
-                break;
-            case Input.Keys.K:
-                StatComponent statComponent = arcadeWorld.getEntityWorld().getMapper(StatComponent.class).get(playerEnt);
-                statComponent.damages.add(new Damage(Damage.DamageType.Normal, 10, 10));
-                break;
-            case Input.Keys.J:
-                statComponent = arcadeWorld.getEntityWorld().getMapper(StatComponent.class).get(playerEnt);
-                statComponent.addRuntimeStat(StatComponent.RuntimeStat.level, 1);
-                break;
-
-            case Input.Keys.Z:
-                statComponent = arcadeWorld.getEntityWorld().getMapper(StatComponent.class).get(playerEnt);
-                statComponent.statusEffects.put("ARP1", StatusEffect.builder()
-                        .effectTime(10)
-                        .flatStat(StatComponent.BaseStat.healthRegen, 10f)
-                        .build());
-                break;
-
-            case Input.Keys.O:
-                EntityArguments arguments = null;
-                arguments = arcadeWorld.getArguments("player.json");
-                PositionComponent.PositionTemplate pos = arguments.get(PositionComponent.class.getSimpleName(), PositionComponent.PositionTemplate.class);
-                pos.x = 5;
-                pos.y = 5;
-                int id = arcadeWorld.spawn(Entities.Player, arguments);
-                statComponent = arcadeWorld.getEntityWorld().getMapper(StatComponent.class).get(id);
-                statComponent.setFlag(StatComponent.FlagStat.deleteOnDeath, true);
-                CharacterControlComponent characterControlComponent = arcadeWorld.getEntityWorld().getMapper(CharacterControlComponent.class).get(id);
-                characterControlComponent.targetId = 0;
-                break;
-            case Input.Keys.Q:
-                CharacterComponent characterComponent = arcadeWorld.getEntityWorld().getMapper(CharacterComponent.class).get(playerEnt);
-                characterComponent.character.cast(1);
-                break;
-            case Input.Keys.E:
-                characterComponent = arcadeWorld.getEntityWorld().getMapper(CharacterComponent.class).get(playerEnt);
-                characterComponent.character.cast(2);
-                break;
-            case Input.Keys.R:
-                characterComponent = arcadeWorld.getEntityWorld().getMapper(CharacterComponent.class).get(playerEnt);
-                characterComponent.character.cast(3);
-                break;
-            case Input.Keys.F:
-                characterComponent = arcadeWorld.getEntityWorld().getMapper(CharacterComponent.class).get(playerEnt);
-                characterComponent.character.cast(4);
-                break;
-            case Input.Keys.ESCAPE:
-                if (!AL.getScreenManager().isRegistered(PauseMenuScreen.class))
-                    AL.getScreenManager().register(new PauseMenuScreen(), PauseMenuScreen.class);
-                AL.getGame().setScreen(AL.getScreenManager().get(PauseMenuScreen.class));
-                break;
-        }
-        camera.update();
-        return false;
-    }
 
     @Override
     public boolean keyUp(int keycode) {
@@ -311,5 +284,38 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
         camera.translate(0, 0, amount);
         camera.update();
         return false;
+    }
+
+
+    private class MoveEventHandler implements InputMapper.InputEvent {
+
+        private final Vector2 move;
+
+        public MoveEventHandler(Vector2 move) {
+            this.move = move;
+        }
+
+        @Override
+        public void onInput() {
+            CharacterControlComponent input = arcadeWorld.getEntityWorld().getComponentOf(playerEnt, CharacterControlComponent.class);
+
+            PositionComponent position = arcadeWorld.getEntityWorld().getComponentOf(playerEnt, PositionComponent.class);
+            if (!input.move.equals(position.position))
+                return;
+            input.move.set(position.position.x + move.x, position.position.y + move.y);
+        }
+    }
+
+    private class AbillityEventHandler implements InputMapper.InputEvent {
+        private final int ability;
+
+        public AbillityEventHandler(int ability) {
+            this.ability = ability;
+        }
+
+        @Override
+        public void onInput() {
+            arcadeWorld.getEntityWorld().getMapper(CharacterComponent.class).get(playerEnt).character.cast(ability);
+        }
     }
 }

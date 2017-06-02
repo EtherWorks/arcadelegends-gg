@@ -1,7 +1,6 @@
 package gg.al.game;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.assets.AssetManager;
 import com.cyphercove.gdx.covetools.assets.AssignmentAssetManager;
 import gg.al.config.*;
 import gg.al.util.AudioManager;
