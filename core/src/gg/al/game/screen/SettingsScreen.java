@@ -1,9 +1,6 @@
 package gg.al.game.screen;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
-import com.badlogic.gdx.InputMultiplexer;
-import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.*;
 import com.badlogic.gdx.assets.AssetDescriptor;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
@@ -73,13 +70,7 @@ public class SettingsScreen implements IAssetScreen, InputProcessor {
     private SpriteDrawable selection;
     private Texture selectionTexture;
 
-    private boolean alreadyInGame;
-
-
-    public SettingsScreen(boolean alreadyInGame)
-    {
-        this.alreadyInGame = alreadyInGame;
-    }
+    private Screen previousScreen;
 
     @Override
     public void show() {
@@ -377,8 +368,8 @@ public class SettingsScreen implements IAssetScreen, InputProcessor {
 
     @Override
     public boolean keyDown(int keycode) {
-        if (keycode == Input.Keys.ESCAPE)
-            AL.getGame().setScreen(AL.getScreenManager().get(MainMenuScreen.class));
+        if (keycode == Input.Keys.ESCAPE && previousScreen != null)
+            AL.getGame().setScreen(previousScreen);
         return false;
     }
 
@@ -420,5 +411,13 @@ public class SettingsScreen implements IAssetScreen, InputProcessor {
     @Override
     public ILoadingScreen customLoadingScreen() {
         return null;
+    }
+
+    public void setPreviousScreen(Screen previousScreen) {
+        this.previousScreen = previousScreen;
+    }
+
+    public Screen getPreviousScreen() {
+        return previousScreen;
     }
 }

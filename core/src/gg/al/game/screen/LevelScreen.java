@@ -105,6 +105,7 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
             map = AL.getAssetManager().get(mapDesc);
 
             arcadeWorld = new ArcadeWorld(map, rot, camera);
+            reInit = false;
         }
 
         Gdx.input.setInputProcessor(this);

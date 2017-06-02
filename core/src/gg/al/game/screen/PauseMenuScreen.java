@@ -1,6 +1,8 @@
 package gg.al.game.screen;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
+import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.assets.AssetDescriptor;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -16,6 +18,7 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import gg.al.game.AL;
 import gg.al.util.Assets;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.Arrays;
 import java.util.List;
@@ -23,7 +26,8 @@ import java.util.List;
 /**
  * Created by Patrick Windegger on 02.06.2017.
  */
-public class PauseMenuScreen implements IAssetScreen {
+@Slf4j
+public class PauseMenuScreen implements IAssetScreen, InputProcessor {
 
     private Stage stage;
     private Skin skin;
@@ -75,6 +79,7 @@ public class PauseMenuScreen implements IAssetScreen {
         btBackToMainMenu.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                AL.getScreenManager().get(LevelScreen.class).setReInit(true);
                 AL.getGame().setScreen(AL.getScreenManager().get(MainMenuScreen.class));
                 super.clicked(event, x, y);
             }
@@ -87,7 +92,9 @@ public class PauseMenuScreen implements IAssetScreen {
         btSettings.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                AL.getGame().setScreen(AL.getScreenManager().get(SettingsScreen.class, true));
+                SettingsScreen s = AL.getScreenManager().get(SettingsScreen.class, true);
+                s.setPreviousScreen(PauseMenuScreen.this);
+                AL.getGame().setScreen(s);
                 super.clicked(event, x, y);
             }
         });
@@ -176,5 +183,50 @@ public class PauseMenuScreen implements IAssetScreen {
     @Override
     public ILoadingScreen customLoadingScreen() {
         return null;
+    }
+
+
+    @Override
+    public boolean keyDown(int keycode) {
+        if(keycode == Input.Keys.ESCAPE)
+        {
+
+        }
+        return false;
+    }
+
+    @Override
+    public boolean keyUp(int keycode) {
+        return false;
+    }
+
+    @Override
+    public boolean keyTyped(char character) {
+        return false;
+    }
+
+    @Override
+    public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+        return false;
+    }
+
+    @Override
+    public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+        return false;
+    }
+
+    @Override
+    public boolean touchDragged(int screenX, int screenY, int pointer) {
+        return false;
+    }
+
+    @Override
+    public boolean mouseMoved(int screenX, int screenY) {
+        return false;
+    }
+
+    @Override
+    public boolean scrolled(int amount) {
+        return false;
     }
 }

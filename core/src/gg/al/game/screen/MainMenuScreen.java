@@ -80,9 +80,10 @@ public class MainMenuScreen implements IAssetScreen {
         btSettings.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                if (!AL.getScreenManager().isRegistered(SettingsScreen.class))
-                    AL.getScreenManager().register(new SettingsScreen(false), SettingsScreen.class);
-                AL.getGame().setScreen(AL.getScreenManager().get(SettingsScreen.class));
+               SettingsScreen s = AL.getScreenManager().get(SettingsScreen.class, true);
+                s.setPreviousScreen(MainMenuScreen.this);
+                AL.getGame().setScreen(s);
+
             }
         });
 
