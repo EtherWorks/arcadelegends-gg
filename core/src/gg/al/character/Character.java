@@ -30,10 +30,12 @@ public abstract class Character {
     public static final int ABILITY_3 = 3;
     public static final int ABILITY_4 = 4;
 
-    protected final float[] cooldowns;
+    protected final float[] cooldownTimer;
     protected final float[] castTimer;
     protected final boolean[] casting;
     protected final Object[] extraData;
+    protected final float[] cooldowns;
+    protected final float[] costs;
     protected final Pool<Vector2> vectorPool;
     protected boolean preparingAttack;
     protected boolean finishedAttack;
@@ -45,10 +47,12 @@ public abstract class Character {
     private ArcadeWorld arcadeWorld;
 
     public Character() {
-        this.cooldowns = new float[5];
+        this.cooldownTimer = new float[5];
         this.castTimer = new float[5];
         this.casting = new boolean[5];
         this.extraData = new Object[5];
+        this.cooldowns = new float[5];
+        this.costs = new float[5];
 
         finishedAttack = true;
 
@@ -83,7 +87,7 @@ public abstract class Character {
 
     public void cast(int abilityInd) {
         StatComponent statComponent = arcadeWorld.getEntityWorld().getMapper(StatComponent.class).get(entityID);
-        if (cooldowns[abilityInd] == 0) {
+        if (cooldownTimer[abilityInd] == 0) {
             float cooldown = 0;
             float cost = 0;
             float castTime = 0;
@@ -119,7 +123,7 @@ public abstract class Character {
                 if (checkOnCast(abilityInd)) {
                     resetAttack();
                     cooldowns[abilityInd] = cooldown;
-                    statComponent.addRuntimeStat(StatComponent.RuntimeStat.resource, -cost);
+                    costs[abilityInd] = cost;
                     casting[abilityInd] = true;
                     castTimer[abilityInd] = castTime;
                     castBegin(abilityInd);
@@ -129,15 +133,20 @@ public abstract class Character {
     }
 
     public void tick(float delta) {
-        for (int i = 0; i < cooldowns.length; i++) {
-            if (cooldowns[i] != 0)
-                cooldowns[i] = cooldowns[i] - delta <= 0 ? 0 : cooldowns[i] - delta;
+        for (int i = 0; i < cooldownTimer.length; i++) {
+            if (cooldownTimer[i] != 0)
+                cooldownTimer[i] = cooldownTimer[i] - delta <= 0 ? 0 : cooldownTimer[i] - delta;
             if (casting[i]) {
                 castTimer[i] -= delta;
                 if (castTimer[i] <= 0) {
                     castTimer[i] = 0;
                     casting[i] = false;
-                    onCast(i);
+                    StatComponent statComponent = arcadeWorld.getEntityWorld().getMapper(StatComponent.class).get(entityID);
+                    if (statComponent.getRuntimeStat(StatComponent.RuntimeStat.resource) - costs[i] >= 0 && checkOnCast(i)) {
+                        statComponent.addRuntimeStat(StatComponent.RuntimeStat.resource, -costs[i]);
+                        cooldownTimer[i] = cooldowns[i];
+                        onCast(i);
+                    }
                 }
             }
         }
