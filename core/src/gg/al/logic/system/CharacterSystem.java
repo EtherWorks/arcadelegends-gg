@@ -94,38 +94,17 @@ public class CharacterSystem extends IteratingSystem {
         if (character.targetId == entityId)
             character.targetId = -1;
         else if (character.targetId != -1) {
-            character.character.startAttack();
-            renderComponent.setRenderState(character.character.hasFinishedAttack() ? IDLE : ATTACK);
-//            PositionComponent otherPos = mapperPosition.get(character.targetId);
-//            if (otherPos != null) {
-//                Vector2 vector = vectorPool.obtain();
-//                if (Math.abs(vector.set(pos.position).dst(otherPos.position)) <= stats.getCurrentStat(StatComponent.BaseStat.attackRange)) {
-//                    if (renderComponent != null)
-//                        renderComponent.setRenderState(ATTACK);
-//                    if (stats.getRuntimeStat(StatComponent.RuntimeStat.attackSpeedTimer) >= 1 / stats.getCurrentStat(StatComponent.BaseStat.attackSpeed)) {
-//                        stats.setRuntimeStat(StatComponent.RuntimeStat.attackSpeedTimer, 0);
-//                        if (character.character != null)
-//                            character.character.attack(character.targetId);
-//                        else {
-//                            Damage dmg = new Damage(Damage.DamageType.Normal,
-//                                    stats.getCurrentStat(StatComponent.BaseStat.attackDamage),
-//                                    stats.getCurrentStat(StatComponent.BaseStat.armorPenetration));
-//                            mapperStatComponent.get(character.targetId).damages.add(dmg);
-//                        }
-//                    } else
-//                        stats.addRuntimeStat(StatComponent.RuntimeStat.attackSpeedTimer, getWorld().getDelta());
-//                } else {
-//                    stats.setRuntimeStat(StatComponent.RuntimeStat.attackSpeedTimer, 0);
-//                    character.targetId = -1;
-//                }
-//                vectorPool.free(vector);
-//            } else {
-//                character.targetId = -1;
-//                stats.setRuntimeStat(StatComponent.RuntimeStat.attackSpeedTimer, 0);
-//                if (renderComponent != null)
-//                    renderComponent.setRenderState(IDLE);
-//            }
-        }
+            Vector2 vector = vectorPool.obtain();
+            PositionComponent target = mapperPosition.get(character.targetId);
+            if (Math.abs(vector.set(pos.position).dst(target.position)) <= stats.getCurrentStat(StatComponent.BaseStat.attackRange)) {
+                character.character.startAttack();
+                renderComponent.setRenderState(ATTACK);
+            } else
+                character.targetId = -1;
+            vectorPool.free(vector);
+        } else if (character.targetId == -1 && renderComponent.isInState(ATTACK))
+            renderComponent.setRenderState(IDLE);
+
 
         character.character.tick(getWorld().getDelta());
     }

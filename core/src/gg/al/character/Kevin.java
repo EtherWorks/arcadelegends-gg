@@ -4,6 +4,7 @@ package gg.al.character;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.IntArray;
 import gg.al.game.AL;
+import gg.al.graphics.renderer.CharacterRenderer;
 import gg.al.logic.component.*;
 import gg.al.logic.component.data.Damage;
 import gg.al.logic.component.data.StatusEffect;
@@ -161,5 +162,21 @@ public class Kevin extends Character {
     public void attack(int enemyId) {
         super.attack(enemyId);
         AL.getAudioManager().playSound("sword_" + (random.nextInt(3) + 1));
+    }
+
+    @Override
+    protected void castBegin(int ability) {
+        RenderComponent renderComponent = getComponent(entityID, RenderComponent.class);
+        switch (ability) {
+            case ABILITY_1:
+                renderComponent.setRenderState(CharacterRenderer.PlayerRenderState.ABILITY_1);
+                break;
+            case ABILITY_2:
+                renderComponent.setRenderState(CharacterRenderer.PlayerRenderState.ABILITY_2);
+                break;
+            case ABILITY_3:
+                renderComponent.setRenderState(CharacterRenderer.PlayerRenderState.ABILITY_3);
+                break;
+        }
     }
 }

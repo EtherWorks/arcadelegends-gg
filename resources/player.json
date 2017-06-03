@@ -166,6 +166,24 @@
         "frameRows": 8,
         "frameDuration": 0.025,
         "texture": "autoattack"
+      },
+      "ABILITY_1": {
+        "frameColumns": 5,
+        "frameRows": 8,
+        "frameDuration": 0.025,
+        "texture": "autoattack"
+      },
+      "ABILITY_2": {
+        "frameColumns": 5,
+        "frameRows": 8,
+        "frameDuration": 0.025,
+        "texture": "autoattack"
+      },
+      "ABILITY_3": {
+        "frameColumns": 5,
+        "frameRows": 8,
+        "frameDuration": 0.025,
+        "texture": "autoattack"
       }
     },
     "renderType": "PLAYER",

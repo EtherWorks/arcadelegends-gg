@@ -50,6 +50,8 @@ public abstract class Character {
         this.casting = new boolean[5];
         this.extraData = new Object[5];
 
+        finishedAttack = true;
+
         vectorPool = new Pool<Vector2>() {
             @Override
             protected Vector2 newObject() {
@@ -115,10 +117,12 @@ public abstract class Character {
             cooldown -= cooldown * statComponent.getCurrentStat(StatComponent.BaseStat.cooldownReduction);
             if (!isCasting() && statComponent.getRuntimeStat(StatComponent.RuntimeStat.resource) - cost >= 0) {
                 if (checkOnCast(abilityInd)) {
+                    resetAttack();
                     cooldowns[abilityInd] = cooldown;
                     statComponent.addRuntimeStat(StatComponent.RuntimeStat.resource, -cost);
                     casting[abilityInd] = true;
                     castTimer[abilityInd] = castTime;
+                    castBegin(abilityInd);
                 }
             }
         }
@@ -156,15 +160,14 @@ public abstract class Character {
                 }
             }
             if (attackTimer <= 0) {
-                attackTimer = 0;
-                finishedAttack = true;
+                stopAttack();
             }
         }
         onTick(delta);
     }
 
     public void startAttack() {
-        if (!preparingAttack) {
+        if (!preparingAttack && !attackAccomplished) {
             StatComponent stats = getComponent(entityID, StatComponent.class);
             preparingAttack = true;
             finishedAttack = false;
@@ -176,13 +179,22 @@ public abstract class Character {
     }
 
     public void stopAttack() {
+        preparingAttack = false;
+        attackTimer = 0;
+        castAttackSpeed = 0;
+        finishedAttack = true;
+        attackAccomplished = false;
+        prepTime = 0;
+    }
+
+    public void resetAttack() {
+        stopAttack();
+        getComponent(entityID, CharacterComponent.class).targetId = -1;
+    }
+
+    public void cancelAttack() {
         if (preparingAttack) {
-            preparingAttack = false;
-            attackTimer = 0;
-            castAttackSpeed = 0;
-            finishedAttack = true;
-            attackAccomplished = false;
-            prepTime = 0;
+            resetAttack();
         }
     }
 
@@ -192,9 +204,9 @@ public abstract class Character {
                 stats.getCurrentStat(StatComponent.BaseStat.attackDamage),
                 stats.getCurrentStat(StatComponent.BaseStat.armorPenetration));
         getComponent(enemyId, StatComponent.class).damages.add(dmg);
-
     }
 
+    protected abstract void castBegin(int ability);
 
     protected abstract void onTick(float delta);
 
@@ -204,7 +216,7 @@ public abstract class Character {
 
     public abstract void affectStats(StatComponent statComponent);
 
-    public float getRenderMultiplicator() {
+    public float getAttackCompletionPercent() {
         return ((1 / castAttackSpeed) - attackTimer) / (1 / castAttackSpeed);
     }
 

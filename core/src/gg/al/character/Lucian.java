@@ -63,4 +63,9 @@ public class Lucian extends Character {
             contact.setEnabled(false);
         };
     }
+
+    @Override
+    protected void castBegin(int ability) {
+
+    }
 }

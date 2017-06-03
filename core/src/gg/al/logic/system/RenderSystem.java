@@ -134,4 +134,8 @@ public class RenderSystem extends BaseEntitySystem {
             tempDecals.add(decal);
         return tempDecals;
     }
+
+    public float getDelta() {
+        return getWorld().getDelta();
+    }
 }

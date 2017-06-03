@@ -1,7 +1,6 @@
 package gg.al.logic.component;
 
 import com.artemis.PooledComponent;
-import com.badlogic.gdx.assets.AssetDescriptor;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
@@ -50,6 +49,7 @@ public class RenderComponent extends PooledComponent implements ITemplateable {
     @Getter(lazy = true)
     private final static TextureRegion NULL_FRAME = new TextureRegion(new Texture(new Pixmap(1, 1, Pixmap.Format.RGBA8888)));
     public final ObjectMap<String, Animation<TextureRegion>> animations;
+    public final ObjectMap<String, Float> stateTimes;
     public RenderTemplate renderTemplate;
     public float width;
     public float height;
@@ -61,6 +61,7 @@ public class RenderComponent extends PooledComponent implements ITemplateable {
 
     public RenderComponent() {
         animations = new ObjectMap<>();
+        stateTimes = new ObjectMap<>();
         renderState = "";
     }
 
@@ -74,6 +75,22 @@ public class RenderComponent extends PooledComponent implements ITemplateable {
 
     public boolean isInState(String state) {
         return renderState.equals(state);
+    }
+
+    public boolean isInAnyState(String... states) {
+        for (int i = 0; i < states.length; i++) {
+            if (isInState(states[i]))
+                return true;
+        }
+        return false;
+    }
+
+    public boolean isInAnyState(Enum... states) {
+        for (int i = 0; i < states.length; i++) {
+            if (isInState(states[i]))
+                return true;
+        }
+        return false;
     }
 
     public void setRenderState(Enum state) {
@@ -169,6 +186,7 @@ public class RenderComponent extends PooledComponent implements ITemplateable {
             public String texture = "";
             public float width = 1;
             public float height = 1;
+            public Animation.PlayMode playMode = Animation.PlayMode.LOOP;
         }
     }
 }

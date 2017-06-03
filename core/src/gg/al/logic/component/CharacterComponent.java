@@ -33,7 +33,7 @@ public class CharacterComponent extends PooledComponent implements ITemplateable
     }
 
     public float getRenderMultiplicator() {
-        return character.getRenderMultiplicator();
+        return character.getAttackCompletionPercent();
     }
 
     @Override

@@ -14,6 +14,8 @@ import gg.al.logic.system.RenderSystem;
 
 import java.util.Map;
 
+import static gg.al.graphics.renderer.CharacterRenderer.PlayerRenderState.*;
+
 /**
  * Created by Thomas Neumann on 29.05.2017.<br />
  */
@@ -37,7 +39,8 @@ public class CharacterRenderer implements RenderComponent.RenderDelegate {
                         frames[index++] = tmp[i][j];
                     }
                 }
-                render.animations.put(entry.getKey(), new Animation<TextureRegion>(entry.getValue().frameDuration, new Array<>(frames), Animation.PlayMode.LOOP));
+                render.animations.put(entry.getKey(), new Animation<>(entry.getValue().frameDuration, new Array<>(frames), entry.getValue().playMode));
+                render.stateTimes.put(entry.getKey(), 0f);
             }
         }
         Decal decal = Decal.newDecal(render.width, render.height, render.getCurrentKeyFrame(renderSystem.getStateTime()), render.transparent);
@@ -66,8 +69,18 @@ public class CharacterRenderer implements RenderComponent.RenderDelegate {
         CharacterComponent character = renderSystem.getMapperCharacterComponent().get(entityId);
         Decal decal = renderSystem.getDecalMap().get(entityId);
         float stateTime = renderSystem.getStateTime();
-        if (character != null && render.isInState(PlayerRenderState.ATTACK)) {
+        if (character != null && render.isInState(ATTACK)) {
             stateTime = render.animations.get(PlayerRenderState.ATTACK.name()).getAnimationDuration() * character.getRenderMultiplicator();
+        } else if (character != null && render.isInAnyState(
+                ABILITY_1, ABILITY_2, ABILITY_3, ABILITY_4, TRAIT
+        )) {
+            stateTime = render.stateTimes.get(render.renderState);
+            stateTime += renderSystem.getDelta();
+            if (render.animations.get(render.renderState).isAnimationFinished(stateTime)) {
+                render.stateTimes.put(render.renderState, 0f);
+                render.setRenderState(IDLE);
+            } else
+                render.stateTimes.put(render.renderState, stateTime);
         }
         TextureRegion region = render.getCurrentKeyFrame(stateTime);
         region.flip(region.isFlipX() ^ render.flipX, region.isFlipY() ^ render.flipY);
@@ -76,10 +89,7 @@ public class CharacterRenderer implements RenderComponent.RenderDelegate {
         decal.setWidth(template.width);
         decal.setHeight(template.height);
 
-        if (physic != null)
-            decal.setPosition(physic.body.getPosition().x, physic.body.getPosition().y, decal.getZ());
-        else
-            decal.setPosition(position.position.x, position.position.y, decal.getZ());
+        decal.setPosition(physic.body.getPosition().x, physic.body.getPosition().y, decal.getZ());
 
         FrameBuffer buffer = renderSystem.getBuffers().get(entityId);
         buffer.begin();
@@ -109,6 +119,6 @@ public class CharacterRenderer implements RenderComponent.RenderDelegate {
     }
 
     public enum PlayerRenderState {
-        IDLE, MOVE_SIDE, ATTACK, MOVE_UP, MOVE_DOWN, TAUNT
+        IDLE, MOVE_SIDE, ATTACK, MOVE_UP, MOVE_DOWN, TAUNT, ABILITY_1, ABILITY_2, ABILITY_3, ABILITY_4, TRAIT
     }
 }
