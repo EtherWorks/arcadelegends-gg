@@ -302,6 +302,14 @@ public abstract class Character {
         return pos.position;
     }
 
+    public int getEntityAtMouse() {
+        Vector2 mousePos = getMousePos();
+        Tile t = getTile(Math.round(mousePos.x), Math.round(mousePos.y));
+        if (t.getEntities().size == 0)
+            return -1;
+        return t.getEntities().first();
+    }
+
     public Tile getTile(Vector2 vec) {
         return arcadeWorld.getTile(vec);
     }

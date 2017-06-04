@@ -10,7 +10,6 @@ import gg.al.logic.component.data.Damage;
 import gg.al.logic.component.data.StatusEffect;
 import gg.al.logic.entity.Entities;
 import gg.al.logic.entity.EntityArguments;
-import gg.al.logic.map.Tile;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Random;
@@ -46,16 +45,18 @@ public class Kevin extends Character {
             case ABILITY_1:
                 return true;
             case ABILITY_2:
-                Vector2 mousePos = getMousePos();
-                Tile t = getTile(Math.round(mousePos.x), Math.round(mousePos.y));
-                if (t.getEntities().size == 0)
+                int targetId = getEntityAtMouse();
+                if (targetId == -1)
                     return false;
-                int targetId = t.getEntities().first();
                 if (checkRange(entityID, targetId, ABILITY_2_RANGE)) {
                     extraData[ABILITY_2] = targetId;
                     return true;
                 }
             case ABILITY_3:
+                targetId = getEntityAtMouse();
+                if (targetId == -1)
+                    return false;
+                extraData[abilityInd] = targetId;
                 return true;
             case ABILITY_4:
                 return true;
@@ -124,7 +125,7 @@ public class Kevin extends Character {
                 bCon.speed = 2;
                 bCon.move.set(dir);
                 bCon.old.set(pos.x, pos.y);
-                bCon.target = 1;
+                bCon.target = (int) extraData[ABILITY_3];
                 bCon.maxDistance = 20;
                 final float damage = 600;
                 final int caster = entityID;

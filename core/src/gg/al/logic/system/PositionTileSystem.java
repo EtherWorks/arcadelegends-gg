@@ -23,7 +23,6 @@ public class PositionTileSystem extends IteratingSystem{
     @Override
     protected void process(int entityId) {
         PositionComponent position = mapperPosition.get(entityId);
-
         Tile newTile = logicMap.getTile(position.position);
         if (position.tile != newTile) {
             position.tile.removeEntity(entityId);
