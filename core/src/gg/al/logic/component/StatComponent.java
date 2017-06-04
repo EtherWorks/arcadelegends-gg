@@ -3,10 +3,7 @@ package gg.al.logic.component;
 import com.artemis.PooledComponent;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap;
-import gg.al.logic.component.data.Damage;
-import gg.al.logic.component.data.ITemplateable;
-import gg.al.logic.component.data.StatusEffect;
-import gg.al.logic.component.data.Template;
+import gg.al.logic.component.data.*;
 import gg.al.util.Constants;
 
 import java.util.LinkedHashMap;
@@ -23,6 +20,7 @@ public class StatComponent extends PooledComponent implements ITemplateable {
     private final static String GROWTH_PERCENTAGE = "GrowthPercentage";
     public final ObjectMap<String, StatusEffect> statusEffects;
     public final Array<Damage> damages;
+    public final Array<Heal> heals;
     private final ObjectMap<FlagStat, Boolean> flags;
     private final ObjectMap<RuntimeStat, Float> runtimeStats;
     private final ObjectMap<BaseStat, Float> currentStats;
@@ -41,6 +39,7 @@ public class StatComponent extends PooledComponent implements ITemplateable {
         growthPercentageStats = new ObjectMap<>();
         statusEffects = new ObjectMap<>();
         damages = new Array<>();
+        heals = new Array<>();
 
         customStats = new ObjectMap<>();
         customFlags = new ObjectMap<>();
@@ -56,12 +55,14 @@ public class StatComponent extends PooledComponent implements ITemplateable {
         growthPercentageStats.clear();
         statusEffects.clear();
         damages.clear();
+        heals.clear();
         customFlags.clear();
         customStats.clear();
     }
 
     public void recalculateCurrent() {
-        for (BaseStat stat : BaseStat.values()) {
+        for (int i = 0; i < BaseStat.values().length; i++) {
+            BaseStat stat = BaseStat.values()[i];
             float value = baseStats.get(stat);
             value += runtimeStats.get(RuntimeStat.level) * growthStats.get(stat);
             value += value * growthPercentageStats.get(stat);
@@ -69,8 +70,7 @@ public class StatComponent extends PooledComponent implements ITemplateable {
         }
     }
 
-    public void applyStatusEffects()
-    {
+    public void applyStatusEffects() {
         for (StatusEffect effect : statusEffects.values()) {
             effect.applyValue(this);
         }
@@ -136,7 +136,7 @@ public class StatComponent extends PooledComponent implements ITemplateable {
     }
 
     public void setBaseStat(BaseStat stat, float value) {
-        baseStats.put(stat,  value >= stat.max ? stat.max : value <= stat.min ? stat.min : value);
+        baseStats.put(stat, value >= stat.max ? stat.max : value <= stat.min ? stat.min : value);
     }
 
     public float getBaseStat(BaseStat stat) {
@@ -194,6 +194,17 @@ public class StatComponent extends PooledComponent implements ITemplateable {
             }
         }
 
+        for (BaseStat stat : BaseStat.values()) {
+            if (!baseStats.containsKey(stat))
+                baseStats.put(stat, 0f);
+            if (!currentStats.containsKey(stat))
+                currentStats.put(stat, 0f);
+            if (!growthStats.containsKey(stat))
+                growthStats.put(stat, 0f);
+            if (!growthPercentageStats.containsKey(stat))
+                growthPercentageStats.put(stat, 0f);
+        }
+
         for (Map.Entry<String, Float> key : statTemplate.getCustomValues().entrySet()) {
             customStats.put(key.getKey(), key.getValue());
         }
@@ -218,6 +229,14 @@ public class StatComponent extends PooledComponent implements ITemplateable {
         return builder.toString();
     }
 
+    public boolean shouldLevel() {
+        return getRuntimeStat(RuntimeStat.experience) >= getNextLevelExperience();
+    }
+
+    public float getNextLevelExperience() {
+        return (float) (100 + Math.pow(2, getRuntimeStat(RuntimeStat.level)));
+    }
+
     public enum BaseStat {
         maxHealth(0, Float.MAX_VALUE),
         healthRegen(0, Float.MAX_VALUE),
@@ -239,6 +258,11 @@ public class StatComponent extends PooledComponent implements ITemplateable {
 
         magicResist(0, Float.MAX_VALUE),
         magicResistPenetration(0, Float.MAX_VALUE),
+
+        damageAmplification(0, Float.MAX_VALUE),
+        healAmplification(0, Float.MAX_VALUE),
+        damageReduction(0, Float.MAX_VALUE),
+        healReduction(0, Float.MAX_VALUE),
 
         criticalStrikeChance(0, Float.MAX_VALUE),
         criticalStrikeDamage(0, Float.MAX_VALUE),
@@ -283,6 +307,12 @@ public class StatComponent extends PooledComponent implements ITemplateable {
         resource,
         level,
         experience,
+        skillPoints,
+        ability_1_points,
+        ability_2_points,
+        ability_3_points,
+        ability_4_points,
+        trait_points
     }
 
     public enum FlagStat {

@@ -9,6 +9,7 @@ import gg.al.logic.component.CharacterComponent;
 import gg.al.logic.component.InventoryComponent;
 import gg.al.logic.component.StatComponent;
 import gg.al.logic.component.data.Damage;
+import gg.al.logic.component.data.Heal;
 import gg.al.logic.component.data.Item;
 import gg.al.logic.component.data.StatusEffect;
 
@@ -40,6 +41,12 @@ public class StatSystem extends IteratingSystem {
             return;
         }
 
+        if (stats.shouldLevel()) {
+            stats.addRuntimeStat(StatComponent.RuntimeStat.experience, -stats.getNextLevelExperience());
+            stats.addRuntimeStat(StatComponent.RuntimeStat.level, 1);
+            stats.addRuntimeStat(StatComponent.RuntimeStat.skillPoints, 1);
+        }
+
         for (ObjectMap.Values<StatusEffect> values = stats.statusEffects.values();
              values.hasNext(); ) {
             StatusEffect effect = values.next();
@@ -64,11 +71,13 @@ public class StatSystem extends IteratingSystem {
 
         InventoryComponent inventoryComponent = mapperInventoryComponent.get(entityId);
         if (inventoryComponent != null) {
-            for (Item item : inventoryComponent.items) {
+            for (int i = 0; i < inventoryComponent.items.length; i++) {
+                Item item = inventoryComponent.items[i];
                 if (item != null)
                     item.applyValue(stats);
             }
-            for (Item item : inventoryComponent.items) {
+            for (int i = 0; i < inventoryComponent.items.length; i++) {
+                Item item = inventoryComponent.items[i];
                 if (item != null)
                     item.applyPercentage(stats);
             }
@@ -78,11 +87,51 @@ public class StatSystem extends IteratingSystem {
             characterComponent.character.affectStats(stats);
         }
 
-        if (!stats.getFlag(StatComponent.FlagStat.dead) &&
-                !stats.getFlag(StatComponent.FlagStat.invulnerable)) {
+        for (Heal heal : stats.heals) {
+            float amount = 0;
+            switch (heal.healType) {
+                case Flat:
+                    amount = heal.amount;
+                    break;
+                case MaxHealth:
+                    amount = stats.getCurrentStat(StatComponent.BaseStat.maxHealth) * heal.amount;
+                    break;
+                case CurrentHealth:
+                    amount = stats.getRuntimeStat(StatComponent.RuntimeStat.health) * heal.amount;
+                    break;
+                case MissingHealth:
+                    amount = (stats.getCurrentStat(StatComponent.BaseStat.maxHealth) - stats.getRuntimeStat(StatComponent.RuntimeStat.health)) * heal.amount;
+                    break;
+            }
+            amount += amount * stats.getCurrentStat(StatComponent.BaseStat.healAmplification);
+            amount -= amount * stats.getCurrentStat(StatComponent.BaseStat.healReduction);
+            float health = stats.getRuntimeStat(StatComponent.RuntimeStat.health);
+            float maxHealth = stats.getCurrentStat(StatComponent.BaseStat.maxHealth);
+            stats.setRuntimeStat(StatComponent.RuntimeStat.health, health + amount >= maxHealth ? maxHealth : health + amount);
+        }
+
+        if (!stats.getFlag(StatComponent.FlagStat.invulnerable)) {
 
             for (Damage damage : stats.damages) {
-                float amount = damage.amount;
+                float amount = 0;
+                switch (damage.damageCalculationType) {
+                    case Flat:
+                        amount = damage.amount;
+                        break;
+                    case MaxHealth:
+                        amount = stats.getCurrentStat(StatComponent.BaseStat.maxHealth) * damage.amount;
+                        break;
+                    case CurrentHealth:
+                        amount = stats.getRuntimeStat(StatComponent.RuntimeStat.health) * damage.amount;
+                        break;
+                    case MissingHealth:
+                        amount = (stats.getCurrentStat(StatComponent.BaseStat.maxHealth) - stats.getRuntimeStat(StatComponent.RuntimeStat.health)) * damage.amount;
+                        break;
+                }
+
+                amount += amount * stats.getCurrentStat(StatComponent.BaseStat.damageAmplification);
+                amount -= amount * stats.getCurrentStat(StatComponent.BaseStat.damageReduction);
+
                 switch (damage.damageType) {
                     case True:
                         break;

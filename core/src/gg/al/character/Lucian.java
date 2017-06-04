@@ -68,4 +68,5 @@ public class Lucian extends Character {
     protected void castBegin(int ability) {
 
     }
+
 }

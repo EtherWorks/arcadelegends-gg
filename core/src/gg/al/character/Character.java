@@ -121,7 +121,6 @@ public abstract class Character {
             cooldown -= cooldown * statComponent.getCurrentStat(StatComponent.BaseStat.cooldownReduction);
             if (!isCasting() && statComponent.getRuntimeStat(StatComponent.RuntimeStat.resource) - cost >= 0) {
                 if (checkOnCast(abilityInd)) {
-                    resetAttack();
                     cooldowns[abilityInd] = cooldown;
                     costs[abilityInd] = cost;
                     casting[abilityInd] = true;

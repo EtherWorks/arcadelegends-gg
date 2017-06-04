@@ -127,12 +127,12 @@ public class Kevin extends Character {
                 bCon.old.set(pos.x, pos.y);
                 bCon.target = (int) extraData[ABILITY_3];
                 bCon.maxDistance = 20;
-                final float damage = 600;
+                final float damage = 0.4f;
                 final int caster = entityID;
                 bCon.callback = (bullet, hit, bFix, hFix, contact) -> {
                     StatComponent hitStat = getComponent(hit, StatComponent.class);
                     if (hitStat != null && hit != caster) {
-                        hitStat.damages.add(new Damage(Damage.DamageType.Normal, damage, 0));
+                        hitStat.damages.add(new Damage(Damage.DamageType.True, Damage.DamageCalculationType.MaxHealth, damage, 0));
                         getComponent(bullet, BulletComponent.class).delete = true;
                         bFix.getBody().setLinearVelocity(Vector2.Zero);
                     }
@@ -170,12 +170,15 @@ public class Kevin extends Character {
         RenderComponent renderComponent = getComponent(entityID, RenderComponent.class);
         switch (ability) {
             case ABILITY_1:
+                resetAttack();
                 renderComponent.setRenderState(CharacterRenderer.PlayerRenderState.ABILITY_1);
                 break;
             case ABILITY_2:
+                resetAttack();
                 renderComponent.setRenderState(CharacterRenderer.PlayerRenderState.ABILITY_2);
                 break;
             case ABILITY_3:
+                resetAttack();
                 renderComponent.setRenderState(CharacterRenderer.PlayerRenderState.ABILITY_3);
                 break;
         }
