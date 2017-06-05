@@ -291,6 +291,13 @@ public abstract class Character {
         return new Vector2(vec.x, vec.y);
     }
 
+    public Vector2 getRoundMousePos() {
+        Ray ray = arcadeWorld.getCam().getPickRay(AL.input.getX(), AL.input.getY());
+        Vector3 vec = new Vector3();
+        Intersector.intersectRayPlane(ray, arcadeWorld.getMapHitbox(), vec);
+        return new Vector2(Math.round(vec.x), Math.round(vec.y));
+    }
+
     public Vector2 getCharacterPosition() {
 
         PhysicComponent phys = getComponent(entityID, PhysicComponent.class);

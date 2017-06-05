@@ -24,7 +24,9 @@ public class BulletComponent extends PooledComponent {
 
     public float speed;
 
-    public OnCollisionCallback callback;
+    public OnCollisionCallback collisionCallback;
+
+    public OnDeleteCallback deleteCallback;
 
     public BulletComponent() {
         move = new Vector2();
@@ -37,12 +39,18 @@ public class BulletComponent extends PooledComponent {
         old.setZero();
         maxDistance = 0;
         currentDistance = 0;
-        callback = null;
+        collisionCallback = null;
+        deleteCallback = null;
         delete = false;
     }
 
     @FunctionalInterface
     public interface OnCollisionCallback {
         void onCollision(int bullet, int hit, Fixture bulletFix, Fixture hitFix, Contact contact);
+    }
+
+    @FunctionalInterface
+    public interface OnDeleteCallback {
+        void onDelete();
     }
 }

@@ -243,7 +243,7 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
             case Input.Buttons.LEFT:
                 if (playerEnt == -1) {
                     EntityArguments arguments;
-                    arguments = arcadeWorld.getArguments("player.json");
+                    arguments = arcadeWorld.getArguments("ezreal.json");
                     PositionComponent.PositionTemplate positionDef = arguments.get("PositionComponent", PositionComponent.PositionTemplate.class);
                     float posX = positionDef.x;
                     float posY = positionDef.y;
@@ -256,6 +256,9 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
                     inventoryComponent.items[0] = Item.builder().name("Armor")
                             .flatStat(StatComponent.BaseStat.armor, 50f)
                             .flatStat(StatComponent.BaseStat.cooldownReduction, 0.1f)
+                            .build();
+                    inventoryComponent.items[1] = Item.builder().name("Staff")
+                            .flatStat(StatComponent.BaseStat.spellPower, 20f)
                             .build();
                 } else {
                     CharacterComponent input = arcadeWorld.getEntityWorld().getComponentOf(playerEnt, CharacterComponent.class);

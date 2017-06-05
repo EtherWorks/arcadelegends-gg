@@ -129,7 +129,7 @@ public class Kevin extends Character {
                 bCon.maxDistance = 20;
                 final float damage = 0.4f;
                 final int caster = entityID;
-                bCon.callback = (bullet, hit, bFix, hFix, contact) -> {
+                bCon.collisionCallback = (bullet, hit, bFix, hFix, contact) -> {
                     StatComponent hitStat = getComponent(hit, StatComponent.class);
                     if (hitStat != null && hit != caster) {
                         hitStat.damages.add(new Damage(Damage.DamageType.True, Damage.DamageCalculationType.MaxHealth, damage, 0));

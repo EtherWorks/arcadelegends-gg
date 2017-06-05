@@ -31,6 +31,8 @@ public class BulletSystem extends IteratingSystem {
     protected void process(int entityId) {
         BulletComponent bCon = mapperBulletControlComponent.get(entityId);
         if (bCon.delete) {
+            if (bCon.deleteCallback != null)
+                bCon.deleteCallback.onDelete();
             arcadeWorld.delete(entityId);
             return;
         }

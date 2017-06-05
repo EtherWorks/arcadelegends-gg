@@ -79,6 +79,27 @@ public class StatComponent extends PooledComponent implements ITemplateable {
         }
     }
 
+
+    public void setCustomStat(Enum stat, float value) {
+        setCustomStat(stat.name(), value);
+    }
+
+    public void addCustomStat(Enum stat, float value) {
+        addCustomStat(stat.name(), value);
+    }
+
+    public float getCustomStat(Enum stat) {
+        return getCustomStat(stat.name());
+    }
+
+    public void setCustomFlag(Enum stat, boolean flag) {
+        setCustomFlag(stat.name(), flag);
+    }
+
+    public boolean getCustomFlag(Enum stat) {
+        return getCustomFlag(stat.name());
+    }
+
     public void setCustomStat(String stat, float value) {
         this.customStats.put(stat, value);
     }

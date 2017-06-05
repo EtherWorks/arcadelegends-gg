@@ -17,6 +17,7 @@ import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import gg.al.character.Ezreal;
 import gg.al.character.Kevin;
 import gg.al.game.AL;
 import gg.al.graphics.CameraLayerGroupStrategy;
@@ -154,10 +155,10 @@ public class ArcadeWorld implements Disposable {
                 BulletComponent bulletA = entityWorld.getMapper(BulletComponent.class).get(entityIdA);
                 BulletComponent bulletB = entityWorld.getMapper(BulletComponent.class).get(entityIdB);
 
-                if (bulletA != null && bulletA.callback != null)
-                    bulletA.callback.onCollision(entityIdA, entityIdB, contact.getFixtureA(), contact.getFixtureB(), contact);
-                if (bulletB != null && bulletB.callback != null)
-                    bulletB.callback.onCollision(entityIdB, entityIdA, contact.getFixtureB(), contact.getFixtureA(), contact);
+                if (bulletA != null && bulletA.collisionCallback != null)
+                    bulletA.collisionCallback.onCollision(entityIdA, entityIdB, contact.getFixtureA(), contact.getFixtureB(), contact);
+                if (bulletB != null && bulletB.collisionCallback != null)
+                    bulletB.collisionCallback.onCollision(entityIdB, entityIdA, contact.getFixtureB(), contact.getFixtureA(), contact);
             }
 
             @Override
@@ -248,6 +249,9 @@ public class ArcadeWorld implements Disposable {
                 switch (arguments.get(CharacterComponent.class.getSimpleName(), CharacterComponent.CharacterTemplate.class).characterName) {
                     case "Kevin":
                         controlComponent.character = new Kevin();
+                        break;
+                    case "Ezreal":
+                        controlComponent.character = new Ezreal();
                         break;
                 }
                 controlComponent.character.setEntityID(entityID);

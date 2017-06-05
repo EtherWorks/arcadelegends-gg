@@ -8,4 +8,6 @@ import gg.al.logic.component.StatComponent;
 public interface IStatAffect {
     void applyValue(StatComponent stats);
     void applyPercentage(StatComponent stats);
+
+    void applyBasePercentage(StatComponent stats);
 }
