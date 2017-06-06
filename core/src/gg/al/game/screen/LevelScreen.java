@@ -243,7 +243,7 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
             case Input.Buttons.LEFT:
                 if (playerEnt == -1) {
                     EntityArguments arguments;
-                    arguments = arcadeWorld.getArguments("ezreal.json");
+                    arguments = arcadeWorld.getArguments("player.json");
                     PositionComponent.PositionTemplate positionDef = arguments.get("PositionComponent", PositionComponent.PositionTemplate.class);
                     float posX = positionDef.x;
                     float posY = positionDef.y;
