@@ -1,7 +1,9 @@
 package gg.al.game.screen;
 
-import com.badlogic.gdx.*;
-import com.badlogic.gdx.assets.AssetDescriptor;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
+import com.badlogic.gdx.InputMultiplexer;
+import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -31,7 +33,6 @@ import gg.al.util.Assets;
 import lombok.extern.slf4j.Slf4j;
 
 import java.awt.*;
-import java.util.Arrays;
 import java.util.HashMap;
 
 
@@ -336,7 +337,14 @@ public class SettingsScreen implements IAssetScreen, InputProcessor {
     }
 
     private String getResolution() {
-        return AL.getVideoConfig().width() + "x" + AL.getVideoConfig().height();
+        switch (AL.getVideoConfig().screenmode()) {
+            case Fullscreen:
+                return "Fullscreen";
+            case Borderless:
+                return "Borderless";
+            default:
+                return AL.getVideoConfig().width() + "x" + AL.getVideoConfig().height();
+        }
     }
 
     private void setFps() {
@@ -402,11 +410,11 @@ public class SettingsScreen implements IAssetScreen, InputProcessor {
         return null;
     }
 
-    public void setPreviousScreen(IAssetScreen previousScreen) {
-        this.previousScreen = previousScreen;
-    }
-
     public IAssetScreen getPreviousScreen() {
         return previousScreen;
+    }
+
+    public void setPreviousScreen(IAssetScreen previousScreen) {
+        this.previousScreen = previousScreen;
     }
 }
