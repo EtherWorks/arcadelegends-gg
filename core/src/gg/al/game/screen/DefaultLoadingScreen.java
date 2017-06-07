@@ -45,7 +45,6 @@ public class DefaultLoadingScreen implements ILoadingScreen {
         return this;
     }
 
-    @Override
     public void show() {
         if (!init) {
             font = new BitmapFont();

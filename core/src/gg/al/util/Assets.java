@@ -12,6 +12,8 @@ import com.cyphercove.gdx.covetools.assets.AssignmentAssetManager;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 
+import javax.xml.soap.Text;
+
 /**
  * Created by Thomas Neumann on 02.06.2017.<br />
  */
@@ -54,6 +56,11 @@ public class Assets {
         public Sound sword_3;
         @AssignmentAssetManager.Asset("assets/audio/sword_4.wav")
         public Sound sword_4;
+
+        @AssignmentAssetManager.Asset("assets/ui/ui.png")
+        public Texture uioverlay;
+
+
 
         private BiMap<String, Object> assetMap;
 
@@ -126,5 +133,9 @@ public class Assets {
 
         @AssignmentAssetManager.Asset("assets/styles/dlgstyle/dlgbackground.png")
         public Texture dlgbackground;
+
+
     }
+
+
 }

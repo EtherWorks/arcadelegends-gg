@@ -3,21 +3,27 @@ package gg.al.game.screen;
 import com.artemis.Aspect;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.Ray;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.cyphercove.gdx.covetools.assets.AssignmentAssetManager;
 import gg.al.character.Character;
 import gg.al.config.IInputConfig;
 import gg.al.game.AL;
+import gg.al.game.ui.ProgressCircle;
 import gg.al.logic.ArcadeWorld;
 import gg.al.logic.component.CharacterComponent;
 import gg.al.logic.component.InventoryComponent;
@@ -48,10 +54,14 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
     private PerspectiveCamera camera;
     private Viewport viewport;
     private ArcadeWorld arcadeWorld;
-    private SpriteBatch fpsBatch;
+    private SpriteBatch spriteBatch;
     private BitmapFont font;
     private boolean reInit;
     private Assets.LevelAssets levelAssets;
+
+    private Stage uiStage;
+    private Viewport uiViewport;
+
 
     public LevelScreen(String mapName) {
         this(mapName, 15);
@@ -72,6 +82,10 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
         inputMapper.registerInputHanlder(IInputConfig.InputKeys.ability3, new AbillityEventHandler(Character.ABILITY_3));
         inputMapper.registerInputHanlder(IInputConfig.InputKeys.ability4, new AbillityEventHandler(Character.ABILITY_4));
         inputMapper.registerInputHanlder(IInputConfig.InputKeys.trait, new AbillityEventHandler(Character.TRAIT));
+
+   //     StatComponent comp = arcadeWorld.getEntityWorld().getMapper(StatComponent.class).get(playerEnt);
+     //   float health = comp.getRuntimeStat(StatComponent.RuntimeStat.health);
+
     }
 
     @Override
@@ -153,7 +167,7 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
             AL.getAudioManager().registerSound("sword_2", levelAssets.sword_2);
             AL.getAudioManager().registerSound("sword_3", levelAssets.sword_3);
             AL.getAudioManager().registerSound("sword_4", levelAssets.sword_4);
-            fpsBatch = new SpriteBatch();
+            spriteBatch = new SpriteBatch();
             font = new BitmapFont();
 
             camera = new PerspectiveCamera();
@@ -164,6 +178,8 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
             camera.update();
             viewport = new ExtendViewport(1920, 1080, camera);
             viewport.apply();
+            uiViewport = new ExtendViewport(1920,1080);
+            uiStage = new Stage(uiViewport);
 
             map = levelAssets.get(mapName);
 
@@ -171,6 +187,17 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
 
             reInit = false;
             playerEnt = -1;
+
+
+
+
+
+
+
+
+
+
+
         }
 
         Gdx.input.setInputProcessor(this);
@@ -185,13 +212,22 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
         arcadeWorld.step();
         arcadeWorld.render();
 
-        fpsBatch.begin();
-        font.draw(fpsBatch, String.format("%d FPS %d Entities", Gdx.graphics.getFramesPerSecond(), arcadeWorld.getEntityWorld().getAspectSubscriptionManager().get(Aspect.all()).getEntities().size()), 0, 15);
-        fpsBatch.end();
+
+
+        spriteBatch.begin();
+        font.draw(spriteBatch, String.format("%d FPS %d Entities", Gdx.graphics.getFramesPerSecond(), arcadeWorld.getEntityWorld().getAspectSubscriptionManager().get(Aspect.all()).getEntities().size()), 0, 15);
+
+        spriteBatch.draw(levelAssets.uioverlay, 0, AL.graphics.getHeight()/10-180, 640, 360);
+
+
+        spriteBatch.end();
+
+
     }
 
     @Override
     public void resize(int width, int height) {
+        uiViewport.update(width, height);
         viewport.update(width, height);
     }
 
@@ -206,7 +242,7 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
     @Override
     public void hide() {
         if (reInit) {
-            fpsBatch.dispose();
+            spriteBatch.dispose();
             arcadeWorld.dispose();
             AL.getAssetManager().unloadAssetFields(levelAssets);
             AL.getAudioManager().unregisterSound("sword_1");
