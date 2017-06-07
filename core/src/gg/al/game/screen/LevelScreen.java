@@ -217,7 +217,7 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
         spriteBatch.begin();
         font.draw(spriteBatch, String.format("%d FPS %d Entities", Gdx.graphics.getFramesPerSecond(), arcadeWorld.getEntityWorld().getAspectSubscriptionManager().get(Aspect.all()).getEntities().size()), 0, 15);
 
-        spriteBatch.draw(levelAssets.uioverlay, 0, AL.graphics.getHeight()/10-180, 640, 360);
+        spriteBatch.draw(levelAssets.uioverlay, 30, AL.graphics.getHeight()/10-150, 640, 360);
 
 
         spriteBatch.end();
