@@ -71,6 +71,9 @@ public class Assets {
         @AssignmentAssetManager.Asset("assets/ui/health_gradient.png")
         public Texture health_gradient;
 
+        @AssignmentAssetManager.Asset("assets/ui/health_bar_gradient.png")
+        public Texture health_bar_gradient;
+
         private BiMap<String, Object> assetMap;
 
         public <T> T get(String name) {

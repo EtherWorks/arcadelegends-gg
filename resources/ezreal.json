@@ -43,7 +43,7 @@
       "costAbility2_Base": 10,
       "costAbility2_Growth": 0.0,
       "costAbility2_GrowthPercentage": 0.0,
-      "costAbility3_Base": 10,
+      "costAbility3_Base": 100,
       "costAbility3_Growth": 0.0,
       "costAbility3_GrowthPercentage": 0.0,
       "costAbility4_Base": 10,

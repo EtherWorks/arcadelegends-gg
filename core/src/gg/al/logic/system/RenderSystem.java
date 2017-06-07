@@ -13,12 +13,14 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g3d.decals.Decal;
 import com.badlogic.gdx.graphics.g3d.decals.DecalBatch;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
+import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import gg.al.logic.component.*;
 import gg.al.util.Assets;
+import gg.al.util.Shaders;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
@@ -39,10 +41,6 @@ public class RenderSystem extends BaseEntitySystem {
     private final AssetManager assetManager;
     @Getter
     private ObjectMap<Integer, FrameBuffer> buffers;
-    @Getter
-    private int buffHeight = 256 * 6;
-    @Getter
-    private int buffWidth = 256 * 3;
     @Getter
     private SpriteBatch spriteBatch;
     @Getter
@@ -65,6 +63,10 @@ public class RenderSystem extends BaseEntitySystem {
     private ComponentMapper<CharacterComponent> mapperCharacterComponent;
     @Getter
     private Assets.LevelAssets levelAssets;
+    @Getter
+    private ShaderProgram gradientShader;
+    @Getter
+    private SpriteBatch shaderBatch;
 
     public RenderSystem(DecalBatch decalBatch, AssetManager assetManager, float worldDegree, Assets.LevelAssets assets) {
         super(Aspect.all(RenderComponent.class, PositionComponent.class));
@@ -82,11 +84,16 @@ public class RenderSystem extends BaseEntitySystem {
         font.setColor(Color.BLACK);
         this.uiCamera = new OrthographicCamera();
 
-        Viewport viewportUi = new FitViewport(buffWidth, buffHeight, uiCamera);
+        Viewport viewportUi = new FitViewport(levelAssets.health_bar_gradient.getWidth(), levelAssets.health_bar_gradient.getHeight(), uiCamera);
         viewportUi.update(viewportUi.getScreenWidth(), viewportUi.getScreenHeight(), true);
 
         stateTime = 0;
         this.worldDegree = worldDegree;
+
+        gradientShader = new ShaderProgram(Shaders.GradientShader.vertexShader, Shaders.GradientShader.fragmentShader);
+        if (gradientShader.isCompiled() == false)
+            throw new IllegalArgumentException("couldn't compile shader: " + gradientShader.getLog());
+        shaderBatch = new SpriteBatch(10, gradientShader);
     }
 
 
@@ -124,6 +131,8 @@ public class RenderSystem extends BaseEntitySystem {
             buffs.next().dispose();
         spriteBatch.dispose();
         font.dispose();
+        shaderBatch.dispose();
+        gradientShader.dispose();
     }
 
     public Array<Decal> getDecals() {

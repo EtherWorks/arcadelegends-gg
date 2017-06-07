@@ -1,16 +1,21 @@
 package gg.al.graphics.renderer;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g3d.decals.Decal;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
+import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.ObjectMap;
 import gg.al.game.AL;
 import gg.al.logic.component.*;
 import gg.al.logic.system.RenderSystem;
+import gg.al.util.Assets;
 
 import java.util.Map;
 
@@ -20,6 +25,32 @@ import static gg.al.graphics.renderer.CharacterRenderer.PlayerRenderState.*;
  * Created by Thomas Neumann on 29.05.2017.<br />
  */
 public class CharacterRenderer implements RenderComponent.RenderDelegate {
+
+    private ObjectMap<Integer, FrameBuffer> healthBuffers;
+    private ObjectMap<Integer, FrameBuffer> resourceBuffers;
+
+    private ObjectMap<Integer, TextureRegion> healthBars;
+    private ObjectMap<Integer, TextureRegion> resourceBars;
+
+    public CharacterRenderer() {
+        healthBars = new ObjectMap<>();
+        resourceBars = new ObjectMap<>();
+        resourceBuffers = new ObjectMap<>();
+        healthBuffers = new ObjectMap<>();
+    }
+
+    private static void drawToBuffer(FrameBuffer buffer, Color color, Texture gradient, float perc, SpriteBatch shaderBatch, ShaderProgram shader) {
+        buffer.begin();
+        AL.graphics.getGL20().glClearColor(0, 0, 0, 0);
+        AL.graphics.getGL20().glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+        shaderBatch.begin();
+        shaderBatch.setColor(color);
+        shader.setUniformf("u_gradient", perc);
+        shaderBatch.draw(gradient, 0, 0);
+        shaderBatch.end();
+        buffer.end();
+    }
 
     @Override
     public void inserted(int entityId, RenderSystem renderSystem) {
@@ -48,13 +79,30 @@ public class CharacterRenderer implements RenderComponent.RenderDelegate {
         decal.setPosition(position.position.x, position.position.y, 0);
         renderSystem.getDecalMap().put(entityId, decal);
 
-        FrameBuffer buffer = new FrameBuffer(Pixmap.Format.RGBA8888, renderSystem.getBuffWidth(), renderSystem.getBuffHeight(), false);
+        FrameBuffer buffer = new FrameBuffer(Pixmap.Format.RGBA8888,
+                renderSystem.getLevelAssets().health_bar_gradient.getWidth(),
+                renderSystem.getLevelAssets().health_bar_gradient.getHeight(),
+                false);
+        Assets.LevelAssets levelAssets = renderSystem.getLevelAssets();
+        FrameBuffer healthBuffer = new FrameBuffer(Pixmap.Format.RGBA8888, levelAssets.health_bar_gradient.getWidth(), levelAssets.health_bar_gradient.getHeight(), false);
+        TextureRegion healthBar = new TextureRegion(healthBuffer.getColorBufferTexture());
+        healthBar.flip(false, true);
+        FrameBuffer resourceBuffer = new FrameBuffer(Pixmap.Format.RGBA8888, levelAssets.health_bar_gradient.getWidth(), levelAssets.health_bar_gradient.getHeight(), false);
+        TextureRegion resourceBar = new TextureRegion(resourceBuffer.getColorBufferTexture());
+        resourceBar.flip(false, true);
+
+        healthBars.put(entityId, healthBar);
+        resourceBars.put(entityId, resourceBar);
+
+        healthBuffers.put(entityId, healthBuffer);
+        resourceBuffers.put(entityId, resourceBuffer);
+
         buffer.getColorBufferTexture().setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
         renderSystem.getBuffers().put(entityId, buffer);
 
         TextureRegion uiTextureRegion = new TextureRegion(buffer.getColorBufferTexture());
         uiTextureRegion.flip(false, true);
-        Decal uiDecal = Decal.newDecal(3, 5, uiTextureRegion, true);
+        Decal uiDecal = Decal.newDecal(1, 1, uiTextureRegion, true);
         uiDecal.setPosition(position.position.x, position.position.y, 1);
         renderSystem.getUiMap().put(entityId, uiDecal);
     }
@@ -91,18 +139,29 @@ public class CharacterRenderer implements RenderComponent.RenderDelegate {
 
         decal.setPosition(physic.body.getPosition().x, physic.body.getPosition().y, decal.getZ());
 
+        SpriteBatch shaderBatch = renderSystem.getShaderBatch();
+        ShaderProgram shader = renderSystem.getGradientShader();
+        drawToBuffer(healthBuffers.get(entityId), Color.RED, renderSystem.getLevelAssets().health_bar_gradient,
+                stats.getRuntimeStat(StatComponent.RuntimeStat.health) / stats.getCurrentStat(StatComponent.BaseStat.maxHealth),
+                shaderBatch, shader);
+        drawToBuffer(resourceBuffers.get(entityId), Color.BLUE, renderSystem.getLevelAssets().health_bar_gradient,
+                stats.getRuntimeStat(StatComponent.RuntimeStat.resource) / stats.getCurrentStat(StatComponent.BaseStat.maxResource),
+                shaderBatch, shader);
+
         FrameBuffer buffer = renderSystem.getBuffers().get(entityId);
         buffer.begin();
         AL.graphics.getGL20().glClearColor(0, 0, 0, 0);
         AL.graphics.getGL20().glClear(GL20.GL_COLOR_BUFFER_BIT);
         renderSystem.getSpriteBatch().setProjectionMatrix(renderSystem.getUiCamera().combined);
         renderSystem.getSpriteBatch().begin();
-        renderSystem.getFont().draw(renderSystem.getSpriteBatch(), stats.toString(), 0, renderSystem.getBuffHeight());
+        //renderSystem.getFont().draw(renderSystem.getSpriteBatch(), String.format("%1.0f", stats.getRuntimeStat(StatComponent.RuntimeStat.actionPoints)), 0, buffer.getHeight());
+        renderSystem.getSpriteBatch().draw(healthBars.get(entityId), 0, 0);
+        //renderSystem.getSpriteBatch().draw(resourceBars.get(entityId), 0, 0);
         renderSystem.getSpriteBatch().end();
         buffer.end();
 
         Decal uiDecal = renderSystem.getUiMap().get(entityId);
-        uiDecal.setPosition(physic.body.getPosition().x + 2, physic.body.getPosition().y - 3, uiDecal.getZ());
+        uiDecal.setPosition(physic.body.getPosition().x, physic.body.getPosition().y + 1f, uiDecal.getZ());
     }
 
     @Override
@@ -111,6 +170,12 @@ public class CharacterRenderer implements RenderComponent.RenderDelegate {
         renderSystem.getBuffers().remove(entityId);
         renderSystem.getDecalMap().remove(entityId);
         renderSystem.getUiMap().remove(entityId);
+        healthBuffers.get(entityId).dispose();
+        resourceBuffers.get(entityId).dispose();
+        healthBuffers.remove(entityId);
+        resourceBuffers.remove(entityId);
+        resourceBars.remove(entityId);
+        healthBars.remove(entityId);
     }
 
     @Override
