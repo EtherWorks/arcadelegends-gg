@@ -1,11 +1,10 @@
 package gg.al.desktop.config;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import com.github.drapostolos.typeparser.TypeParser;
-import com.google.common.io.Files;
-import gg.al.config.*;
+import gg.al.config.Config;
+import gg.al.config.IVideoConfig;
 import lombok.extern.slf4j.Slf4j;
 import org.cfg4j.provider.ConfigurationProvider;
 import org.cfg4j.provider.ConfigurationProviderBuilder;
@@ -15,11 +14,9 @@ import org.cfg4j.source.files.FilesConfigurationSource;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.NoSuchElementException;
-import java.util.Properties;
 
 /**
  * Created by Thomas Neumann on 15.03.2017.<br />
@@ -63,7 +60,7 @@ public class DesktopConfigUtil {
         } catch (NoSuchElementException ex) {
             File file = new File(getCurrentConfigPath());
             File errFile = new File(getCurrentConfigPath() + ".err");
-            if(errFile.exists())
+            if (errFile.exists())
                 errFile.delete();
             file.renameTo(errFile);
             cfg = new Config(buildConfigProvider(), editor);
@@ -89,13 +86,21 @@ public class DesktopConfigUtil {
             IVideoConfig.ScreenMode mode = parser.parse(value, IVideoConfig.ScreenMode.class);
             switch (mode) {
                 case Fullscreen:
-                    application.postRunnable(() -> application.getGraphics().setFullscreenMode(application.getGraphics().getDisplayMode()));
+                    application.postRunnable(() -> {
+                        application.getGraphics().setFullscreenMode(application.getGraphics().getDisplayMode());
+                        editor.setValue(IVideoConfig.VideoKeys.width, application.getGraphics().getWidth());
+                        editor.setValue(IVideoConfig.VideoKeys.width, application.getGraphics().getWidth());
+                        editor.flush();
+                    });
                     break;
                 case Borderless:
                     application.postRunnable(() -> {
                         application.getGraphics().setFullscreenMode(application.getGraphics().getDisplayMode());
                         application.getGraphics().setUndecorated(true);
                         application.getGraphics().setWindowedMode(cfg.video.width(), cfg.video.height());
+                        editor.setValue(IVideoConfig.VideoKeys.width, application.getGraphics().getWidth());
+                        editor.setValue(IVideoConfig.VideoKeys.width, application.getGraphics().getWidth());
+                        editor.flush();
                     });
                     break;
                 case Windowed:
