@@ -97,7 +97,7 @@
       "resourceRegen_Base": 1.5,
       "resourceRegen_Growth": 0.0,
       "resourceRegen_GrowthPercentage": 0.0,
-      "spellPower_Base": 0.0,
+      "spellPower_Base": 1000.0,
       "spellPower_Growth": 0.0,
       "spellPower_GrowthPercentage": 0.0,
       "tenacity_Base": 0.0,

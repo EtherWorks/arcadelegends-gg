@@ -5,15 +5,13 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.PerspectiveCamera;
+import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.SpriteCache;
+import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.math.Intersector;
@@ -118,7 +116,7 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
                         "{\n" +
                         "  vec4 color = texture2D(u_texture, v_texCoords);\n" +
                         "  if(color.a == 0 || color.r <= 1.0f -gradient) discard;\n" +
-                        "  gl_FragColor = v_color * vec4(1,1,1,0.5);\n" +
+                        "  gl_FragColor = v_color * vec4(1,1,1,1);\n" +
                         "}");
         if (shaderProgram.isCompiled() == false)
             throw new IllegalArgumentException("couldn't compile shader: " + shaderProgram.getLog());
@@ -215,7 +213,7 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
             camera.update();
             viewport = new ExtendViewport(1920, 1080, camera);
             viewport.apply();
-            uiViewport = new ExtendViewport(1920,1080);
+            uiViewport = new ExtendViewport(1920, 1080);
             uiStage = new Stage(uiViewport);
 
             map = levelAssets.get(mapName);
@@ -224,6 +222,10 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
 
             reInit = false;
             playerEnt = -1;
+
+            for (int i = 0; i < buffers.length; i++) {
+                buffers[i] = new FrameBuffer(Pixmap.Format.RGBA8888, levelAssets.gradient.getWidth(), levelAssets.gradient.getHeight(), false);
+            }
         }
 
         Gdx.input.setInputProcessor(this);
@@ -238,26 +240,67 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
         arcadeWorld.step();
         arcadeWorld.render();
 
-        fpsBatch.begin();
-        fpsBatch.draw(levelAssets.gradient, 500, 500);
-        fpsBatch.draw(levelAssets.uioverlay, 30, AL.graphics.getHeight()/10-150, 640, 360);
-        font.draw(fpsBatch, String.format("%d FPS %d Entities", Gdx.graphics.getFramesPerSecond(), arcadeWorld.getEntityWorld().getAspectSubscriptionManager().get(Aspect.all()).getEntities().size()), 0, 15);
-        fpsBatch.end();
-
-        float perc = 0;
         if (playerEnt != -1) {
             StatComponent stat = arcadeWorld.getEntityWorld().getMapper(StatComponent.class).get(playerEnt);
             CharacterComponent chara = arcadeWorld.getEntityWorld().getMapper(CharacterComponent.class).get(playerEnt);
-            if(chara.character.getCooldownTimer(1)!= 0)
-                perc = chara.character.getCooldownTimer(1) /stat.getCurrentStat(StatComponent.BaseStat.cooldownAbility1);
+            for (int i = 0; i < abilityPerc.length; i++) {
+                if (chara.character.getCooldownTimer(i) != 0)
+                    abilityPerc[i] = chara.character.getCooldownTimer(i) / Character.getCooldown(i, stat);
+            }
+            healthPerc = stat.getRuntimeStat(StatComponent.RuntimeStat.health) / stat.getCurrentStat(StatComponent.BaseStat.maxHealth);
+            rescPerc = stat.getRuntimeStat(StatComponent.RuntimeStat.resource) / stat.getCurrentStat(StatComponent.BaseStat.maxResource);
         }
+
+        buffers[5].begin();
+        AL.graphics.getGL20().glClearColor(0, 0, 0, 0);
+        AL.graphics.getGL20().glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         shaderBatch.begin();
         shaderBatch.setColor(Color.RED);
-        shaderProgram.setUniformf("u_gradient", perc);
-        shaderBatch.draw(levelAssets.gradient, 100, 100);
+        shaderProgram.setUniformf("u_gradient", healthPerc);
+        shaderBatch.draw(levelAssets.gradient, 0, 0);
         shaderBatch.end();
+        buffers[5].end();
+
+        buffers[6].begin();
+        AL.graphics.getGL20().glClearColor(0, 0, 0, 0);
+        AL.graphics.getGL20().glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+        shaderBatch.begin();
+        shaderBatch.setColor(Color.BLUE);
+        shaderProgram.setUniformf("u_gradient", rescPerc);
+        shaderBatch.draw(levelAssets.gradient, 0, 0);
+        shaderBatch.end();
+        buffers[6].end();
+        for (int i = 0; i < abilityPerc.length; i++) {
+            buffers[i].begin();
+            AL.graphics.getGL20().glClearColor(0, 0, 0, 0);
+            AL.graphics.getGL20().glClear(GL20.GL_COLOR_BUFFER_BIT);
+            shaderBatch.begin();
+            shaderBatch.setColor(Color.GREEN);
+            shaderProgram.setUniformf("u_gradient", abilityPerc[i]);
+            shaderBatch.draw(levelAssets.gradient, 0, 0);
+            shaderBatch.end();
+            buffers[i].end();
+        }
+
+        fpsBatch.begin();
+        fpsBatch.draw(levelAssets.gradient, 500, 500);
+        fpsBatch.draw(levelAssets.uioverlay, 30, AL.graphics.getHeight() / 10 - 150, 640, 360);
+        font.draw(fpsBatch, String.format("%d FPS %d Entities", Gdx.graphics.getFramesPerSecond(), arcadeWorld.getEntityWorld().getAspectSubscriptionManager().get(Aspect.all()).getEntities().size()), 0, 15);
+
+        for (int i = 0; i < buffers.length; i++) {
+            fpsBatch.draw(buffers[i].getColorBufferTexture(), 100 + 100 * i, 100, 600, 300);
+        }
+        fpsBatch.end();
+
+
     }
+
+    float[] abilityPerc = new float[5];
+    float rescPerc = 0;
+    float healthPerc = 0;
+    FrameBuffer[] buffers = new FrameBuffer[7];
 
     @Override
     public void resize(int width, int height) {

@@ -329,4 +329,22 @@ public abstract class Character {
     public Tile getTile(int x, int y) {
         return arcadeWorld.getLogicMap().getTile(x, y);
     }
+
+    public static float getCooldown(int ability, StatComponent stats)
+    {
+        switch (ability)
+        {
+            case TRAIT:
+                return stats.getCurrentStat(StatComponent.BaseStat.cooldownTrait);
+            case ABILITY_1:
+                return stats.getCurrentStat(StatComponent.BaseStat.cooldownAbility1);
+            case ABILITY_2:
+                return stats.getCurrentStat(StatComponent.BaseStat.cooldownAbility2);
+            case ABILITY_3:
+                return stats.getCurrentStat(StatComponent.BaseStat.cooldownAbility3);
+            case ABILITY_4:
+                return stats.getCurrentStat(StatComponent.BaseStat.cooldownAbility4);
+        }
+        throw new IllegalArgumentException("No ability with index" + ability);
+    }
 }
