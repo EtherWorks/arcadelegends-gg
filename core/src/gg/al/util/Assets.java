@@ -12,8 +12,6 @@ import com.cyphercove.gdx.covetools.assets.AssignmentAssetManager;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 
-import javax.xml.soap.Text;
-
 /**
  * Created by Thomas Neumann on 02.06.2017.<br />
  */
@@ -61,6 +59,9 @@ public class Assets {
         public Texture uioverlay;
 
 
+
+        @AssignmentAssetManager.Asset("assets/sprites/gradient.png")
+        public Texture gradient;
 
         private BiMap<String, Object> assetMap;
 
@@ -133,9 +134,5 @@ public class Assets {
 
         @AssignmentAssetManager.Asset("assets/styles/dlgstyle/dlgbackground.png")
         public Texture dlgbackground;
-
-
     }
-
-
 }

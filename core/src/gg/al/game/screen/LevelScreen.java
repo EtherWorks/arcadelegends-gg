@@ -8,6 +8,11 @@ import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.SpriteCache;
+import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.maps.tiled.TiledMap;
@@ -54,10 +59,12 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
     private PerspectiveCamera camera;
     private Viewport viewport;
     private ArcadeWorld arcadeWorld;
-    private SpriteBatch spriteBatch;
+    private SpriteBatch fpsBatch;
     private BitmapFont font;
     private boolean reInit;
     private Assets.LevelAssets levelAssets;
+    private ShaderProgram shaderProgram;
+    private SpriteBatch shaderBatch;
 
     private Stage uiStage;
     private Viewport uiViewport;
@@ -83,9 +90,39 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
         inputMapper.registerInputHanlder(IInputConfig.InputKeys.ability4, new AbillityEventHandler(Character.ABILITY_4));
         inputMapper.registerInputHanlder(IInputConfig.InputKeys.trait, new AbillityEventHandler(Character.TRAIT));
 
-   //     StatComponent comp = arcadeWorld.getEntityWorld().getMapper(StatComponent.class).get(playerEnt);
-     //   float health = comp.getRuntimeStat(StatComponent.RuntimeStat.health);
-
+        shaderProgram = new ShaderProgram("attribute vec4 a_position;\n" +
+                "attribute vec4 a_color;\n" +
+                "attribute vec2 a_texCoord0;\n" +
+                "uniform mat4 u_projTrans;\n" +
+                "uniform float u_gradient;\n" +
+                "varying vec4 v_color;\n" +
+                "varying vec2 v_texCoords;\n" +
+                "varying float gradient;\n" +
+                "\n" +
+                "void main()\n" +
+                "{\n" +
+                "   v_color = a_color;\n" +
+                "   v_color.a = v_color.a * (255.0/254.0);\n" +
+                "   v_texCoords = a_texCoord0;\n" +
+                "   gradient = u_gradient;\n" +
+                "   gl_Position =  u_projTrans * a_position;\n" +
+                "}",
+                "#ifdef GL_ES\n" +
+                        "precision mediump float;\n" +
+                        "#endif\n" +
+                        "varying vec4 v_color;\n" +
+                        "varying vec2 v_texCoords;\n" +
+                        "varying float gradient;\n" +
+                        "uniform sampler2D u_texture;\n" +
+                        "void main()\n" +
+                        "{\n" +
+                        "  vec4 color = texture2D(u_texture, v_texCoords);\n" +
+                        "  if(color.a == 0 || color.r <= 1.0f -gradient) discard;\n" +
+                        "  gl_FragColor = v_color * vec4(1,1,1,0.5);\n" +
+                        "}");
+        if (shaderProgram.isCompiled() == false)
+            throw new IllegalArgumentException("couldn't compile shader: " + shaderProgram.getLog());
+        shaderBatch = new SpriteBatch(1000, shaderProgram);
     }
 
     @Override
@@ -167,7 +204,7 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
             AL.getAudioManager().registerSound("sword_2", levelAssets.sword_2);
             AL.getAudioManager().registerSound("sword_3", levelAssets.sword_3);
             AL.getAudioManager().registerSound("sword_4", levelAssets.sword_4);
-            spriteBatch = new SpriteBatch();
+            fpsBatch = new SpriteBatch();
             font = new BitmapFont();
 
             camera = new PerspectiveCamera();
@@ -187,17 +224,6 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
 
             reInit = false;
             playerEnt = -1;
-
-
-
-
-
-
-
-
-
-
-
         }
 
         Gdx.input.setInputProcessor(this);
@@ -212,17 +238,25 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
         arcadeWorld.step();
         arcadeWorld.render();
 
+        fpsBatch.begin();
+        fpsBatch.draw(levelAssets.gradient, 500, 500);
+        fpsBatch.draw(levelAssets.uioverlay, 30, AL.graphics.getHeight()/10-150, 640, 360);
+        font.draw(fpsBatch, String.format("%d FPS %d Entities", Gdx.graphics.getFramesPerSecond(), arcadeWorld.getEntityWorld().getAspectSubscriptionManager().get(Aspect.all()).getEntities().size()), 0, 15);
+        fpsBatch.end();
 
+        float perc = 0;
+        if (playerEnt != -1) {
+            StatComponent stat = arcadeWorld.getEntityWorld().getMapper(StatComponent.class).get(playerEnt);
+            CharacterComponent chara = arcadeWorld.getEntityWorld().getMapper(CharacterComponent.class).get(playerEnt);
+            if(chara.character.getCooldownTimer(1)!= 0)
+                perc = chara.character.getCooldownTimer(1) /stat.getCurrentStat(StatComponent.BaseStat.cooldownAbility1);
+        }
 
-        spriteBatch.begin();
-        font.draw(spriteBatch, String.format("%d FPS %d Entities", Gdx.graphics.getFramesPerSecond(), arcadeWorld.getEntityWorld().getAspectSubscriptionManager().get(Aspect.all()).getEntities().size()), 0, 15);
-
-        spriteBatch.draw(levelAssets.uioverlay, 30, AL.graphics.getHeight()/10-150, 640, 360);
-
-
-        spriteBatch.end();
-
-
+        shaderBatch.begin();
+        shaderBatch.setColor(Color.RED);
+        shaderProgram.setUniformf("u_gradient", perc);
+        shaderBatch.draw(levelAssets.gradient, 100, 100);
+        shaderBatch.end();
     }
 
     @Override
@@ -242,7 +276,7 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
     @Override
     public void hide() {
         if (reInit) {
-            spriteBatch.dispose();
+            fpsBatch.dispose();
             arcadeWorld.dispose();
             AL.getAssetManager().unloadAssetFields(levelAssets);
             AL.getAudioManager().unregisterSound("sword_1");
