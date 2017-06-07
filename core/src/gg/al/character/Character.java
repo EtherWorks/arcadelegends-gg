@@ -136,6 +136,7 @@ public abstract class Character {
         return cooldownTimer[ability];
     }
 
+
     public void tick(float delta) {
         for (int i = 0; i < cooldownTimer.length; i++) {
             if (cooldownTimer[i] != 0)
