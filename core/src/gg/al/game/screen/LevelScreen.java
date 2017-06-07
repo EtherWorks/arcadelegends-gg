@@ -188,7 +188,7 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
             uiLabelStyle = new Label.LabelStyle(uiFont, Color.WHITE);
             actionPointsLabel = new Label("0", uiLabelStyle);
             actionPointsLabel.setColor(Color.WHITE);
-            actionPointsLabel.setPosition(AL.graphics.getWidth() / 14.4f, AL.graphics.getHeight() / 19.63f);
+            actionPointsLabel.setPosition(AL.graphics.getWidth() / 14.4f, AL.graphics.getHeight() / 14);
 
             uiStage.addActor(actionPointsLabel);
 
@@ -223,8 +223,8 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
 
 
         if (playerHelper != null) {
-            spriteBatch.draw(playerHelper.getHealthTexture(), 100, 100, 200 * 2, 100 * 2);
-            spriteBatch.draw(playerHelper.getResourceTexture(), 100 + 8 * 2, 100, 150 * 2, 75 * 2);
+            spriteBatch.draw(playerHelper.getHealthTexture(), AL.graphics.getWidth() / 25.6f, AL.graphics.getHeight() / 7.2f, AL.graphics.getWidth() / 2.8285f, AL.graphics.getHeight() / 2.7f);
+            spriteBatch.draw(playerHelper.getResourceTexture(), AL.graphics.getWidth() / 21.098f, AL.graphics.getHeight() / 7.297f, AL.graphics.getWidth() / 3.49f, AL.graphics.getHeight() / 3.6f);
             for (int i = 0; i < playerHelper.getCooldownTextures().length; i++) {
                 spriteBatch.draw(playerHelper.getCooldownTextures()[i], 250 + 50 * i, 100, 200, 100);
             }
