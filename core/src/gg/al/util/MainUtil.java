@@ -4,7 +4,6 @@ import com.artemis.Component;
 import gg.al.logic.component.data.ITemplateable;
 import gg.al.logic.component.data.Template;
 import gg.al.logic.entity.Entities;
-import gg.al.util.GsonUtil;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -38,7 +37,7 @@ public class MainUtil {
 //        int id;
 //
 //        switch (entity) {
-//            case Player:
+//            case PlayerHelper:
 //                PositionComponent.PositionTemplate pos = arguments.get("PositionComponent", PositionComponent.PositionTemplate.class);
 //                Tile tile = arcadeWorld.getTile(pos.x, pos.y);
 //                if (tile.getEntities().size > 0)

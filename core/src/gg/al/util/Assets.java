@@ -59,9 +59,11 @@ public class Assets {
         public Texture uioverlay;
 
 
+        @AssignmentAssetManager.Asset("assets/ui/cooldown_gradient.png")
+        public Texture cooldown_gradient;
 
-        @AssignmentAssetManager.Asset("assets/sprites/gradient.png")
-        public Texture gradient;
+        @AssignmentAssetManager.Asset("assets/ui/health_gradient.png")
+        public Texture health_gradient;
 
         private BiMap<String, Object> assetMap;
 
