@@ -52,6 +52,7 @@ public class Kevin extends Character {
                     extraData[ABILITY_2] = targetId;
                     return true;
                 }
+                break;
             case ABILITY_3:
                 targetId = getEntityAtMouse();
                 if (targetId == -1)
