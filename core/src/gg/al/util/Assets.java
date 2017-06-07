@@ -58,6 +58,9 @@ public class Assets {
         @AssignmentAssetManager.Asset("assets/ui/ui.png")
         public Texture uioverlay;
 
+        @AssignmentAssetManager.Asset("assets/ui/uifont.fnt")
+        public BitmapFont uifont;
+
 
         @AssignmentAssetManager.Asset("assets/ui/cooldown_gradient.png")
         public Texture cooldown_gradient;

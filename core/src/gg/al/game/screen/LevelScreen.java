@@ -4,6 +4,7 @@ import com.artemis.Aspect;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -14,6 +15,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.Ray;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import gg.al.character.Character;
@@ -50,7 +52,7 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
     private PerspectiveCamera camera;
     private Viewport viewport;
     private ArcadeWorld arcadeWorld;
-    private SpriteBatch fpsBatch;
+    private SpriteBatch spriteBatch;
     private BitmapFont font;
     private boolean reInit;
     private Assets.LevelAssets levelAssets;
@@ -58,6 +60,10 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
 
     private Stage uiStage;
     private Viewport uiViewport;
+
+    private BitmapFont uiFont;
+    private Label.LabelStyle uiLabelStyle;
+    private Label actionPointsLabel;
 
 
     public LevelScreen(String mapName) {
@@ -160,7 +166,7 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
             AL.getAudioManager().registerSound("sword_2", levelAssets.sword_2);
             AL.getAudioManager().registerSound("sword_3", levelAssets.sword_3);
             AL.getAudioManager().registerSound("sword_4", levelAssets.sword_4);
-            fpsBatch = new SpriteBatch();
+            spriteBatch = new SpriteBatch();
             font = new BitmapFont();
 
             camera = new PerspectiveCamera();
@@ -177,6 +183,14 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
             map = levelAssets.get(mapName);
 
             arcadeWorld = new ArcadeWorld(map, rot, camera, levelAssets);
+
+            uiFont = levelAssets.uifont;
+            uiLabelStyle = new Label.LabelStyle(uiFont, Color.WHITE);
+            actionPointsLabel = new Label("0", uiLabelStyle);
+            actionPointsLabel.setColor(Color.WHITE);
+            actionPointsLabel.setPosition(AL.graphics.getWidth() / 14.4f, AL.graphics.getHeight() / 19.63f);
+
+            uiStage.addActor(actionPointsLabel);
 
             reInit = false;
             playerEnt = -1;
@@ -197,18 +211,29 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
         if (playerHelper != null)
             playerHelper.step(delta);
 
-        fpsBatch.begin();
-        fpsBatch.draw(levelAssets.uioverlay, 30, AL.graphics.getHeight() / 10 - 150, 640, 360);
+        spriteBatch.begin();
+        spriteBatch.draw(levelAssets.uioverlay, AL.graphics.getWidth() / 64, AL.graphics.getHeight() / -25.71f, AL.graphics.getWidth() / 3, AL.graphics.getHeight() / 3);
+
+        if(playerEnt != -1)
+        {
+            StatComponent stats = arcadeWorld.getEntityWorld().getMapper(StatComponent.class).get(playerEnt);
+            actionPointsLabel.setText(String.format("%1.0f", stats.getRuntimeStat(StatComponent.RuntimeStat.actionPoints)));
+        }
+
+
 
         if (playerHelper != null) {
-            fpsBatch.draw(playerHelper.getHealthTexture(), 100, 100, 200 * 2, 100 * 2);
-            fpsBatch.draw(playerHelper.getResourceTexture(), 100 + 8 * 2, 100, 150 * 2, 75 * 2);
+            spriteBatch.draw(playerHelper.getHealthTexture(), 100, 100, 200 * 2, 100 * 2);
+            spriteBatch.draw(playerHelper.getResourceTexture(), 100 + 8 * 2, 100, 150 * 2, 75 * 2);
             for (int i = 0; i < playerHelper.getCooldownTextures().length; i++) {
-                fpsBatch.draw(playerHelper.getCooldownTextures()[i], 250 + 50 * i, 100, 200, 100);
+                spriteBatch.draw(playerHelper.getCooldownTextures()[i], 250 + 50 * i, 100, 200, 100);
             }
         }
-        font.draw(fpsBatch, String.format("%d FPS %d Entities", Gdx.graphics.getFramesPerSecond(), arcadeWorld.getEntityWorld().getAspectSubscriptionManager().get(Aspect.all()).getEntities().size()), 0, 15);
-        fpsBatch.end();
+        font.draw(spriteBatch, String.format("%d FPS %d Entities", Gdx.graphics.getFramesPerSecond(), arcadeWorld.getEntityWorld().getAspectSubscriptionManager().get(Aspect.all()).getEntities().size()), 0, 15);
+
+        spriteBatch.end();
+        uiStage.act(Gdx.graphics.getDeltaTime());
+        uiStage.draw();
     }
 
     @Override
@@ -228,7 +253,7 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
     @Override
     public void hide() {
         if (reInit) {
-            fpsBatch.dispose();
+            spriteBatch.dispose();
             arcadeWorld.dispose();
             AL.getAssetManager().unloadAssetFields(levelAssets);
             AL.getAudioManager().unregisterSound("sword_1");
