@@ -62,8 +62,11 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
     private Viewport uiViewport;
 
     private BitmapFont uiFont;
+    private BitmapFont uiFontSmall;
     private Label.LabelStyle uiLabelStyle;
     private Label actionPointsLabel;
+    private Label attackPointsLabel;
+    private Label spellPowerLabel;
 
 
     public LevelScreen(String mapName) {
@@ -185,12 +188,21 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
             arcadeWorld = new ArcadeWorld(map, rot, camera, levelAssets);
 
             uiFont = levelAssets.uifont;
-            uiLabelStyle = new Label.LabelStyle(uiFont, Color.WHITE);
+            uiLabelStyle = new Label.LabelStyle(uiFont, Color.BLACK);
             actionPointsLabel = new Label("0", uiLabelStyle);
-            actionPointsLabel.setColor(Color.WHITE);
             actionPointsLabel.setPosition(AL.graphics.getWidth() / 14.4f, AL.graphics.getHeight() / 14);
-
             uiStage.addActor(actionPointsLabel);
+
+
+            uiFontSmall = levelAssets.uifontsmall;
+            uiLabelStyle = new Label.LabelStyle(uiFontSmall, Color.WHITE);
+            attackPointsLabel = new Label("0 AP", uiLabelStyle);
+            attackPointsLabel.setPosition(465,115);
+            uiStage.addActor(attackPointsLabel);
+
+            spellPowerLabel = new Label("0 SP", uiLabelStyle);
+            spellPowerLabel.setPosition(465, 82);
+            uiStage.addActor(spellPowerLabel);
 
             reInit = false;
             playerEnt = -1;
@@ -224,7 +236,7 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
 
         if (playerHelper != null) {
             spriteBatch.draw(playerHelper.getHealthTexture(), AL.graphics.getWidth() / 25.6f, AL.graphics.getHeight() / 7.2f, AL.graphics.getWidth() / 2.8285f, AL.graphics.getHeight() / 2.7f);
-            spriteBatch.draw(playerHelper.getResourceTexture(), AL.graphics.getWidth() / 21.098f, AL.graphics.getHeight() / 7.297f, AL.graphics.getWidth() / 3.49f, AL.graphics.getHeight() / 3.6f);
+            spriteBatch.draw(playerHelper.getResourceTexture(), AL.graphics.getWidth() / 21.098f, AL.graphics.getHeight() / 7.25f, AL.graphics.getWidth() / 3.49f, AL.graphics.getHeight() / 3.6f);
             for (int i = 0; i < playerHelper.getCooldownTextures().length; i++) {
                 spriteBatch.draw(playerHelper.getCooldownTextures()[i], 250 + 50 * i, 100, 200, 100);
             }
