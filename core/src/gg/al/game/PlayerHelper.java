@@ -41,6 +41,9 @@ public class PlayerHelper implements Disposable {
     private TextureRegion healthGradient;
     private TextureRegion cooldownGradient;
 
+    private Camera healthCam;
+    private Camera cooldownCam;
+
     private Color healthColor = new Color(255, 0, 0, 1);
     private Color resourceColor = new Color (0,0,255,1);
     private Color cooldownColor = new Color(1, 1, 1, 0.8f);
@@ -53,7 +56,10 @@ public class PlayerHelper implements Disposable {
             throw new IllegalArgumentException("couldn't compile shader: " + shader.getLog());
         shaderBatch = new SpriteBatch(1000, shader);
 
+
+
         this.healthGradient = new TextureRegion(assets.health_gradient);
+        healthCam = new OrthographicCamera(healthGradient.getRegionWidth(), healthGradient.getRegionHeight());
         this.healthBuffer = new FrameBuffer(Pixmap.Format.RGBA8888, assets.health_gradient.getWidth(), assets.health_gradient.getHeight(), false);
         this.healthTexture = new TextureRegion(healthBuffer.getColorBufferTexture());
         healthTexture.flip(false, true);
@@ -61,6 +67,7 @@ public class PlayerHelper implements Disposable {
         this.resourceTexture = new TextureRegion(resourceBuffer.getColorBufferTexture());
         resourceTexture.flip(false, true);
         this.cooldownGradient = new TextureRegion(assets.cooldown_gradient, assets.cooldown_gradient.getWidth(), assets.cooldown_gradient.getHeight());
+        cooldownCam =new OrthographicCamera(cooldownGradient.getRegionWidth(), cooldownGradient.getRegionHeight());
         for (int i = 0; i < abilityBuffers.length; i++) {
             abilityBuffers[i] = new FrameBuffer(Pixmap.Format.RGBA8888, cooldownGradient.getRegionWidth(), cooldownGradient.getRegionHeight(), false);
             cooldownTextures[i] = new TextureRegion(abilityBuffers[i].getColorBufferTexture());
@@ -80,19 +87,19 @@ public class PlayerHelper implements Disposable {
         healthPerc = stat.getRuntimeStat(StatComponent.RuntimeStat.health) / stat.getCurrentStat(StatComponent.BaseStat.maxHealth);
         resourcePerc = stat.getRuntimeStat(StatComponent.RuntimeStat.resource) / stat.getCurrentStat(StatComponent.BaseStat.maxResource);
 
-        drawToBuffer(healthBuffer, healthColor, healthGradient, healthPerc);
-        drawToBuffer(resourceBuffer, resourceColor, healthGradient, resourcePerc);
+        drawToBuffer(healthBuffer, healthColor, healthGradient, healthPerc, healthCam.combined);
+        drawToBuffer(resourceBuffer, resourceColor, healthGradient, resourcePerc, healthCam.combined);
         for (int i = 0; i < abilityBuffers.length; i++) {
-            drawToBuffer(abilityBuffers[i], cooldownColor, cooldownGradient, abilityPercents[i]);
+            drawToBuffer(abilityBuffers[i], cooldownColor, cooldownGradient, abilityPercents[i], cooldownCam.combined);
         }
     }
 
-    private void drawToBuffer(FrameBuffer buffer, Color color, TextureRegion gradient, float perc) {
+    private void drawToBuffer(FrameBuffer buffer, Color color, TextureRegion gradient, float perc, Matrix4 projection) {
         buffer.begin();
-        AL.graphics.getGL20().glClearColor(1, 0, 0, 0.7f);
+        AL.graphics.getGL20().glClearColor(0, 0, 0, 0);
         AL.graphics.getGL20().glClear(GL20.GL_COLOR_BUFFER_BIT);
-        Camera camera = new OrthographicCamera(buffer.getWidth(), buffer.getHeight());
-        shaderBatch.setProjectionMatrix(camera.combined);
+
+        shaderBatch.setProjectionMatrix(projection);
         shaderBatch.begin();
         shaderBatch.setColor(color);
         shader.setUniformf("u_gradient", perc);
