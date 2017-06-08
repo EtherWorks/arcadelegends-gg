@@ -1,13 +1,14 @@
 package gg.al.game;
 
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
+import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.utils.Disposable;
+import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
 import gg.al.character.Character;
 import gg.al.logic.ArcadeWorld;
 import gg.al.logic.component.CharacterComponent;
@@ -53,13 +54,13 @@ public class PlayerHelper implements Disposable {
         shaderBatch = new SpriteBatch(1000, shader);
 
         this.healthGradient = new TextureRegion(assets.health_gradient);
-        this.healthBuffer = new FrameBuffer(Pixmap.Format.RGBA8888, healthGradient.getRegionWidth(), healthGradient.getRegionHeight(), false);
+        this.healthBuffer = new FrameBuffer(Pixmap.Format.RGBA8888, assets.health_gradient.getWidth(), assets.health_gradient.getHeight(), false);
         this.healthTexture = new TextureRegion(healthBuffer.getColorBufferTexture());
         healthTexture.flip(false, true);
-        this.resourceBuffer = new FrameBuffer(Pixmap.Format.RGBA8888, healthGradient.getRegionWidth(), healthGradient.getRegionHeight(), false);
+        this.resourceBuffer = new FrameBuffer(Pixmap.Format.RGBA8888, assets.health_gradient.getWidth(), assets.health_gradient.getHeight(),  false);
         this.resourceTexture = new TextureRegion(resourceBuffer.getColorBufferTexture());
         resourceTexture.flip(false, true);
-        this.cooldownGradient = new TextureRegion(assets.cooldown_gradient);
+        this.cooldownGradient = new TextureRegion(assets.cooldown_gradient, assets.cooldown_gradient.getWidth(), assets.cooldown_gradient.getHeight());
         for (int i = 0; i < abilityBuffers.length; i++) {
             abilityBuffers[i] = new FrameBuffer(Pixmap.Format.RGBA8888, cooldownGradient.getRegionWidth(), cooldownGradient.getRegionHeight(), false);
             cooldownTextures[i] = new TextureRegion(abilityBuffers[i].getColorBufferTexture());
@@ -88,13 +89,14 @@ public class PlayerHelper implements Disposable {
 
     private void drawToBuffer(FrameBuffer buffer, Color color, TextureRegion gradient, float perc) {
         buffer.begin();
-        AL.graphics.getGL20().glClearColor(0, 0, 0, 0);
+        AL.graphics.getGL20().glClearColor(1, 0, 0, 0.7f);
         AL.graphics.getGL20().glClear(GL20.GL_COLOR_BUFFER_BIT);
-
+        Camera camera = new OrthographicCamera(buffer.getWidth(), buffer.getHeight());
+        shaderBatch.setProjectionMatrix(camera.combined);
         shaderBatch.begin();
         shaderBatch.setColor(color);
         shader.setUniformf("u_gradient", perc);
-        shaderBatch.draw(gradient, 0, 0);
+        shaderBatch.draw(gradient, -buffer.getWidth()/2, -buffer.getHeight()/2);
         shaderBatch.end();
         buffer.end();
     }

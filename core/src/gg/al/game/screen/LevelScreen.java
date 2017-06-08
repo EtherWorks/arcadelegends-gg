@@ -6,9 +6,11 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Vector2;
@@ -17,6 +19,7 @@ import com.badlogic.gdx.math.collision.Ray;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
+import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import gg.al.character.Character;
 import gg.al.config.IInputConfig;
@@ -60,6 +63,7 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
 
     private Stage uiStage;
     private Viewport uiViewport;
+    private OrthographicCamera uiCamera;
 
     private BitmapFont uiFont;
     private BitmapFont uiFontSmall;
@@ -180,7 +184,8 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
             camera.update();
             viewport = new ExtendViewport(1920, 1080, camera);
             viewport.apply();
-            uiViewport = new ExtendViewport(1920, 1080);
+            uiCamera = new OrthographicCamera();
+            uiViewport = new FitViewport(1920, 1080, uiCamera);
             uiStage = new Stage(uiViewport);
 
             map = levelAssets.get(mapName);
@@ -198,18 +203,21 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
             uiLabelStyle = new Label.LabelStyle(uiFontSmall, Color.WHITE);
             attackPointsLabel = new Label("0 AP", uiLabelStyle);
             attackPointsLabel.setPosition(465,115);
-            uiStage.addActor(attackPointsLabel);
+     //       uiStage.addActor(attackPointsLabel);
 
             spellPowerLabel = new Label("0 SP", uiLabelStyle);
             spellPowerLabel.setPosition(465, 82);
-            uiStage.addActor(spellPowerLabel);
+          //  uiStage.addActor(spellPowerLabel);
 
             reInit = false;
             playerEnt = -1;
+            tr = new TextureRegion(levelAssets.cooldown_gradient, levelAssets.cooldown_gradient.getWidth(), levelAssets.cooldown_gradient.getHeight());
         }
 
         Gdx.input.setInputProcessor(this);
     }
+
+    TextureRegion tr;
 
     @Override
     public void render(float delta) {
@@ -223,8 +231,9 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
         if (playerHelper != null)
             playerHelper.step(delta);
 
+        spriteBatch.setProjectionMatrix(uiCamera.combined);
         spriteBatch.begin();
-        spriteBatch.draw(levelAssets.uioverlay, AL.graphics.getWidth() / 64, AL.graphics.getHeight() / -25.71f, AL.graphics.getWidth() / 3, AL.graphics.getHeight() / 3);
+        spriteBatch.draw(levelAssets.uioverlay, 10, 10, levelAssets.uioverlay.getWidth() /2 , levelAssets.uioverlay.getHeight() / 2);
 
         if(playerEnt != -1)
         {
@@ -235,11 +244,21 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
 
 
         if (playerHelper != null) {
-            spriteBatch.draw(playerHelper.getHealthTexture(), AL.graphics.getWidth() / 25.6f, AL.graphics.getHeight() / 7.2f, AL.graphics.getWidth() / 2.8285f, AL.graphics.getHeight() / 2.7f);
-            spriteBatch.draw(playerHelper.getResourceTexture(), AL.graphics.getWidth() / 21.098f, AL.graphics.getHeight() / 7.25f, AL.graphics.getWidth() / 3.49f, AL.graphics.getHeight() / 3.6f);
-            for (int i = 0; i < playerHelper.getCooldownTextures().length; i++) {
+            spriteBatch.draw(playerHelper.getHealthTexture(), 60, 150, 678, 400);
+            spriteBatch.draw(playerHelper.getResourceTexture(), 300,148/*, 550, 300*/);
+            /*for (int i = 0; i < playerHelper.getCooldownTextures().length; i++) {
                 spriteBatch.draw(playerHelper.getCooldownTextures()[i], 250 + 50 * i, 100, 200, 100);
+
             }
+            */
+           // spriteBatch.draw(playerHelper.getCooldownTextures()[Character.ABILITY_1], AL.graphics.getWidth() / 6.464f, AL.graphics.getHeight() / 6.35f, AL.graphics.getWidth() / 38.4f, AL.graphics.getHeight() / 21.6f);
+             spriteBatch.draw(playerHelper.getCooldownTextures()[Character.ABILITY_1], 500, 100);
+
+            //spriteBatch.draw(levelAssets.cooldown_gradient, 297, 170, 50, 50);
+            //spriteBatch.draw(tr, 347, 170, 50, 50);
+
+
+
         }
         font.draw(spriteBatch, String.format("%d FPS %d Entities", Gdx.graphics.getFramesPerSecond(), arcadeWorld.getEntityWorld().getAspectSubscriptionManager().get(Aspect.all()).getEntities().size()), 0, 15);
 
