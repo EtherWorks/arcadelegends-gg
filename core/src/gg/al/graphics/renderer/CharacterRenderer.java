@@ -14,7 +14,6 @@ import gg.al.game.AL;
 import gg.al.logic.component.*;
 import gg.al.logic.system.RenderSystem;
 import gg.al.util.Assets;
-import org.lwjgl.util.glu.Project;
 
 import java.util.Map;
 
@@ -25,12 +24,13 @@ import static gg.al.graphics.renderer.CharacterRenderer.PlayerRenderState.*;
  */
 public class CharacterRenderer implements RenderComponent.RenderDelegate {
 
+    private final static int RESOURCE_OFFSET = 45;
+    private final static int UI_WIDTH = 250;
+    private final static int UI_HEIGHT = 200;
     private ObjectMap<Integer, FrameBuffer> healthBuffers;
     private ObjectMap<Integer, FrameBuffer> resourceBuffers;
-
     private ObjectMap<Integer, TextureRegion> healthBars;
     private ObjectMap<Integer, TextureRegion> resourceBars;
-
     private Camera cameraBar;
     private Camera uiCamera;
 
@@ -60,8 +60,7 @@ public class CharacterRenderer implements RenderComponent.RenderDelegate {
         if (cameraBar == null) {
             cameraBar = new OrthographicCamera(renderSystem.getLevelAssets().health_bar_gradient.getWidth(),
                     renderSystem.getLevelAssets().health_bar_gradient.getHeight());
-            uiCamera = new OrthographicCamera(renderSystem.getLevelAssets().health_bar_gradient.getWidth(),
-                    renderSystem.getLevelAssets().health_bar_gradient.getHeight() * 2);
+            uiCamera = new OrthographicCamera(UI_WIDTH, UI_HEIGHT);
         }
 
         RenderComponent render = renderSystem.getMapperRender().get(entityId);
@@ -89,10 +88,7 @@ public class CharacterRenderer implements RenderComponent.RenderDelegate {
         decal.setPosition(position.position.x, position.position.y, 0);
         renderSystem.getDecalMap().put(entityId, decal);
 
-        FrameBuffer buffer = new FrameBuffer(Pixmap.Format.RGBA8888,
-                renderSystem.getLevelAssets().health_bar_gradient.getWidth(),
-                renderSystem.getLevelAssets().health_bar_gradient.getHeight() * 2,
-                false);
+        FrameBuffer buffer = new FrameBuffer(Pixmap.Format.RGBA8888, UI_WIDTH, UI_HEIGHT, false);
         Assets.LevelAssets levelAssets = renderSystem.getLevelAssets();
         FrameBuffer healthBuffer = new FrameBuffer(Pixmap.Format.RGBA8888, levelAssets.health_bar_gradient.getWidth(), levelAssets.health_bar_gradient.getHeight(), false);
         TextureRegion healthBar = new TextureRegion(healthBuffer.getColorBufferTexture());
@@ -164,13 +160,16 @@ public class CharacterRenderer implements RenderComponent.RenderDelegate {
         renderSystem.getSpriteBatch().setProjectionMatrix(uiCamera.combined);
         renderSystem.getSpriteBatch().begin();
         //renderSystem.getFont().draw(renderSystem.getSpriteBatch(), String.format("%1.0f", stats.getRuntimeStat(StatComponent.RuntimeStat.actionPoints)), 0, buffer.getHeight());
-        renderSystem.getSpriteBatch().draw(healthBars.get(entityId), -buffer.getWidth() / 2, 0);
-        renderSystem.getSpriteBatch().draw(resourceBars.get(entityId), -buffer.getWidth() / 2, -buffer.getHeight() / 2);
+
+        renderSystem.getSpriteBatch().draw(resourceBars.get(entityId), 50 - UI_WIDTH / 2, -UI_HEIGHT / 2 + RESOURCE_OFFSET, 175, 75);
+        renderSystem.getSpriteBatch().draw(healthBars.get(entityId), 50 - UI_WIDTH / 2, 0, 200, 100);
+        renderSystem.getFont().draw(renderSystem.getSpriteBatch(), String.format("%1.0f", stats.getRuntimeStat(StatComponent.RuntimeStat.actionPoints)),
+                -UI_WIDTH / 2, 30);
         renderSystem.getSpriteBatch().end();
         buffer.end();
 
         Decal uiDecal = renderSystem.getUiMap().get(entityId);
-        uiDecal.setPosition(physic.body.getPosition().x, physic.body.getPosition().y + 0.75f, uiDecal.getZ());
+        uiDecal.setPosition(physic.body.getPosition().x, physic.body.getPosition().y + 0.5f, uiDecal.getZ());
     }
 
     @Override

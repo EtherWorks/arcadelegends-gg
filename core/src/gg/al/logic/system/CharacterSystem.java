@@ -96,11 +96,15 @@ public class CharacterSystem extends IteratingSystem {
         else if (character.targetId != -1) {
             Vector2 vector = vectorPool.obtain();
             PositionComponent target = mapperPosition.get(character.targetId);
-            if (Math.abs(vector.set(pos.position).dst(target.position)) <= stats.getCurrentStat(StatComponent.BaseStat.attackRange)) {
-                character.character.startAttack();
-                renderComponent.setRenderState(ATTACK);
-            } else
+            if (target == null)
                 character.targetId = -1;
+            else {
+                if (Math.abs(vector.set(pos.position).dst(target.position)) <= stats.getCurrentStat(StatComponent.BaseStat.attackRange)) {
+                    character.character.startAttack();
+                    renderComponent.setRenderState(ATTACK);
+                } else
+                    character.targetId = -1;
+            }
             vectorPool.free(vector);
         } else if (character.targetId == -1 && renderComponent.isInState(ATTACK))
             renderComponent.setRenderState(IDLE);
