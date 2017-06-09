@@ -45,9 +45,9 @@ public class PlayerHelper implements Disposable {
     private Camera healthCam;
     private Camera cooldownCam;
 
-    private Color healthColor = new Color(255, 0, 0, 1);
-    private Color resourceColor = new Color(0, 0, 255, 1);
-    private Color cooldownColor = new Color(1, 1, 1, 0.8f);
+    private Color healthColor = new Color(0.7f, 0, 0, 1);
+    private Color resourceColor = new Color(0, 0, 0.7f, 1);
+    private Color cooldownColor = new Color(0.7f, 0.7f, 0.7f, 0.8f);
 
     public PlayerHelper(int entityId, ArcadeWorld arcadeWorld, Assets.LevelAssets assets) {
         this.entityId = entityId;

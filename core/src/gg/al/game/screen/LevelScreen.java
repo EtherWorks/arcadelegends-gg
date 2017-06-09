@@ -195,7 +195,7 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
             uiFont = levelAssets.uifont;
             uiLabelStyle = new Label.LabelStyle(uiFont, Color.BLACK);
             actionPointsLabel = new Label("0", uiLabelStyle);
-            actionPointsLabel.setPosition(AL.graphics.getWidth() / 14.4f, AL.graphics.getHeight() / 14);
+            actionPointsLabel.setPosition(115, 75);
             uiStage.addActor(actionPointsLabel);
 
 
@@ -242,19 +242,20 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
         }
 
 
+
         if (playerHelper != null) {
-            spriteBatch.draw(playerHelper.getHealthTexture(), 60, 150, 678, 400);
-            spriteBatch.draw(playerHelper.getResourceTexture(), 300, 148/*, 550, 300*/);
-            /*for (int i = 0; i < playerHelper.getCooldownTextures().length; i++) {
-                spriteBatch.draw(playerHelper.getCooldownTextures()[i], 250 + 50 * i, 100, 200, 100);
+            spriteBatch.draw(playerHelper.getHealthTexture(), 50, 142, 190, 95);
+            spriteBatch.draw(playerHelper.getResourceTexture(), 68,142, 150,75);
 
-            }
-            */
-            // spriteBatch.draw(playerHelper.getCooldownTextures()[Character.ABILITY_1], AL.graphics.getWidth() / 6.464f, AL.graphics.getHeight() / 6.35f, AL.graphics.getWidth() / 38.4f, AL.graphics.getHeight() / 21.6f);
-            spriteBatch.draw(playerHelper.getCooldownTextures()[Character.ABILITY_1], 500, 100);
 
-            //spriteBatch.draw(levelAssets.cooldown_gradient, 297, 170, 50, 50);
-            //spriteBatch.draw(tr, 347, 170, 50, 50);
+            spriteBatch.draw(playerHelper.getCooldownTextures()[Character.ABILITY_1], 275, 155, 50,50);
+            spriteBatch.draw(levelAssets.ability2, 359, 155, 50, 50);
+            spriteBatch.draw(playerHelper.getCooldownTextures()[Character.ABILITY_2], 359, 155, 50,50);
+            spriteBatch.draw(playerHelper.getCooldownTextures()[Character.ABILITY_3], 449, 155, 50,50);
+            spriteBatch.draw(playerHelper.getCooldownTextures()[Character.ABILITY_4], 359, 77, 50,50);
+
+
+
 
 
         }

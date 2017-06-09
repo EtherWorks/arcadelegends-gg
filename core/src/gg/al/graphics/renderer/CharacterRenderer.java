@@ -34,6 +34,9 @@ public class CharacterRenderer implements RenderComponent.RenderDelegate {
     private Camera cameraBar;
     private Camera uiCamera;
 
+    private final Color healthBarColor = new Color(0.7f, 0, 0, 1);
+    private final Color resourceBarColor = new Color(0,0,0.7f,1);
+
     public CharacterRenderer() {
         healthBars = new ObjectMap<>();
         resourceBars = new ObjectMap<>();
@@ -146,10 +149,10 @@ public class CharacterRenderer implements RenderComponent.RenderDelegate {
 
         SpriteBatch shaderBatch = renderSystem.getShaderBatch();
         ShaderProgram shader = renderSystem.getGradientShader();
-        drawToBuffer(healthBuffers.get(entityId), Color.RED, renderSystem.getLevelAssets().health_bar_gradient,
+        drawToBuffer(healthBuffers.get(entityId), healthBarColor, renderSystem.getLevelAssets().health_bar_gradient,
                 stats.getRuntimeStat(StatComponent.RuntimeStat.health) / stats.getCurrentStat(StatComponent.BaseStat.maxHealth),
                 shaderBatch, shader, cameraBar.combined);
-        drawToBuffer(resourceBuffers.get(entityId), Color.BLUE, renderSystem.getLevelAssets().health_bar_gradient,
+        drawToBuffer(resourceBuffers.get(entityId), resourceBarColor, renderSystem.getLevelAssets().health_bar_gradient,
                 stats.getRuntimeStat(StatComponent.RuntimeStat.resource) / stats.getCurrentStat(StatComponent.BaseStat.maxResource),
                 shaderBatch, shader, cameraBar.combined);
 
