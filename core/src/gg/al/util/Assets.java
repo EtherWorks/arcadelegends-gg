@@ -108,6 +108,11 @@ public class Assets {
                 assetMap = HashBiMap.create();
                 assetMap.put("tileMap", tileMap);
                 assetMap.put("textureAtlas", textureAtlas);
+                assetMap.put("ability1", ability1);
+                assetMap.put("ability2", ability2);
+                assetMap.put("ability3", ability3);
+                assetMap.put("ability4", ability4);
+                assetMap.put("trait", trait);
             }
             return assetMap;
         }

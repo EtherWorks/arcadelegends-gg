@@ -13,6 +13,10 @@ import gg.al.logic.entity.EntityArguments;
  */
 public class Ghost extends Character {
 
+    @Override
+    protected String getIconName(int ability) {
+        return "";
+    }
 
     @Override
     protected void castBegin(int ability) {

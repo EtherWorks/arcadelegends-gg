@@ -138,8 +138,7 @@ public class PlayerHelper implements Disposable {
     public Sprite getAbilityOverlaySprite(int ability) {
         CharacterComponent characterComponent = arcadeWorld.getEntityWorld().getMapper(CharacterComponent.class).get(entityId);
         Color color;
-        if ((color = characterComponent.character.getAbilityOverlay()) != null)
-
+        if ((color = characterComponent.character.getAbilityOverlay(ability)) != null)
             abilityOverlaySprites[ability].setColor(color);
         else
             abilityOverlaySprites[ability].setColor(0, 0, 0, 0);

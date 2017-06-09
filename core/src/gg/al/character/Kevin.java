@@ -1,6 +1,7 @@
 package gg.al.character;
 
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.IntArray;
 import gg.al.game.AL;
@@ -28,6 +29,8 @@ public class Kevin extends Character {
             .effectTime(5);
     private boolean ability4_activate = false;
     private Random random = new Random();
+
+    private static final Color INACTIVE_COLOR = new Color(.3f, .3f, .3f, .8f);
 
     @Override
     protected void onTick(float delta) {
@@ -158,9 +161,9 @@ public class Kevin extends Character {
         statComponent.addCurrentStat(StatComponent.BaseStat.cooldownAbility1, -statComponent.getRuntimeStat(StatComponent.RuntimeStat.ability_1_points));
 
         if (ability4_activate) {
-            if (statComponent.statusEffects.containsKey(BOOST_NAME))
+            if (statComponent.statusEffects.containsKey(BOOST_NAME)) {
                 statComponent.statusEffects.remove(BOOST_NAME);
-            else
+            } else
                 statComponent.statusEffects.put(BOOST_NAME,
                         StatusEffect.builder()
                                 .percentageStat(StatComponent.BaseStat.armor, -0.5f)
@@ -197,6 +200,38 @@ public class Kevin extends Character {
                 resetAttack();
                 renderComponent.setRenderState(CharacterRenderer.PlayerRenderState.ABILITY_4);
                 break;
+        }
+    }
+
+    @Override
+    public Color getAbilityOverlay(int ability) {
+        StatComponent stat = getComponent(entityID, StatComponent.class);
+        return stat.statusEffects.containsKey(BOOST_NAME) && ability == ABILITY_3 ? null : INACTIVE_COLOR;
+    }
+
+    @Override
+    protected float modifyCost(int ability, float cost) {
+        if (ability == ABILITY_3 && getComponent(entityID, StatComponent.class).statusEffects.containsKey(BOOST_NAME)) {
+            cost = 0;
+        }
+        return cost;
+    }
+
+    @Override
+    protected String getIconName(int ability) {
+        switch (ability) {
+            case ABILITY_1:
+                return "ability1";
+            case ABILITY_2:
+                return "ability2";
+            case ABILITY_3:
+                return "ability3";
+            case ABILITY_4:
+                return "ability4";
+            case TRAIT:
+                return "trait";
+            default:
+                return "";
         }
     }
 }

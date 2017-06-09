@@ -13,6 +13,12 @@ import gg.al.logic.entity.EntityArguments;
  * Created by Thomas Neumann on 09.06.2017.<br />
  */
 public class SuperGhost extends Character {
+
+    @Override
+    protected String getIconName(int ability) {
+        return "";
+    }
+
     @Override
     protected void castBegin(int ability) {
 

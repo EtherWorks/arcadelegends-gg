@@ -49,6 +49,11 @@ public class Ezreal extends Character {
     }
 
     @Override
+    protected String getIconName(int ability) {
+        return "";
+    }
+
+    @Override
     protected void onCast(int abilityInd) {
         switch (abilityInd) {
             case ABILITY_1:

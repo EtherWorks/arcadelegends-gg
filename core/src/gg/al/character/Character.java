@@ -121,6 +121,7 @@ public abstract class Character {
                     break;
             }
             cooldown -= cooldown * statComponent.getCurrentStat(StatComponent.BaseStat.cooldownReduction);
+            cost = modifyCost(abilityInd, cost);
             if (!isCasting() && statComponent.getRuntimeStat(StatComponent.RuntimeStat.resource) - cost >= 0) {
                 if (checkOnCast(abilityInd)) {
                     cooldowns[abilityInd] = cooldown;
@@ -133,8 +134,7 @@ public abstract class Character {
         }
     }
 
-    public float getCooldownTimer(int ability)
-    {
+    public float getCooldownTimer(int ability) {
         return cooldownTimer[ability];
     }
 
@@ -224,6 +224,8 @@ public abstract class Character {
 
     protected abstract void castBegin(int ability);
 
+    protected abstract String getIconName(int ability);
+
     protected abstract void onTick(float delta);
 
     protected abstract boolean checkOnCast(int abilityInd);
@@ -238,6 +240,11 @@ public abstract class Character {
 
     public boolean hasFinishedAttack() {
         return finishedAttack;
+    }
+
+    protected float modifyCost(int ability, float cost)
+    {
+        return cost;
     }
 
     protected <T extends Component> T getComponent(int entityID, Class<T> type) {
@@ -332,10 +339,8 @@ public abstract class Character {
         return arcadeWorld.getLogicMap().getTile(x, y);
     }
 
-    public static float getCooldown(int ability, StatComponent stats)
-    {
-        switch (ability)
-        {
+    public static float getCooldown(int ability, StatComponent stats) {
+        switch (ability) {
             case TRAIT:
                 return stats.getCurrentStat(StatComponent.BaseStat.cooldownTrait);
             case ABILITY_1:
@@ -350,8 +355,7 @@ public abstract class Character {
         throw new IllegalArgumentException("No ability with index" + ability);
     }
 
-    public Color getAbilityOverlay()
-    {
+    public Color getAbilityOverlay(int ability) {
         return null;
     }
 }
