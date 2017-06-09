@@ -68,6 +68,9 @@ public class Assets {
         @AssignmentAssetManager.Asset("assets/ui/cooldown_gradient.png")
         public Texture cooldown_gradient;
 
+        @AssignmentAssetManager.Asset("assets/ui/passive_cooldown_gradient.png")
+        public Texture passive_cooldown_gradient;
+
         @AssignmentAssetManager.Asset("assets/ui/health_gradient.png")
         public Texture health_gradient;
 

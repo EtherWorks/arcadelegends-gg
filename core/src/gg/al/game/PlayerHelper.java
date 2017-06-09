@@ -40,12 +40,13 @@ public class PlayerHelper implements Disposable {
 
     private TextureRegion healthGradient;
     private TextureRegion cooldownGradient;
+    private TextureRegion passiveGradient;
 
     private Camera healthCam;
     private Camera cooldownCam;
 
     private Color healthColor = new Color(255, 0, 0, 1);
-    private Color resourceColor = new Color (0,0,255,1);
+    private Color resourceColor = new Color(0, 0, 255, 1);
     private Color cooldownColor = new Color(1, 1, 1, 0.8f);
 
     public PlayerHelper(int entityId, ArcadeWorld arcadeWorld, Assets.LevelAssets assets) {
@@ -57,19 +58,22 @@ public class PlayerHelper implements Disposable {
         shaderBatch = new SpriteBatch(1000, shader);
 
 
-
+        passiveGradient = new TextureRegion(assets.passive_cooldown_gradient);
         this.healthGradient = new TextureRegion(assets.health_gradient);
         healthCam = new OrthographicCamera(healthGradient.getRegionWidth(), healthGradient.getRegionHeight());
         this.healthBuffer = new FrameBuffer(Pixmap.Format.RGBA8888, assets.health_gradient.getWidth(), assets.health_gradient.getHeight(), false);
         this.healthTexture = new TextureRegion(healthBuffer.getColorBufferTexture());
         healthTexture.flip(false, true);
-        this.resourceBuffer = new FrameBuffer(Pixmap.Format.RGBA8888, assets.health_gradient.getWidth(), assets.health_gradient.getHeight(),  false);
+        this.resourceBuffer = new FrameBuffer(Pixmap.Format.RGBA8888, assets.health_gradient.getWidth(), assets.health_gradient.getHeight(), false);
         this.resourceTexture = new TextureRegion(resourceBuffer.getColorBufferTexture());
         resourceTexture.flip(false, true);
         this.cooldownGradient = new TextureRegion(assets.cooldown_gradient, assets.cooldown_gradient.getWidth(), assets.cooldown_gradient.getHeight());
-        cooldownCam =new OrthographicCamera(cooldownGradient.getRegionWidth(), cooldownGradient.getRegionHeight());
+        cooldownCam = new OrthographicCamera(cooldownGradient.getRegionWidth(), cooldownGradient.getRegionHeight());
+
         for (int i = 0; i < abilityBuffers.length; i++) {
-            abilityBuffers[i] = new FrameBuffer(Pixmap.Format.RGBA8888, cooldownGradient.getRegionWidth(), cooldownGradient.getRegionHeight(), false);
+            abilityBuffers[i] = new FrameBuffer(Pixmap.Format.RGBA8888,
+                    i == 0 ? passiveGradient.getRegionWidth() : cooldownGradient.getRegionWidth(),
+                    i == 0 ? passiveGradient.getRegionHeight() : cooldownGradient.getRegionHeight(), false);
             cooldownTextures[i] = new TextureRegion(abilityBuffers[i].getColorBufferTexture());
             cooldownTextures[i].flip(false, true);
         }
@@ -90,7 +94,7 @@ public class PlayerHelper implements Disposable {
         drawToBuffer(healthBuffer, healthColor, healthGradient, healthPerc, healthCam.combined);
         drawToBuffer(resourceBuffer, resourceColor, healthGradient, resourcePerc, healthCam.combined);
         for (int i = 0; i < abilityBuffers.length; i++) {
-            drawToBuffer(abilityBuffers[i], cooldownColor, cooldownGradient, abilityPercents[i], cooldownCam.combined);
+            drawToBuffer(abilityBuffers[i], cooldownColor, i == 0 ? passiveGradient : cooldownGradient, abilityPercents[i], cooldownCam.combined);
         }
     }
 
@@ -103,7 +107,7 @@ public class PlayerHelper implements Disposable {
         shaderBatch.begin();
         shaderBatch.setColor(color);
         shader.setUniformf("u_gradient", perc);
-        shaderBatch.draw(gradient, -buffer.getWidth()/2, -buffer.getHeight()/2);
+        shaderBatch.draw(gradient, -buffer.getWidth() / 2, -buffer.getHeight() / 2);
         shaderBatch.end();
         buffer.end();
     }
