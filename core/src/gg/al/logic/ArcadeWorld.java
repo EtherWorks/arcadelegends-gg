@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.g3d.decals.Decal;
 import com.badlogic.gdx.graphics.g3d.decals.DecalBatch;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Plane;
 import com.badlogic.gdx.math.Vector2;
@@ -25,6 +26,7 @@ import gg.al.game.AL;
 import gg.al.graphics.CameraLayerGroupStrategy;
 import gg.al.graphics.renderer.CharacterRenderer;
 import gg.al.logic.component.*;
+import gg.al.logic.component.data.Item;
 import gg.al.logic.component.data.Template;
 import gg.al.logic.entity.Entities;
 import gg.al.logic.entity.EntityArguments;
@@ -39,6 +41,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 /**
@@ -113,6 +116,55 @@ public class ArcadeWorld implements Disposable {
 
         physicsWorld = new World(Vector2.Zero, true);
 
+        PolygonShape shapeSide = new PolygonShape();
+        shapeSide.set(new Vector2[]{
+                new Vector2(0, mapHeight + 2),
+                new Vector2(0, 0),
+                new Vector2(1, 1),
+                new Vector2(1, mapHeight + 1)
+        });
+        PolygonShape shapeBot = new PolygonShape();
+        shapeBot.set(new Vector2[]{
+                new Vector2(mapWidth + 2, 0),
+                new Vector2(0, 0),
+                new Vector2(1, 1),
+                new Vector2(mapWidth + 1, 1)
+        });
+
+
+        FixtureDef fixtureDef = new FixtureDef();
+        BodyDef bodyDef = new BodyDef();
+        bodyDef.type = BodyDef.BodyType.StaticBody;
+
+        fixtureDef.shape = shapeBot;
+
+        Body body = physicsWorld.createBody(bodyDef);
+        body.setTransform(-1.5f, -1.5f, body.getAngle());
+        Fixture fixture = body.createFixture(fixtureDef);
+
+        body = physicsWorld.createBody(bodyDef);
+        body.setTransform(-1.5f, -1.5f, body.getAngle());
+        fixtureDef.shape = shapeSide;
+        fixture = body.createFixture(fixtureDef);
+
+        bodyDef.angle = (float) Math.toRadians(180);
+        body = physicsWorld.createBody(bodyDef);
+        body.setTransform(mapWidth + 0.5f, mapHeight + 0.5f, body.getAngle());
+        fixtureDef.shape = shapeSide;
+        fixture = body.createFixture(fixtureDef);
+
+        body = physicsWorld.createBody(bodyDef);
+        body.setTransform(mapWidth + 0.5f, mapHeight + 0.5f, body.getAngle());
+        fixtureDef.shape = shapeBot;
+        fixture = body.createFixture(fixtureDef);
+
+//        body = physicsWorld.createBody(bodyDef);
+//        body.setTransform(-1.5f, -1.5f, body.getAngle());
+//        fixtureDef.shape = shapeSide;
+//        fixture = body.createFixture(fixtureDef);
+
+        shapeBot.dispose();
+        shapeSide.dispose();
 
         debugPhysicrender = new Box2DDebugRenderer();
         WorldConfiguration worldConfiguration = new WorldConfigurationBuilder()
@@ -132,35 +184,47 @@ public class ArcadeWorld implements Disposable {
 
         physicsWorld.setContactListener(new ContactListener() {
 
-            @Override
-            public void beginContact(Contact contact) {
-                int entityIdA = (int) contact.getFixtureA().getBody().getUserData();
-                int entityIdB = (int) contact.getFixtureB().getBody().getUserData();
-                CharacterComponent inputA = entityWorld.getMapper(CharacterComponent.class).get(entityIdA);
-                CharacterComponent inputB = entityWorld.getMapper(CharacterComponent.class).get(entityIdB);
+            private void resetPos(int entity, Fixture fixture) {
+                CharacterComponent input = entityWorld.getMapper(CharacterComponent.class).get(entity);
+                PositionComponent positionA = entityWorld.getMapper(PositionComponent.class).get(entity);
+                fixture.getBody().setLinearVelocity(Vector2.Zero);
+                positionA.resetPos = true;
+                input.move.set(positionA.position);
+                RenderComponent renderComponent = entityWorld.getMapper(RenderComponent.class).get(entity);
+                renderComponent.setRenderState(CharacterRenderer.PlayerRenderState.IDLE);
+            }
 
-                if (inputA != null && inputB != null) {
-                    PositionComponent positionA = entityWorld.getMapper(PositionComponent.class).get(entityIdA);
-                    PositionComponent positionB = entityWorld.getMapper(PositionComponent.class).get(entityIdB);
-                    contact.getFixtureA().getBody().setLinearVelocity(Vector2.Zero);
-                    contact.getFixtureB().getBody().setLinearVelocity(Vector2.Zero);
-                    positionA.resetPos = true;
-                    positionB.resetPos = true;
-                    inputA.move.set(positionA.position);
-                    inputB.move.set(positionB.position);
-                    RenderComponent renderComponentA = entityWorld.getMapper(RenderComponent.class).get(entityIdA);
-                    RenderComponent renderComponentB = entityWorld.getMapper(RenderComponent.class).get(entityIdB);
-                    renderComponentA.setRenderState(CharacterRenderer.PlayerRenderState.IDLE);
-                    renderComponentB.setRenderState(CharacterRenderer.PlayerRenderState.IDLE);
+            private void handleOne(Object one, Object other, Fixture fixOne, Fixture fixOther, Contact contact) {
+                if (one == null)
+                    return;
+                int entity = (int) one;
+
+                CharacterComponent input = entityWorld.getMapper(CharacterComponent.class).get(entity);
+                if (input != null) {
+                    if (other == null) {
+                        resetPos(entity, fixOne);
+                    } else {
+                        CharacterComponent inputOther = entityWorld.getMapper(CharacterComponent.class).get(entity);
+                        if (inputOther == null) {
+                            resetPos(entity, fixOne);
+                            resetPos((int) other, fixOther);
+                        }
+                    }
                 }
 
-                BulletComponent bulletA = entityWorld.getMapper(BulletComponent.class).get(entityIdA);
-                BulletComponent bulletB = entityWorld.getMapper(BulletComponent.class).get(entityIdB);
+                BulletComponent bullet = entityWorld.getMapper(BulletComponent.class).get(entity);
+                if (bullet != null && other != null)
+                    bullet.collisionCallback.onCollision(entity, (int) other, fixOne, fixOther, contact);
+                else if (bullet != null && other == null)
+                    bullet.delete = true;
+            }
 
-                if (bulletA != null && bulletA.collisionCallback != null)
-                    bulletA.collisionCallback.onCollision(entityIdA, entityIdB, contact.getFixtureA(), contact.getFixtureB(), contact);
-                if (bulletB != null && bulletB.collisionCallback != null)
-                    bulletB.collisionCallback.onCollision(entityIdB, entityIdA, contact.getFixtureB(), contact.getFixtureA(), contact);
+            @Override
+            public void beginContact(Contact contact) {
+                Object uA = contact.getFixtureA().getBody().getUserData();
+                Object uB = contact.getFixtureB().getBody().getUserData();
+                handleOne(uA, uB, contact.getFixtureA(), contact.getFixtureB(), contact);
+                handleOne(uB, uA, contact.getFixtureB(), contact.getFixtureA(), contact);
             }
 
             @Override
@@ -307,6 +371,37 @@ public class ArcadeWorld implements Disposable {
         EntityArguments arguments = EntityArguments.fromFile(fileName);
         loadedEntityArguments.put(fileName, arguments);
         return arguments;
+    }
+
+    public Vector2 getSpawnPosition() {
+        return new Vector2(
+                tiledMap.getProperties().get("spawnX", Integer.class),
+                tiledMap.getProperties().get("spawnY", Integer.class)
+        );
+    }
+
+    public int spawnPlayer() {
+        Vector2 mapCoord = getSpawnPosition();
+
+        EntityArguments arguments;
+        arguments = getArguments("super_ghost.json");
+        PositionComponent.PositionTemplate positionDef = arguments.get("PositionComponent", PositionComponent.PositionTemplate.class);
+        float posX = positionDef.x;
+        float posY = positionDef.y;
+        positionDef.x = (int) mapCoord.x;
+        positionDef.y = (int) mapCoord.y;
+        int playerEnt = spawn(Entities.Player, arguments);
+        positionDef.x = posX;
+        positionDef.y = posY;
+        InventoryComponent inventoryComponent = entityWorld.getMapper(InventoryComponent.class).get(playerEnt);
+        inventoryComponent.items[0] = Item.builder().name("Armor")
+                .flatStat(StatComponent.BaseStat.armor, 50f)
+                .flatStat(StatComponent.BaseStat.cooldownReduction, 0.1f)
+                .build();
+        inventoryComponent.items[1] = Item.builder().name("Staff")
+                .flatStat(StatComponent.BaseStat.spellPower, 20f)
+                .build();
+        return playerEnt;
     }
 
     public EntityArguments getArguments(String fileName) {

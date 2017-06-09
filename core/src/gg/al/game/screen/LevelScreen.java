@@ -232,7 +232,7 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
 
     @Override
     public void render(float delta) {
-        AL.graphics.getGL20().glClearColor(0, 0, 0, 1);
+        AL.graphics.getGL20().glClearColor(0, 0.3f, 0, 1);
         AL.graphics.getGL20().glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 
         arcadeWorld.setDelta(AL.graphics.getDeltaTime());
@@ -252,22 +252,18 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
         }
 
 
-
         if (playerHelper != null) {
             spriteBatch.draw(playerHelper.getHealthTexture(), 50, 142, 190, 95);
-            spriteBatch.draw(playerHelper.getResourceTexture(), 68,142, 150,75);
+            spriteBatch.draw(playerHelper.getResourceTexture(), 68, 142, 150, 75);
 
 
-            spriteBatch.draw(playerHelper.getCooldownTextures()[Character.ABILITY_1], 275, 155, 50,50);
+            spriteBatch.draw(playerHelper.getCooldownTextures()[Character.ABILITY_1], 275, 155, 50, 50);
             spriteBatch.draw(levelAssets.ability2, 359, 155, 50, 50);
-            spriteBatch.draw(playerHelper.getCooldownTextures()[Character.ABILITY_2], 359, 155, 50,50);
+            spriteBatch.draw(playerHelper.getCooldownTextures()[Character.ABILITY_2], 359, 155, 50, 50);
             spriteBatch.draw(levelAssets.ability3, 448, 154, 50, 50);
-            spriteBatch.draw(playerHelper.getCooldownTextures()[Character.ABILITY_3], 448, 154, 50,50);
-            spriteBatch.draw(playerHelper.getCooldownTextures()[Character.ABILITY_4], 359, 77, 50,50);
+            spriteBatch.draw(playerHelper.getCooldownTextures()[Character.ABILITY_3], 448, 154, 50, 50);
+            spriteBatch.draw(playerHelper.getCooldownTextures()[Character.ABILITY_4], 359, 77, 50, 50);
             spriteBatch.draw(playerHelper.getCooldownTextures()[Character.TRAIT], 276, 79, 48, 48);
-
-
-
 
 
         }
@@ -353,26 +349,10 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
     }
 
     private int spawnPlayer() {
-        Vector2 mapCoord = new Vector2(1, 1);
-        EntityArguments arguments;
-        arguments = arcadeWorld.getArguments("super_ghost.json");
-        PositionComponent.PositionTemplate positionDef = arguments.get("PositionComponent", PositionComponent.PositionTemplate.class);
-        float posX = positionDef.x;
-        float posY = positionDef.y;
-        positionDef.x = (int) mapCoord.x;
-        positionDef.y = (int) mapCoord.y;
-        playerEnt = arcadeWorld.spawn(Entities.Player, arguments);
-        positionDef.x = posX;
-        positionDef.y = posY;
-        InventoryComponent inventoryComponent = arcadeWorld.getEntityWorld().getMapper(InventoryComponent.class).get(playerEnt);
-        inventoryComponent.items[0] = Item.builder().name("Armor")
-                .flatStat(StatComponent.BaseStat.armor, 50f)
-                .flatStat(StatComponent.BaseStat.cooldownReduction, 0.1f)
-                .build();
-        inventoryComponent.items[1] = Item.builder().name("Staff")
-                .flatStat(StatComponent.BaseStat.spellPower, 20f)
-                .build();
+        playerEnt = arcadeWorld.spawnPlayer();
         playerHelper = new PlayerHelper(playerEnt, arcadeWorld, levelAssets);
+        Vector2 pos = arcadeWorld.getSpawnPosition();
+        camera.position.set(pos.x, pos.y - 12, camera.position.z);
         return playerEnt;
     }
 
@@ -383,9 +363,8 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
 
     @Override
     public boolean touchDragged(int screenX, int screenY, int pointer) {
-        if(Gdx.input.isButtonPressed(Input.Buttons.MIDDLE))
-        {
-            camera.translate((lastMousePos.x - screenX)/10, (screenY-lastMousePos.y)/10, 0);
+        if (Gdx.input.isButtonPressed(Input.Buttons.MIDDLE)) {
+            camera.translate((lastMousePos.x - screenX) / 10, (screenY - lastMousePos.y) / 10, 0);
             lastMousePos.set(screenX, screenY);
             camera.update();
         }
