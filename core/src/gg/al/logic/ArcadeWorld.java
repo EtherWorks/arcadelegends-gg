@@ -384,7 +384,7 @@ public class ArcadeWorld implements Disposable {
         Vector2 mapCoord = getSpawnPosition();
 
         EntityArguments arguments;
-        arguments = getArguments("super_ghost.json");
+        arguments = getArguments("kevin.json");
         PositionComponent.PositionTemplate positionDef = arguments.get("PositionComponent", PositionComponent.PositionTemplate.class);
         float posX = positionDef.x;
         float posY = positionDef.y;

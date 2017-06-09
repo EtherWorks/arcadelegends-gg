@@ -78,13 +78,13 @@ public class Assets {
         public Texture health_bar_gradient;
 
 
-        @AssignmentAssetManager.Asset("assets/ui/ability2.png")
+        @AssignmentAssetManager.Asset("assets/ui/ability1.png")
         public Texture ability1;
 
         @AssignmentAssetManager.Asset("assets/ui/ability2.png")
         public Texture ability2;
 
-        @AssignmentAssetManager.Asset("assets/ui/ability3.png")
+        @AssignmentAssetManager.Asset("assets/ui/ability2.png")
         public Texture ability3;
 
         @AssignmentAssetManager.Asset("assets/ui/ability2.png")
