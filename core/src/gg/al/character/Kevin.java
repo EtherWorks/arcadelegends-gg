@@ -21,13 +21,13 @@ import java.util.Random;
 public class Kevin extends Character {
 
     public float ABILITY_2_RANGE = 1.5f;
-    public float ABILITY_4_BOOST = .6f;
+    public float ABILITY_3_BOOST = .6f;
     public String BLEED_NAME = "KevBleed";
     public String BOOST_NAME = "KevBoost";
 
     private StatusEffect.StatusEffectBuilder boost = StatusEffect.builder()
             .effectTime(0)
-            .percentageStat(StatComponent.BaseStat.attackSpeed, ABILITY_4_BOOST)
+            .percentageStat(StatComponent.BaseStat.attackSpeed, ABILITY_3_BOOST)
             .percentageStat(StatComponent.BaseStat.armor, -.5f);
     private StatusEffect.StatusEffectBuilder bleed = StatusEffect.builder()
             .effectTime(5);
@@ -54,12 +54,12 @@ public class Kevin extends Character {
                 }
                 break;
             case ABILITY_3:
+                return true;
+            case ABILITY_4:
                 targetId = getEntityAtMouse();
                 if (targetId == -1)
                     return false;
-                extraData[abilityInd] = targetId;
-                return true;
-            case ABILITY_4:
+                extraData[ABILITY_4] = targetId;
                 return true;
             case TRAIT:
                 return true;
@@ -112,6 +112,9 @@ public class Kevin extends Character {
                 ).build());
                 break;
             case ABILITY_3:
+                ability4_activate = true;
+                break;
+            case ABILITY_4:
                 EntityArguments arguments = getArguments("bullet.json");
                 PositionComponent.PositionTemplate pos = arguments.get(PositionComponent.class.getSimpleName(), PositionComponent.PositionTemplate.class);
                 Vector2 mousePos = getMousePos();
@@ -126,7 +129,7 @@ public class Kevin extends Character {
                 bCon.speed = 2;
                 bCon.move.set(dir);
                 bCon.old.set(pos.x, pos.y);
-                bCon.target = (int) extraData[ABILITY_3];
+                bCon.target = (int) extraData[ABILITY_4];
                 bCon.maxDistance = 20;
                 final float damage = 0.4f;
                 final int caster = entityID;
@@ -139,9 +142,6 @@ public class Kevin extends Character {
                     }
                     contact.setEnabled(false);
                 };
-                break;
-            case ABILITY_4:
-                ability4_activate = true;
                 break;
         }
     }
@@ -178,9 +178,9 @@ public class Kevin extends Character {
                 resetAttack();
                 renderComponent.setRenderState(CharacterRenderer.PlayerRenderState.ABILITY_2);
                 break;
-            case ABILITY_3:
+            case ABILITY_4:
                 resetAttack();
-                renderComponent.setRenderState(CharacterRenderer.PlayerRenderState.ABILITY_3);
+                renderComponent.setRenderState(CharacterRenderer.PlayerRenderState.ABILITY_4);
                 break;
         }
     }

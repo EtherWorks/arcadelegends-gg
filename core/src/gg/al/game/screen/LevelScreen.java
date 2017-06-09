@@ -129,7 +129,7 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
 
             case Input.Keys.O:
                 EntityArguments arguments = null;
-                arguments = arcadeWorld.getArguments("player.json");
+                arguments = arcadeWorld.getArguments("kevin.json");
                 PositionComponent.PositionTemplate pos = arguments.get(PositionComponent.class.getSimpleName(), PositionComponent.PositionTemplate.class);
                 pos.x = 5;
                 pos.y = 5;
@@ -202,16 +202,17 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
             uiFontSmall = levelAssets.uifontsmall;
             uiLabelStyle = new Label.LabelStyle(uiFontSmall, Color.WHITE);
             attackPointsLabel = new Label("0 AP", uiLabelStyle);
-            attackPointsLabel.setPosition(465,115);
-     //       uiStage.addActor(attackPointsLabel);
+            attackPointsLabel.setPosition(465, 115);
+            //       uiStage.addActor(attackPointsLabel);
 
             spellPowerLabel = new Label("0 SP", uiLabelStyle);
             spellPowerLabel.setPosition(465, 82);
-          //  uiStage.addActor(spellPowerLabel);
+            //  uiStage.addActor(spellPowerLabel);
 
             reInit = false;
             playerEnt = -1;
-            tr = new TextureRegion(levelAssets.cooldown_gradient, levelAssets.cooldown_gradient.getWidth(), levelAssets.cooldown_gradient.getHeight());
+
+            spawnPlayer();
         }
 
         Gdx.input.setInputProcessor(this);
@@ -233,30 +234,27 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
 
         spriteBatch.setProjectionMatrix(uiCamera.combined);
         spriteBatch.begin();
-        spriteBatch.draw(levelAssets.uioverlay, 10, 10, levelAssets.uioverlay.getWidth() /2 , levelAssets.uioverlay.getHeight() / 2);
+        spriteBatch.draw(levelAssets.uioverlay, 10, 10, levelAssets.uioverlay.getWidth() / 2, levelAssets.uioverlay.getHeight() / 2);
 
-        if(playerEnt != -1)
-        {
+        if (playerEnt != -1) {
             StatComponent stats = arcadeWorld.getEntityWorld().getMapper(StatComponent.class).get(playerEnt);
             actionPointsLabel.setText(String.format("%1.0f", stats.getRuntimeStat(StatComponent.RuntimeStat.actionPoints)));
         }
 
 
-
         if (playerHelper != null) {
             spriteBatch.draw(playerHelper.getHealthTexture(), 60, 150, 678, 400);
-            spriteBatch.draw(playerHelper.getResourceTexture(), 300,148/*, 550, 300*/);
+            spriteBatch.draw(playerHelper.getResourceTexture(), 300, 148/*, 550, 300*/);
             /*for (int i = 0; i < playerHelper.getCooldownTextures().length; i++) {
                 spriteBatch.draw(playerHelper.getCooldownTextures()[i], 250 + 50 * i, 100, 200, 100);
 
             }
             */
-           // spriteBatch.draw(playerHelper.getCooldownTextures()[Character.ABILITY_1], AL.graphics.getWidth() / 6.464f, AL.graphics.getHeight() / 6.35f, AL.graphics.getWidth() / 38.4f, AL.graphics.getHeight() / 21.6f);
-             spriteBatch.draw(playerHelper.getCooldownTextures()[Character.ABILITY_1], 500, 100);
+            // spriteBatch.draw(playerHelper.getCooldownTextures()[Character.ABILITY_1], AL.graphics.getWidth() / 6.464f, AL.graphics.getHeight() / 6.35f, AL.graphics.getWidth() / 38.4f, AL.graphics.getHeight() / 21.6f);
+            spriteBatch.draw(playerHelper.getCooldownTextures()[Character.ABILITY_1], 500, 100);
 
             //spriteBatch.draw(levelAssets.cooldown_gradient, 297, 170, 50, 50);
             //spriteBatch.draw(tr, 347, 170, 50, 50);
-
 
 
         }
@@ -321,36 +319,14 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
         Vector2 mapCoord = new Vector2(Math.round(worldcoor.x), Math.round(worldcoor.y));
         switch (button) {
             case Input.Buttons.LEFT:
-                if (playerEnt == -1) {
-                    EntityArguments arguments;
-                    arguments = arcadeWorld.getArguments("ezreal.json");
-                    PositionComponent.PositionTemplate positionDef = arguments.get("PositionComponent", PositionComponent.PositionTemplate.class);
-                    float posX = positionDef.x;
-                    float posY = positionDef.y;
-                    positionDef.x = (int) mapCoord.x;
-                    positionDef.y = (int) mapCoord.y;
-                    playerEnt = arcadeWorld.spawn(Entities.Player, arguments);
-                    positionDef.x = posX;
-                    positionDef.y = posY;
-                    InventoryComponent inventoryComponent = arcadeWorld.getEntityWorld().getMapper(InventoryComponent.class).get(playerEnt);
-                    inventoryComponent.items[0] = Item.builder().name("Armor")
-                            .flatStat(StatComponent.BaseStat.armor, 50f)
-                            .flatStat(StatComponent.BaseStat.cooldownReduction, 0.1f)
-                            .build();
-                    inventoryComponent.items[1] = Item.builder().name("Staff")
-                            .flatStat(StatComponent.BaseStat.spellPower, 20f)
-                            .build();
-                    playerHelper = new PlayerHelper(playerEnt, arcadeWorld, levelAssets);
-                } else {
-                    CharacterComponent input = arcadeWorld.getEntityWorld().getComponentOf(playerEnt, CharacterComponent.class);
-                    input.move.set((int) mapCoord.x, (int) mapCoord.y);
-                }
+                CharacterComponent input = arcadeWorld.getEntityWorld().getComponentOf(playerEnt, CharacterComponent.class);
+                input.move.set((int) mapCoord.x, (int) mapCoord.y);
                 break;
             case Input.Buttons.RIGHT:
                 Tile t = arcadeWorld.getTile(mapCoord);
                 try {
                     int id = t.getEntities().first();
-                    CharacterComponent input = arcadeWorld.getEntityWorld().getMapper(CharacterComponent.class).get(playerEnt);
+                    input = arcadeWorld.getEntityWorld().getMapper(CharacterComponent.class).get(playerEnt);
                     input.targetId = id;
                     log.debug("{}", id);
                 } catch (IllegalStateException ex) {
@@ -360,6 +336,31 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
         }
 
         return false;
+    }
+
+    private int spawnPlayer()
+    {
+        Vector2 mapCoord = new Vector2(1,1);
+        EntityArguments arguments;
+        arguments = arcadeWorld.getArguments("kevin.json");
+        PositionComponent.PositionTemplate positionDef = arguments.get("PositionComponent", PositionComponent.PositionTemplate.class);
+        float posX = positionDef.x;
+        float posY = positionDef.y;
+        positionDef.x = (int) mapCoord.x;
+        positionDef.y = (int) mapCoord.y;
+        playerEnt = arcadeWorld.spawn(Entities.Player, arguments);
+        positionDef.x = posX;
+        positionDef.y = posY;
+        InventoryComponent inventoryComponent = arcadeWorld.getEntityWorld().getMapper(InventoryComponent.class).get(playerEnt);
+        inventoryComponent.items[0] = Item.builder().name("Armor")
+                .flatStat(StatComponent.BaseStat.armor, 50f)
+                .flatStat(StatComponent.BaseStat.cooldownReduction, 0.1f)
+                .build();
+        inventoryComponent.items[1] = Item.builder().name("Staff")
+                .flatStat(StatComponent.BaseStat.spellPower, 20f)
+                .build();
+        playerHelper = new PlayerHelper(playerEnt, arcadeWorld, levelAssets);
+        return playerEnt;
     }
 
     @Override

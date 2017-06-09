@@ -179,7 +179,7 @@
         "frameDuration": 0.025,
         "texture": "autoattack"
       },
-      "ABILITY_3": {
+      "ABILITY_4": {
         "frameColumns": 5,
         "frameRows": 8,
         "frameDuration": 0.025,
