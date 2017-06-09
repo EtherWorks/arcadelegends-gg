@@ -238,7 +238,9 @@ public class Ezreal extends Character {
         bCon.old.set(pos.x, pos.y);
         bCon.target = enemyId;
         bCon.maxDistance = Float.MAX_VALUE;
-        final float damage = stats.getCurrentStat(StatComponent.BaseStat.attackDamage);
+        final float damage = random.nextFloat() <= stats.getCurrentStat(StatComponent.BaseStat.criticalStrikeChance) ?
+                stats.getCurrentStat(StatComponent.BaseStat.attackDamage) * (2 + stats.getCurrentStat(StatComponent.BaseStat.criticalStrikeDamage)) :
+                stats.getCurrentStat(StatComponent.BaseStat.attackDamage);
         final int caster = entityID;
         bCon.collisionCallback = (bullet, hit, bFix, hFix, contact) -> {
             BulletComponent bulletComponent = getComponent(bullet, BulletComponent.class);

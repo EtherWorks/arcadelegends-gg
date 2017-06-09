@@ -20,6 +20,7 @@ import gg.al.logic.entity.Entities;
 import gg.al.logic.entity.EntityArguments;
 import gg.al.logic.map.Tile;
 
+import java.util.Random;
 
 /**
  * Created by Thomas Neumann on 23.05.2017.<br />
@@ -46,6 +47,7 @@ public abstract class Character {
     protected float attackTimer;
     protected float prepTime;
     protected int entityID;
+    protected Random random;
     private ArcadeWorld arcadeWorld;
 
     public Character() {
@@ -55,6 +57,7 @@ public abstract class Character {
         this.extraData = new Object[5];
         this.cooldowns = new float[5];
         this.costs = new float[5];
+        this.random = new Random();
 
         finishedAttack = true;
 
@@ -69,6 +72,22 @@ public abstract class Character {
                 object.setZero();
             }
         };
+    }
+
+    public static float getCooldown(int ability, StatComponent stats) {
+        switch (ability) {
+            case TRAIT:
+                return stats.getCurrentStat(StatComponent.BaseStat.cooldownTrait);
+            case ABILITY_1:
+                return stats.getCurrentStat(StatComponent.BaseStat.cooldownAbility1);
+            case ABILITY_2:
+                return stats.getCurrentStat(StatComponent.BaseStat.cooldownAbility2);
+            case ABILITY_3:
+                return stats.getCurrentStat(StatComponent.BaseStat.cooldownAbility3);
+            case ABILITY_4:
+                return stats.getCurrentStat(StatComponent.BaseStat.cooldownAbility4);
+        }
+        throw new IllegalArgumentException("No ability with index" + ability);
     }
 
     public boolean isCasting() {
@@ -137,7 +156,6 @@ public abstract class Character {
     public float getCooldownTimer(int ability) {
         return cooldownTimer[ability];
     }
-
 
     public void tick(float delta) {
         for (int i = 0; i < cooldownTimer.length; i++) {
@@ -216,8 +234,11 @@ public abstract class Character {
 
     public void attack(int enemyId) {
         StatComponent stats = getComponent(entityID, StatComponent.class);
+        float amount = stats.getCurrentStat(StatComponent.BaseStat.attackDamage);
+        if (random.nextFloat() <= stats.getCurrentStat(StatComponent.BaseStat.criticalStrikeChance))
+            amount *= (2 + stats.getCurrentStat(StatComponent.BaseStat.criticalStrikeDamage));
         Damage dmg = new Damage(Damage.DamageType.Normal,
-                stats.getCurrentStat(StatComponent.BaseStat.attackDamage),
+                amount,
                 stats.getCurrentStat(StatComponent.BaseStat.armorPenetration));
         getComponent(enemyId, StatComponent.class).damages.add(dmg);
     }
@@ -337,22 +358,6 @@ public abstract class Character {
 
     public Tile getTile(int x, int y) {
         return arcadeWorld.getLogicMap().getTile(x, y);
-    }
-
-    public static float getCooldown(int ability, StatComponent stats) {
-        switch (ability) {
-            case TRAIT:
-                return stats.getCurrentStat(StatComponent.BaseStat.cooldownTrait);
-            case ABILITY_1:
-                return stats.getCurrentStat(StatComponent.BaseStat.cooldownAbility1);
-            case ABILITY_2:
-                return stats.getCurrentStat(StatComponent.BaseStat.cooldownAbility2);
-            case ABILITY_3:
-                return stats.getCurrentStat(StatComponent.BaseStat.cooldownAbility3);
-            case ABILITY_4:
-                return stats.getCurrentStat(StatComponent.BaseStat.cooldownAbility4);
-        }
-        throw new IllegalArgumentException("No ability with index" + ability);
     }
 
     public Color getAbilityOverlay(int ability) {
