@@ -80,7 +80,6 @@ public class RenderSystem extends BaseEntitySystem {
 
         this.spriteBatch = new SpriteBatch();
         this.font = assets.uifont;
-        //font.getData().setScale(5);
         font.setColor(Color.BLACK);
         this.uiCamera = new OrthographicCamera();
 

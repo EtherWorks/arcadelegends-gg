@@ -111,7 +111,7 @@ public class CharacterRenderer implements RenderComponent.RenderDelegate {
 
         TextureRegion uiTextureRegion = new TextureRegion(buffer.getColorBufferTexture());
         uiTextureRegion.flip(false, true);
-        Decal uiDecal = Decal.newDecal(1.5f, 0.5f, uiTextureRegion, true);
+        Decal uiDecal = Decal.newDecal(1.8f, 1f, uiTextureRegion, true);
         uiDecal.setPosition(position.position.x, position.position.y, 1);
         renderSystem.getUiMap().put(entityId, uiDecal);
     }
@@ -164,10 +164,10 @@ public class CharacterRenderer implements RenderComponent.RenderDelegate {
         renderSystem.getSpriteBatch().begin();
         //renderSystem.getFont().draw(renderSystem.getSpriteBatch(), String.format("%1.0f", stats.getRuntimeStat(StatComponent.RuntimeStat.actionPoints)), 0, buffer.getHeight());
 
-        renderSystem.getSpriteBatch().draw(resourceBars.get(entityId), 50 - UI_WIDTH / 2, -UI_HEIGHT / 2 + RESOURCE_OFFSET, 175, 75);
-        renderSystem.getSpriteBatch().draw(healthBars.get(entityId), 50 - UI_WIDTH / 2, 0, 200, 100);
+        renderSystem.getSpriteBatch().draw(resourceBars.get(entityId), 50 - UI_WIDTH / 2, -UI_HEIGHT / 2 + RESOURCE_OFFSET, 175, 75 / 2);
+        renderSystem.getSpriteBatch().draw(healthBars.get(entityId), 50 - UI_WIDTH / 2, -30, 200, 100 / 2);
         renderSystem.getFont().draw(renderSystem.getSpriteBatch(), String.format("%1.0f", stats.getRuntimeStat(StatComponent.RuntimeStat.actionPoints)),
-                -UI_WIDTH / 2, 30);
+                -UI_WIDTH / 2 - 8, 20);
         renderSystem.getSpriteBatch().end();
         buffer.end();
 
