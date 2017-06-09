@@ -73,6 +73,14 @@ public class RenderComponent extends PooledComponent implements ITemplateable {
         return flipX;
     }
 
+    public void faceLeft() {
+        flipX = true;
+    }
+
+    public void faceRight() {
+        flipX = false;
+    }
+
     public boolean isInState(String state) {
         return renderState.equals(state);
     }

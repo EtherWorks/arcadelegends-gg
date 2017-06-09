@@ -22,6 +22,7 @@ import java.util.Random;
 public class Kevin extends Character {
 
     public static final String[] ICON_NAMES = {"trait", "ability1", "ability2", "ability3", "ability4"};
+    public static final String[] ATTACK_SOUNDS = {"sword_1", "sword_2", "sword_3", "sword_4"};
     private static final Color INACTIVE_COLOR = new Color(.3f, .3f, .3f, .8f);
     public float ABILITY_2_RANGE = 1.5f;
     public String BLEED_NAME = "KevBleed";
@@ -180,7 +181,7 @@ public class Kevin extends Character {
     @Override
     public void attack(int enemyId) {
         super.attack(enemyId);
-        AL.getAudioManager().playSound("sword_" + (random.nextInt(3) + 1));
+        AL.getAudioManager().playSound(ATTACK_SOUNDS[random.nextInt(ATTACK_SOUNDS.length)]);
     }
 
     @Override
@@ -194,10 +195,22 @@ public class Kevin extends Character {
             case ABILITY_2:
                 resetAttack();
                 renderComponent.setRenderState(CharacterRenderer.PlayerRenderState.ABILITY_2);
+                PositionComponent target = getComponent((Integer) extraData[ABILITY_2], PositionComponent.class);
+                Vector2 pos = getCharacterPosition();
+                if (pos.x < target.position.x)
+                    renderComponent.faceRight();
+                else if (pos.x > target.position.x)
+                    renderComponent.faceLeft();
                 break;
             case ABILITY_4:
                 resetAttack();
                 renderComponent.setRenderState(CharacterRenderer.PlayerRenderState.ABILITY_4);
+                target = getComponent((Integer) extraData[ABILITY_4], PositionComponent.class);
+                pos = getCharacterPosition();
+                if (pos.x < target.position.x)
+                    renderComponent.faceRight();
+                else if (pos.x > target.position.x)
+                    renderComponent.faceLeft();
                 break;
         }
     }
@@ -205,7 +218,7 @@ public class Kevin extends Character {
     @Override
     public Color getAbilityOverlay(int ability) {
         StatComponent stat = getComponent(entityID, StatComponent.class);
-        return ability == ABILITY_1 && !stat.statusEffects.containsKey(BOOST_NAME) ? INACTIVE_COLOR : null;
+        return ability == ABILITY_3 && !stat.statusEffects.containsKey(BOOST_NAME) ? INACTIVE_COLOR : null;
     }
 
     @Override
