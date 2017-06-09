@@ -8,8 +8,6 @@ import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.utils.Disposable;
-import com.badlogic.gdx.utils.viewport.FitViewport;
-import com.badlogic.gdx.utils.viewport.Viewport;
 import gg.al.character.Character;
 import gg.al.logic.ArcadeWorld;
 import gg.al.logic.component.CharacterComponent;
@@ -22,17 +20,15 @@ import gg.al.util.Shaders;
  */
 public class PlayerHelper implements Disposable {
 
-    private Sprite[] abilityOverlaySprites = new Sprite[5];
-
     private final int entityId;
     private final ArcadeWorld arcadeWorld;
-
     private final float[] abilityPercents = new float[5];
     private final FrameBuffer[] abilityBuffers = new FrameBuffer[5];
     private final TextureRegion[] cooldownTextures = new TextureRegion[5];
-
     float resourcePerc = 0;
     float healthPerc = 0;
+    private Sprite[] abilityOverlaySprites = new Sprite[5];
+    private Texture[] icons = new Texture[5];
     private FrameBuffer resourceBuffer;
     private TextureRegion resourceTexture;
     private FrameBuffer healthBuffer;
@@ -53,6 +49,10 @@ public class PlayerHelper implements Disposable {
     private Color cooldownColor = new Color(0.7f, 0.7f, 0.7f, 0.8f);
 
     public PlayerHelper(int entityId, ArcadeWorld arcadeWorld, Assets.LevelAssets assets) {
+        String[] iNames = arcadeWorld.getEntityWorld().getMapper(CharacterComponent.class).get(entityId).character.getIconNames();
+        for (int i = 0; i < icons.length; i++) {
+            icons[i] = arcadeWorld.getLevelAssets().get(iNames[i]);
+        }
         this.entityId = entityId;
         this.arcadeWorld = arcadeWorld;
         shader = new ShaderProgram(Shaders.GradientShader.vertexShader, Shaders.GradientShader.fragmentShader);
@@ -82,11 +82,19 @@ public class PlayerHelper implements Disposable {
         }
 
         for (int i = 0; i < abilityOverlaySprites.length; i++) {
-            Pixmap pixmap = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
-            pixmap.setColor(Color.WHITE);
-            pixmap.fill();
-            abilityOverlaySprites[i] = new Sprite(new Texture(pixmap));
-            pixmap.dispose();
+            if (i == 0) {
+                Pixmap pixmap = new Pixmap(passiveGradient.getRegionWidth(), passiveGradient.getRegionHeight(), Pixmap.Format.RGBA8888);
+                pixmap.setColor(Color.WHITE);
+                pixmap.fillCircle(passiveGradient.getRegionWidth() / 2, passiveGradient.getRegionHeight() / 2, passiveGradient.getRegionHeight() / 2);
+                abilityOverlaySprites[i] = new Sprite(new Texture(pixmap));
+                pixmap.dispose();
+            } else {
+                Pixmap pixmap = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
+                pixmap.setColor(Color.WHITE);
+                pixmap.fill();
+                abilityOverlaySprites[i] = new Sprite(new Texture(pixmap));
+                pixmap.dispose();
+            }
         }
     }
 
@@ -147,6 +155,10 @@ public class PlayerHelper implements Disposable {
 
     public int getEntityId() {
         return entityId;
+    }
+
+    public Texture getIcon(int ability) {
+        return icons[ability];
     }
 
     @Override

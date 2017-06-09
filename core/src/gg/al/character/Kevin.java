@@ -21,16 +21,15 @@ import java.util.Random;
 @Slf4j
 public class Kevin extends Character {
 
+    public static final String[] ICON_NAMES = {"trait", "ability1", "ability2", "ability3", "ability4"};
+    private static final Color INACTIVE_COLOR = new Color(.3f, .3f, .3f, .8f);
     public float ABILITY_2_RANGE = 1.5f;
     public String BLEED_NAME = "KevBleed";
     public String BOOST_NAME = "KevBoost";
-
     private StatusEffect.StatusEffectBuilder bleed = StatusEffect.builder()
             .effectTime(5);
     private boolean ability4_activate = false;
     private Random random = new Random();
-
-    private static final Color INACTIVE_COLOR = new Color(.3f, .3f, .3f, .8f);
 
     @Override
     protected void onTick(float delta) {
@@ -206,7 +205,7 @@ public class Kevin extends Character {
     @Override
     public Color getAbilityOverlay(int ability) {
         StatComponent stat = getComponent(entityID, StatComponent.class);
-        return stat.statusEffects.containsKey(BOOST_NAME) && ability == ABILITY_3 ? null : INACTIVE_COLOR;
+        return ability == ABILITY_1 && !stat.statusEffects.containsKey(BOOST_NAME) ? INACTIVE_COLOR : null;
     }
 
     @Override
@@ -218,20 +217,7 @@ public class Kevin extends Character {
     }
 
     @Override
-    protected String getIconName(int ability) {
-        switch (ability) {
-            case ABILITY_1:
-                return "ability1";
-            case ABILITY_2:
-                return "ability2";
-            case ABILITY_3:
-                return "ability3";
-            case ABILITY_4:
-                return "ability4";
-            case TRAIT:
-                return "trait";
-            default:
-                return "";
-        }
+    public String[] getIconNames() {
+        return ICON_NAMES;
     }
 }

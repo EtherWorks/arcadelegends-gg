@@ -14,10 +14,6 @@ import gg.al.logic.entity.EntityArguments;
  */
 public class SuperGhost extends Character {
 
-    @Override
-    protected String getIconName(int ability) {
-        return "";
-    }
 
     @Override
     protected void castBegin(int ability) {

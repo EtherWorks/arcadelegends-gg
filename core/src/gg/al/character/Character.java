@@ -32,7 +32,7 @@ public abstract class Character {
     public static final int ABILITY_2 = 2;
     public static final int ABILITY_3 = 3;
     public static final int ABILITY_4 = 4;
-
+    private static String[] ICON_NAMES = new String[5];
     protected final float[] cooldownTimer;
     protected final float[] castTimer;
     protected final boolean[] casting;
@@ -245,7 +245,9 @@ public abstract class Character {
 
     protected abstract void castBegin(int ability);
 
-    protected abstract String getIconName(int ability);
+    public String[] getIconNames() {
+        return ICON_NAMES;
+    }
 
     protected abstract void onTick(float delta);
 
@@ -263,8 +265,7 @@ public abstract class Character {
         return finishedAttack;
     }
 
-    protected float modifyCost(int ability, float cost)
-    {
+    protected float modifyCost(int ability, float cost) {
         return cost;
     }
 

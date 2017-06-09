@@ -14,15 +14,14 @@ import gg.al.logic.entity.EntityArguments;
  * Created by Thomas Neumann on 03.06.2017.
  */
 public class Ezreal extends Character {
+    public static final String[] ICON_NAMES = {"trait", "ability1", "ability2", "ability3", "ability4"};
     private static float PASSIVE_DURATION = 5f;
     private static int PASSIVE_MAX_STACK = 5;
     private static float PASSIVE_ATTACKSPEED_PERCENT = .15f;
-
     private static float ABILITY_1_MAX_DISTANCE = 7;
     private static float ABILITY_2_MAX_DISTANCE = 5;
     private static float ABILITY_4_MAX_DISTANCE = 3;
     private static StatusEffect.StatusEffectBuilder ABILITY_2_BOOST = StatusEffect.builder().effectTime(2).percentageStat(StatComponent.BaseStat.attackSpeed, 0.3f);
-
     private int passive_stacks;
     private float passive_tick;
 
@@ -49,8 +48,8 @@ public class Ezreal extends Character {
     }
 
     @Override
-    protected String getIconName(int ability) {
-        return "";
+    public String[] getIconNames() {
+        return ICON_NAMES;
     }
 
     @Override
@@ -241,7 +240,6 @@ public class Ezreal extends Character {
         final float damage = random.nextFloat() <= stats.getCurrentStat(StatComponent.BaseStat.criticalStrikeChance) ?
                 stats.getCurrentStat(StatComponent.BaseStat.attackDamage) * (2 + stats.getCurrentStat(StatComponent.BaseStat.criticalStrikeDamage)) :
                 stats.getCurrentStat(StatComponent.BaseStat.attackDamage);
-        final int caster = entityID;
         bCon.collisionCallback = (bullet, hit, bFix, hFix, contact) -> {
             BulletComponent bulletComponent = getComponent(bullet, BulletComponent.class);
             if (bulletComponent.target == hit) {

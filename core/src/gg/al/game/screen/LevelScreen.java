@@ -29,11 +29,9 @@ import gg.al.game.AL;
 import gg.al.game.PlayerHelper;
 import gg.al.logic.ArcadeWorld;
 import gg.al.logic.component.CharacterComponent;
-import gg.al.logic.component.InventoryComponent;
 import gg.al.logic.component.PositionComponent;
 import gg.al.logic.component.StatComponent;
 import gg.al.logic.component.data.Damage;
-import gg.al.logic.component.data.Item;
 import gg.al.logic.component.data.StatusEffect;
 import gg.al.logic.entity.Entities;
 import gg.al.logic.entity.EntityArguments;
@@ -52,6 +50,7 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
     private final String mapName;
     private final float rot;
     private final InputMapper inputMapper;
+    TextureRegion tr;
     private int playerEnt = -1;
     private TiledMap map;
     private PerspectiveCamera camera;
@@ -62,22 +61,18 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
     private boolean reInit;
     private Assets.LevelAssets levelAssets;
     private PlayerHelper playerHelper;
-
     private Stage uiStage;
     private Viewport uiViewport;
     private OrthographicCamera uiCamera;
-
     private BitmapFont uiFont;
     private BitmapFont uiFontSmall;
     private Label.LabelStyle uiLabelStyle;
     private Label actionPointsLabel;
     private Label attackPointsLabel;
     private Label spellPowerLabel;
-
     private Matrix4 rotationMatrix;
     private Vector3 cameraVector;
     private Vector2 lastMousePos;
-
 
     public LevelScreen(String mapName) {
         this(mapName, 15);
@@ -229,8 +224,6 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
         Gdx.input.setInputProcessor(this);
     }
 
-    TextureRegion tr;
-
     @Override
     public void render(float delta) {
         AL.graphics.getGL20().glClearColor(0, 0.3f, 0, 1);
@@ -257,21 +250,33 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
             spriteBatch.draw(playerHelper.getHealthTexture(), 50, 142, 190, 95);
             spriteBatch.draw(playerHelper.getResourceTexture(), 68, 142, 150, 75);
 
-            spriteBatch.draw(levelAssets.ability1, 275, 155, 50, 50);
+            spriteBatch.draw(playerHelper.getIcon(Character.ABILITY_1), 275, 155, 50, 50);
+            Sprite sprite = playerHelper.getAbilityOverlaySprite(Character.ABILITY_1);
+            sprite.setBounds(275, 155, 50, 50);
+            sprite.draw(spriteBatch);
             spriteBatch.draw(playerHelper.getCooldownTextures()[Character.ABILITY_1], 275, 155, 50, 50);
 
-            spriteBatch.draw(levelAssets.ability2, 359, 155, 50, 50);
+            spriteBatch.draw(playerHelper.getIcon(Character.ABILITY_2), 359, 155, 50, 50);
+            sprite = playerHelper.getAbilityOverlaySprite(Character.ABILITY_2);
+            sprite.setBounds(359, 155, 50, 50);
+            sprite.draw(spriteBatch);
             spriteBatch.draw(playerHelper.getCooldownTextures()[Character.ABILITY_2], 359, 155, 50, 50);
 
-            spriteBatch.draw(levelAssets.ability3, 448, 154, 50, 50);
-            Sprite overlay3 = playerHelper.getAbilityOverlaySprite(Character.ABILITY_3);
-            overlay3.setBounds(448, 154, 50, 50);
-            overlay3.draw(spriteBatch);
+            spriteBatch.draw(playerHelper.getIcon(Character.ABILITY_3), 448, 154, 50, 50);
+            sprite = playerHelper.getAbilityOverlaySprite(Character.ABILITY_3);
+            sprite.setBounds(448, 154, 50, 50);
+            sprite.draw(spriteBatch);
             spriteBatch.draw(playerHelper.getCooldownTextures()[Character.ABILITY_3], 448, 154, 50, 50);
 
+            sprite = playerHelper.getAbilityOverlaySprite(Character.ABILITY_4);
+            sprite.setBounds(359, 77, 50, 50);
+            sprite.draw(spriteBatch);
             spriteBatch.draw(playerHelper.getCooldownTextures()[Character.ABILITY_4], 359, 77, 50, 50);
 
-            spriteBatch.draw(levelAssets.trait, 276, 79, 48, 48);
+            spriteBatch.draw(playerHelper.getIcon(Character.TRAIT), 276, 79, 48, 48);
+            sprite = playerHelper.getAbilityOverlaySprite(Character.TRAIT);
+            sprite.setBounds(276, 79, 48, 48);
+            sprite.draw(spriteBatch);
             spriteBatch.draw(playerHelper.getCooldownTextures()[Character.TRAIT], 276, 79, 48, 48);
 
 

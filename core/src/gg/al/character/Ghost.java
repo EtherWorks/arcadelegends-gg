@@ -14,11 +14,6 @@ import gg.al.logic.entity.EntityArguments;
 public class Ghost extends Character {
 
     @Override
-    protected String getIconName(int ability) {
-        return "";
-    }
-
-    @Override
     protected void castBegin(int ability) {
 
     }
@@ -30,11 +25,7 @@ public class Ghost extends Character {
 
     @Override
     protected boolean checkOnCast(int abilityInd) {
-        if (abilityInd == ABILITY_1) {
-
-            return true;
-        } else
-            return false;
+        return abilityInd == ABILITY_1;
     }
 
     @Override

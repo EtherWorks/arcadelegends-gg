@@ -87,7 +87,7 @@ public class Assets {
         @AssignmentAssetManager.Asset("assets/ui/ability3.png")
         public Texture ability3;
 
-        @AssignmentAssetManager.Asset("assets/ui/ability2.png")
+        @AssignmentAssetManager.Asset("assets/ui/ability4.png")
         public Texture ability4;
 
         @AssignmentAssetManager.Asset("assets/ui/trait.png")
