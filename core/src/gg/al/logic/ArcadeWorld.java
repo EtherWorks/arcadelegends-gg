@@ -18,7 +18,9 @@ import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import gg.al.character.Ezreal;
+import gg.al.character.Ghost;
 import gg.al.character.Kevin;
+import gg.al.character.SuperGhost;
 import gg.al.game.AL;
 import gg.al.graphics.CameraLayerGroupStrategy;
 import gg.al.graphics.renderer.CharacterRenderer;
@@ -252,6 +254,12 @@ public class ArcadeWorld implements Disposable {
                         break;
                     case "Ezreal":
                         controlComponent.character = new Ezreal();
+                        break;
+                    case "Ghost":
+                        controlComponent.character = new Ghost();
+                        break;
+                    case "SuperGhost":
+                        controlComponent.character = new SuperGhost();
                         break;
                 }
                 controlComponent.character.setEntityID(entityID);
