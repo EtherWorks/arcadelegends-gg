@@ -32,6 +32,7 @@ public class Tile {
     }
 
     public static Tile fromCell(TiledMapTileLayer.Cell cell, int x, int y) {
+        System.out.println(cell);
         return fromTileMapTile(cell.getTile(), x, y);
     }
 

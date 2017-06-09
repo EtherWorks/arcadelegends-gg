@@ -186,10 +186,10 @@ public class ArcadeWorld implements Disposable {
 
             private void resetPos(int entity, Fixture fixture) {
                 CharacterComponent input = entityWorld.getMapper(CharacterComponent.class).get(entity);
-                PositionComponent positionA = entityWorld.getMapper(PositionComponent.class).get(entity);
+                PositionComponent position = entityWorld.getMapper(PositionComponent.class).get(entity);
                 fixture.getBody().setLinearVelocity(Vector2.Zero);
-                positionA.resetPos = true;
-                input.move.set(positionA.position);
+                position.resetPos = true;
+                input.move.set(position.position);
                 RenderComponent renderComponent = entityWorld.getMapper(RenderComponent.class).get(entity);
                 renderComponent.setRenderState(CharacterRenderer.PlayerRenderState.IDLE);
             }
@@ -204,8 +204,8 @@ public class ArcadeWorld implements Disposable {
                     if (other == null) {
                         resetPos(entity, fixOne);
                     } else {
-                        CharacterComponent inputOther = entityWorld.getMapper(CharacterComponent.class).get(entity);
-                        if (inputOther == null) {
+                        CharacterComponent inputOther = entityWorld.getMapper(CharacterComponent.class).get((int) other);
+                        if (inputOther != null) {
                             resetPos(entity, fixOne);
                             resetPos((int) other, fixOther);
                         }

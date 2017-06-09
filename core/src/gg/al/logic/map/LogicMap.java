@@ -27,7 +27,7 @@ public class LogicMap {
         TiledMapTileLayer bottom = (TiledMapTileLayer) map.getLayers().get(0);
         for (int x = 0; x < width; x++)
             for (int y = 0; y < height; y++) {
-                this.map[x][y] = Tile.fromCell(bottom.getCell(x, y), x, y);
+                this.map[x][y] = Tile.fromCell(bottom.getCell(x, height - 1 - y), x, y);
             }
     }
 

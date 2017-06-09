@@ -77,14 +77,17 @@ public class Kevin extends Character {
                 Vector2 start = vectorPool.obtain();
                 Vector2 end = vectorPool.obtain();
 
-                start.set(renderComponent.facingRight() ? 1 : -1, 1);
-                end.set(renderComponent.facingRight() ? 1 : -1, -1);
+                start.set(-1, -1);
+                end.set(1, 1);
                 IntArray entities = getEntitiesInArea(start, end);
                 for (int i = 0; i < entities.size; i++) {
                     int entity = entities.get(i);
+                    if (entity == entityID)
+                        continue;
                     applyDamage(entity, new Damage(Damage.DamageType.Normal,
-                            5 + casterStat.getCurrentStat(StatComponent.BaseStat.attackDamage) * 1.1f,
-                            0));
+                            50 + 20 * casterStat.getRuntimeStat(StatComponent.RuntimeStat.ability_1_points)
+                                    + casterStat.getCurrentStat(StatComponent.BaseStat.attackDamage) * (0.5f + 0.1f * casterStat.getRuntimeStat(StatComponent.RuntimeStat.ability_1_points)),
+                            casterStat.getCurrentStat(StatComponent.BaseStat.armorPenetration)));
                 }
 
                 vectorPool.free(start);
@@ -93,7 +96,10 @@ public class Kevin extends Character {
             case ABILITY_2:
                 int targetId = (int) extraData[ABILITY_2];
                 StatComponent statComponent = getComponent(targetId, StatComponent.class);
-                statComponent.damages.add(new Damage(Damage.DamageType.True, 10 + casterStat.getCurrentStat(StatComponent.BaseStat.spellPower) * .4f, 0));
+                statComponent.damages.add(new Damage(Damage.DamageType.True, 50 + 10 * casterStat.getRuntimeStat(StatComponent.RuntimeStat.ability_2_points)
+                        + casterStat.getCurrentStat(StatComponent.BaseStat.spellPower) * .5f, 0));
+                final float tickDamage = 20 * casterStat.getRuntimeStat(StatComponent.RuntimeStat.ability_2_points) + casterStat.getCurrentStat(StatComponent.BaseStat.attackDamage) * 0.3f;
+                final float tickPen = statComponent.getCurrentStat(StatComponent.BaseStat.armorPenetration);
                 statComponent.statusEffects.put(BLEED_NAME, bleed.tickHandler(
                         new StatusEffect.TickHandler() {
                             private float time;
@@ -104,7 +110,9 @@ public class Kevin extends Character {
                                     return;
                                 time += delta;
                                 if (time >= .5f || effect.remainingTime <= .5f) {
-                                    statComponent.damages.add(new Damage(Damage.DamageType.Normal, statComponent.getCurrentStat(StatComponent.BaseStat.attackDamage), 0));
+                                    statComponent.damages.add(
+                                            new Damage(Damage.DamageType.Normal,
+                                                    tickDamage, tickPen));
                                     time = effect.remainingTime <= .5f ? -1 : 0;
                                 }
                             }

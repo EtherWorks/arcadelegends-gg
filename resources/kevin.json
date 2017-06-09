@@ -1,7 +1,7 @@
 {
   "StatComponent": {
     "values": {
-      "actionPointsRegen_Base": 1.0,
+      "actionPointsRegen_Base": 2.0,
       "actionPointsRegen_Growth": 0.0,
       "actionPointsRegen_GrowthPercentage": 0.0,
       "armor_Base": 10.0,
