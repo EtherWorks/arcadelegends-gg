@@ -345,7 +345,7 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
     {
         Vector2 mapCoord = new Vector2(1,1);
         EntityArguments arguments;
-        arguments = arcadeWorld.getArguments("ezreal.json");
+        arguments = arcadeWorld.getArguments("super_ghost.json");
         PositionComponent.PositionTemplate positionDef = arguments.get("PositionComponent", PositionComponent.PositionTemplate.class);
         float posX = positionDef.x;
         float posY = positionDef.y;
