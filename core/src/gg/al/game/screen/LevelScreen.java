@@ -13,6 +13,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.math.Intersector;
+import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.Ray;
@@ -72,6 +73,10 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
     private Label attackPointsLabel;
     private Label spellPowerLabel;
 
+    private Matrix4 rotationMatrix;
+    private Vector3 cameraVector;
+    private Vector2 lastMousePos;
+
 
     public LevelScreen(String mapName) {
         this(mapName, 15);
@@ -92,6 +97,11 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
         inputMapper.registerInputHanlder(IInputConfig.InputKeys.ability3, new AbillityEventHandler(Character.ABILITY_3));
         inputMapper.registerInputHanlder(IInputConfig.InputKeys.ability4, new AbillityEventHandler(Character.ABILITY_4));
         inputMapper.registerInputHanlder(IInputConfig.InputKeys.trait, new AbillityEventHandler(Character.TRAIT));
+
+        rotationMatrix = new Matrix4().rotate(Vector3.X, rot);
+        cameraVector = new Vector3(0, 1, 1);
+        cameraVector.mul(rotationMatrix);
+        lastMousePos = new Vector2(Gdx.input.getX(), Gdx.input.getY());
     }
 
     @Override
@@ -315,6 +325,7 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+        lastMousePos.set(screenX, screenY);
         Ray ray = camera.getPickRay(screenX, screenY);
         Vector3 worldcoor = new Vector3();
         Intersector.intersectRayPlane(ray, arcadeWorld.getMapHitbox(), worldcoor);
@@ -341,9 +352,8 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
         return false;
     }
 
-    private int spawnPlayer()
-    {
-        Vector2 mapCoord = new Vector2(1,1);
+    private int spawnPlayer() {
+        Vector2 mapCoord = new Vector2(1, 1);
         EntityArguments arguments;
         arguments = arcadeWorld.getArguments("super_ghost.json");
         PositionComponent.PositionTemplate positionDef = arguments.get("PositionComponent", PositionComponent.PositionTemplate.class);
@@ -373,6 +383,12 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
 
     @Override
     public boolean touchDragged(int screenX, int screenY, int pointer) {
+        if(Gdx.input.isButtonPressed(Input.Buttons.MIDDLE))
+        {
+            camera.translate((lastMousePos.x - screenX)/10, (screenY-lastMousePos.y)/10, 0);
+            lastMousePos.set(screenX, screenY);
+            camera.update();
+        }
         return false;
     }
 
@@ -383,7 +399,7 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
 
     @Override
     public boolean scrolled(int amount) {
-        camera.translate(0, 0, amount);
+        camera.translate(0, -amount * cameraVector.y, amount * cameraVector.z);
         camera.update();
         return false;
     }
