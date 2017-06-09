@@ -258,11 +258,16 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
 
             spriteBatch.draw(levelAssets.ability1, 275, 155, 50, 50);
             spriteBatch.draw(playerHelper.getCooldownTextures()[Character.ABILITY_1], 275, 155, 50, 50);
+
             spriteBatch.draw(levelAssets.ability2, 359, 155, 50, 50);
             spriteBatch.draw(playerHelper.getCooldownTextures()[Character.ABILITY_2], 359, 155, 50, 50);
 
+            spriteBatch.draw(levelAssets.ability3, 448, 154, 50, 50);
             spriteBatch.draw(playerHelper.getCooldownTextures()[Character.ABILITY_3], 448, 154, 50, 50);
+
             spriteBatch.draw(playerHelper.getCooldownTextures()[Character.ABILITY_4], 359, 77, 50, 50);
+
+            spriteBatch.draw(levelAssets.trait, 276, 79, 48, 48);
             spriteBatch.draw(playerHelper.getCooldownTextures()[Character.TRAIT], 276, 79, 48, 48);
 
 
