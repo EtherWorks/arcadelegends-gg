@@ -1,6 +1,7 @@
 package gg.al.game;
 
 import com.badlogic.gdx.graphics.*;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
@@ -20,6 +21,8 @@ import gg.al.util.Shaders;
  * Created by Thomas Neumann on 07.06.2017.
  */
 public class PlayerHelper implements Disposable {
+
+    private Sprite[] abilityOverlaySprites = new Sprite[5];
 
     private final int entityId;
     private final ArcadeWorld arcadeWorld;
@@ -77,6 +80,14 @@ public class PlayerHelper implements Disposable {
             cooldownTextures[i] = new TextureRegion(abilityBuffers[i].getColorBufferTexture());
             cooldownTextures[i].flip(false, true);
         }
+
+        for (int i = 0; i < abilityOverlaySprites.length; i++) {
+            Pixmap pixmap = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
+            pixmap.setColor(Color.WHITE);
+            pixmap.fill();
+            abilityOverlaySprites[i] = new Sprite(new Texture(pixmap));
+            pixmap.dispose();
+        }
     }
 
     public void step(float delta) {
@@ -124,6 +135,17 @@ public class PlayerHelper implements Disposable {
         return cooldownTextures;
     }
 
+    public Sprite getAbilityOverlaySprite(int ability) {
+        CharacterComponent characterComponent = arcadeWorld.getEntityWorld().getMapper(CharacterComponent.class).get(entityId);
+        Color color;
+        if ((color = characterComponent.character.getAbilityOverlay()) != null)
+
+            abilityOverlaySprites[ability].setColor(color);
+        else
+            abilityOverlaySprites[ability].setColor(0, 0, 0, 0);
+        return abilityOverlaySprites[ability];
+    }
+
     public int getEntityId() {
         return entityId;
     }
@@ -137,5 +159,7 @@ public class PlayerHelper implements Disposable {
         resourceBuffer.dispose();
         shaderBatch.dispose();
         shader.dispose();
+        for (Sprite s : abilityOverlaySprites)
+            s.getTexture().dispose();
     }
 }

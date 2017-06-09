@@ -1,6 +1,7 @@
 package gg.al.character;
 
 import com.artemis.Component;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
@@ -18,6 +19,7 @@ import gg.al.logic.component.data.StatusEffect;
 import gg.al.logic.entity.Entities;
 import gg.al.logic.entity.EntityArguments;
 import gg.al.logic.map.Tile;
+
 
 /**
  * Created by Thomas Neumann on 23.05.2017.<br />
@@ -346,5 +348,10 @@ public abstract class Character {
                 return stats.getCurrentStat(StatComponent.BaseStat.cooldownAbility4);
         }
         throw new IllegalArgumentException("No ability with index" + ability);
+    }
+
+    public Color getAbilityOverlay()
+    {
+        return null;
     }
 }

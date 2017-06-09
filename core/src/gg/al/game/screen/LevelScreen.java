@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.tiled.TiledMap;
@@ -263,6 +264,9 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
             spriteBatch.draw(playerHelper.getCooldownTextures()[Character.ABILITY_2], 359, 155, 50, 50);
 
             spriteBatch.draw(levelAssets.ability3, 448, 154, 50, 50);
+            Sprite overlay3 = playerHelper.getAbilityOverlaySprite(Character.ABILITY_3);
+            overlay3.setBounds(448, 154, 50, 50);
+            overlay3.draw(spriteBatch);
             spriteBatch.draw(playerHelper.getCooldownTextures()[Character.ABILITY_3], 448, 154, 50, 50);
 
             spriteBatch.draw(playerHelper.getCooldownTextures()[Character.ABILITY_4], 359, 77, 50, 50);
@@ -417,7 +421,31 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
 
         @Override
         public void onInput() {
-            arcadeWorld.getEntityWorld().getMapper(CharacterComponent.class).get(playerEnt).character.cast(ability);
+            CharacterComponent characterComponent = arcadeWorld.getEntityWorld().getMapper(CharacterComponent.class).get(playerEnt);
+            if (Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT)) {
+                StatComponent stat = arcadeWorld.getEntityWorld().getMapper(StatComponent.class).get(playerEnt);
+                if (stat.getRuntimeStat(StatComponent.RuntimeStat.skillPoints) > 0) {
+                    switch (ability) {
+                        case Character.TRAIT:
+                            stat.addRuntimeStat(StatComponent.RuntimeStat.trait_points, 1);
+                            break;
+                        case Character.ABILITY_1:
+                            stat.addRuntimeStat(StatComponent.RuntimeStat.ability_1_points, 1);
+                            break;
+                        case Character.ABILITY_2:
+                            stat.addRuntimeStat(StatComponent.RuntimeStat.ability_2_points, 1);
+                            break;
+                        case Character.ABILITY_3:
+                            stat.addRuntimeStat(StatComponent.RuntimeStat.ability_3_points, 1);
+                            break;
+                        case Character.ABILITY_4:
+                            stat.addRuntimeStat(StatComponent.RuntimeStat.ability_4_points, 1);
+                            break;
+                    }
+                    stat.addRuntimeStat(StatComponent.RuntimeStat.skillPoints, -1);
+                }
+            } else
+                characterComponent.character.cast(ability);
         }
     }
 }

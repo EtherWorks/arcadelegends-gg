@@ -21,14 +21,9 @@ import java.util.Random;
 public class Kevin extends Character {
 
     public float ABILITY_2_RANGE = 1.5f;
-    public float ABILITY_3_BOOST = .6f;
     public String BLEED_NAME = "KevBleed";
     public String BOOST_NAME = "KevBoost";
 
-    private StatusEffect.StatusEffectBuilder boost = StatusEffect.builder()
-            .effectTime(0)
-            .percentageStat(StatComponent.BaseStat.attackSpeed, ABILITY_3_BOOST)
-            .percentageStat(StatComponent.BaseStat.armor, -.5f);
     private StatusEffect.StatusEffectBuilder bleed = StatusEffect.builder()
             .effectTime(5);
     private boolean ability4_activate = false;
@@ -123,6 +118,7 @@ public class Kevin extends Character {
                 ability4_activate = true;
                 break;
             case ABILITY_4:
+                statComponent = getComponent(entityID, StatComponent.class);
                 EntityArguments arguments = getArguments("bullet.json");
                 PositionComponent.PositionTemplate pos = arguments.get(PositionComponent.class.getSimpleName(), PositionComponent.PositionTemplate.class);
                 Vector2 mousePos = getMousePos();
@@ -139,12 +135,14 @@ public class Kevin extends Character {
                 bCon.old.set(pos.x, pos.y);
                 bCon.target = (int) extraData[ABILITY_4];
                 bCon.maxDistance = 20;
-                final float damage = 0.4f;
+                final float damage = 0.4f + 0.1f * statComponent.getCurrentStat(StatComponent.BaseStat.attackDamage) / 100;
+                final float baseDamage = 200 + 50 * statComponent.getRuntimeStat(StatComponent.RuntimeStat.ability_4_points);
                 final int caster = entityID;
                 bCon.collisionCallback = (bullet, hit, bFix, hFix, contact) -> {
                     StatComponent hitStat = getComponent(hit, StatComponent.class);
                     if (hitStat != null && hit != caster) {
-                        hitStat.damages.add(new Damage(Damage.DamageType.True, Damage.DamageCalculationType.MaxHealth, damage, 0));
+                        hitStat.damages.add(new Damage(Damage.DamageType.True, baseDamage, 0));
+                        hitStat.damages.add(new Damage(Damage.DamageType.True, Damage.DamageCalculationType.MissingHealth, damage, 0));
                         getComponent(bullet, BulletComponent.class).delete = true;
                         bFix.getBody().setLinearVelocity(Vector2.Zero);
                     }
@@ -156,15 +154,24 @@ public class Kevin extends Character {
 
     @Override
     public void affectStats(StatComponent statComponent) {
+
+        statComponent.addCurrentStat(StatComponent.BaseStat.cooldownAbility1, -statComponent.getRuntimeStat(StatComponent.RuntimeStat.ability_1_points));
+
         if (ability4_activate) {
             if (statComponent.statusEffects.containsKey(BOOST_NAME))
                 statComponent.statusEffects.remove(BOOST_NAME);
             else
-                statComponent.statusEffects.put(BOOST_NAME, boost.build());
+                statComponent.statusEffects.put(BOOST_NAME,
+                        StatusEffect.builder()
+                                .percentageStat(StatComponent.BaseStat.armor, -0.5f)
+                                .percentageStat(StatComponent.BaseStat.magicResist, -0.5f)
+                                .percentageStat(StatComponent.BaseStat.attackSpeed, 0.3f + 0.1f * statComponent.getRuntimeStat(StatComponent.RuntimeStat.ability_3_points))
+                                .build());
             ability4_activate = false;
         }
         statComponent.addCurrentStat(StatComponent.BaseStat.attackSpeed,
-                statComponent.getCurrentStat(StatComponent.BaseStat.attackSpeed) * 2 *
+                statComponent.getCurrentStat(StatComponent.BaseStat.attackSpeed) *
+                        (1 + statComponent.getRuntimeStat(StatComponent.RuntimeStat.trait_points) * 0.2f) *
                         (1 - (statComponent.getRuntimeStat(StatComponent.RuntimeStat.health) / statComponent.getCurrentStat(StatComponent.BaseStat.maxHealth))));
     }
 
