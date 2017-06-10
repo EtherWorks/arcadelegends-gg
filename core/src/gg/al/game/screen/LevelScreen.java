@@ -50,7 +50,7 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
     private final String mapName;
     private final float rot;
     private final InputMapper inputMapper;
-    TextureRegion tr;
+
     private int playerEnt = -1;
     private TiledMap map;
     private PerspectiveCamera camera;
