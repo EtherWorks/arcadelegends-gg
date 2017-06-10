@@ -64,7 +64,6 @@ public class SettingsScreen implements IAssetScreen, InputProcessor {
 
     private Table tableVideo;
     private Table tableAudio;
-    private Table tableInput;
 
     private ALTabbedPane tabbedPane;
 
