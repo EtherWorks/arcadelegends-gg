@@ -56,6 +56,7 @@ public class SettingsScreen implements IAssetScreen, InputProcessor {
     private Slider volumeSlider;
     private Slider musicSlider;
     private Slider effectSlider;
+    private TextButton btBack;
 
     private TextButton btTabVideo;
     private TextButton btTabAudio;
@@ -123,6 +124,21 @@ public class SettingsScreen implements IAssetScreen, InputProcessor {
         componentMap.put(btTabAudio, tableAudio);
         tabbedPane.currentTable(btTabVideo);
         stage.addActor(tabbedPane);
+
+        btBack = new TextButton("Back", skin);
+        btBack.setSize(300, 50);
+        btBack.setPosition(AL.graphics.getWidth() / 2 - 150, AL.graphics.getWidth() / 22);
+        btBack.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                if (previousScreen != null) {
+                    AL.getGame().setScreen(previousScreen);
+                }
+
+            }
+        });
+        stage.addActor(btBack);
+
         AL.input.setInputProcessor(new InputMultiplexer(stage, this));
 
     }

@@ -47,6 +47,7 @@ public class InputSettingsScreen implements IAssetScreen, InputProcessor {
 
     private ScrollPane scrollPane;
     private Table inputTable;
+    private TextButton btBack;
 
     private ALInputDialog dialog;
 
@@ -105,6 +106,17 @@ public class InputSettingsScreen implements IAssetScreen, InputProcessor {
         scrollPane.setPosition(x / 2 - 250, y / 2 - 400);
 
         stage.addActor(scrollPane);
+
+        btBack = new TextButton("Back", skin);
+        btBack.setSize(300, 50);
+        btBack.setPosition(AL.graphics.getWidth() / 2 - 150, AL.graphics.getWidth() / 22);
+        btBack.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                AL.getGame().setScreen(AL.getScreenManager().get(SettingsScreen.class));
+            }
+        });
+        stage.addActor(btBack);
 
 
         AL.input.setInputProcessor(new InputMultiplexer(stage, this));

@@ -2,6 +2,7 @@ package gg.al.game.screen;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.assets.AssetDescriptor;
 import com.badlogic.gdx.graphics.GL20;
@@ -69,7 +70,6 @@ public class PauseMenuScreen implements IAssetScreen, InputProcessor {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 AL.getGame().setScreen(AL.getScreenManager().get(LevelScreen.class));
-                super.clicked(event, x, y);
             }
         });
 
@@ -82,7 +82,6 @@ public class PauseMenuScreen implements IAssetScreen, InputProcessor {
             public void clicked(InputEvent event, float x, float y) {
                 AL.getScreenManager().get(LevelScreen.class).setReInit(true);
                 AL.getGame().setScreen(AL.getScreenManager().get(MainMenuScreen.class));
-                super.clicked(event, x, y);
             }
         });
 
@@ -96,7 +95,6 @@ public class PauseMenuScreen implements IAssetScreen, InputProcessor {
                 SettingsScreen s = AL.getScreenManager().get(SettingsScreen.class, true);
                 s.setPreviousScreen(PauseMenuScreen.this);
                 AL.getGame().setScreen(s);
-                super.clicked(event, x, y);
             }
         });
 
@@ -108,7 +106,6 @@ public class PauseMenuScreen implements IAssetScreen, InputProcessor {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 AL.app.exit();
-                super.clicked(event, x, y);
             }
         });
 
@@ -125,7 +122,7 @@ public class PauseMenuScreen implements IAssetScreen, InputProcessor {
 
         stage.addActor(table);
 
-        AL.input.setInputProcessor(stage);
+        AL.input.setInputProcessor(new InputMultiplexer(stage, this));
     }
 
     @Override
@@ -185,13 +182,14 @@ public class PauseMenuScreen implements IAssetScreen, InputProcessor {
     @Override
     public boolean keyDown(int keycode) {
         if (keycode == Input.Keys.ESCAPE) {
-
+            AL.getGame().setScreen(AL.getScreenManager().get(LevelScreen.class));
         }
         return false;
     }
 
     @Override
     public boolean keyUp(int keycode) {
+
         return false;
     }
 
