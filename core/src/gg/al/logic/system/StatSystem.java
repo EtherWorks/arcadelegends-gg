@@ -144,7 +144,6 @@ public class StatSystem extends IteratingSystem {
                         amount *= 100 / (100 + ar);
                         break;
                 }
-                System.out.println(amount + " " + stats.getRuntimeStat(StatComponent.RuntimeStat.health));
                 if ((int) (stats.getRuntimeStat(StatComponent.RuntimeStat.health) - amount) <= 0) {
                     stats.setRuntimeStat(StatComponent.RuntimeStat.health, 0);
                     stats.setRuntimeStat(StatComponent.RuntimeStat.resource, 0);
