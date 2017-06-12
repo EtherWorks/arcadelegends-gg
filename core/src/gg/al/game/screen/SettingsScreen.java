@@ -28,7 +28,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import gg.al.config.IAudioConfig;
 import gg.al.config.IVideoConfig;
 import gg.al.game.AL;
-import gg.al.game.ui.ALTabbedPane;
+import gg.al.game.ui.SettingsTabbedPane;
 import gg.al.util.Assets;
 import lombok.extern.slf4j.Slf4j;
 
@@ -40,6 +40,7 @@ import java.util.HashMap;
 /**
  * Created by Patrick Windegger on 16.03.2017.
  * Class responsible for the different Settings (Video, Audio, Input) in the game
+ * {@link IVideoConfig}, {@link IAudioConfig}, {@link gg.al.config.IInputConfig}
  */
 public class SettingsScreen implements IAssetScreen, InputProcessor {
 
@@ -65,7 +66,7 @@ public class SettingsScreen implements IAssetScreen, InputProcessor {
     private Table tableVideo;
     private Table tableAudio;
 
-    private ALTabbedPane tabbedPane;
+    private SettingsTabbedPane tabbedPane;
 
     private HashMap<TextButton, Table> componentMap;
     private SpriteDrawable selection;
@@ -93,7 +94,7 @@ public class SettingsScreen implements IAssetScreen, InputProcessor {
         selection = new SpriteDrawable(sprite);
 
 
-        tabbedPane = new ALTabbedPane(skin, x, y, componentMap);
+        tabbedPane = new SettingsTabbedPane(skin, x, y, componentMap);
 
         // Init Tabs:
         btTabVideo = new TextButton("Video", skin);
@@ -121,7 +122,7 @@ public class SettingsScreen implements IAssetScreen, InputProcessor {
 
         componentMap.put(btTabVideo, tableVideo);
         componentMap.put(btTabAudio, tableAudio);
-        tabbedPane.currentTable(btTabVideo);
+        tabbedPane.setCurrentTab(btTabVideo);
         stage.addActor(tabbedPane);
 
         btBack = new TextButton("Back", skin);
@@ -308,6 +309,9 @@ public class SettingsScreen implements IAssetScreen, InputProcessor {
 
     }
 
+    /**
+     * Method responsible for hiding the screen
+     */
     @Override
     public void hide() {
         AL.input.setInputProcessor(null);
@@ -315,17 +319,27 @@ public class SettingsScreen implements IAssetScreen, InputProcessor {
         spriteBatch.dispose();
     }
 
+    /**
+     * Method responsible for disposing the Assets
+     * Called when the screen releases all resources
+     */
     @Override
     public void dispose() {
         AL.getAssetManager().unloadAssetFields(settingsAssets);
     }
 
+    /**
+     * Mehthod responsible for turing VSync on or off
+     */
     private void vsyncOnOff() {
         AL.getConfigEditor().setValue(IVideoConfig.VideoKeys.vsyncEnabled, !AL.getVideoConfig().vsyncEnabled());
         AL.getConfigEditor().flush();
         btVsync.setText(AL.getVideoConfig().vsyncEnabled() == true ? "Vsync on" : "Vsync off");
     }
 
+    /**
+     * Method responsible for setting the resolution of the game
+     */
     private void setResolution() {
         String resolution = (String) sbResolution.getSelected();
         log.debug(resolution);
@@ -362,6 +376,9 @@ public class SettingsScreen implements IAssetScreen, InputProcessor {
         }
     }
 
+    /**
+     * Method responsible for setting the FPS (Frames per second) of the game
+     */
     private void setFps() {
         int fps = (int) sbFps.getSelected();
         AL.getConfigEditor().setValue(IVideoConfig.VideoKeys.foregroundFPS, fps);

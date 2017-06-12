@@ -28,9 +28,10 @@ import java.security.Key;
 
 /**
  * Created by Patrick Windegger on 12.05.2017.
+ * Class responsible for providing a basic Input Dialog for the key config {@link IInputConfig} of the game.
  */
 @Slf4j
-public class ALInputDialog extends Dialog {
+public class KeyInputDialog extends Dialog {
 
     private Table table;
     private Skin skin;
@@ -41,7 +42,7 @@ public class ALInputDialog extends Dialog {
     private TextButton button;
 
 
-    public ALInputDialog(String title, WindowStyle windowStyle, Skin skin, Stage stage, BitmapFont font, String inputKey, String currentKey, TextButton button) {
+    public KeyInputDialog(String title, WindowStyle windowStyle, Skin skin, Stage stage, BitmapFont font, String inputKey, String currentKey, TextButton button) {
         super(title, windowStyle);
         table = new Table();
         this.skin = skin;
@@ -53,6 +54,10 @@ public class ALInputDialog extends Dialog {
         this.setSize(300, 300);
     }
 
+    /**
+     * Method responsible for initializing a Dialog to provide the option to set input-keys
+     * @param background - background of the dialog
+     */
     public void initDialog(Drawable background) {
         this.setBackground(background);
         Label lbKey = new Label("Key:", skin);

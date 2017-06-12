@@ -43,11 +43,15 @@ public class MainMenuScreen implements IAssetScreen {
 
     private Assets.MenuAssets menuAssets;
 
+    /**
+     * Method responsible for initializing the main menu
+     * Called when the screen becomes the current screen of the game
+     */
     @Override
     public void show() {
         AL.getAudioManager().registerMusic("bitrush", menuAssets.bitrush);
         AL.getAudioManager().playMusic("bitrush");
-        // Inits:
+
         cam = new OrthographicCamera();
         viewport = new FitViewport(1920, 1080);
         viewport.setCamera(cam);
@@ -60,8 +64,107 @@ public class MainMenuScreen implements IAssetScreen {
         spriteBatch = new SpriteBatch();
         mainbackground = menuAssets.testmainscreen;
 
+        initButtons();
 
-        // Buttons:
+        Table table = new Table();
+        table.add(btPlay).width(400).pad(10);
+        table.row();
+        table.add(btSettings).width(400).pad(10);
+        table.row();
+        table.add(btExit).width(400).pad(10);
+        table.setPosition(x / 2, y / 2 + 50);
+
+        stage.addActor(table);
+
+        AL.input.setInputProcessor(stage);
+    }
+
+    /**
+     * Method responsible for rendering components
+     * Called everytime when rendering need to be done
+     * @param delta
+     */
+    @Override
+    public void render(float delta) {
+        AL.gl.glClearColor(0, 0, 0, 1);
+        AL.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+        spriteBatch.setProjectionMatrix(cam.combined);
+        spriteBatch.begin();
+        spriteBatch.draw(mainbackground, 0, 0);
+        spriteBatch.end();
+
+
+        stage.act(Gdx.graphics.getDeltaTime());
+        stage.draw();
+    }
+
+    /**
+     * Method responsible for resizing the application
+     * Called everytime when the screen is re-sized
+     * @param width - width of the window
+     * @param height - height of the window
+     */
+    @Override
+    public void resize(int width, int height) {
+
+        viewport.update(width, height, true);
+    }
+
+    @Override
+    public void pause() {
+
+    }
+
+    @Override
+    public void resume() {
+
+    }
+
+    /**
+     * Method responsible for hiding the screen
+     */
+    @Override
+    public void hide() {
+        AL.input.setInputProcessor(null);
+        AL.getAudioManager().stopMusic("bitrush");
+        stage.dispose();
+        spriteBatch.dispose();
+    }
+
+    /**
+     * Method responsible for disposing the Assets
+     * Called when the screen releases all resources
+     */
+    @Override
+    public void dispose() {
+        AL.getAssetManager().unloadAssetFields(menuAssets);
+    }
+
+
+    /**
+     * Method responsible for returning {@link gg.al.util.Assets.MenuAssets}
+     * @return
+     */
+    @Override
+    public Object assets() {
+        return menuAssets = new Assets.MenuAssets();
+    }
+
+    /**
+     * Method responsible for setting a custom loading screen
+     * @return
+     */
+    @Override
+    public ILoadingScreen customLoadingScreen() {
+        return null;
+    }
+
+    /**
+     * Method responsible for creating the Buttons for {@link MainMenuScreen}
+     */
+    private void initButtons()
+    {
         btPlay = new TextButton("Play", skin, "default");
         btPlay.setWidth(400);
         btPlay.setHeight(100);
@@ -81,7 +184,7 @@ public class MainMenuScreen implements IAssetScreen {
         btSettings.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-               SettingsScreen s = AL.getScreenManager().get(SettingsScreen.class, true);
+                SettingsScreen s = AL.getScreenManager().get(SettingsScreen.class, true);
                 s.setPreviousScreen(MainMenuScreen.this);
                 AL.getGame().setScreen(s);
 
@@ -97,79 +200,7 @@ public class MainMenuScreen implements IAssetScreen {
                 AL.app.exit();
             }
         });
-
-        Table table = new Table();
-        table.add(btPlay).width(400).pad(10);
-        table.row();
-        table.add(btSettings).width(400).pad(10);
-        table.row();
-        table.add(btExit).width(400).pad(10);
-        table.setPosition(x / 2, y / 2 + 50);
-
-        stage.addActor(table);
-
-        AL.input.setInputProcessor(stage);
-    }
-
-    @Override
-    public void render(float delta) {
-        AL.gl.glClearColor(0, 0, 0, 1);
-        AL.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
-        spriteBatch.setProjectionMatrix(cam.combined);
-        spriteBatch.begin();
-        spriteBatch.draw(mainbackground, 0, 0);
-        spriteBatch.end();
-
-
-        stage.act(Gdx.graphics.getDeltaTime());
-        stage.draw();
-    }
-
-    @Override
-    public void resize(int width, int height) {
-
-        viewport.update(width, height, true);
-    }
-
-    @Override
-    public void pause() {
-
-    }
-
-    @Override
-    public void resume() {
-
-    }
-
-    @Override
-    public void hide() {
-        AL.input.setInputProcessor(null);
-        AL.getAudioManager().stopMusic("bitrush");
-        stage.dispose();
-        spriteBatch.dispose();
-    }
-
-    @Override
-    public void dispose() {
-        AL.getAssetManager().unloadAssetFields(menuAssets);
     }
 
 
-    @Override
-    public Object assets() {
-        return menuAssets = new Assets.MenuAssets();
-    }
-
-    @Override
-    public ILoadingScreen customLoadingScreen() {
-        return null;
-    }
-
-    // Sets the position of all TextButtons on the Screen
-    private void setButtonPosition(int x, int y) {
-        btPlay.setPosition(x / 2 - 200, y / 5 + y / 2);
-        btSettings.setPosition(x / 2 - 200, y / 5 + y / 2.6f);
-        btExit.setPosition(x / 2 - 200, y / 5 + y / 5);
-    }
 }

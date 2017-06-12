@@ -4,7 +4,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
-import com.badlogic.gdx.assets.AssetDescriptor;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -23,13 +22,11 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import gg.al.config.IInputConfig;
 import gg.al.game.AL;
-import gg.al.game.ui.ALInputDialog;
+import gg.al.game.ui.KeyInputDialog;
 import gg.al.util.Assets;
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 
 /**
  * Created by Patrick Windegger on 24.04.2017.
@@ -49,7 +46,7 @@ public class InputSettingsScreen implements IAssetScreen, InputProcessor {
     private Table inputTable;
     private TextButton btBack;
 
-    private ALInputDialog dialog;
+    private KeyInputDialog dialog;
 
     private IInputConfig.InputKeys[] keys;
     private HashMap<String, Integer> keyMap;
@@ -125,7 +122,7 @@ public class InputSettingsScreen implements IAssetScreen, InputProcessor {
 
     private void showDialog(BitmapFont font, TextureRegion textureRegion, String name, TextButton button) {
         Drawable dlgBackground = new TextureRegionDrawable(new TextureRegion(settingsAssets.dlgbackground));
-        dialog = new ALInputDialog("", new Window.WindowStyle(font, Color.BLACK, new TextureRegionDrawable(new TextureRegion(textureRegion))), skin, stage, font,
+        dialog = new KeyInputDialog("", new Window.WindowStyle(font, Color.BLACK, new TextureRegionDrawable(new TextureRegion(textureRegion))), skin, stage, font,
                 Input.Keys.toString(IInputConfig.InputKeys.getFromKey(keys[keyMap.get(name)], AL.getInputConfig())), keys[keyMap.get(name)].getKeyName(), button);
         dialog.initDialog(dlgBackground);
     }
