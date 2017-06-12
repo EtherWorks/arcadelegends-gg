@@ -1,13 +1,18 @@
 package gg.al.desktop.launcher;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
+import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.utils.BufferUtils;
 import gg.al.config.Config;
 import gg.al.desktop.config.DesktopConfigEditor;
 import gg.al.desktop.config.DesktopConfigUtil;
 import gg.al.game.ArcadeLegendsGame;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.MarkerFactory;
+
+import java.nio.IntBuffer;
 
 /**
  * Created by Thomas Neumann on 11.03.2017.<br />
@@ -27,6 +32,8 @@ public class DesktopLauncher {
             LwjglApplication application = new LwjglApplication(new ArcadeLegendsGame(cfg), config);
             //application.postRunnable(() -> application.getGraphics().setUndecorated(true));
             DesktopConfigUtil.registerStandardListeners(editor, cfg, config, application);
+
+
         } catch (Exception ex) {
             log.error(MarkerFactory.getMarker("ERROR"), "Error loading config", ex);
             System.exit(0);

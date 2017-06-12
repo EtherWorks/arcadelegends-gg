@@ -9,9 +9,11 @@ public interface IMiscellaneousConfig {
     String PREFIX = "miscellaneous";
 
     boolean logConfigEvents();
+    boolean debug();
 
     enum MiscellaneousKeys implements IConfigKey {
-        logConfigEvents("true");
+        logConfigEvents("true"),
+        debug("false");
 
         private final String defaultValue;
 
