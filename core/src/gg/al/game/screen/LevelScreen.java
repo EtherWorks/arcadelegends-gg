@@ -337,7 +337,9 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
             playerEnt = -1;
 
             spawnPlayer();
-            enemies = arcadeWorld.spawnEnemies(playerEnt);
+            //enemies = arcadeWorld.spawnEnemies(playerEnt);
+            enemies = new IntArray();
+            enemies.add(13);
             arcadeWorld.setDebug(true);
         }
 

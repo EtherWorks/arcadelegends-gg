@@ -61,7 +61,7 @@ public class Kevin extends Character {
                 if (isMoving())
                     return false;
                 targetId = getEntityAtMouse();
-                if (targetId == -1)
+                if (targetId == -1 || targetId == entityID)
                     return false;
                 extraData[ABILITY_4] = targetId;
                 return true;

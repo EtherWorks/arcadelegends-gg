@@ -1,48 +1,75 @@
 
 char.png
-size: 8192,16384
+size: 16384,16384
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
-kevin/autoattack
+kevin/backviewsprites
   rotate: false
-  xy: 2, 8825
-  size: 3990, 6384
-  orig: 3990, 6384
+  xy: 9348, 2
+  size: 3760, 3005
+  orig: 3760, 3005
   offset: 0, 0
   index: -1
 kevin/ezreal
   rotate: false
-  xy: 7986, 15177
+  xy: 15420, 15624
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
-kevin/frontwalk
+kevin/squatsprites
   rotate: false
-  xy: 2, 2439
-  size: 3990, 6384
-  orig: 3990, 6384
+  xy: 2, 261
+  size: 9344, 6210
+  orig: 9344, 6210
   offset: 0, 0
   index: -1
-kevin/rightsidewalk
+kevin/stabsprites
   rotate: false
-  xy: 3994, 8825
-  size: 3990, 6384
-  orig: 3990, 6384
+  xy: 2, 11850
+  size: 15416, 3806
+  orig: 15416, 3806
   offset: 0, 0
   index: -1
-kevin/sideviewsheet
+kevin/ultsprites
   rotate: false
-  xy: 3994, 3323
-  size: 3208, 5500
-  orig: 3208, 5500
+  xy: 2, 6473
+  size: 12400, 5375
+  orig: 12400, 5375
   offset: 0, 0
   index: -1
-kevin/squatsheet
+kevin/walkingsprites
+  rotate: false
+  xy: 9348, 3009
+  size: 6816, 3462
+  orig: 6816, 3462
+  offset: 0, 0
+  index: -1
+
+char2.png
+size: 16384,16384
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+kevin/attacksprites
+  rotate: false
+  xy: 2, 3059
+  size: 8888, 4159
+  orig: 8888, 4159
+  offset: 0, 0
+  index: -1
+kevin/frontviewsprites
   rotate: false
   xy: 2, 2
-  size: 5640, 2435
-  orig: 5640, 2435
+  size: 8408, 3055
+  orig: 8408, 3055
+  offset: 0, 0
+  index: -1
+kevin/smashsprites
+  rotate: false
+  xy: 2, 7220
+  size: 9320, 7595
+  orig: 9320, 7595
   offset: 0, 0
   index: -1

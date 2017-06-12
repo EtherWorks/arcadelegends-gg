@@ -265,7 +265,7 @@ public class StatComponent extends PooledComponent implements ITemplateable {
         maxHealth(0, Float.MAX_VALUE),
         healthRegen(0, Float.MAX_VALUE),
 
-        maxActionPoints(0, 9),
+        maxActionPoints(0, Constants.MAX_AP),
         actionPointsRegen(0, Float.MAX_VALUE),
 
         maxResource(0, Float.MAX_VALUE),

@@ -135,13 +135,13 @@
         "frameColumns": 5,
         "frameRows": 8,
         "frameDuration": 0.025,
-        "texture": "sideviewsheet"
+        "texture": "backviewsprites"
       },
       "IDLE": {
         "frameColumns": 10,
         "frameRows": 4,
         "frameDuration": 0.025,
-        "texture": "squatsheet"
+        "texture": "squatsprites"
       },
       "TAUNT": {
         "frameColumns": 1,
@@ -153,37 +153,37 @@
         "frameColumns": 5,
         "frameRows": 8,
         "frameDuration": 0.025,
-        "texture": "rightsidewalk"
+        "texture": "walkingsprites"
       },
       "MOVE_DOWN": {
         "frameColumns": 5,
         "frameRows": 8,
         "frameDuration": 0.025,
-        "texture": "frontwalk"
+        "texture": "frontviewsprites"
       },
       "ATTACK": {
         "frameColumns": 5,
         "frameRows": 8,
         "frameDuration": 0.025,
-        "texture": "autoattack"
+        "texture": "attacksprites"
       },
       "ABILITY_1": {
         "frameColumns": 5,
         "frameRows": 8,
         "frameDuration": 0.025,
-        "texture": "autoattack"
+        "texture": "smashsprites"
       },
       "ABILITY_2": {
         "frameColumns": 5,
         "frameRows": 8,
         "frameDuration": 0.025,
-        "texture": "autoattack"
+        "texture": "stabsprites"
       },
       "ABILITY_4": {
         "frameColumns": 5,
         "frameRows": 8,
         "frameDuration": 0.025,
-        "texture": "autoattack"
+        "texture": "ultsprites"
       }
     },
     "renderType": "PLAYER",
