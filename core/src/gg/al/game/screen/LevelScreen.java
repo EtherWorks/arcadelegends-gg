@@ -251,6 +251,7 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
         spriteBatch.setProjectionMatrix(uiCamera.combined);
         spriteBatch.begin();
         spriteBatch.draw(levelAssets.uioverlay, 10, 10, levelAssets.uioverlay.getWidth() / 2, levelAssets.uioverlay.getHeight() / 2);
+        spriteBatch.draw(levelAssets.uistats, 1, 1080-levelAssets.uistats.getHeight() * 1.5f, levelAssets.uistats.getWidth() * 1.5f, levelAssets.uistats.getHeight() * 1.5f);
 
         if (playerEnt != -1) {
             StatComponent stats = arcadeWorld.getEntityWorld().getMapper(StatComponent.class).get(playerEnt);

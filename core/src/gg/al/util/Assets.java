@@ -93,6 +93,9 @@ public class Assets {
         @AssignmentAssetManager.Asset("assets/ui/trait.png")
         public Texture trait;
 
+        @AssignmentAssetManager.Asset("assets/ui/stats.png")
+        public Texture uistats;
+
         private BiMap<String, Object> assetMap;
 
         public <T> T get(String name) {
