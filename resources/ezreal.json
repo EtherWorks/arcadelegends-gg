@@ -85,7 +85,7 @@
       "maxActionPoints_Base": 5.0,
       "maxActionPoints_Growth": 0.0,
       "maxActionPoints_GrowthPercentage": 0.0,
-      "maxHealth_Base": 1000.0,
+      "maxHealth_Base": 1000000.0,
       "maxHealth_Growth": 0.0,
       "maxHealth_GrowthPercentage": 0.0,
       "maxResource_Base": 500.0,

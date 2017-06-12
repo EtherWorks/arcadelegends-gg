@@ -13,7 +13,7 @@
       "attackDamage_Base": 87.0,
       "attackDamage_Growth": 0.0,
       "attackDamage_GrowthPercentage": 0.0,
-      "attackRange_Base": 4.5,
+      "attackRange_Base": 1.5,
       "attackRange_Growth": 0.0,
       "attackRange_GrowthPercentage": 0.0,
       "attackSpeed_Base": 0.8,

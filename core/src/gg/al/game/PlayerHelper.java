@@ -131,6 +131,11 @@ public class PlayerHelper implements Disposable {
         buffer.end();
     }
 
+    public boolean isDead()
+    {
+        return arcadeWorld.getEntityWorld().getMapper(StatComponent.class).get(entityId).getFlag(StatComponent.FlagStat.dead);
+    }
+
     public TextureRegion getHealthTexture() {
         return healthTexture;
     }

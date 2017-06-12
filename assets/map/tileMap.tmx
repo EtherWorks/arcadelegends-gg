@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.0" orientation="orthogonal" renderorder="left-up" width="50" height="50" tilewidth="32" tileheight="32" nextobjectid="1">
  <properties>
+  <property name="enemies" value="10;10;super_ghost.json;1500-20;20;ghost.json;140"/>
   <property name="spawnX" type="int" value="13"/>
   <property name="spawnY" type="int" value="11"/>
  </properties>

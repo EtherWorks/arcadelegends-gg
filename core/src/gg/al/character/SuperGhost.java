@@ -2,6 +2,7 @@ package gg.al.character;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.IntArray;
+import gg.al.logic.component.AIComponent;
 import gg.al.logic.component.BulletComponent;
 import gg.al.logic.component.PositionComponent;
 import gg.al.logic.component.StatComponent;
@@ -14,6 +15,29 @@ import gg.al.logic.entity.EntityArguments;
  */
 public class SuperGhost extends Character {
 
+    private AIExtension aiExtension = new AIExtension() {
+        @Override
+        public float getRange(int ability) {
+            switch (ability) {
+                case ABILITY_1:
+                    return 5;
+                case ABILITY_4:
+                    return 3;
+                default:
+                    return 0;
+            }
+        }
+
+        @Override
+        public boolean disabled(int ability) {
+            return ability != ABILITY_1 && ability != ABILITY_4;
+        }
+    };
+
+    @Override
+    public AIExtension getAIExtension() {
+        return aiExtension;
+    }
 
     @Override
     protected void castBegin(int ability) {
@@ -44,10 +68,12 @@ public class SuperGhost extends Character {
                 StatComponent stats = getComponent(entityID, StatComponent.class);
                 EntityArguments arguments = getArguments("ezreal_auto.json");
                 PositionComponent.PositionTemplate pos = arguments.get(PositionComponent.class.getSimpleName(), PositionComponent.PositionTemplate.class);
-                Vector2 mousePos = getMousePos();
+                AIComponent aiComponent = getComponent(entityID, AIComponent.class);
+
+                Vector2 enemyPos = getComponent(aiComponent.target, PositionComponent.class).position;
                 Vector2 charPos = getCharacterPosition();
 
-                Vector2 dir = new Vector2(mousePos).sub(charPos).nor();
+                Vector2 dir = new Vector2(enemyPos).sub(charPos).nor();
                 pos.x = charPos.x;
                 pos.y = charPos.y;
                 int entity = spawn(Entities.Bullet, arguments);
@@ -60,7 +86,7 @@ public class SuperGhost extends Character {
                 final float damage = stats.getCurrentStat(StatComponent.BaseStat.attackDamage) * 1.1f;
                 final int caster1 = entityID;
                 bCon.collisionCallback = (bullet, hit, bFix, hFix, contact) -> {
-                    if (hit == caster1)
+                    if (hit == caster1 || hit != aiComponent.target)
                         return;
                     BulletComponent bulletComponent = getComponent(bullet, BulletComponent.class);
                     StatComponent hitStat = getComponent(hit, StatComponent.class);
@@ -72,14 +98,12 @@ public class SuperGhost extends Character {
                 break;
             case ABILITY_4:
                 IntArray entities = getEntitiesInArea(new Vector2(-2, -2), new Vector2(2, 2));
-                for (int i = 0; i < entities.size; i++)
-                {
+                for (int i = 0; i < entities.size; i++) {
                     int enemy = entities.get(i);
-                    if(enemy == entityID)
+                    if (enemy == entityID)
                         continue;
                     StatComponent statComponent = getComponent(enemy, StatComponent.class);
-                    if(statComponent != null)
-                    {
+                    if (statComponent != null) {
                         statComponent.damages.add(new Damage(Damage.DamageType.Magic, 1000, 0));
                     }
                 }

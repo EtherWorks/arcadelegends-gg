@@ -25,6 +25,7 @@ public class EntityArguments {
     }
 
     public static EntityArguments fromFile(String name) throws IOException {
+
         EntityArguments arguments = new EntityArguments();
         InputStream is = EntityArguments.class.getResourceAsStream("/" + name);
         InputStreamReader reader = new InputStreamReader(is);

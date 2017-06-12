@@ -364,4 +364,14 @@ public abstract class Character {
     public Color getAbilityOverlay(int ability) {
         return null;
     }
+
+    public AIExtension getAIExtension() {
+        return null;
+    }
+
+    public interface AIExtension {
+        float getRange(int ability);
+
+        boolean disabled(int ability);
+    }
 }

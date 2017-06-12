@@ -20,6 +20,7 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.Ray;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.utils.IntArray;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
@@ -72,6 +73,8 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
     private Matrix4 rotationMatrix;
     private Vector3 cameraVector;
     private Vector2 lastMousePos;
+
+    private IntArray enemies;
 
     public LevelScreen(String mapName) {
         this(mapName, 15);
@@ -218,6 +221,7 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
             playerEnt = -1;
 
             spawnPlayer();
+            enemies = arcadeWorld.spawnEnemies(playerEnt);
         }
 
         Gdx.input.setInputProcessor(this);
@@ -230,6 +234,15 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
 
         arcadeWorld.setDelta(AL.graphics.getDeltaTime());
         arcadeWorld.step();
+
+        if (enemies.size == 0) {
+            log.debug("lolnice");
+            AL.getGame().setScreen(AL.getScreenManager().get(MainMenuScreen.class));
+        } else if (playerHelper.isDead()) {
+            log.debug("ded");
+            AL.getGame().setScreen(AL.getScreenManager().get(MainMenuScreen.class));
+        }
+
         arcadeWorld.render();
 
         if (playerHelper != null)
@@ -267,6 +280,7 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
             sprite.draw(spriteBatch);
             spriteBatch.draw(playerHelper.getCooldownTextures()[Character.ABILITY_3], 448, 154, 50, 50);
 
+            spriteBatch.draw(playerHelper.getIcon(Character.ABILITY_4), 359, 77, 50, 50);
             sprite = playerHelper.getAbilityOverlaySprite(Character.ABILITY_4);
             sprite.setBounds(359, 77, 50, 50);
             sprite.draw(spriteBatch);

@@ -35,6 +35,11 @@ public class StatSystem extends IteratingSystem {
         CharacterComponent characterComponent = mapperCharacterComponent.get(entityId);
 
         if (stats.getFlag(StatComponent.FlagStat.dead)) {
+            if(stats.statEventHanlder != null)
+            {
+                stats.statEventHanlder.onDeath(stats, entityId);
+                stats.statEventHanlder = null;
+            }
             if (stats.getFlag(StatComponent.FlagStat.deleteOnDeath)) {
                 arcadeWorld.delete(entityId);
             }
@@ -111,7 +116,6 @@ public class StatSystem extends IteratingSystem {
         }
 
         if (!stats.getFlag(StatComponent.FlagStat.invulnerable)) {
-
             for (Damage damage : stats.damages) {
                 float amount = 0;
                 switch (damage.damageCalculationType) {
@@ -151,6 +155,7 @@ public class StatSystem extends IteratingSystem {
                     stats.setFlag(StatComponent.FlagStat.dead, true);
                 } else
                     stats.addRuntimeStat(StatComponent.RuntimeStat.health, -amount);
+
                 stats.damages.removeValue(damage, true);
             }
         }

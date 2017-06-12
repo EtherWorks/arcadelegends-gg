@@ -16,6 +16,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.Disposable;
+import com.badlogic.gdx.utils.IntArray;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import gg.al.character.Ezreal;
@@ -40,6 +41,7 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -170,6 +172,7 @@ public class ArcadeWorld implements Disposable {
         WorldConfiguration worldConfiguration = new WorldConfigurationBuilder()
                 .with(1,
                         new StatSystem(this),
+                        new AISystem(),
                         new CharacterSystem(physicsWorld),
                         new RegenSystem(.5f)
                 )
@@ -378,6 +381,36 @@ public class ArcadeWorld implements Disposable {
                 tiledMap.getProperties().get("spawnX", Integer.class),
                 tiledMap.getProperties().get("spawnY", Integer.class)
         );
+    }
+
+    public IntArray spawnEnemies(int playerId) {
+        String enemies = (String) tiledMap.getProperties().get("enemies");
+        IntArray array = new IntArray();
+        for (String enemy : enemies.split("-")) {
+            String[] parts = enemy.split(";");
+
+            Vector2 pos = new Vector2(Integer.parseInt(parts[0]),
+                    Integer.parseInt(parts[1]));
+            EntityArguments arguments = getArguments(parts[2]);
+            PositionComponent.PositionTemplate positionDef = arguments.get("PositionComponent", PositionComponent.PositionTemplate.class);
+            positionDef.x = pos.x;
+            positionDef.y = pos.y;
+            int id = spawn(Entities.Player, arguments);
+            StatComponent statComponent = entityWorld.getMapper(StatComponent.class).get(id);
+            final float xp = Integer.parseInt(parts[3]);
+            statComponent.statEventHanlder = (statComponent1, entityId) ->
+            {
+                StatComponent player = entityWorld.getMapper(StatComponent.class).get(playerId);
+                player.addRuntimeStat(StatComponent.RuntimeStat.experience, xp);
+                array.removeValue(id);
+            };
+            statComponent.setFlag(StatComponent.FlagStat.deleteOnDeath, true);
+            AIComponent aiComponent = entityWorld.getMapper(AIComponent.class).create(id);
+            aiComponent.target = playerId;
+            aiComponent.aggroRange = 5;
+            array.add(id);
+        }
+        return array;
     }
 
     public int spawnPlayer() {
