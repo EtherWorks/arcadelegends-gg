@@ -79,6 +79,9 @@ public class ArcadeWorld implements Disposable {
     private float step = 1.0f / 60;
     @Getter
     private LogicMap logicMap;
+    @Getter
+    @Setter
+    private boolean debug = false;
 
     @Getter
     private Assets.LevelAssets levelAssets;
@@ -275,7 +278,8 @@ public class ArcadeWorld implements Disposable {
         decalBatch.add(mapDecal);
         decalBatch.flush();
 
-        debugPhysicrender.render(physicsWorld, cam.combined);
+        if (debug)
+            debugPhysicrender.render(physicsWorld, cam.combined);
     }
 
     @Override

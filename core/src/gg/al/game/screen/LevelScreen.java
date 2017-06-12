@@ -76,6 +76,8 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
     private Label[] abilityPointsLabels;
 
     private Matrix4 rotationMatrix;
+    private Matrix4 invRotationMatrix;
+    private Vector3 tempVec;
     private Vector3 cameraVector;
     private Vector2 lastMousePos;
 
@@ -122,7 +124,9 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
         rotationMatrix = new Matrix4().rotate(Vector3.X, rot);
         cameraVector = new Vector3(0, 1, 1);
         cameraVector.mul(rotationMatrix);
+        invRotationMatrix = rotationMatrix.cpy().inv();
         lastMousePos = new Vector2(Gdx.input.getX(), Gdx.input.getY());
+        tempVec = new Vector3();
     }
 
     @Override
@@ -326,8 +330,20 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
         AL.graphics.getGL20().glClearColor(0, 0.3f, 0, 1);
         AL.graphics.getGL20().glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 
+
         arcadeWorld.setDelta(AL.graphics.getDeltaTime());
         arcadeWorld.step();
+
+        if(AL.input.isKeyPressed(Input.Keys.SPACE))
+        {
+            tempVec.set(camera.position).mul(invRotationMatrix);
+            float z = tempVec.z;
+            Vector2 pos = playerHelper.getPosition();
+            tempVec.set(pos, z);
+            tempVec.mul(rotationMatrix);
+            camera.position.set(tempVec);
+            camera.update();
+        }
 
         if (enemies.size == 0) {
             log.debug("lolnice");
@@ -525,6 +541,10 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
 
     @Override
     public boolean scrolled(int amount) {
+        if(amount > 0 && camera.position.z > 50)
+            return false;
+        else if(amount < 0 && camera.position.z < 10)
+            return false;
         camera.translate(0, -amount * cameraVector.y, amount * cameraVector.z);
         camera.update();
         return false;

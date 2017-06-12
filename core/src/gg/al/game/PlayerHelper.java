@@ -7,10 +7,12 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Matrix4;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Disposable;
 import gg.al.character.Character;
 import gg.al.logic.ArcadeWorld;
 import gg.al.logic.component.CharacterComponent;
+import gg.al.logic.component.PhysicComponent;
 import gg.al.logic.component.StatComponent;
 import gg.al.util.Assets;
 import gg.al.util.Shaders;
@@ -98,6 +100,10 @@ public class PlayerHelper implements Disposable {
         }
     }
 
+    public Vector2 getPosition() {
+        return arcadeWorld.getEntityWorld().getMapper(PhysicComponent.class).get(entityId).body.getPosition();
+    }
+
     public void step(float delta) {
         StatComponent stat = arcadeWorld.getEntityWorld().getMapper(StatComponent.class).get(entityId);
         CharacterComponent chara = arcadeWorld.getEntityWorld().getMapper(CharacterComponent.class).get(entityId);
@@ -131,8 +137,7 @@ public class PlayerHelper implements Disposable {
         buffer.end();
     }
 
-    public boolean isDead()
-    {
+    public boolean isDead() {
         return arcadeWorld.getEntityWorld().getMapper(StatComponent.class).get(entityId).getFlag(StatComponent.FlagStat.dead);
     }
 
