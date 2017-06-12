@@ -67,8 +67,7 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
     private BitmapFont uiFontSmall;
     private Label.LabelStyle uiLabelStyle;
     private Label actionPointsLabel;
-    private Label attackPointsLabel;
-    private Label spellPowerLabel;
+
 
     private Label levelLabel;
     private Label xpLabel;
@@ -96,6 +95,7 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
     private Label actionPointRegenLabel;
     private Label healthRegenLabel;
     private Label resourceRegenLabel;
+
 
 
 
@@ -261,9 +261,7 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
             levelLabel.setPosition(95, 60);
             uiStage.addActor(levelLabel);
 
-            attackPointsLabel = new Label("0 AP", uiLabelStyle);
-            attackPointsLabel.setPosition(465, 115);
-            //       uiStage.addActor(attackPointsLabel);
+
 
             // First row
             attackDamageLabel = new Label("0 AD", uiLabelStyle);
