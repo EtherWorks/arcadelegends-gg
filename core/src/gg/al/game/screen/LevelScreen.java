@@ -344,12 +344,12 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
         spriteBatch.setProjectionMatrix(uiCamera.combined);
         spriteBatch.begin();
         spriteBatch.draw(levelAssets.uioverlay, 10, 10, levelAssets.uioverlay.getWidth() / 2, levelAssets.uioverlay.getHeight() / 2);
-        spriteBatch.draw(levelAssets.uistats, 1, 1080-levelAssets.uistats.getHeight() * 1.5f, levelAssets.uistats.getWidth() * 1.5f, levelAssets.uistats.getHeight() * 1.5f);
+        spriteBatch.draw(levelAssets.uistats, 1, 1080-levelAssets.uistats.getHeight() * 1.5f, levelAssets.uistats.getWidth() * 1.6f, levelAssets.uistats.getHeight() * 1.5f);
 
         if (playerEnt != -1) {
             StatComponent stats = arcadeWorld.getEntityWorld().getMapper(StatComponent.class).get(playerEnt);
             actionPointsLabel.setText(String.format("%1.0f", stats.getRuntimeStat(StatComponent.RuntimeStat.actionPoints)));
-            attackDamageLabel.setText(String.format("%1.0f AD", stats.getCurrentStat(StatComponent.BaseStat.attackDamage)));
+          //  attackDamageLabel.setText(String.format("%1.0f AD", stats.getCurrentStat(StatComponent.BaseStat.attackDamage)));
 
             levelLabel.setText(String.format("Level %1.0f", stats.getRuntimeStat(StatComponent.RuntimeStat.level)));
             abilityPointsLabels[0].setText(String.format("%1.0f", stats.getRuntimeStat(StatComponent.RuntimeStat.trait_points)));
