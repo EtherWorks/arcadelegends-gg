@@ -1,12 +1,14 @@
 package gg.al.character;
 
 import com.artemis.Component;
+import com.artemis.ComponentMapper;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.Ray;
 import com.badlogic.gdx.utils.IntArray;
+import com.badlogic.gdx.utils.IntSet;
 import com.badlogic.gdx.utils.Pool;
 import gg.al.game.AL;
 import gg.al.logic.ArcadeWorld;
@@ -294,6 +296,10 @@ public abstract class Character {
             statComponent.statusEffects.put(effectName, effect);
     }
 
+    protected boolean isMoving() {
+        return !getComponent(entityID, PhysicComponent.class).body.getLinearVelocity().equals(Vector2.Zero);
+    }
+
     protected IntArray getEntitiesInArea(Vector2 start, Vector2 end) {
         Vector2 pos = getComponent(entityID, PositionComponent.class).position;
         IntArray array = new IntArray();
@@ -352,7 +358,14 @@ public abstract class Character {
         Tile t = getTile(Math.round(mousePos.x), Math.round(mousePos.y));
         if (t.getEntities().size == 0)
             return -1;
-        return t.getEntities().first();
+        IntSet.IntSetIterator iterator = t.getEntities().iterator();
+        ComponentMapper<StatComponent> statMapper = arcadeWorld.getEntityWorld().getMapper(StatComponent.class);
+        while (iterator.hasNext) {
+            int entity = iterator.next();
+            if (statMapper.has(entity))
+                return entity;
+        }
+        return -1;
     }
 
     public Tile getTile(Vector2 vec) {

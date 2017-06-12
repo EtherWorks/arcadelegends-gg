@@ -245,19 +245,20 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
                 uiStage.addActor(abilLabel);
                 abilityPointsLabels[i] = abilLabel;
             }
-            int val = 40;
-            abilityPointsLabels[0].setPosition(290 + val, 50);
-            abilityPointsLabels[1].setPosition(290 + val, 115);
-            abilityPointsLabels[2].setPosition(375 + val, 115);
-            abilityPointsLabels[3].setPosition(460 + val, 115);
-            abilityPointsLabels[4].setPosition(375 + val, 50);
+            int val = 45;
+            int val2 = 5;
+            abilityPointsLabels[0].setPosition(290 + val, 50 + val2);
+            abilityPointsLabels[1].setPosition(290 + val, 115 + val2);
+            abilityPointsLabels[2].setPosition(375 + val, 115 + val2);
+            abilityPointsLabels[3].setPosition(460 + val, 115 + val2);
+            abilityPointsLabels[4].setPosition(375 + val, 50 + val2);
 
             xpLabel = new Label("", uiLabelStyle);
-            xpLabel.setPosition(75, 50);
+            xpLabel.setPosition(90, 60);
             uiStage.addActor(xpLabel);
 
             levelLabel = new Label("Level 0", uiLabelStyle);
-            levelLabel.setPosition(95, 60);
+            levelLabel.setPosition(100, 70);
             uiStage.addActor(levelLabel);
 
 
@@ -331,9 +332,11 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
         if (enemies.size == 0) {
             log.debug("lolnice");
             AL.getGame().setScreen(AL.getScreenManager().get(MainMenuScreen.class));
+            reInit = true;
         } else if (playerHelper.isDead()) {
             log.debug("ded");
             AL.getGame().setScreen(AL.getScreenManager().get(MainMenuScreen.class));
+            reInit = true;
         }
 
         arcadeWorld.render();

@@ -41,8 +41,12 @@ public class Kevin extends Character {
     protected boolean checkOnCast(int abilityInd) {
         switch (abilityInd) {
             case ABILITY_1:
+                if(isMoving())
+                    return false;
                 return true;
             case ABILITY_2:
+                if(isMoving())
+                    return false;
                 int targetId = getEntityAtMouse();
                 if (targetId == -1)
                     return false;
@@ -54,6 +58,8 @@ public class Kevin extends Character {
             case ABILITY_3:
                 return true;
             case ABILITY_4:
+                if(isMoving())
+                    return false;
                 targetId = getEntityAtMouse();
                 if (targetId == -1)
                     return false;
