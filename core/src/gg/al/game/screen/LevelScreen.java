@@ -231,9 +231,8 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
 
 
             uiFontSmall = levelAssets.uifontsmaller;
-            uiLabelStyle = new Label.LabelStyle(uiFontSmall, Color.BLACK);
-            uiFontSmall = levelAssets.uifontsmall;
             uiLabelStyle = new Label.LabelStyle(uiFontSmall, Color.WHITE);
+
 
             skillPointLabel = new Label("0 Skillpoints", uiLabelStyle);
             skillPointLabel.setPosition(130, 250);
@@ -273,7 +272,7 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
             uiStage.addActor(movespeedLabel);
 
             armorLabel = new Label("0 AR", uiLabelStyle);
-            armorLabel.setPosition(200,1010);
+            armorLabel.setPosition(250,1010);
             uiStage.addActor(armorLabel);
 
             // Second row
@@ -286,7 +285,7 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
             uiStage.addActor(attackspeedLabel);
 
             magicResistLabel = new Label("0 MR", uiLabelStyle);
-            magicResistLabel.setPosition(200, 980);
+            magicResistLabel.setPosition(250, 980);
             uiStage.addActor(magicResistLabel);
 
             // Third row
@@ -308,7 +307,7 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
             uiStage.addActor(healthRegenLabel);
 
             resourceRegenLabel = new Label("0 RS/S", uiLabelStyle);
-            resourceRegenLabel.setPosition(200, 920);
+            resourceRegenLabel.setPosition(250, 920);
             uiStage.addActor(resourceRegenLabel);
 
             reInit = false;
