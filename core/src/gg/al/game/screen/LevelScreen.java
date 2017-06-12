@@ -218,7 +218,7 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
             uiLabelStyle = new Label.LabelStyle(uiFontSmall, Color.WHITE);
 
             skillPointLabel = new Label("0 Skillpoints", uiLabelStyle);
-            skillPointLabel.setPosition(140, 250);
+            skillPointLabel.setPosition(130, 250);
             uiStage.addActor(skillPointLabel);
 
             abilityPointsLabels = new Label[5];
@@ -298,7 +298,7 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
             abilityPointsLabels[3].setText(String.format("%1.0f", stats.getRuntimeStat(StatComponent.RuntimeStat.ability_3_points)));
             abilityPointsLabels[4].setText(String.format("%1.0f", stats.getRuntimeStat(StatComponent.RuntimeStat.ability_4_points)));
             if (stats.getRuntimeStat(StatComponent.RuntimeStat.skillPoints) != 0)
-                skillPointLabel.setText(String.format("%1.0f", stats.getRuntimeStat(StatComponent.RuntimeStat.skillPoints)));
+                skillPointLabel.setText(String.format("%1.0fx", stats.getRuntimeStat(StatComponent.RuntimeStat.skillPoints)));
             else skillPointLabel.setText("");
             xpLabel.setText(String.format("%1.0f/%1.0f XP", stats.getRuntimeStat(StatComponent.RuntimeStat.experience), stats.getNextLevelExperience()));
         }
