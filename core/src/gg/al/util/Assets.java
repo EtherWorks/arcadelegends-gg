@@ -64,6 +64,9 @@ public class Assets {
         @AssignmentAssetManager.Asset("assets/ui/uifont_small.fnt")
         public BitmapFont uifontsmall;
 
+        @AssignmentAssetManager.Asset("assets/ui/uifont_smaller.fnt")
+        public BitmapFont uifontsmaller;
+
 
         @AssignmentAssetManager.Asset("assets/ui/cooldown_gradient.png")
         public Texture cooldown_gradient;

@@ -11,7 +11,6 @@ import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Matrix4;
@@ -82,6 +81,23 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
     private Vector2 lastMousePos;
 
     private IntArray enemies;
+
+    private Label attackDamageLabel;
+    private Label movespeedLabel;
+    private Label armorLabel;
+
+    private Label spellPowerLabel;
+    private Label attackspeedLabel;
+    private Label magicResistLabel;
+
+    private Label cooldownReductionLabel;
+    private Label critchanceLabel;
+
+    private Label actionPointRegenLabel;
+    private Label healthRegenLabel;
+    private Label resourceRegenLabel;
+
+
 
     public LevelScreen(String mapName) {
         this(mapName, 15);
@@ -214,6 +230,8 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
             uiStage.addActor(actionPointsLabel);
 
 
+            uiFontSmall = levelAssets.uifontsmaller;
+            uiLabelStyle = new Label.LabelStyle(uiFontSmall, Color.BLACK);
             uiFontSmall = levelAssets.uifontsmall;
             uiLabelStyle = new Label.LabelStyle(uiFontSmall, Color.WHITE);
 
@@ -247,9 +265,53 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
             attackPointsLabel.setPosition(465, 115);
             //       uiStage.addActor(attackPointsLabel);
 
+            // First row
+            attackDamageLabel = new Label("0 AD", uiLabelStyle);
+            attackDamageLabel.setPosition(35, 1010);
+            uiStage.addActor(attackDamageLabel);
+
+            movespeedLabel = new Label("0 MS", uiLabelStyle);
+            movespeedLabel.setPosition(150, 1010);
+            uiStage.addActor(movespeedLabel);
+
+            armorLabel = new Label("0 AR", uiLabelStyle);
+            armorLabel.setPosition(200,1010);
+            uiStage.addActor(armorLabel);
+
+            // Second row
             spellPowerLabel = new Label("0 SP", uiLabelStyle);
-            spellPowerLabel.setPosition(465, 82);
-            //  uiStage.addActor(spellPowerLabel);
+            spellPowerLabel.setPosition(35, 980);
+            uiStage.addActor(spellPowerLabel);
+
+            attackspeedLabel = new Label("0 AS", uiLabelStyle);
+            attackspeedLabel.setPosition(150, 980);
+            uiStage.addActor(attackspeedLabel);
+
+            magicResistLabel = new Label("0 MR", uiLabelStyle);
+            magicResistLabel.setPosition(200, 980);
+            uiStage.addActor(magicResistLabel);
+
+            // Third row
+            cooldownReductionLabel = new Label("0 CDR", uiLabelStyle);
+            cooldownReductionLabel.setPosition(35, 950);
+            uiStage.addActor(cooldownReductionLabel);
+
+            critchanceLabel = new Label("0 CRIT", uiLabelStyle);
+            critchanceLabel.setPosition(150, 950);
+            uiStage.addActor(critchanceLabel);
+
+            // Fourth row
+            actionPointRegenLabel = new Label("0 AP/S", uiLabelStyle);
+            actionPointRegenLabel.setPosition(35, 920);
+            uiStage.addActor(actionPointRegenLabel);
+
+            healthRegenLabel = new Label("0 HP/S", uiLabelStyle);
+            healthRegenLabel.setPosition(150, 920);
+            uiStage.addActor(healthRegenLabel);
+
+            resourceRegenLabel = new Label("0 RS/S", uiLabelStyle);
+            resourceRegenLabel.setPosition(200, 920);
+            uiStage.addActor(resourceRegenLabel);
 
             reInit = false;
             playerEnt = -1;
@@ -285,11 +347,12 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
         spriteBatch.setProjectionMatrix(uiCamera.combined);
         spriteBatch.begin();
         spriteBatch.draw(levelAssets.uioverlay, 10, 10, levelAssets.uioverlay.getWidth() / 2, levelAssets.uioverlay.getHeight() / 2);
-        spriteBatch.draw(levelAssets.uistats, 1, 1080 - levelAssets.uistats.getHeight() * 1.5f, levelAssets.uistats.getWidth() * 1.5f, levelAssets.uistats.getHeight() * 1.5f);
+        spriteBatch.draw(levelAssets.uistats, 1, 1080-levelAssets.uistats.getHeight() * 1.5f, levelAssets.uistats.getWidth() * 1.5f, levelAssets.uistats.getHeight() * 1.5f);
 
         if (playerEnt != -1) {
             StatComponent stats = arcadeWorld.getEntityWorld().getMapper(StatComponent.class).get(playerEnt);
             actionPointsLabel.setText(String.format("%1.0f", stats.getRuntimeStat(StatComponent.RuntimeStat.actionPoints)));
+            attackDamageLabel.setText(String.format("%1.0f AD", stats.getCurrentStat(StatComponent.BaseStat.attackDamage)));
 
             levelLabel.setText(String.format("Level %1.0f", stats.getRuntimeStat(StatComponent.RuntimeStat.level)));
             abilityPointsLabels[0].setText(String.format("%1.0f", stats.getRuntimeStat(StatComponent.RuntimeStat.trait_points)));
