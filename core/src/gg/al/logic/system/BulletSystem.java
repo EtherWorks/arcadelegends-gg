@@ -39,6 +39,8 @@ public class BulletSystem extends IteratingSystem {
         PhysicComponent phys = mapperPhysicComponent.get(entityId);
         bCon.currentDistance += phys.body.getPosition().dst(bCon.old);
         if (bCon.maxDistance <= bCon.currentDistance) {
+            if(bCon.deleteCallback != null)
+                bCon.deleteCallback.onDelete();
             arcadeWorld.delete(entityId);
             return;
         }

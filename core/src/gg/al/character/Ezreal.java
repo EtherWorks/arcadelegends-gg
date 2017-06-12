@@ -81,7 +81,7 @@ public class Ezreal extends Character {
                     StatComponent hitStat = getComponent(hit, StatComponent.class);
                     if (hitStat != null) {
                         bulletComponent.delete = true;
-                        hitStat.damages.add(new Damage(Damage.DamageType.Normal, damage, 0));
+                        hitStat.damages.add(new Damage(Damage.DamageType.Physical, damage, 0));
                         for (int i = 0; i < cooldownTimer.length; i++) {
                             if (cooldownTimer[i] != 0) {
                                 cooldownTimer[i] -= 1.5f;
@@ -197,7 +197,7 @@ public class Ezreal extends Character {
                                 bulletComponent.delete = true;
                                 StatComponent statComponent = getComponent(hit, StatComponent.class);
                                 if (statComponent != null) {
-                                    statComponent.damages.add(new Damage(Damage.DamageType.Normal, damage4, 0));
+                                    statComponent.damages.add(new Damage(Damage.DamageType.Physical, damage4, 0));
                                     addPassiveStack();
                                 }
                             }
@@ -246,7 +246,7 @@ public class Ezreal extends Character {
                 bulletComponent.delete = true;
                 StatComponent statComponent = getComponent(hit, StatComponent.class);
                 if (statComponent != null)
-                    statComponent.damages.add(new Damage(Damage.DamageType.Normal, damage, 0));
+                    statComponent.damages.add(new Damage(Damage.DamageType.Physical, damage, 0));
             }
         };
     }

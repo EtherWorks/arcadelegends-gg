@@ -22,7 +22,7 @@ public class Damage {
     }
 
     public enum DamageType {
-        True, Magic, Normal
+        True, Magic, Physical
     }
 
     public enum DamageCalculationType {

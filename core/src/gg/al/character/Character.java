@@ -239,7 +239,7 @@ public abstract class Character {
         float amount = stats.getCurrentStat(StatComponent.BaseStat.attackDamage);
         if (random.nextFloat() <= stats.getCurrentStat(StatComponent.BaseStat.criticalStrikeChance))
             amount *= (2 + stats.getCurrentStat(StatComponent.BaseStat.criticalStrikeDamage));
-        Damage dmg = new Damage(Damage.DamageType.Normal,
+        Damage dmg = new Damage(Damage.DamageType.Physical,
                 amount,
                 stats.getCurrentStat(StatComponent.BaseStat.armorPenetration));
         getComponent(enemyId, StatComponent.class).damages.add(dmg);
@@ -300,11 +300,10 @@ public abstract class Character {
         return !getComponent(entityID, PhysicComponent.class).body.getLinearVelocity().equals(Vector2.Zero);
     }
 
-    protected IntArray getEntitiesInArea(Vector2 start, Vector2 end) {
-        Vector2 pos = getComponent(entityID, PositionComponent.class).position;
+    protected IntArray getEntitiesInArea(Vector2 mid, Vector2 start, Vector2 end) {
         IntArray array = new IntArray();
-        for (float x = pos.x + Math.min(start.x, end.x); x <= pos.x + Math.max(start.x, end.x); x++) {
-            for (float y = pos.y + Math.min(start.y, end.y); y <= pos.y + Math.max(start.y, end.y); y++) {
+        for (float x = mid.x + Math.min(start.x, end.x); x <= mid.x + Math.max(start.x, end.x); x++) {
+            for (float y = mid.y + Math.min(start.y, end.y); y <= mid.y + Math.max(start.y, end.y); y++) {
                 try {
                     Tile t = arcadeWorld.getTile((int) x, (int) y);
                     if (t.getEntities().size != 0)
@@ -315,6 +314,10 @@ public abstract class Character {
             }
         }
         return array;
+    }
+
+    protected IntArray getEntitiesInArea( Vector2 start, Vector2 end) {
+        return getEntitiesInArea(getComponent(entityID, PositionComponent.class).position, start, end);
     }
 
     protected int spawn(Entities entity, EntityArguments arguments) {

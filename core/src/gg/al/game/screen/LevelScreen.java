@@ -152,7 +152,7 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
                 break;
             case Input.Keys.K:
                 StatComponent statComponent = arcadeWorld.getEntityWorld().getMapper(StatComponent.class).get(playerEnt);
-                statComponent.damages.add(new Damage(Damage.DamageType.Normal, 10, 10));
+                statComponent.damages.add(new Damage(Damage.DamageType.Physical, 10, 10));
                 break;
             case Input.Keys.J:
                 statComponent = arcadeWorld.getEntityWorld().getMapper(StatComponent.class).get(playerEnt);
@@ -213,6 +213,8 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
             AL.getAudioManager().registerSound("sword_2", levelAssets.sword_2);
             AL.getAudioManager().registerSound("sword_3", levelAssets.sword_3);
             AL.getAudioManager().registerSound("sword_4", levelAssets.sword_4);
+            AL.getAudioManager().registerSound("rocketlauncher", levelAssets.rocketLauncher);
+            AL.getAudioManager().registerSound("boom", levelAssets.boom);
             spriteBatch = new SpriteBatch();
             font = new BitmapFont();
 
@@ -336,6 +338,7 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
 
             spawnPlayer();
             enemies = arcadeWorld.spawnEnemies(playerEnt);
+            arcadeWorld.setDebug(true);
         }
 
         Gdx.input.setInputProcessor(this);
@@ -482,6 +485,8 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
             AL.getAudioManager().unregisterSound("sword_2");
             AL.getAudioManager().unregisterSound("sword_3");
             AL.getAudioManager().unregisterSound("sword_4");
+            AL.getAudioManager().unregisterSound("rocketlauncher");
+            AL.getAudioManager().unregisterSound("boom");
             if (playerHelper != null)
                 playerHelper.dispose();
         }

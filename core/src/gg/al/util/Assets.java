@@ -99,6 +99,12 @@ public class Assets {
         @AssignmentAssetManager.Asset("assets/ui/stats.png")
         public Texture uistats;
 
+        @AssignmentAssetManager.Asset("assets/audio/rocketlauncher.wav")
+        public Sound rocketLauncher;
+
+        @AssignmentAssetManager.Asset("assets/audio/boom.wav")
+        public Sound boom;
+
         private BiMap<String, Object> assetMap;
 
         public <T> T get(String name) {

@@ -92,7 +92,7 @@ public class SuperGhost extends Character {
                     StatComponent hitStat = getComponent(hit, StatComponent.class);
                     if (hitStat != null) {
                         bulletComponent.delete = true;
-                        hitStat.damages.add(new Damage(Damage.DamageType.Normal, damage, 0));
+                        hitStat.damages.add(new Damage(Damage.DamageType.Physical, damage, 0));
                     }
                 };
                 break;

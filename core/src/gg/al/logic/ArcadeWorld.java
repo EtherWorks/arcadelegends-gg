@@ -408,7 +408,7 @@ public class ArcadeWorld implements Disposable {
             statComponent.setFlag(StatComponent.FlagStat.deleteOnDeath, true);
             AIComponent aiComponent = entityWorld.getMapper(AIComponent.class).create(id);
             aiComponent.target = playerId;
-            aiComponent.aggroRange = 5;
+            aiComponent.aggroRange = Integer.parseInt(parts[4]);
             array.add(id);
         }
         return array;

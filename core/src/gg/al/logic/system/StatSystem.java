@@ -143,7 +143,7 @@ public class StatSystem extends IteratingSystem {
                         float mr = stats.getCurrentStat(StatComponent.BaseStat.magicResist) - stats.getCurrentStat(StatComponent.BaseStat.magicResist) * damage.penetration / 100;
                         amount *= 100 / (100 + mr);
                         break;
-                    case Normal:
+                    case Physical:
                         float ar = stats.getCurrentStat(StatComponent.BaseStat.armor) - stats.getCurrentStat(StatComponent.BaseStat.armor) * damage.penetration / 100;
                         amount *= 100 / (100 + ar);
                         break;

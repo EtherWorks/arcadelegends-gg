@@ -41,11 +41,11 @@ public class Kevin extends Character {
     protected boolean checkOnCast(int abilityInd) {
         switch (abilityInd) {
             case ABILITY_1:
-                if(isMoving())
+                if (isMoving())
                     return false;
                 return true;
             case ABILITY_2:
-                if(isMoving())
+                if (isMoving())
                     return false;
                 int targetId = getEntityAtMouse();
                 if (targetId == -1)
@@ -58,7 +58,7 @@ public class Kevin extends Character {
             case ABILITY_3:
                 return true;
             case ABILITY_4:
-                if(isMoving())
+                if (isMoving())
                     return false;
                 targetId = getEntityAtMouse();
                 if (targetId == -1)
@@ -88,7 +88,7 @@ public class Kevin extends Character {
                     int entity = entities.get(i);
                     if (entity == entityID)
                         continue;
-                    applyDamage(entity, new Damage(Damage.DamageType.Normal,
+                    applyDamage(entity, new Damage(Damage.DamageType.Physical,
                             50 + 20 * casterStat.getRuntimeStat(StatComponent.RuntimeStat.ability_1_points)
                                     + casterStat.getCurrentStat(StatComponent.BaseStat.attackDamage) * (0.5f + 0.1f * casterStat.getRuntimeStat(StatComponent.RuntimeStat.ability_1_points)),
                             casterStat.getCurrentStat(StatComponent.BaseStat.armorPenetration)));
@@ -115,7 +115,7 @@ public class Kevin extends Character {
                                 time += delta;
                                 if (time >= .5f || effect.remainingTime <= .5f) {
                                     statComponent.damages.add(
-                                            new Damage(Damage.DamageType.Normal,
+                                            new Damage(Damage.DamageType.Physical,
                                                     tickDamage, tickPen));
                                     time = effect.remainingTime <= .5f ? -1 : 0;
                                 }
@@ -139,11 +139,11 @@ public class Kevin extends Character {
                 int entity = spawn(Entities.Bullet, arguments);
                 BulletComponent bCon = getComponent(entity, BulletComponent.class);
                 getComponent(entity, PhysicComponent.class).body.setBullet(true);
-                bCon.speed = 2;
+                bCon.speed = 4;
                 bCon.move.set(dir);
                 bCon.old.set(pos.x, pos.y);
                 bCon.target = (int) extraData[ABILITY_4];
-                bCon.maxDistance = 20;
+                bCon.maxDistance = 10;
                 final float damage = 0.4f + 0.1f * statComponent.getCurrentStat(StatComponent.BaseStat.attackDamage) / 100;
                 final float baseDamage = 200 + 50 * statComponent.getRuntimeStat(StatComponent.RuntimeStat.ability_4_points);
                 final int caster = entityID;
@@ -156,6 +156,22 @@ public class Kevin extends Character {
                         bFix.getBody().setLinearVelocity(Vector2.Zero);
                     }
                     contact.setEnabled(false);
+                };
+                bCon.deleteCallback = () ->
+                {
+                    IntArray enemies = getEntitiesInArea(getComponent(entity, PhysicComponent.class).body.getPosition(), new Vector2(-2, -2), new Vector2(2, 2));
+                    for (int i = 0; i < enemies.size; i++)
+                    {
+                        int enemy = enemies.get(i);
+                        if(enemy == caster)
+                            continue;
+                        StatComponent enemyStat = getComponent(enemy, StatComponent.class);
+                        if(enemyStat != null)
+                        {
+                            enemyStat.damages.add(new Damage(Damage.DamageType.Physical, 300, 0));
+                        }
+                    }
+                    AL.getAudioManager().playSound("boom");
                 };
                 break;
         }
@@ -217,6 +233,7 @@ public class Kevin extends Character {
                     renderComponent.faceRight();
                 else if (pos.x > target.position.x)
                     renderComponent.faceLeft();
+                AL.getAudioManager().playSound("rocketlauncher");
                 break;
         }
     }
