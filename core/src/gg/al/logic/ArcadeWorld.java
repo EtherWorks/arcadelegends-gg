@@ -9,7 +9,6 @@ import com.badlogic.gdx.graphics.g3d.decals.Decal;
 import com.badlogic.gdx.graphics.g3d.decals.DecalBatch;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.maps.tiled.TiledMap;
-import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Plane;
 import com.badlogic.gdx.math.Vector2;
@@ -41,9 +40,7 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 /**
@@ -398,7 +395,7 @@ public class ArcadeWorld implements Disposable {
             int id = spawn(Entities.Player, arguments);
             StatComponent statComponent = entityWorld.getMapper(StatComponent.class).get(id);
             final float xp = Integer.parseInt(parts[3]);
-            statComponent.statEventHanlder = (statComponent1, entityId) ->
+            statComponent.statEventHandler = (statComponent1, entityId) ->
             {
                 StatComponent player = entityWorld.getMapper(StatComponent.class).get(playerId);
                 player.addRuntimeStat(StatComponent.RuntimeStat.experience, xp);

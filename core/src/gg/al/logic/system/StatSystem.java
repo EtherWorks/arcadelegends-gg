@@ -35,10 +35,10 @@ public class StatSystem extends IteratingSystem {
         CharacterComponent characterComponent = mapperCharacterComponent.get(entityId);
 
         if (stats.getFlag(StatComponent.FlagStat.dead)) {
-            if(stats.statEventHanlder != null)
+            if(stats.statEventHandler != null)
             {
-                stats.statEventHanlder.onDeath(stats, entityId);
-                stats.statEventHanlder = null;
+                stats.statEventHandler.onDeath(stats, entityId);
+                stats.statEventHandler = null;
             }
             if (stats.getFlag(StatComponent.FlagStat.deleteOnDeath)) {
                 arcadeWorld.delete(entityId);

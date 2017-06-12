@@ -30,7 +30,7 @@ public class StatComponent extends PooledComponent implements ITemplateable {
     private final ObjectMap<String, Float> customStats;
     private final ObjectMap<String, Boolean> customFlags;
 
-    public StatEventHanlder statEventHanlder;
+    public StatEventHandler statEventHandler;
 
     public StatComponent() {
         runtimeStats = new ObjectMap<>();
@@ -60,7 +60,7 @@ public class StatComponent extends PooledComponent implements ITemplateable {
         heals.clear();
         customFlags.clear();
         customStats.clear();
-        statEventHanlder = null;
+        statEventHandler = null;
     }
 
     public void recalculateCurrent() {
@@ -367,7 +367,7 @@ public class StatComponent extends PooledComponent implements ITemplateable {
         }
     }
 
-    public interface StatEventHanlder
+    public interface StatEventHandler
     {
         void onDeath(StatComponent statComponent, int entityId);
     }
