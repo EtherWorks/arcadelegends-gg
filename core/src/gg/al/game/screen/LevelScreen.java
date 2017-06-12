@@ -323,12 +323,12 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
             uiStage.addActor(resourceRegenLabel);
 
 
-            healthLabel = new Label("5000/5000", uiLabelStyle);
+            healthLabel = new Label("0/0 HP", uiLabelStyle);
             healthLabel.setPosition(90, 250);
             healthLabel.setAlignment(Align.center);
             uiStage.addActor(healthLabel);
 
-            resourceLabel = new Label("5000/5000", uiLabelStyle);
+            resourceLabel = new Label("0/0 RS", uiLabelStyle);
             resourceLabel.setPosition(90, 187);
             resourceLabel.setAlignment(Align.center);
             uiStage.addActor(resourceLabel);
@@ -390,19 +390,19 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
             StatComponent stats = arcadeWorld.getEntityWorld().getMapper(StatComponent.class).get(playerEnt);
             actionPointsLabel.setText(String.format("%1.0f", stats.getRuntimeStat(StatComponent.RuntimeStat.actionPoints)));
             attackDamageLabel.setText(String.format("%1.0f AD", stats.getCurrentStat(StatComponent.BaseStat.attackDamage)));
-            movespeedLabel.setText(String.format("%1.0f MS", stats.getCurrentStat(StatComponent.BaseStat.moveSpeed)));
+            movespeedLabel.setText(String.format("%1.1f MS", stats.getCurrentStat(StatComponent.BaseStat.moveSpeed)));
             armorLabel.setText(String.format("%1.0f AR", stats.getCurrentStat(StatComponent.BaseStat.armor)));
             spellPowerLabel.setText(String.format("%1.0f SP", stats.getCurrentStat(StatComponent.BaseStat.spellPower)));
-            attackspeedLabel.setText(String.format("%1.0f AS", stats.getCurrentStat(StatComponent.BaseStat.attackSpeed)));
+            attackspeedLabel.setText(String.format("%1.2f AS", stats.getCurrentStat(StatComponent.BaseStat.attackSpeed)));
             magicResistLabel.setText(String.format("%1.0f MR", stats.getCurrentStat(StatComponent.BaseStat.magicResist)));
-            cooldownReductionLabel.setText(String.format("%1.0f CDR", stats.getCurrentStat(StatComponent.BaseStat.cooldownReduction)));
-            critchanceLabel.setText(String.format("%1.0f CRIT", stats.getCurrentStat(StatComponent.BaseStat.criticalStrikeChance)));
+            cooldownReductionLabel.setText(String.format("%1.0f%% CDR", stats.getCurrentStat(StatComponent.BaseStat.cooldownReduction)*100));
+            critchanceLabel.setText(String.format("%1.0f%% CRIT", stats.getCurrentStat(StatComponent.BaseStat.criticalStrikeChance)*100));
             actionPointRegenLabel.setText(String.format("%1.0f AP/S", stats.getCurrentStat(StatComponent.BaseStat.actionPointsRegen)));
             healthRegenLabel.setText(String.format("%1.0f HP/S", stats.getCurrentStat(StatComponent.BaseStat.healthRegen)));
             resourceRegenLabel.setText(String.format("%1.0f RS/S", stats.getCurrentStat(StatComponent.BaseStat.resourceRegen)));
 
-       //     healthLabel.setText(String.format("%1.0f/%1.0f", stats.getRuntimeStat(StatComponent.RuntimeStat.health), stats.getCurrentStat(StatComponent.BaseStat.maxHealth)));
-       //     resourceLabel.setText(String.format("%1.0f/%1.0f", stats.getRuntimeStat(StatComponent.RuntimeStat.resource), stats.getCurrentStat(StatComponent.BaseStat.maxResource)));
+            healthLabel.setText(String.format("%1.0f/%1.0f HP", stats.getRuntimeStat(StatComponent.RuntimeStat.health), stats.getCurrentStat(StatComponent.BaseStat.maxHealth)));
+            resourceLabel.setText(String.format("%1.0f/%1.0f RS", stats.getRuntimeStat(StatComponent.RuntimeStat.resource), stats.getCurrentStat(StatComponent.BaseStat.maxResource)));
 
 
             levelLabel.setText(String.format("Level %1.0f", stats.getRuntimeStat(StatComponent.RuntimeStat.level)));
