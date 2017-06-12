@@ -70,6 +70,13 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
     private Label actionPointsLabel;
     private Label attackPointsLabel;
     private Label spellPowerLabel;
+
+    private Label levelLabel;
+    private Label xpLabel;
+    private Label skillPointLabel;
+
+    private Label[] abilityPointsLabels;
+
     private Matrix4 rotationMatrix;
     private Vector3 cameraVector;
     private Vector2 lastMousePos;
@@ -209,6 +216,33 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
 
             uiFontSmall = levelAssets.uifontsmall;
             uiLabelStyle = new Label.LabelStyle(uiFontSmall, Color.WHITE);
+
+            skillPointLabel = new Label("0 Skillpoints", uiLabelStyle);
+            skillPointLabel.setPosition(140, 250);
+            uiStage.addActor(skillPointLabel);
+
+            abilityPointsLabels = new Label[5];
+            for (int i = 0; i < 5; i++) {
+                Label abilLabel = new Label(i + ": 0", uiLabelStyle);
+                abilLabel.setPosition(200 + i * 50, 100);
+                uiStage.addActor(abilLabel);
+                abilityPointsLabels[i] = abilLabel;
+            }
+            int val = 40;
+            abilityPointsLabels[0].setPosition(290 + val, 50);
+            abilityPointsLabels[1].setPosition(290 + val, 115);
+            abilityPointsLabels[2].setPosition(375 + val, 115);
+            abilityPointsLabels[3].setPosition(460 + val, 115);
+            abilityPointsLabels[4].setPosition(375 + val, 50);
+
+            xpLabel = new Label("", uiLabelStyle);
+            xpLabel.setPosition(75, 50);
+            uiStage.addActor(xpLabel);
+
+            levelLabel = new Label("Level 0", uiLabelStyle);
+            levelLabel.setPosition(95, 60);
+            uiStage.addActor(levelLabel);
+
             attackPointsLabel = new Label("0 AP", uiLabelStyle);
             attackPointsLabel.setPosition(465, 115);
             //       uiStage.addActor(attackPointsLabel);
@@ -251,11 +285,22 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
         spriteBatch.setProjectionMatrix(uiCamera.combined);
         spriteBatch.begin();
         spriteBatch.draw(levelAssets.uioverlay, 10, 10, levelAssets.uioverlay.getWidth() / 2, levelAssets.uioverlay.getHeight() / 2);
-        spriteBatch.draw(levelAssets.uistats, 1, 1080-levelAssets.uistats.getHeight() * 1.5f, levelAssets.uistats.getWidth() * 1.5f, levelAssets.uistats.getHeight() * 1.5f);
+        spriteBatch.draw(levelAssets.uistats, 1, 1080 - levelAssets.uistats.getHeight() * 1.5f, levelAssets.uistats.getWidth() * 1.5f, levelAssets.uistats.getHeight() * 1.5f);
 
         if (playerEnt != -1) {
             StatComponent stats = arcadeWorld.getEntityWorld().getMapper(StatComponent.class).get(playerEnt);
             actionPointsLabel.setText(String.format("%1.0f", stats.getRuntimeStat(StatComponent.RuntimeStat.actionPoints)));
+
+            levelLabel.setText(String.format("Level %1.0f", stats.getRuntimeStat(StatComponent.RuntimeStat.level)));
+            abilityPointsLabels[0].setText(String.format("%1.0f", stats.getRuntimeStat(StatComponent.RuntimeStat.trait_points)));
+            abilityPointsLabels[1].setText(String.format("%1.0f", stats.getRuntimeStat(StatComponent.RuntimeStat.ability_1_points)));
+            abilityPointsLabels[2].setText(String.format("%1.0f", stats.getRuntimeStat(StatComponent.RuntimeStat.ability_2_points)));
+            abilityPointsLabels[3].setText(String.format("%1.0f", stats.getRuntimeStat(StatComponent.RuntimeStat.ability_3_points)));
+            abilityPointsLabels[4].setText(String.format("%1.0f", stats.getRuntimeStat(StatComponent.RuntimeStat.ability_4_points)));
+            if (stats.getRuntimeStat(StatComponent.RuntimeStat.skillPoints) != 0)
+                skillPointLabel.setText(String.format("%1.0f", stats.getRuntimeStat(StatComponent.RuntimeStat.skillPoints)));
+            else skillPointLabel.setText("");
+            xpLabel.setText(String.format("%1.0f/%1.0f XP", stats.getRuntimeStat(StatComponent.RuntimeStat.experience), stats.getNextLevelExperience()));
         }
 
 
