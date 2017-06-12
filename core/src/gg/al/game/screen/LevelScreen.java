@@ -349,7 +349,18 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
         if (playerEnt != -1) {
             StatComponent stats = arcadeWorld.getEntityWorld().getMapper(StatComponent.class).get(playerEnt);
             actionPointsLabel.setText(String.format("%1.0f", stats.getRuntimeStat(StatComponent.RuntimeStat.actionPoints)));
-          //  attackDamageLabel.setText(String.format("%1.0f AD", stats.getCurrentStat(StatComponent.BaseStat.attackDamage)));
+            attackDamageLabel.setText(String.format("%1.0f AD", stats.getCurrentStat(StatComponent.BaseStat.attackDamage)));
+            movespeedLabel.setText(String.format("%1.0f MS", stats.getCurrentStat(StatComponent.BaseStat.moveSpeed)));
+            armorLabel.setText(String.format("%1.0f AR", stats.getCurrentStat(StatComponent.BaseStat.armor)));
+            spellPowerLabel.setText(String.format("%1.0f SP", stats.getCurrentStat(StatComponent.BaseStat.spellPower)));
+            attackspeedLabel.setText(String.format("%1.0f AS", stats.getCurrentStat(StatComponent.BaseStat.attackSpeed)));
+            magicResistLabel.setText(String.format("%1.0f MR", stats.getCurrentStat(StatComponent.BaseStat.magicResist)));
+            cooldownReductionLabel.setText(String.format("%1.0f CDR", stats.getCurrentStat(StatComponent.BaseStat.cooldownReduction)));
+            critchanceLabel.setText(String.format("%1.0f CRIT", stats.getCurrentStat(StatComponent.BaseStat.criticalStrikeChance)));
+            actionPointRegenLabel.setText(String.format("%1.0f AP/S", stats.getCurrentStat(StatComponent.BaseStat.actionPointsRegen)));
+            healthRegenLabel.setText(String.format("%1.0f HP/S", stats.getCurrentStat(StatComponent.BaseStat.healthRegen)));
+            resourceRegenLabel.setText(String.format("%1.0f RS/S", stats.getCurrentStat(StatComponent.BaseStat.resourceRegen)));
+
 
             levelLabel.setText(String.format("Level %1.0f", stats.getRuntimeStat(StatComponent.RuntimeStat.level)));
             abilityPointsLabels[0].setText(String.format("%1.0f", stats.getRuntimeStat(StatComponent.RuntimeStat.trait_points)));
