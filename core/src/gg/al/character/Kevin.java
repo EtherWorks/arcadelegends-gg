@@ -168,7 +168,7 @@ public class Kevin extends Character {
                         StatusEffect.builder()
                                 .percentageStat(StatComponent.BaseStat.armor, -0.5f)
                                 .percentageStat(StatComponent.BaseStat.magicResist, -0.5f)
-                                .percentageStat(StatComponent.BaseStat.attackSpeed, 0.3f + 0.1f * statComponent.getRuntimeStat(StatComponent.RuntimeStat.ability_3_points))
+                                .percentageStat(StatComponent.BaseStat.attackSpeed, 0.5f + 0.2f * statComponent.getRuntimeStat(StatComponent.RuntimeStat.ability_3_points))
                                 .build());
             ability4_activate = false;
         }

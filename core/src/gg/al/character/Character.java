@@ -284,12 +284,14 @@ public abstract class Character {
 
     protected void applyDamage(int entity, Damage damage) {
         StatComponent statComponent = getComponent(entity, StatComponent.class);
-        statComponent.damages.add(damage);
+        if (statComponent != null)
+            statComponent.damages.add(damage);
     }
 
     protected void applyStatusEffect(int entityID, StatusEffect effect, String effectName) {
         StatComponent statComponent = getComponent(entityID, StatComponent.class);
-        statComponent.statusEffects.put(effectName, effect);
+        if (statComponent != null)
+            statComponent.statusEffects.put(effectName, effect);
     }
 
     protected IntArray getEntitiesInArea(Vector2 start, Vector2 end) {

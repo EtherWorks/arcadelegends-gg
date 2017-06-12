@@ -46,7 +46,7 @@ public class PlayerHelper implements Disposable {
 
     private Color healthColor = new Color(0.7f, 0, 0, 1);
     private Color resourceColor = new Color(0, 0, 0.7f, 1);
-    private Color cooldownColor = new Color(0.7f, 0.7f, 0.7f, 0.8f);
+    private Color cooldownColor = new Color(0.5f, 0.5f, 0.5f, 0.8f);
 
     public PlayerHelper(int entityId, ArcadeWorld arcadeWorld, Assets.LevelAssets assets) {
         String[] iNames = arcadeWorld.getEntityWorld().getMapper(CharacterComponent.class).get(entityId).character.getIconNames();

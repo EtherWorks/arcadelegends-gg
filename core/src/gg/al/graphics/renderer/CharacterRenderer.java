@@ -25,7 +25,7 @@ import static gg.al.graphics.renderer.CharacterRenderer.PlayerRenderState.*;
 public class CharacterRenderer implements RenderComponent.RenderDelegate {
 
     private final static int RESOURCE_OFFSET = 45;
-    private final static int UI_WIDTH = 250;
+    private final static int UI_WIDTH = 260;
     private final static int UI_HEIGHT = 200;
     private ObjectMap<Integer, FrameBuffer> healthBuffers;
     private ObjectMap<Integer, FrameBuffer> resourceBuffers;
@@ -167,7 +167,7 @@ public class CharacterRenderer implements RenderComponent.RenderDelegate {
         renderSystem.getSpriteBatch().draw(resourceBars.get(entityId), 50 - UI_WIDTH / 2, -UI_HEIGHT / 2 + RESOURCE_OFFSET, 175, 75 / 2);
         renderSystem.getSpriteBatch().draw(healthBars.get(entityId), 50 - UI_WIDTH / 2, -30, 200, 100 / 2);
         renderSystem.getFont().draw(renderSystem.getSpriteBatch(), String.format("%1.0f", stats.getRuntimeStat(StatComponent.RuntimeStat.actionPoints)),
-                -UI_WIDTH / 2 - 8, 20);
+                -UI_WIDTH / 2 - 4, 20);
         renderSystem.getSpriteBatch().end();
         buffer.end();
 
