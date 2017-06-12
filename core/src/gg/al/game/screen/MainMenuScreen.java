@@ -155,11 +155,6 @@ public class MainMenuScreen implements IAssetScreen {
         AL.getAssetManager().unloadAssetFields(menuAssets);
     }
 
-    private void changeSize() {
-        AL.getConfigEditor().setValue(IVideoConfig.VideoKeys.height, AL.getVideoConfig().height() + 10);
-        AL.getConfigEditor().setValue(IVideoConfig.VideoKeys.width, AL.getVideoConfig().width() + 10);
-        AL.getConfigEditor().flush();
-    }
 
     @Override
     public Object assets() {

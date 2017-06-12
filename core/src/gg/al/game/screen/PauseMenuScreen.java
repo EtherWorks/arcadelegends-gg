@@ -47,8 +47,6 @@ public class PauseMenuScreen implements IAssetScreen, InputProcessor {
 
     @Override
     public void show() {
-        AL.getAudioManager().registerMusic("bitrush", menuAssets.bitrush);
-        AL.getAudioManager().playMusic("bitrush");
         // Inits:
         cam = new OrthographicCamera();
         viewport = new FitViewport(1920, 1080);
@@ -117,7 +115,7 @@ public class PauseMenuScreen implements IAssetScreen, InputProcessor {
         table.add(btSettings).width(600).pad(10);
         table.row();
         table.add(btExitGame).width(600).pad(10);
-        table.setPosition(x / 2, y / 2 + 50);
+        table.setPosition(AL.graphics.getWidth() / 2, AL.graphics.getHeight() / 2 +50);
 
 
         stage.addActor(table);
@@ -158,7 +156,6 @@ public class PauseMenuScreen implements IAssetScreen, InputProcessor {
     @Override
     public void hide() {
         AL.input.setInputProcessor(null);
-        AL.getAudioManager().stopMusic("bitrush");
         stage.dispose();
         spriteBatch.dispose();
         AL.getAssetManager().unloadAssetFields(menuAssets);

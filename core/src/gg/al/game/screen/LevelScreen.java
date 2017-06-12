@@ -1,6 +1,7 @@
 package gg.al.game.screen;
 
 import com.artemis.Aspect;
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
@@ -19,6 +20,7 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.Ray;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.IntArray;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.FitViewport;
@@ -97,6 +99,9 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
     private Label actionPointRegenLabel;
     private Label healthRegenLabel;
     private Label resourceRegenLabel;
+
+    private Label healthLabel;
+    private Label resourceLabel;
 
 
 
@@ -315,6 +320,17 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
             resourceRegenLabel.setPosition(250, 920);
             uiStage.addActor(resourceRegenLabel);
 
+
+            healthLabel = new Label("5000/5000", uiLabelStyle);
+            healthLabel.setPosition(90, 250);
+            healthLabel.setAlignment(Align.center);
+            uiStage.addActor(healthLabel);
+
+            resourceLabel = new Label("5000/5000", uiLabelStyle);
+            resourceLabel.setPosition(90, 187);
+            resourceLabel.setAlignment(Align.center);
+            uiStage.addActor(resourceLabel);
+
             reInit = false;
             playerEnt = -1;
 
@@ -346,12 +362,14 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
         }
 
         if (enemies.size == 0) {
-            log.debug("lolnice");
-            AL.getGame().setScreen(AL.getScreenManager().get(MainMenuScreen.class));
+            GameOverScreen gos = AL.getScreenManager().get(GameOverScreen.class, true);
+            gos.setEndgameText("You win!");
+            AL.getGame().setScreen(gos);
             reInit = true;
         } else if (playerHelper.isDead()) {
-            log.debug("ded");
-            AL.getGame().setScreen(AL.getScreenManager().get(MainMenuScreen.class));
+            GameOverScreen gos = AL.getScreenManager().get(GameOverScreen.class, true);
+            gos.setEndgameText("Game over! You lost!");
+            AL.getGame().setScreen(gos);
             reInit = true;
         }
 
@@ -379,6 +397,9 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
             actionPointRegenLabel.setText(String.format("%1.0f AP/S", stats.getCurrentStat(StatComponent.BaseStat.actionPointsRegen)));
             healthRegenLabel.setText(String.format("%1.0f HP/S", stats.getCurrentStat(StatComponent.BaseStat.healthRegen)));
             resourceRegenLabel.setText(String.format("%1.0f RS/S", stats.getCurrentStat(StatComponent.BaseStat.resourceRegen)));
+
+       //     healthLabel.setText(String.format("%1.0f/%1.0f", stats.getRuntimeStat(StatComponent.RuntimeStat.health), stats.getCurrentStat(StatComponent.BaseStat.maxHealth)));
+       //     resourceLabel.setText(String.format("%1.0f/%1.0f", stats.getRuntimeStat(StatComponent.RuntimeStat.resource), stats.getCurrentStat(StatComponent.BaseStat.maxResource)));
 
 
             levelLabel.setText(String.format("Level %1.0f", stats.getRuntimeStat(StatComponent.RuntimeStat.level)));
