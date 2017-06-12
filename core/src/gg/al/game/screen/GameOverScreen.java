@@ -35,9 +35,6 @@ public class GameOverScreen implements IAssetScreen {
     private Label endgameLabel;
     private TextButton btBackToMainMenu;
 
-
-
-
     @Override
     public Object assets() {
         return menuAssets = new Assets.MenuAssets();

@@ -406,7 +406,6 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
             healthLabel.setText(String.format("%1.0f/%1.0f HP", stats.getRuntimeStat(StatComponent.RuntimeStat.health), stats.getCurrentStat(StatComponent.BaseStat.maxHealth)));
             resourceLabel.setText(String.format("%1.0f/%1.0f RS", stats.getRuntimeStat(StatComponent.RuntimeStat.resource), stats.getCurrentStat(StatComponent.BaseStat.maxResource)));
 
-
             levelLabel.setText(String.format("Level %1.0f", stats.getRuntimeStat(StatComponent.RuntimeStat.level)));
             abilityPointsLabels[0].setText(String.format("%1.0f", stats.getRuntimeStat(StatComponent.RuntimeStat.trait_points)));
             abilityPointsLabels[1].setText(String.format("%1.0f", stats.getRuntimeStat(StatComponent.RuntimeStat.ability_1_points)));
