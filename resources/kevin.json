@@ -52,7 +52,7 @@
       "costTrait_Base": 10,
       "costTrait_Growth": 0.0,
       "costTrait_GrowthPercentage": 0.0,
-      "castTimeAbility1_Base": 1,
+      "castTimeAbility1_Base": 0.7,
       "castTimeAbility1_Growth": 0.0,
       "castTimeAbility1_GrowthPercentage": 0.0,
       "castTimeAbility2_Base": 1,
@@ -61,7 +61,7 @@
       "castTimeAbility3_Base": 0,
       "castTimeAbility3_Growth": 0.0,
       "castTimeAbility3_GrowthPercentage": 0.0,
-      "castTimeAbility4_Base": 0,
+      "castTimeAbility4_Base": 0.8,
       "castTimeAbility4_Growth": 0.0,
       "castTimeAbility4_GrowthPercentage": 0.0,
       "castTimeTrait_Base": 10,
@@ -132,14 +132,14 @@
     "transparent": true,
     "animationTemplates": {
       "MOVE_UP": {
-        "frameColumns": 5,
-        "frameRows": 8,
+        "frameColumns": 8,
+        "frameRows": 5,
         "frameDuration": 0.025,
         "texture": "backviewsprites"
       },
       "IDLE": {
-        "frameColumns": 10,
-        "frameRows": 4,
+        "frameColumns": 8,
+        "frameRows": 5,
         "frameDuration": 0.025,
         "texture": "squatsprites"
       },
@@ -150,38 +150,38 @@
         "texture": "ezreal"
       },
       "MOVE_SIDE": {
-        "frameColumns": 5,
-        "frameRows": 8,
+        "frameColumns": 8,
+        "frameRows": 5,
         "frameDuration": 0.025,
         "texture": "walkingsprites"
       },
       "MOVE_DOWN": {
-        "frameColumns": 5,
-        "frameRows": 8,
+        "frameColumns": 8,
+        "frameRows": 5,
         "frameDuration": 0.025,
         "texture": "frontviewsprites"
       },
       "ATTACK": {
-        "frameColumns": 5,
-        "frameRows": 8,
+        "frameColumns": 8,
+        "frameRows": 5,
         "frameDuration": 0.025,
         "texture": "attacksprites"
       },
       "ABILITY_1": {
-        "frameColumns": 5,
-        "frameRows": 8,
+        "frameColumns": 8,
+        "frameRows": 5,
         "frameDuration": 0.025,
         "texture": "smashsprites"
       },
       "ABILITY_2": {
-        "frameColumns": 5,
-        "frameRows": 8,
+        "frameColumns": 8,
+        "frameRows": 5,
         "frameDuration": 0.025,
         "texture": "stabsprites"
       },
       "ABILITY_4": {
-        "frameColumns": 5,
-        "frameRows": 8,
+        "frameColumns": 8,
+        "frameRows": 5,
         "frameDuration": 0.025,
         "texture": "ultsprites"
       }

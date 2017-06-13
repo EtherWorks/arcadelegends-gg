@@ -35,7 +35,7 @@ public class CharacterRenderer implements RenderComponent.RenderDelegate {
     private Camera uiCamera;
 
     private final Color healthBarColor = new Color(0.7f, 0, 0, 1);
-    private final Color resourceBarColor = new Color(0,0,0.7f,1);
+    private final Color resourceBarColor = new Color(0, 0, 0.7f, 1);
 
     public CharacterRenderer() {
         healthBars = new ObjectMap<>();

@@ -132,58 +132,58 @@
     "transparent": true,
     "animationTemplates": {
       "MOVE_UP": {
-        "frameColumns": 5,
-        "frameRows": 8,
-        "frameDuration": 0.025,
-        "texture": "sideviewsheet"
+        "frameColumns": 1,
+        "frameRows": 2,
+        "frameDuration": 1,
+        "texture": "ezreal"
       },
       "IDLE": {
-        "frameColumns": 10,
-        "frameRows": 4,
-        "frameDuration": 0.025,
-        "texture": "squatsheet"
+        "frameColumns": 1,
+        "frameRows": 2,
+        "frameDuration": 1,
+        "texture": "ezreal"
       },
       "TAUNT": {
         "frameColumns": 1,
-        "frameRows": 1,
+        "frameRows": 2,
         "frameDuration": 1,
         "texture": "ezreal"
       },
       "MOVE_SIDE": {
-        "frameColumns": 5,
-        "frameRows": 8,
-        "frameDuration": 0.025,
-        "texture": "rightsidewalk"
+        "frameColumns": 1,
+        "frameRows": 2,
+        "frameDuration": 1,
+        "texture": "ezreal"
       },
       "MOVE_DOWN": {
-        "frameColumns": 5,
-        "frameRows": 8,
-        "frameDuration": 0.025,
-        "texture": "frontwalk"
+        "frameColumns": 1,
+        "frameRows": 2,
+        "frameDuration": 1,
+        "texture": "ezreal"
       },
       "ATTACK": {
-        "frameColumns": 5,
-        "frameRows": 8,
-        "frameDuration": 0.025,
-        "texture": "autoattack"
+        "frameColumns": 1,
+        "frameRows": 2,
+        "frameDuration": 1,
+        "texture": "ezreal"
       },
       "ABILITY_1": {
-        "frameColumns": 5,
-        "frameRows": 8,
-        "frameDuration": 0.025,
-        "texture": "autoattack"
+        "frameColumns": 1,
+        "frameRows": 2,
+        "frameDuration": 1,
+        "texture": "ezreal"
       },
       "ABILITY_2": {
-        "frameColumns": 5,
-        "frameRows": 8,
-        "frameDuration": 0.025,
-        "texture": "autoattack"
+        "frameColumns": 1,
+        "frameRows": 2,
+        "frameDuration": 1,
+        "texture": "ezreal"
       },
       "ABILITY_3": {
-        "frameColumns": 5,
-        "frameRows": 8,
-        "frameDuration": 0.025,
-        "texture": "autoattack"
+        "frameColumns": 1,
+        "frameRows": 2,
+        "frameDuration": 1,
+        "texture": "ezreal"
       }
     },
     "renderType": "PLAYER",

@@ -47,6 +47,11 @@ public class Ghost extends Character {
     }
 
     @Override
+    protected boolean checkOnTrigger(int abilityInd) {
+        return checkOnCast(abilityInd);
+    }
+
+    @Override
     protected void onCast(int abilityInd) {
         if (abilityInd == ABILITY_1) {
             StatComponent stats = getComponent(entityID, StatComponent.class);

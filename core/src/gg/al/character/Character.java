@@ -169,7 +169,7 @@ public abstract class Character {
                     castTimer[i] = 0;
                     casting[i] = false;
                     StatComponent statComponent = arcadeWorld.getEntityWorld().getMapper(StatComponent.class).get(entityID);
-                    if (statComponent.getRuntimeStat(StatComponent.RuntimeStat.resource) - costs[i] >= 0 && checkOnCast(i)) {
+                    if (statComponent.getRuntimeStat(StatComponent.RuntimeStat.resource) - costs[i] >= 0 && checkOnTrigger(i)) {
                         statComponent.addRuntimeStat(StatComponent.RuntimeStat.resource, -costs[i]);
                         cooldownTimer[i] = cooldowns[i];
                         onCast(i);
@@ -254,6 +254,8 @@ public abstract class Character {
     protected abstract void onTick(float delta);
 
     protected abstract boolean checkOnCast(int abilityInd);
+
+    protected abstract boolean checkOnTrigger(int abilityInd);
 
     protected abstract void onCast(int abilityInd);
 

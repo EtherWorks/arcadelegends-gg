@@ -62,6 +62,11 @@ public class SuperGhost extends Character {
     }
 
     @Override
+    protected boolean checkOnTrigger(int abilityInd) {
+        return checkOnCast(abilityInd);
+    }
+
+    @Override
     protected void onCast(int abilityInd) {
         switch (abilityInd) {
             case ABILITY_1:

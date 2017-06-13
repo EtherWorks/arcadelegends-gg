@@ -20,14 +20,40 @@ public class Assets {
         @AssignmentAssetManager.Asset("assets/characters/kevin/char.atlas")
         public TextureAtlas textureAtlas;
 
+        @AssignmentAssetManager.Asset("assets/characters/kevin/attacksprites.png")
+        public Texture attackspritesTexture;
         public TextureRegion attacksprites;
+
+        @AssignmentAssetManager.Asset("assets/characters/kevin/ezreal.png")
+        public Texture ezrealTexture;
         public TextureRegion ezreal;
+
+        @AssignmentAssetManager.Asset("assets/characters/kevin/frontviewsprites.png")
+        public Texture frontviewspritesTexture;
         public TextureRegion frontviewsprites;
+
+        @AssignmentAssetManager.Asset("assets/characters/kevin/walkingsprites.png")
+        public Texture walkingspritesTexture;
         public TextureRegion walkingsprites;
+
+        @AssignmentAssetManager.Asset("assets/characters/kevin/backviewsprites.png")
+        public Texture backviewspritesTexture;
         public TextureRegion backviewsprites;
+
+        @AssignmentAssetManager.Asset("assets/characters/kevin/squatsprites.png")
+        public Texture squatspritesTexture;
         public TextureRegion squatsprites;
+
+        @AssignmentAssetManager.Asset("assets/characters/kevin/ultsprites.png")
+        public Texture ultspritesTexture;
         public TextureRegion ultsprites;
+
+        @AssignmentAssetManager.Asset("assets/characters/kevin/smashsprites.png")
+        public Texture smashspritesTexture;
         public TextureRegion smashsprites;
+
+        @AssignmentAssetManager.Asset("assets/characters/kevin/stabsprites.png")
+        public Texture stabspritesTexture;
         public TextureRegion stabsprites;
 
 
@@ -124,15 +150,25 @@ public class Assets {
 
         @Override
         public void onAssetsLoaded() {
-            attacksprites = textureAtlas.findRegion("kevin/attacksprites");
-            ezreal = textureAtlas.findRegion("kevin/ezreal");
-            frontviewsprites = textureAtlas.findRegion("kevin/frontviewsprites");
-            walkingsprites = textureAtlas.findRegion("kevin/walkingsprites");
-            backviewsprites = textureAtlas.findRegion("kevin/backviewsprites");
-            squatsprites = textureAtlas.findRegion("kevin/squatsprites");
-            ultsprites = textureAtlas.findRegion("kevin/ultsprites");
-            smashsprites = textureAtlas.findRegion("kevin/smashsprites");
-            stabsprites = textureAtlas.findRegion("kevin/stabsprites");
+//            attacksprites = textureAtlas.findRegion("kevin/attacksprites");
+//            ezreal = textureAtlas.findRegion("kevin/ezreal");
+//            frontviewsprites = textureAtlas.findRegion("kevin/frontviewsprites");
+//            walkingsprites = textureAtlas.findRegion("kevin/walkingsprites");
+//            backviewsprites = textureAtlas.findRegion("kevin/backviewsprites");
+//            squatsprites = textureAtlas.findRegion("kevin/squatsprites");
+//            ultsprites = textureAtlas.findRegion("kevin/ultsprites");
+//            smashsprites = textureAtlas.findRegion("kevin/smashsprites");
+//            stabsprites = textureAtlas.findRegion("kevin/stabsprites");
+
+            attacksprites = new TextureRegion(attackspritesTexture);
+            ezreal = new TextureRegion(ezrealTexture);
+            frontviewsprites = new TextureRegion(frontviewspritesTexture);
+            walkingsprites = new TextureRegion(walkingspritesTexture);
+            backviewsprites = new TextureRegion(backviewspritesTexture);
+            squatsprites = new TextureRegion(squatspritesTexture);
+            ultsprites = new TextureRegion(ultspritesTexture);
+            smashsprites = new TextureRegion(smashspritesTexture);
+            stabsprites = new TextureRegion(stabspritesTexture);
 
             assetMap = getAssetMap();
 

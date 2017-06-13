@@ -72,6 +72,38 @@ public class Kevin extends Character {
     }
 
     @Override
+    protected boolean checkOnTrigger(int abilityInd) {
+        switch (abilityInd) {
+            case ABILITY_1:
+                if (isMoving())
+                    return false;
+                return true;
+            case ABILITY_2:
+                if (isMoving())
+                    return false;
+                int targetId = (int) extraData[ABILITY_2];
+                if (targetId == -1)
+                    return false;
+                if (checkRange(entityID, targetId, ABILITY_2_RANGE)) {
+                    return true;
+                }
+                break;
+            case ABILITY_3:
+                return true;
+            case ABILITY_4:
+                if (isMoving())
+                    return false;
+                targetId = (int) extraData[ABILITY_4];
+                if (targetId == -1 || targetId == entityID)
+                    return false;
+                return true;
+            case TRAIT:
+                return true;
+        }
+        return false;
+    }
+
+    @Override
     protected void onCast(int abilityInd) {
 
         StatComponent casterStat = getComponent(entityID, StatComponent.class);
@@ -160,14 +192,12 @@ public class Kevin extends Character {
                 bCon.deleteCallback = () ->
                 {
                     IntArray enemies = getEntitiesInArea(getComponent(entity, PhysicComponent.class).body.getPosition(), new Vector2(-2, -2), new Vector2(2, 2));
-                    for (int i = 0; i < enemies.size; i++)
-                    {
+                    for (int i = 0; i < enemies.size; i++) {
                         int enemy = enemies.get(i);
-                        if(enemy == caster)
+                        if (enemy == caster)
                             continue;
                         StatComponent enemyStat = getComponent(enemy, StatComponent.class);
-                        if(enemyStat != null)
-                        {
+                        if (enemyStat != null) {
                             enemyStat.damages.add(new Damage(Damage.DamageType.Physical, 300, 0));
                         }
                     }

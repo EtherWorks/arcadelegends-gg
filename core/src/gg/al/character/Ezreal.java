@@ -48,6 +48,11 @@ public class Ezreal extends Character {
     }
 
     @Override
+    protected boolean checkOnTrigger(int abilityInd) {
+        return checkOnCast(abilityInd);
+    }
+
+    @Override
     public String[] getIconNames() {
         return ICON_NAMES;
     }
