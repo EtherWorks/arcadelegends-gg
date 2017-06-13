@@ -79,15 +79,20 @@ public abstract class Character {
     public static float getCooldown(int ability, StatComponent stats) {
         switch (ability) {
             case TRAIT:
-                return stats.getCurrentStat(StatComponent.BaseStat.cooldownTrait);
+                return stats.getCurrentStat(StatComponent.BaseStat.cooldownTrait)
+                        - stats.getCurrentStat(StatComponent.BaseStat.cooldownTrait) * stats.getCurrentStat(StatComponent.BaseStat.cooldownReduction);
             case ABILITY_1:
-                return stats.getCurrentStat(StatComponent.BaseStat.cooldownAbility1);
+                return stats.getCurrentStat(StatComponent.BaseStat.cooldownAbility1)
+                        - stats.getCurrentStat(StatComponent.BaseStat.cooldownAbility1) * stats.getCurrentStat(StatComponent.BaseStat.cooldownReduction);
             case ABILITY_2:
-                return stats.getCurrentStat(StatComponent.BaseStat.cooldownAbility2);
+                return stats.getCurrentStat(StatComponent.BaseStat.cooldownAbility2)
+                        - stats.getCurrentStat(StatComponent.BaseStat.cooldownAbility2) * stats.getCurrentStat(StatComponent.BaseStat.cooldownReduction);
             case ABILITY_3:
-                return stats.getCurrentStat(StatComponent.BaseStat.cooldownAbility3);
+                return stats.getCurrentStat(StatComponent.BaseStat.cooldownAbility3)
+                        - stats.getCurrentStat(StatComponent.BaseStat.cooldownAbility3) * stats.getCurrentStat(StatComponent.BaseStat.cooldownReduction);
             case ABILITY_4:
-                return stats.getCurrentStat(StatComponent.BaseStat.cooldownAbility4);
+                return stats.getCurrentStat(StatComponent.BaseStat.cooldownAbility4)
+                        - stats.getCurrentStat(StatComponent.BaseStat.cooldownAbility4) * stats.getCurrentStat(StatComponent.BaseStat.cooldownReduction);
         }
         throw new IllegalArgumentException("No ability with index" + ability);
     }
@@ -318,7 +323,7 @@ public abstract class Character {
         return array;
     }
 
-    protected IntArray getEntitiesInArea( Vector2 start, Vector2 end) {
+    protected IntArray getEntitiesInArea(Vector2 start, Vector2 end) {
         return getEntitiesInArea(getComponent(entityID, PositionComponent.class).position, start, end);
     }
 
@@ -391,7 +396,6 @@ public abstract class Character {
 
     public interface AIExtension {
         float getRange(int ability);
-
         boolean disabled(int ability);
     }
 }

@@ -28,10 +28,10 @@
       "cooldownAbility3_Base": 1.0,
       "cooldownAbility3_Growth": 0.0,
       "cooldownAbility3_GrowthPercentage": 0.0,
-      "cooldownAbility4_Base": 30.0,
+      "cooldownAbility4_Base": 4.0,
       "cooldownAbility4_Growth": 0.0,
       "cooldownAbility4_GrowthPercentage": 0.0,
-      "cooldownReduction_Base": 0.0,
+      "cooldownReduction_Base": 0.9,
       "cooldownReduction_Growth": 0.0,
       "cooldownReduction_GrowthPercentage": 0.0,
       "cooldownTrait_Base": 0.0,
@@ -55,7 +55,7 @@
       "castTimeAbility1_Base": 0.7,
       "castTimeAbility1_Growth": 0.0,
       "castTimeAbility1_GrowthPercentage": 0.0,
-      "castTimeAbility2_Base": 1,
+      "castTimeAbility2_Base": 0.5,
       "castTimeAbility2_Growth": 0.0,
       "castTimeAbility2_GrowthPercentage": 0.0,
       "castTimeAbility3_Base": 0,
@@ -85,7 +85,7 @@
       "maxActionPoints_Base": 5.0,
       "maxActionPoints_Growth": 1.0,
       "maxActionPoints_GrowthPercentage": 0.0,
-      "maxHealth_Base": 100000.0,
+      "maxHealth_Base": 500.0,
       "maxHealth_Growth": 0.0,
       "maxHealth_GrowthPercentage": 0.0,
       "maxResource_Base": 50.0,
@@ -94,7 +94,7 @@
       "moveSpeed_Base": 2.0,
       "moveSpeed_Growth": 0.0,
       "moveSpeed_GrowthPercentage": 0.0,
-      "resourceRegen_Base": 1.5,
+      "resourceRegen_Base": 2.5,
       "resourceRegen_Growth": 0.0,
       "resourceRegen_GrowthPercentage": 0.0,
       "spellPower_Base": 0.0,
@@ -135,7 +135,8 @@
         "frameColumns": 8,
         "frameRows": 5,
         "frameDuration": 0.025,
-        "texture": "backviewsprites"
+        "texture": "backviewsprites",
+        "width": 0.8
       },
       "IDLE": {
         "frameColumns": 8,
@@ -153,37 +154,47 @@
         "frameColumns": 8,
         "frameRows": 5,
         "frameDuration": 0.025,
-        "texture": "walkingsprites"
+        "texture": "walkingsprites",
+        "width": 1.4
       },
       "MOVE_DOWN": {
         "frameColumns": 8,
         "frameRows": 5,
         "frameDuration": 0.025,
-        "texture": "frontviewsprites"
+        "texture": "frontviewsprites",
+        "width": 1.8
       },
       "ATTACK": {
         "frameColumns": 8,
         "frameRows": 5,
         "frameDuration": 0.025,
-        "texture": "attacksprites"
+        "texture": "attacksprites",
+        "width": 1.65,
+        "height": 1.2
       },
       "ABILITY_1": {
         "frameColumns": 8,
         "frameRows": 5,
         "frameDuration": 0.025,
-        "texture": "smashsprites"
+        "texture": "smashsprites",
+        "width": 1.9,
+        "height": 2.23
       },
       "ABILITY_2": {
         "frameColumns": 8,
         "frameRows": 5,
         "frameDuration": 0.025,
-        "texture": "stabsprites"
+        "texture": "stabsprites",
+        "width": 2.8,
+        "height": 1.1
       },
       "ABILITY_4": {
         "frameColumns": 8,
         "frameRows": 5,
         "frameDuration": 0.025,
-        "texture": "ultsprites"
+        "texture": "ultsprites",
+        "width": 2.2,
+        "height": 1.5
       }
     },
     "renderType": "PLAYER",

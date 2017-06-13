@@ -1,10 +1,8 @@
 package gg.al.character;
 
 import com.badlogic.gdx.math.Vector2;
-import gg.al.logic.component.AIComponent;
-import gg.al.logic.component.BulletComponent;
-import gg.al.logic.component.PositionComponent;
-import gg.al.logic.component.StatComponent;
+import gg.al.graphics.renderer.CharacterRenderer;
+import gg.al.logic.component.*;
 import gg.al.logic.component.data.Damage;
 import gg.al.logic.entity.Entities;
 import gg.al.logic.entity.EntityArguments;
@@ -33,7 +31,12 @@ public class Ghost extends Character {
 
     @Override
     protected void castBegin(int ability) {
-
+        RenderComponent renderComponent = getComponent(entityID, RenderComponent.class);
+        switch (ability) {
+            case ABILITY_1:
+                renderComponent.setRenderState(CharacterRenderer.PlayerRenderState.ABILITY_1);
+                break;
+        }
     }
 
     @Override
@@ -43,7 +46,7 @@ public class Ghost extends Character {
 
     @Override
     protected boolean checkOnCast(int abilityInd) {
-        return abilityInd == ABILITY_1;
+        return abilityInd == ABILITY_1 && !isMoving();
     }
 
     @Override
@@ -72,7 +75,7 @@ public class Ghost extends Character {
             bCon.old.set(pos.x, pos.y);
             bCon.target = -1;
             bCon.maxDistance = 5;
-            final float damage = stats.getCurrentStat(StatComponent.BaseStat.attackDamage) * 1.1f;
+            final float damage = stats.getCurrentStat(StatComponent.BaseStat.spellPower);
             final int caster1 = entityID;
             bCon.collisionCallback = (bullet, hit, bFix, hFix, contact) -> {
                 if (hit == caster1 || hit != aiComponent.target)
@@ -81,7 +84,7 @@ public class Ghost extends Character {
                 StatComponent hitStat = getComponent(hit, StatComponent.class);
                 if (hitStat != null) {
                     bulletComponent.delete = true;
-                    hitStat.damages.add(new Damage(Damage.DamageType.Physical, damage, 0));
+                    hitStat.damages.add(new Damage(Damage.DamageType.Magic, damage, 0));
                 }
             };
         }

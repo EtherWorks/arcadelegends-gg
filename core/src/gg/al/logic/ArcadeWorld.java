@@ -430,7 +430,7 @@ public class ArcadeWorld implements Disposable {
         InventoryComponent inventoryComponent = entityWorld.getMapper(InventoryComponent.class).get(playerEnt);
         inventoryComponent.items[0] = Item.builder().name("Armor")
                 .flatStat(StatComponent.BaseStat.armor, 50f)
-                .flatStat(StatComponent.BaseStat.cooldownReduction, 0.1f)
+                .flatStat(StatComponent.BaseStat.cooldownReduction, 0.2f)
                 .build();
         inventoryComponent.items[1] = Item.builder().name("Staff")
                 .flatStat(StatComponent.BaseStat.spellPower, 20f)

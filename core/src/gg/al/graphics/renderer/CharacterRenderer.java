@@ -27,15 +27,14 @@ public class CharacterRenderer implements RenderComponent.RenderDelegate {
     private final static int RESOURCE_OFFSET = 45;
     private final static int UI_WIDTH = 260;
     private final static int UI_HEIGHT = 200;
+    private final Color healthBarColor = new Color(0.7f, 0, 0, 1);
+    private final Color resourceBarColor = new Color(0, 0, 0.7f, 1);
     private ObjectMap<Integer, FrameBuffer> healthBuffers;
     private ObjectMap<Integer, FrameBuffer> resourceBuffers;
     private ObjectMap<Integer, TextureRegion> healthBars;
     private ObjectMap<Integer, TextureRegion> resourceBars;
     private Camera cameraBar;
     private Camera uiCamera;
-
-    private final Color healthBarColor = new Color(0.7f, 0, 0, 1);
-    private final Color resourceBarColor = new Color(0, 0, 0.7f, 1);
 
     public CharacterRenderer() {
         healthBars = new ObjectMap<>();
@@ -172,7 +171,7 @@ public class CharacterRenderer implements RenderComponent.RenderDelegate {
         buffer.end();
 
         Decal uiDecal = renderSystem.getUiMap().get(entityId);
-        uiDecal.setPosition(physic.body.getPosition().x, physic.body.getPosition().y + 0.5f, uiDecal.getZ());
+        uiDecal.setPosition(physic.body.getPosition().x, physic.body.getPosition().y + decal.getHeight() / 2, uiDecal.getZ());
     }
 
     @Override

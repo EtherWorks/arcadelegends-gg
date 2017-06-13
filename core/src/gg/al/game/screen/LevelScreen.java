@@ -1,7 +1,6 @@
 package gg.al.game.screen;
 
 import com.artemis.Aspect;
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
@@ -39,6 +38,7 @@ import gg.al.logic.entity.Entities;
 import gg.al.logic.entity.EntityArguments;
 import gg.al.logic.map.Tile;
 import gg.al.util.Assets;
+import gg.al.util.Constants;
 import gg.al.util.InputMapper;
 import lombok.extern.slf4j.Slf4j;
 
@@ -566,9 +566,9 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
 
     @Override
     public boolean scrolled(int amount) {
-        if(amount > 0 && camera.position.z > 50)
+        if (amount > 0 && camera.position.z > Constants.MAX_ZOOM)
             return false;
-        else if(amount < 0 && camera.position.z < 10)
+        else if (amount < 0 && camera.position.z < Constants.MIN_ZOOM)
             return false;
         camera.translate(0, -amount * cameraVector.y, amount * cameraVector.z);
         camera.update();

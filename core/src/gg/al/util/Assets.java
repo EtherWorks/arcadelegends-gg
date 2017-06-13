@@ -4,7 +4,6 @@ import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -17,8 +16,8 @@ import com.google.common.collect.HashBiMap;
  */
 public class Assets {
     public static class LevelAssets implements AssignmentAssetManager.AssetContainer {
-        @AssignmentAssetManager.Asset("assets/characters/kevin/char.atlas")
-        public TextureAtlas textureAtlas;
+//        @AssignmentAssetManager.Asset("assets/characters/kevin/char.atlas")
+//        public TextureAtlas textureAtlas;
 
         @AssignmentAssetManager.Asset("assets/characters/kevin/attacksprites.png")
         public Texture attackspritesTexture;
@@ -133,7 +132,7 @@ public class Assets {
             if (assetMap == null) {
                 assetMap = HashBiMap.create();
                 assetMap.put("tileMap", tileMap);
-                assetMap.put("textureAtlas", textureAtlas);
+//                assetMap.put("textureAtlas", textureAtlas);
                 assetMap.put("ability1", ability1);
                 assetMap.put("ability2", ability2);
                 assetMap.put("ability3", ability3);

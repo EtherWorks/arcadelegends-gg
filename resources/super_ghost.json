@@ -10,7 +10,7 @@
       "armorPenetration_Base": 0.0,
       "armorPenetration_Growth": 0.0,
       "armorPenetration_GrowthPercentage": 0.0,
-      "attackDamage_Base": 87.0,
+      "attackDamage_Base": 50.0,
       "attackDamage_Growth": 0.0,
       "attackDamage_GrowthPercentage": 0.0,
       "attackRange_Base": 2.5,
@@ -61,7 +61,7 @@
       "castTimeAbility3_Base": 1,
       "castTimeAbility3_Growth": 0.0,
       "castTimeAbility3_GrowthPercentage": 0.0,
-      "castTimeAbility4_Base": 0.25,
+      "castTimeAbility4_Base": 1.5,
       "castTimeAbility4_Growth": 0.0,
       "castTimeAbility4_GrowthPercentage": 0.0,
       "castTimeTrait_Base": 0,
@@ -179,7 +179,7 @@
         "frameDuration": 1,
         "texture": "ezreal"
       },
-      "ABILITY_3": {
+      "ABILITY_4": {
         "frameColumns": 1,
         "frameRows": 2,
         "frameDuration": 1,

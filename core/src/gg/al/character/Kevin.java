@@ -8,6 +8,7 @@ import gg.al.game.AL;
 import gg.al.graphics.renderer.CharacterRenderer;
 import gg.al.logic.component.*;
 import gg.al.logic.component.data.Damage;
+import gg.al.logic.component.data.Heal;
 import gg.al.logic.component.data.StatusEffect;
 import gg.al.logic.entity.Entities;
 import gg.al.logic.entity.EntityArguments;
@@ -41,9 +42,7 @@ public class Kevin extends Character {
     protected boolean checkOnCast(int abilityInd) {
         switch (abilityInd) {
             case ABILITY_1:
-                if (isMoving())
-                    return false;
-                return true;
+                return !isMoving();
             case ABILITY_2:
                 if (isMoving())
                     return false;
@@ -75,9 +74,7 @@ public class Kevin extends Character {
     protected boolean checkOnTrigger(int abilityInd) {
         switch (abilityInd) {
             case ABILITY_1:
-                if (isMoving())
-                    return false;
-                return true;
+                return !isMoving();
             case ABILITY_2:
                 if (isMoving())
                     return false;
@@ -94,9 +91,7 @@ public class Kevin extends Character {
                 if (isMoving())
                     return false;
                 targetId = (int) extraData[ABILITY_4];
-                if (targetId == -1 || targetId == entityID)
-                    return false;
-                return true;
+                return !(targetId == -1 || targetId == entityID);
             case TRAIT:
                 return true;
         }
@@ -203,6 +198,8 @@ public class Kevin extends Character {
                     }
                     AL.getAudioManager().playSound("boom");
                 };
+
+                AL.getAudioManager().playSound("rocketlauncher");
                 break;
         }
     }
@@ -218,6 +215,7 @@ public class Kevin extends Character {
             } else
                 statComponent.statusEffects.put(BOOST_NAME,
                         StatusEffect.builder()
+                                .percentageStat(StatComponent.BaseStat.moveSpeed, 1f)
                                 .percentageStat(StatComponent.BaseStat.armor, -0.5f)
                                 .percentageStat(StatComponent.BaseStat.magicResist, -0.5f)
                                 .percentageStat(StatComponent.BaseStat.attackSpeed, 0.5f + 0.2f * statComponent.getRuntimeStat(StatComponent.RuntimeStat.ability_3_points))
@@ -234,6 +232,13 @@ public class Kevin extends Character {
     public void attack(int enemyId) {
         super.attack(enemyId);
         AL.getAudioManager().playSound(ATTACK_SOUNDS[random.nextInt(ATTACK_SOUNDS.length)]);
+        StatComponent stat = getComponent(entityID, StatComponent.class);
+        if (stat.statusEffects.containsKey(BOOST_NAME)) {
+            if (stat.getRuntimeStat(StatComponent.RuntimeStat.resource) >= 5) {
+                stat.heals.add(new Heal(25 * (1 + stat.getRuntimeStat(StatComponent.RuntimeStat.ability_3_points))));
+                stat.addRuntimeStat(StatComponent.RuntimeStat.resource, -5);
+            }
+        }
     }
 
     @Override
@@ -263,7 +268,6 @@ public class Kevin extends Character {
                     renderComponent.faceRight();
                 else if (pos.x > target.position.x)
                     renderComponent.faceLeft();
-                AL.getAudioManager().playSound("rocketlauncher");
                 break;
         }
     }

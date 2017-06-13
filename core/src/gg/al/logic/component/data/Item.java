@@ -33,7 +33,7 @@ public class Item implements IStatAffect, ITickable {
     @Override
     public void applyValue(StatComponent stats) {
         for (ObjectMap.Entry<StatComponent.BaseStat, Float> flatChange : flatStats.entries()) {
-            stats.setCurrentStat(flatChange.key, stats.getBaseStat(flatChange.key) + flatChange.value);
+            stats.addCurrentStat(flatChange.key, flatChange.value);
         }
     }
 
@@ -49,7 +49,7 @@ public class Item implements IStatAffect, ITickable {
     public void applyBasePercentage(StatComponent stats) {
         for (ObjectMap.Entry<StatComponent.BaseStat, Float> percentageBaseChange : percentageBaseStats.entries()) {
             float value = stats.getBaseStat(percentageBaseChange.key);
-            stats.setCurrentStat(percentageBaseChange.key, value + value * percentageBaseChange.value);
+            stats.setCurrentStat(percentageBaseChange.key, stats.getCurrentStat(percentageBaseChange.key) + value * percentageBaseChange.value);
         }
     }
 

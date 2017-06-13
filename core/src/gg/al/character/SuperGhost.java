@@ -2,10 +2,8 @@ package gg.al.character;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.IntArray;
-import gg.al.logic.component.AIComponent;
-import gg.al.logic.component.BulletComponent;
-import gg.al.logic.component.PositionComponent;
-import gg.al.logic.component.StatComponent;
+import gg.al.graphics.renderer.CharacterRenderer;
+import gg.al.logic.component.*;
 import gg.al.logic.component.data.Damage;
 import gg.al.logic.entity.Entities;
 import gg.al.logic.entity.EntityArguments;
@@ -41,7 +39,15 @@ public class SuperGhost extends Character {
 
     @Override
     protected void castBegin(int ability) {
-
+        RenderComponent renderComponent = getComponent(entityID, RenderComponent.class);
+        switch (ability) {
+            case ABILITY_1:
+                renderComponent.setRenderState(CharacterRenderer.PlayerRenderState.ABILITY_1);
+                break;
+            case ABILITY_4:
+                renderComponent.setRenderState(CharacterRenderer.PlayerRenderState.ABILITY_4);
+                break;
+        }
     }
 
     @Override
@@ -53,9 +59,9 @@ public class SuperGhost extends Character {
     protected boolean checkOnCast(int abilityInd) {
         switch (abilityInd) {
             case ABILITY_1:
-                return true;
+                return !isMoving();
             case ABILITY_4:
-                return true;
+                return !isMoving();
             default:
                 return false;
         }
@@ -109,7 +115,7 @@ public class SuperGhost extends Character {
                         continue;
                     StatComponent statComponent = getComponent(enemy, StatComponent.class);
                     if (statComponent != null) {
-                        statComponent.damages.add(new Damage(Damage.DamageType.Magic, 1000, 0));
+                        statComponent.damages.add(new Damage(Damage.DamageType.Magic, 150, 0));
                     }
                 }
                 break;

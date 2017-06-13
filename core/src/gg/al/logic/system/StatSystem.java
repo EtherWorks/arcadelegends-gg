@@ -113,6 +113,7 @@ public class StatSystem extends IteratingSystem {
             float health = stats.getRuntimeStat(StatComponent.RuntimeStat.health);
             float maxHealth = stats.getCurrentStat(StatComponent.BaseStat.maxHealth);
             stats.setRuntimeStat(StatComponent.RuntimeStat.health, health + amount >= maxHealth ? maxHealth : health + amount);
+            stats.heals.removeValue(heal, true);
         }
 
         if (!stats.getFlag(StatComponent.FlagStat.invulnerable)) {
