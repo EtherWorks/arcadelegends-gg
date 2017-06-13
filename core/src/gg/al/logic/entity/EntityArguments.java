@@ -5,9 +5,10 @@ import com.google.gson.reflect.TypeToken;
 import gg.al.logic.component.data.Template;
 import gg.al.util.GsonUtil;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.lang.reflect.Type;
-import java.net.URISyntaxException;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
@@ -24,6 +25,13 @@ public class EntityArguments {
         arguments = new ObjectMap<>();
     }
 
+    /**
+     * Parses an {@link EntityArguments} object from the given .json file
+     *
+     * @param name the name of the .json file
+     * @return the parsed {@link EntityArguments}
+     * @throws IOException
+     */
     public static EntityArguments fromFile(String name) throws IOException {
 
         EntityArguments arguments = new EntityArguments();

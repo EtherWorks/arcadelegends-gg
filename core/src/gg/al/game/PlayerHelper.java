@@ -31,12 +31,17 @@ public class PlayerHelper implements Disposable {
     private final TextureRegion[] cooldownTextures = new TextureRegion[5];
     float resourcePerc = 0;
     float healthPerc = 0;
+    float xpPerc = 0;
+
     private Sprite[] abilityOverlaySprites = new Sprite[5];
     private Texture[] icons = new Texture[5];
+
     private FrameBuffer resourceBuffer;
     private TextureRegion resourceTexture;
     private FrameBuffer healthBuffer;
     private TextureRegion healthTexture;
+    private TextureRegion xpTexture;
+    private FrameBuffer xpBuffer;
 
     private ShaderProgram shader;
     private SpriteBatch shaderBatch;
@@ -44,13 +49,16 @@ public class PlayerHelper implements Disposable {
     private TextureRegion healthGradient;
     private TextureRegion cooldownGradient;
     private TextureRegion passiveGradient;
+    private TextureRegion xpGradient;
 
     private Camera healthCam;
+    private Camera xpCam;
     private Camera cooldownCam;
 
     private Color healthColor = new Color(0.7f, 0, 0, 1);
     private Color resourceColor = new Color(0, 0, 0.7f, 1);
     private Color cooldownColor = new Color(0.5f, 0.5f, 0.5f, 0.8f);
+    private Color xpColor = new Color(0, 1, 1, 1);
 
     public PlayerHelper(int entityId, ArcadeWorld arcadeWorld, Assets.LevelAssets assets) {
         String[] iNames = arcadeWorld.getEntityWorld().getMapper(CharacterComponent.class).get(entityId).character.getIconNames();
@@ -64,6 +72,11 @@ public class PlayerHelper implements Disposable {
             throw new IllegalArgumentException("couldn't compile shader: " + shader.getLog());
         shaderBatch = new SpriteBatch(1000, shader);
 
+        xpGradient = new TextureRegion(assets.xp_gradient);
+        xpCam = new OrthographicCamera(xpGradient.getRegionWidth(), xpGradient.getRegionHeight());
+        this.xpBuffer = new FrameBuffer(Pixmap.Format.RGBA8888, xpGradient.getRegionWidth(), xpGradient.getRegionHeight(), false);
+        this.xpTexture = new TextureRegion(xpBuffer.getColorBufferTexture());
+        xpTexture.flip(false, true);
 
         passiveGradient = new TextureRegion(assets.passive_cooldown_gradient);
         this.healthGradient = new TextureRegion(assets.health_gradient);
@@ -125,7 +138,9 @@ public class PlayerHelper implements Disposable {
         }
         healthPerc = stat.getRuntimeStat(StatComponent.RuntimeStat.health) / stat.getCurrentStat(StatComponent.BaseStat.maxHealth);
         resourcePerc = stat.getRuntimeStat(StatComponent.RuntimeStat.resource) / stat.getCurrentStat(StatComponent.BaseStat.maxResource);
+        xpPerc = stat.getRuntimeStat(StatComponent.RuntimeStat.experience) / stat.getNextLevelExperience();
 
+        drawToBuffer(xpBuffer, xpColor, xpGradient, xpPerc, xpCam.combined);
         drawToBuffer(healthBuffer, healthColor, healthGradient, healthPerc, healthCam.combined);
         drawToBuffer(resourceBuffer, resourceColor, healthGradient, resourcePerc, healthCam.combined);
         for (int i = 0; i < abilityBuffers.length; i++) {
@@ -177,8 +192,13 @@ public class PlayerHelper implements Disposable {
         return cooldownTextures;
     }
 
+    public TextureRegion getExperienceTexture() {
+        return xpTexture;
+    }
+
     /**
      * Returns a shaded sprite for coloring the ability icons. Controlled by the {@link Character} class.
+     *
      * @param ability for the overlay sprite
      * @return the overlay sprite
      */
@@ -206,6 +226,7 @@ public class PlayerHelper implements Disposable {
             buffer.dispose();
         }
         healthBuffer.dispose();
+        xpBuffer.dispose();
         resourceBuffer.dispose();
         shaderBatch.dispose();
         shader.dispose();

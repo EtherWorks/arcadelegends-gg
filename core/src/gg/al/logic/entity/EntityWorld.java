@@ -24,13 +24,25 @@ public class EntityWorld extends World {
         archetypeMap = new ObjectMap<>();
     }
 
-    public Archetype getArchetype(ArchetypeBuilder builder)
-    {
+    /**
+     * Prevents memory allocation by mapping the {@link Archetype} to their respective {@link ArchetypeBuilder}.
+     * Mostly used in conjunction with {@link Entities}.
+     *
+     * @param builder the {@link ArchetypeBuilder}
+     * @return the cached or newly build {@link Archetype}
+     */
+    public Archetype getArchetype(ArchetypeBuilder builder) {
         if(!archetypeMap.containsKey(builder))
             archetypeMap.put(builder, builder.build(this));
         return archetypeMap.get(builder);
     }
 
+    /**
+     * Shorthand method for getting a {@link Component}
+     * @param id the entity id containing the {@link Component}
+     * @param type the {@link Component} type
+     * @return the {@link Component} of the entity
+     */
     public <T extends Component> T getComponentOf(int id, Class<T> type) {
         return super.getMapper(type).get(id);
     }

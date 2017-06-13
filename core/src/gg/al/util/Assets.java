@@ -93,6 +93,8 @@ public class Assets {
 
         @AssignmentAssetManager.Asset("assets/ui/health_bar_gradient.png")
         public Texture health_bar_gradient;
+        @AssignmentAssetManager.Asset("assets/ui/xp_gradient.png")
+        public Texture xp_gradient;
 
 
         @AssignmentAssetManager.Asset("assets/ui/ability1.png")
