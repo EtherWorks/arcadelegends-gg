@@ -1,7 +1,6 @@
 package gg.al.game.screen;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.assets.AssetDescriptor;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -14,13 +13,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import gg.al.config.IVideoConfig;
 import gg.al.game.AL;
 import gg.al.util.Assets;
 import lombok.extern.slf4j.Slf4j;
-
-import java.util.Arrays;
-import java.util.List;
 
 
 /**
@@ -82,6 +77,7 @@ public class MainMenuScreen implements IAssetScreen {
     /**
      * Method responsible for rendering components
      * Called everytime when rendering need to be done
+     *
      * @param delta
      */
     @Override
@@ -102,7 +98,8 @@ public class MainMenuScreen implements IAssetScreen {
     /**
      * Method responsible for resizing the application
      * Called everytime when the screen is re-sized
-     * @param width - width of the window
+     *
+     * @param width  - width of the window
      * @param height - height of the window
      */
     @Override
@@ -144,6 +141,7 @@ public class MainMenuScreen implements IAssetScreen {
 
     /**
      * Method responsible for returning {@link gg.al.util.Assets.MenuAssets}
+     *
      * @return Object
      */
     @Override
@@ -153,6 +151,7 @@ public class MainMenuScreen implements IAssetScreen {
 
     /**
      * Method responsible for setting a custom loading screen
+     *
      * @return ILoadingScreen
      */
     @Override
@@ -163,8 +162,7 @@ public class MainMenuScreen implements IAssetScreen {
     /**
      * Method responsible for creating the Buttons for the Main Menu
      */
-    private void initButtons()
-    {
+    private void initButtons() {
         btPlay = new TextButton("Play", skin, "default");
         btPlay.setWidth(400);
         btPlay.setHeight(100);

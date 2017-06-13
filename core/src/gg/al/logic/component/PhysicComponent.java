@@ -7,7 +7,7 @@ import gg.al.logic.component.data.ITemplateable;
 import gg.al.logic.component.data.Template;
 
 /**
- * Created by Thomas Neumann on 08.05.2017.<br />
+ * Created by Thomas Neumann on 08.05.2017.<br>
  * {@link Component} containing physic related data, mainly the {@link Body} of the entity.
  */
 public class PhysicComponent extends Component implements ITemplateable {

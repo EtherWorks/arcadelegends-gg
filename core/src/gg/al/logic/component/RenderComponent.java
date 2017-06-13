@@ -18,7 +18,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Created by Thomas Neumann on 30.03.2017.<br />
+ * Created by Thomas Neumann on 30.03.2017.<br>
  * {@link com.artemis.Component} containing all data related to rendering.<br>
  * Also contains static {@link RenderDelegate} variables for group rendering.
  */

@@ -6,7 +6,7 @@ import com.google.common.collect.ListMultimap;
 import java.util.*;
 
 /**
- * Created by Thomas Neumann on 15.03.2017.<br />
+ * Created by Thomas Neumann on 15.03.2017.<br>
  * Abstract class describing a ConfigEditor, which houses methods for
  * changing the current configuration, and flushing this configuration,
  * as well as listeners for the flush event.
@@ -102,7 +102,8 @@ public abstract class ConfigEditor {
     /**
      * Notifies all listeners that a config value has been changed.
      * This is called before updating all config instances.
-     * @param key the key of the changed value
+     *
+     * @param key   the key of the changed value
      * @param value the changed value
      */
     protected void fireConfigValueChanged(String key, String value) {
@@ -119,7 +120,8 @@ public abstract class ConfigEditor {
     /**
      * Notifies all listeners that a config value has been changed.
      * This is called after updating all config instances.
-     * @param key the key of the changed value
+     *
+     * @param key   the key of the changed value
      * @param value the changed value
      */
     protected void fireConfigValueChangedAfter(String key, String value) {

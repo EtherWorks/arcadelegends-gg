@@ -1,7 +1,6 @@
 package gg.al.game.screen;
 
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.assets.AssetDescriptor;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -10,12 +9,8 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-
 /**
- * Created by Thomas Neumann on 18.03.2017.<br />
+ * Created by Thomas Neumann on 18.03.2017.<br>
  * {@link ILoadingScreen} used as the default LoadingScreen in {@link gg.al.game.ArcadeLegendsGame}.
  */
 @Slf4j

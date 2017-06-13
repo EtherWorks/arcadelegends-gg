@@ -7,7 +7,7 @@ import gg.al.logic.component.data.Template;
 import gg.al.logic.map.Tile;
 
 /**
- * Created by Thomas Neumann on 23.03.2017.<br />
+ * Created by Thomas Neumann on 23.03.2017.<br>
  * {@link com.artemis.Component} containing the positional data and a reference to the current {@link Tile}
  */
 public class PositionComponent extends PooledComponent implements ITemplateable {

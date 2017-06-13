@@ -12,7 +12,7 @@ import io.gsonfire.PostProcessor;
 import java.util.Set;
 
 /**
- * Created by Thomas Neumann on 26.04.2017.<br />
+ * Created by Thomas Neumann on 26.04.2017.<br>
  * Singleton for {@link Gson} access. <br>
  * Contains configuration for loading {@link gg.al.logic.component.data.ITemplateable} from .json files.
  */

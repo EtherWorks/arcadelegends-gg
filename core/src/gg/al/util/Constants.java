@@ -1,7 +1,7 @@
 package gg.al.util;
 
 /**
- * Created by Thomas Neumann on 26.04.2017.<br />
+ * Created by Thomas Neumann on 26.04.2017.<br>
  * Constants for the project.
  */
 public class Constants {

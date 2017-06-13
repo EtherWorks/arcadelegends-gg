@@ -10,7 +10,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
- * Created by Thomas Neumann on 08.05.2017.<br />
+ * Created by Thomas Neumann on 08.05.2017.<br>
  * {@link com.artemis.Component} containing all logical status values. <br>
  * Additionally contains logic to updating the values, and queues for {@link Damage} and {@link Heal} objects.
  */

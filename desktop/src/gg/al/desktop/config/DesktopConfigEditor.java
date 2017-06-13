@@ -7,7 +7,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 
 /**
- * Created by Thomas Neumann on 15.03.2017.<br />
+ * Created by Thomas Neumann on 15.03.2017.<br>
  * Implementation of the {@link ConfigEditor}
  * in a desktop environment.
  */

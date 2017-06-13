@@ -10,7 +10,7 @@ import java.util.Iterator;
 import java.util.Map;
 
 /**
- * Created by Thomas Neumann on 18.03.2017.<br />
+ * Created by Thomas Neumann on 18.03.2017.<br>
  * Manager class for {@link Screen}, which allow only one Screen
  * per type to be loaded. Holds additional utility methods for
  * loaded Screens.
@@ -38,6 +38,7 @@ public class ScreenManager implements Disposable {
     /**
      * Registers the given screen into the {@link ScreenManager}.
      * Initializes the given {@link Screen} with a default constructor, if init is true.
+     *
      * @param type type of the {@link Screen}
      * @return the old registered instance
      */
@@ -64,6 +65,7 @@ public class ScreenManager implements Disposable {
             throw new IllegalArgumentException("Screen not registered: " + ClassReflection.getSimpleName(type));
         return (T) screenMap.get(type);
     }
+
     public synchronized void remove(Class<? extends Screen> type) {
         if (!screenMap.containsKey(type))
             throw new IllegalArgumentException("Screen not registered: " + ClassReflection.getSimpleName(type));

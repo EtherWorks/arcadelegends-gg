@@ -14,7 +14,7 @@ import java.util.Map;
 import java.util.Properties;
 
 /**
- * Created by Thomas Neumann on 07.04.2017.<br />
+ * Created by Thomas Neumann on 07.04.2017.<br>
  * Arguments indexed with {@link String} objects for use with Entities.
  */
 public class EntityArguments {

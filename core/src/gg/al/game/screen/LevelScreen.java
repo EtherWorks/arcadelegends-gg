@@ -43,7 +43,7 @@ import gg.al.util.InputMapper;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * Created by Thomas Neumann on 20.03.2017.<br />
+ * Created by Thomas Neumann on 20.03.2017.<br>
  * Main {@link IAssetScreen} for loading and playing levels.
  */
 @Slf4j
@@ -102,8 +102,6 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
 
     private Label healthLabel;
     private Label resourceLabel;
-
-
 
 
     public LevelScreen(String mapName) {
@@ -273,7 +271,6 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
             uiStage.addActor(levelLabel);
 
 
-
             // First row
             attackDamageLabel = new Label("0 AD", uiLabelStyle);
             attackDamageLabel.setPosition(35, 1010);
@@ -284,7 +281,7 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
             uiStage.addActor(movespeedLabel);
 
             armorLabel = new Label("0 AR", uiLabelStyle);
-            armorLabel.setPosition(250,1010);
+            armorLabel.setPosition(250, 1010);
             uiStage.addActor(armorLabel);
 
             // Second row
@@ -353,8 +350,7 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
         arcadeWorld.setDelta(AL.graphics.getDeltaTime());
         arcadeWorld.step();
 
-        if(AL.input.isKeyPressed(Input.Keys.SPACE))
-        {
+        if (AL.input.isKeyPressed(Input.Keys.SPACE)) {
             tempVec.set(camera.position).mul(invRotationMatrix);
             float z = tempVec.z;
             Vector2 pos = playerHelper.getPosition();
@@ -384,8 +380,8 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
         spriteBatch.setProjectionMatrix(uiCamera.combined);
         spriteBatch.begin();
         spriteBatch.draw(levelAssets.uioverlay, 10, 10, levelAssets.uioverlay.getWidth() / 2, levelAssets.uioverlay.getHeight() / 2);
-        spriteBatch.draw(levelAssets.uistats, 1, 1080-levelAssets.uistats.getHeight() * 1.5f, levelAssets.uistats.getWidth() * 1.6f, levelAssets.uistats.getHeight() * 1.5f);
-        spriteBatch.draw(levelAssets.uistats2, 1, 1080-levelAssets.uistats.getHeight()*1.5f-levelAssets.uistats2.getHeight()+20, levelAssets.uistats2.getWidth(), levelAssets.uistats2.getHeight());
+        spriteBatch.draw(levelAssets.uistats, 1, 1080 - levelAssets.uistats.getHeight() * 1.5f, levelAssets.uistats.getWidth() * 1.6f, levelAssets.uistats.getHeight() * 1.5f);
+        spriteBatch.draw(levelAssets.uistats2, 1, 1080 - levelAssets.uistats.getHeight() * 1.5f - levelAssets.uistats2.getHeight() + 20, levelAssets.uistats2.getWidth(), levelAssets.uistats2.getHeight());
 
         if (playerEnt != -1) {
             StatComponent stats = arcadeWorld.getEntityWorld().getMapper(StatComponent.class).get(playerEnt);
@@ -396,8 +392,8 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
             spellPowerLabel.setText(String.format("%1.0f SP", stats.getCurrentStat(StatComponent.BaseStat.spellPower)));
             attackspeedLabel.setText(String.format("%1.2f AS", stats.getCurrentStat(StatComponent.BaseStat.attackSpeed)));
             magicResistLabel.setText(String.format("%1.0f MR", stats.getCurrentStat(StatComponent.BaseStat.magicResist)));
-            cooldownReductionLabel.setText(String.format("%1.0f%% CDR", stats.getCurrentStat(StatComponent.BaseStat.cooldownReduction)*100));
-            critchanceLabel.setText(String.format("%1.0f%% CRIT", stats.getCurrentStat(StatComponent.BaseStat.criticalStrikeChance)*100));
+            cooldownReductionLabel.setText(String.format("%1.0f%% CDR", stats.getCurrentStat(StatComponent.BaseStat.cooldownReduction) * 100));
+            critchanceLabel.setText(String.format("%1.0f%% CRIT", stats.getCurrentStat(StatComponent.BaseStat.criticalStrikeChance) * 100));
             actionPointRegenLabel.setText(String.format("%1.0f AP/S", stats.getCurrentStat(StatComponent.BaseStat.actionPointsRegen)));
             healthRegenLabel.setText(String.format("%1.0f HP/S", stats.getCurrentStat(StatComponent.BaseStat.healthRegen)));
             resourceRegenLabel.setText(String.format("%1.0f RS/S", stats.getCurrentStat(StatComponent.BaseStat.resourceRegen)));

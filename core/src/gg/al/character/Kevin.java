@@ -17,7 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 import java.util.Random;
 
 /**
- * Created by Thomas Neumann on 23.05.2017.<br />
+ * Created by Thomas Neumann on 23.05.2017.<br>
  * Main {@link Character} of the game.
  */
 @Slf4j

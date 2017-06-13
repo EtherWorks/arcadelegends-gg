@@ -11,7 +11,7 @@ import gg.al.logic.component.PositionComponent;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * Created by Thomas Neumann on 29.05.2017.<br />
+ * Created by Thomas Neumann on 29.05.2017.<br>
  * {@link IteratingSystem} responsible for controlling all entities with a {@link BulletComponent}.
  */
 @Slf4j
@@ -40,7 +40,7 @@ public class BulletSystem extends IteratingSystem {
         PhysicComponent phys = mapperPhysicComponent.get(entityId);
         bCon.currentDistance += phys.body.getPosition().dst(bCon.old);
         if (bCon.maxDistance <= bCon.currentDistance) {
-            if(bCon.deleteCallback != null)
+            if (bCon.deleteCallback != null)
                 bCon.deleteCallback.onDelete();
             arcadeWorld.delete(entityId);
             return;
@@ -49,12 +49,11 @@ public class BulletSystem extends IteratingSystem {
 
         if (bCon.target != -1) {
             PositionComponent positionComponent = mapperPositionComponent.get(bCon.target);
-            if(positionComponent != null) {
+            if (positionComponent != null) {
                 Vector2 targetPos = positionComponent.position;
                 Vector2 bulPos = phys.body.getPosition();
                 bCon.move.set(targetPos).sub(bulPos).nor();
-            }
-            else
+            } else
                 bCon.target = -1;
         }
         phys.body.setLinearVelocity(bCon.move.x * bCon.speed, bCon.move.y * bCon.speed);

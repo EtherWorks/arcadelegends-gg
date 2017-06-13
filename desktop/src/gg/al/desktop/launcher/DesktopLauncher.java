@@ -1,10 +1,7 @@
 package gg.al.desktop.launcher;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
-import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.utils.BufferUtils;
 import gg.al.config.Config;
 import gg.al.desktop.config.DesktopConfigEditor;
 import gg.al.desktop.config.DesktopConfigUtil;
@@ -12,10 +9,8 @@ import gg.al.game.ArcadeLegendsGame;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.MarkerFactory;
 
-import java.nio.IntBuffer;
-
 /**
- * Created by Thomas Neumann on 11.03.2017.<br />
+ * Created by Thomas Neumann on 11.03.2017.<br>
  * Main class responsible for launching the game in a
  * desktop environment.
  */

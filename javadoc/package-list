@@ -1,0 +1,17 @@
+gg.al.character
+gg.al.config
+gg.al.desktop.config
+gg.al.desktop.launcher
+gg.al.exception
+gg.al.game
+gg.al.game.screen
+gg.al.game.ui
+gg.al.graphics
+gg.al.graphics.renderer
+gg.al.logic
+gg.al.logic.component
+gg.al.logic.component.data
+gg.al.logic.entity
+gg.al.logic.map
+gg.al.logic.system
+gg.al.util

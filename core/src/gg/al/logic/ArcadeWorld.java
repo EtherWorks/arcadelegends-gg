@@ -44,7 +44,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Created by Thomas Neumann on 23.03.2017.<br />
+ * Created by Thomas Neumann on 23.03.2017.<br>
  */
 @Slf4j
 public class ArcadeWorld implements Disposable {

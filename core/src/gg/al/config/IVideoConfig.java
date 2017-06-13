@@ -1,7 +1,7 @@
 package gg.al.config;
 
 /**
- * Created by Patrick Windegger on 15.03.2017.<br />
+ * Created by Patrick Windegger on 15.03.2017.<br>
  * Config interface housing methods for accessing the current video configuration.
  */
 public interface IVideoConfig {

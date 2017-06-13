@@ -19,7 +19,7 @@ import java.util.Arrays;
 import java.util.NoSuchElementException;
 
 /**
- * Created by Thomas Neumann on 15.03.2017.<br />
+ * Created by Thomas Neumann on 15.03.2017.<br>
  * Utility class holding useful methods for building
  * the {@link Config} class in a desktop environment.
  */
@@ -56,6 +56,7 @@ public class DesktopConfigUtil {
 
     /**
      * Builds the {@link Config} object with links to CFG4J
+     *
      * @return the linked {@link Config}
      */
     public static Config buildConfig() {
@@ -82,8 +83,9 @@ public class DesktopConfigUtil {
 
     /**
      * Sets up the given {@link LwjglApplicationConfiguration} object.
+     *
      * @param config the {@link LwjglApplicationConfiguration} to alter
-     * @param cfg the {@link Config} as presets
+     * @param cfg    the {@link Config} as presets
      */
     public static void setupLwjglConfig(LwjglApplicationConfiguration config, Config cfg) {
         config.foregroundFPS = cfg.video.foregroundFPS();
@@ -97,9 +99,10 @@ public class DesktopConfigUtil {
 
     /**
      * Registers the standard listeners to {@link gg.al.config.IConfigKey} changed events, which are native only to desktop.
-     * @param editor the {@link gg.al.config.ConfigEditor} which is linked to the {@link Config} object
-     * @param cfg the {@link Config} object
-     * @param config the {@link LwjglApplicationConfiguration} object
+     *
+     * @param editor      the {@link gg.al.config.ConfigEditor} which is linked to the {@link Config} object
+     * @param cfg         the {@link Config} object
+     * @param config      the {@link LwjglApplicationConfiguration} object
      * @param application the {@link LwjglApplication} to alter
      */
     public static void registerStandardListeners(DesktopConfigEditor editor, Config cfg, LwjglApplicationConfiguration config, LwjglApplication application) {

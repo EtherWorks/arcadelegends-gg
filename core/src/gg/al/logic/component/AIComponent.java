@@ -3,7 +3,7 @@ package gg.al.logic.component;
 import com.artemis.PooledComponent;
 
 /**
- * Created by Thomas Neumann on 12.06.2017.<br />
+ * Created by Thomas Neumann on 12.06.2017.<br>
  * {@link com.artemis.Component} containing data for the {@link gg.al.logic.system.AISystem}.
  */
 public class AIComponent extends PooledComponent {

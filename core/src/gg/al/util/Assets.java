@@ -12,7 +12,7 @@ import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 
 /**
- * Created by Thomas Neumann on 02.06.2017.<br />
+ * Created by Thomas Neumann on 02.06.2017.<br>
  * Container class containing all preset assets for the {@link AssignmentAssetManager}.
  */
 public class Assets {

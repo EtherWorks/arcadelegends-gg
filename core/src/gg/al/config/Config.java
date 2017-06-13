@@ -5,7 +5,7 @@ import org.cfg4j.provider.ConfigurationProvider;
 import java.util.Properties;
 
 /**
- * Created by Thomas Neumann on 15.03.2017.<br />
+ * Created by Thomas Neumann on 15.03.2017.<br>
  * Config class holding all relevant config objects, as well as an
  * {@link ConfigEditor} object, which holds the ability to change the current configuration.
  */

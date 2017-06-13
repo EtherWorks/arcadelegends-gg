@@ -14,7 +14,7 @@ import gg.al.logic.component.data.Item;
 import gg.al.logic.component.data.StatusEffect;
 
 /**
- * Created by Thomas Neumann on 24.04.2017.<br />
+ * Created by Thomas Neumann on 24.04.2017.<br>
  * {@link IteratingSystem} responsible for updating the current stats of the {@link StatComponent}.<br>
  * Contains every necessary calculation from {@link Item} to {@link StatusEffect}.<br>
  * Also controls the death of entities.

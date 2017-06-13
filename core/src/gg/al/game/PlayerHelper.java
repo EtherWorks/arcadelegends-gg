@@ -20,7 +20,7 @@ import gg.al.util.Shaders;
 /**
  * Created by Thomas Neumann on 07.06.2017.<br>
  * Helper class for exposing entity related variables to the UI-system.<br>
- * Also contains {@link TextureRegion]s for current health, resource and cooldowns.
+ * Also contains {@link TextureRegion} for current health, resource and cooldowns.
  */
 public class PlayerHelper implements Disposable {
 

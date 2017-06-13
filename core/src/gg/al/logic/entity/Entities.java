@@ -5,7 +5,7 @@ import com.artemis.Component;
 import gg.al.logic.component.*;
 
 /**
- * Created by Thomas Neumann on 07.04.2017.<br />
+ * Created by Thomas Neumann on 07.04.2017.<br>
  * Enum containing all entity types, their default components, and a id for identifying proposes.
  */
 public enum Entities {

@@ -8,7 +8,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
- * Created by Thomas Neumann on 30.03.2017.<br />
+ * Created by Thomas Neumann on 30.03.2017.<br>
  * Class describing exatly one tile of a {@link LogicMap}.
  */
 public class Tile {

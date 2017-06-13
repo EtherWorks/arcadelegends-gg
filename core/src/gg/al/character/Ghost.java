@@ -8,7 +8,7 @@ import gg.al.logic.entity.Entities;
 import gg.al.logic.entity.EntityArguments;
 
 /**
- * Created by Thomas Neumann on 09.06.2017.<br />
+ * Created by Thomas Neumann on 09.06.2017.<br>
  * Standard enemy of the game.
  */
 public class Ghost extends Character {

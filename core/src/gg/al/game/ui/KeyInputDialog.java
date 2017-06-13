@@ -2,28 +2,15 @@ package gg.al.game.ui;
 
 
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
-import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
-import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import gg.al.config.IInputConfig;
 import gg.al.game.AL;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 import lombok.extern.slf4j.Slf4j;
-
-
-import javax.swing.*;
-import java.awt.*;
-import java.security.Key;
 
 
 /**
@@ -56,6 +43,7 @@ public class KeyInputDialog extends Dialog {
 
     /**
      * Method responsible for initializing a Dialog to provide the option to set input-keys
+     *
      * @param background - background of the dialog
      */
     public void initDialog(Drawable background) {

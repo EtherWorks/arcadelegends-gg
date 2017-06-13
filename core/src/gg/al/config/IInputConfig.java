@@ -1,7 +1,7 @@
 package gg.al.config;
 
 /**
- * Created by Patrick Windegger on 15.03.2017.<br />
+ * Created by Patrick Windegger on 15.03.2017.<br>
  * Config interface housing methods for accessing the current input / control configuration.
  */
 public interface IInputConfig {
@@ -46,21 +46,6 @@ public interface IInputConfig {
             this.defaultValue = defaultValue;
         }
 
-        @Override
-        public String getKeyName() {
-            return name();
-        }
-
-        @Override
-        public String getPrefix() {
-            return PREFIX;
-        }
-
-        @Override
-        public String getDefaultValue() {
-            return defaultValue;
-        }
-
         public static int getFromKey(InputKeys key, IInputConfig cfg) {
             switch (key) {
                 case up:
@@ -86,6 +71,21 @@ public interface IInputConfig {
                 default:
                     throw new IllegalArgumentException("Key does not exist");
             }
+        }
+
+        @Override
+        public String getKeyName() {
+            return name();
+        }
+
+        @Override
+        public String getPrefix() {
+            return PREFIX;
+        }
+
+        @Override
+        public String getDefaultValue() {
+            return defaultValue;
         }
 
     }

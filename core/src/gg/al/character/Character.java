@@ -25,7 +25,7 @@ import gg.al.logic.map.Tile;
 import java.util.Random;
 
 /**
- * Created by Thomas Neumann on 23.05.2017.<br />
+ * Created by Thomas Neumann on 23.05.2017.<br>
  * Main sandbox superclass for all characters.
  */
 public abstract class Character {

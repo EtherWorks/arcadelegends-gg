@@ -24,7 +24,7 @@ import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * Created by Thomas Neumann on 30.03.2017.<br />
+ * Created by Thomas Neumann on 30.03.2017.<br>
  * {@link BaseEntitySystem} containing all logic responsible for updating the render data for each entity.
  * Most render work is delegated to the {@link RenderComponent.RenderDelegate}, but this class holds the references on most of the used resources.
  * {@link RenderComponent.RenderDelegate} don´t own the resources, and only the {@link RenderSystem} can release them.

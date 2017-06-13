@@ -6,7 +6,7 @@ import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.Fixture;
 
 /**
- * Created by Thomas Neumann on 29.05.2017.<br />
+ * Created by Thomas Neumann on 29.05.2017.<br>
  * {@link com.artemis.Component} describing a bullet.
  */
 public class BulletComponent extends PooledComponent {

@@ -3,7 +3,7 @@ package gg.al.logic.component.data;
 import gg.al.logic.component.StatComponent;
 
 /**
- * Created by Thomas Neumann on 31.05.2017.<br />
+ * Created by Thomas Neumann on 31.05.2017.<br>
  * Describes a object which can be ticked, meaning stepped with the stimulation.
  */
 public interface ITickable {

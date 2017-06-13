@@ -8,7 +8,7 @@ import lombok.Getter;
 import java.util.Arrays;
 
 /**
- * Created by Thomas Neumann on 30.03.2017.<br />
+ * Created by Thomas Neumann on 30.03.2017.<br>
  * Container class for all {@link Tile}, and describing the complete map of a level.
  */
 public class LogicMap {

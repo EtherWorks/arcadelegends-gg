@@ -1,7 +1,7 @@
 package gg.al.logic.component.data;
 
 /**
- * Created by Thomas Neumann on 24.04.2017.<br />
+ * Created by Thomas Neumann on 24.04.2017.<br>
  * Interface denoting the ability to be loaded from a {@link Template}.
  */
 public interface ITemplateable {

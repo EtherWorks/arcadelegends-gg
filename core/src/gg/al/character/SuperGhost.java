@@ -9,7 +9,7 @@ import gg.al.logic.entity.Entities;
 import gg.al.logic.entity.EntityArguments;
 
 /**
- * Created by Thomas Neumann on 09.06.2017.<br />
+ * Created by Thomas Neumann on 09.06.2017.<br>
  * First boss of the game.
  */
 public class SuperGhost extends Character {

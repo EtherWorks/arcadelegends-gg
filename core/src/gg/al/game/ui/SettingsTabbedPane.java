@@ -1,7 +1,10 @@
 package gg.al.game.ui;
 
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.ui.Container;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import lombok.extern.slf4j.Slf4j;
 
@@ -14,12 +17,10 @@ import java.util.HashMap;
 @Slf4j
 public class SettingsTabbedPane extends Container {
 
+    protected Table contentTable;
+    protected HashMap<TextButton, Table> componentMap;
     private Table baseTable;
     private Table buttonTable;
-    protected Table contentTable;
-
-    protected HashMap<TextButton, Table> componentMap;
-
     private int x;
     private int y;
 
@@ -42,10 +43,11 @@ public class SettingsTabbedPane extends Container {
 
     /**
      * Method responsible for adding a new Tab to the TabbedPane
+     *
      * @param btnTab - TextButton you want to add to the TabbedPane
      */
     public void addTab(TextButton btnTab) {
-        btnTab.addListener(new ClickListener(){
+        btnTab.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 setCurrentTab(btnTab);
@@ -64,16 +66,14 @@ public class SettingsTabbedPane extends Container {
 
     /**
      * Method responsible for making the Tab visible depending on which TextButton was clicked
+     *
      * @param btnTab - TextButton of the tab you want to show
      */
-    public void setCurrentTab(TextButton btnTab)
-    {
+    public void setCurrentTab(TextButton btnTab) {
         Table currentTable = componentMap.get(btnTab);
         contentTable.clear();
         contentTable.add(currentTable);
     }
-
-
 
 
 }

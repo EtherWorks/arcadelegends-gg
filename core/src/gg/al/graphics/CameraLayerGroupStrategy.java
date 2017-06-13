@@ -15,7 +15,7 @@ import com.badlogic.gdx.utils.Pool;
 import java.util.Comparator;
 
 /**
- * Created by Thomas Neumann on 21.04.2017.<br />
+ * Created by Thomas Neumann on 21.04.2017.<br>
  * {@link GroupStrategy} which is the exact same as {@link com.badlogic.gdx.graphics.g3d.decals.CameraGroupStrategy}, only setting an additional OpenGL flag.<br>
  * Additional flag is set since libGDX version 1.9.5, therefore technically @{@link Deprecated}
  */

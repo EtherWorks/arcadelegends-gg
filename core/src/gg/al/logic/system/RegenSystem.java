@@ -6,7 +6,7 @@ import com.artemis.systems.IntervalIteratingSystem;
 import gg.al.logic.component.StatComponent;
 
 /**
- * Created by Thomas Neumann on 26.04.2017.<br />
+ * Created by Thomas Neumann on 26.04.2017.<br>
  * {@link IntervalIteratingSystem} responsible for calculating second based regeneration, like health regeneration.
  */
 public class RegenSystem extends IntervalIteratingSystem {

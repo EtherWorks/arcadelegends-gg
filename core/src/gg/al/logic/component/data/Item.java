@@ -4,7 +4,7 @@ import com.badlogic.gdx.utils.ObjectMap;
 import gg.al.logic.component.StatComponent;
 
 /**
- * Created by Thomas Neumann on 31.05.2017.<br />
+ * Created by Thomas Neumann on 31.05.2017.<br>
  * Data class describing the logic portion of an item.<br>
  */
 public class Item implements IStatAffect, ITickable {
