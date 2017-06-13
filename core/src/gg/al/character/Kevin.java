@@ -138,24 +138,24 @@ public class Kevin extends Character {
                         + casterStat.getCurrentStat(StatComponent.BaseStat.spellPower) * .5f, 0));
                 final float tickDamage = 20 * casterStat.getRuntimeStat(StatComponent.RuntimeStat.ability_2_points) + casterStat.getCurrentStat(StatComponent.BaseStat.attackDamage) * 0.3f;
                 final float tickPen = statComponent.getCurrentStat(StatComponent.BaseStat.armorPenetration);
-                statComponent.statusEffects.put(BLEED_NAME, bleed.tickHandler(
-                        new StatusEffect.TickHandler() {
-                            private float time;
+                StatusEffect bleedStatus = bleed.build();
+                bleedStatus.tickHandler = new StatusEffect.TickHandler() {
+                    private float time;
 
-                            @Override
-                            public void onTick(float delta, StatComponent statComponent, StatusEffect effect) {
-                                if (time == -1)
-                                    return;
-                                time += delta;
-                                if (time >= .5f || effect.remainingTime <= .5f) {
-                                    statComponent.damages.add(
-                                            new Damage(Damage.DamageType.Physical,
-                                                    tickDamage, tickPen));
-                                    time = effect.remainingTime <= .5f ? -1 : 0;
-                                }
-                            }
+                    @Override
+                    public void onTick(float delta, StatComponent statComponent) {
+                        if (time == -1)
+                            return;
+                        time += delta;
+                        if (time >= .5f || bleedStatus.remainingTime <= .5f) {
+                            statComponent.damages.add(
+                                    new Damage(Damage.DamageType.Physical,
+                                            tickDamage, tickPen));
+                            time = bleedStatus.remainingTime <= .5f ? -1 : 0;
                         }
-                ).build());
+                    }
+                };
+                statComponent.statusEffects.put(BLEED_NAME, bleedStatus);
                 break;
             /**
              * Grants a {@link StatusEffect} which strengths {@link Kevin}s offensive power, but decreases his defense.

@@ -13,7 +13,7 @@ public class PhysicComponent extends Component implements ITemplateable {
     public Body body;
 
     @Override
-    public Template getTemplate() {
+    public Template getDefaultTemplate() {
         return new PhysicTemplate();
     }
 

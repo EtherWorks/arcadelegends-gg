@@ -57,7 +57,7 @@ public class StatSystem extends IteratingSystem {
             StatusEffect effect = values.next();
             if (effect.effectTime == 0) {
                 if (effect.tickHandler != null)
-                    effect.tickHandler.onTick(getWorld().getDelta(), stats, effect);
+                    effect.tickHandler.onTick(getWorld().getDelta(), stats);
                 continue;
             }
             if (effect.remainingTime == -1)
@@ -68,7 +68,7 @@ public class StatSystem extends IteratingSystem {
             } else {
                 effect.remainingTime -= getWorld().getDelta();
                 if (effect.tickHandler != null)
-                    effect.tickHandler.onTick(getWorld().getDelta(), stats, effect);
+                    effect.tickHandler.onTick(getWorld().getDelta(), stats);
             }
         }
 
@@ -94,7 +94,7 @@ public class StatSystem extends IteratingSystem {
 
         for (Heal heal : stats.heals) {
             float amount = 0;
-            switch (heal.healType) {
+            switch (heal.healCalculationType) {
                 case Flat:
                     amount = heal.amount;
                     break;

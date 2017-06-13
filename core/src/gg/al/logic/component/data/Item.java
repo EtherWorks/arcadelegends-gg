@@ -5,15 +5,28 @@ import gg.al.logic.component.StatComponent;
 
 /**
  * Created by Thomas Neumann on 31.05.2017.<br />
+ * Data class describing the logic portion of an item.<br>
  */
 public class Item implements IStatAffect, ITickable {
 
+    /**
+     * The flat stat changes.
+     */
     public ObjectMap<StatComponent.BaseStat, Float> flatStats = new ObjectMap<>();
 
+    /**
+     * The percent stat changes
+     */
     public ObjectMap<StatComponent.BaseStat, Float> percentageStats = new ObjectMap<>();
 
+    /**
+     * The percentage stat changes based on the base stats of an entity.
+     */
     public ObjectMap<StatComponent.BaseStat, Float> percentageBaseStats = new ObjectMap<>();
 
+    /**
+     * The name of an {@link Item}.
+     */
     public String name = "";
 
     public TickHandler tickHandler;

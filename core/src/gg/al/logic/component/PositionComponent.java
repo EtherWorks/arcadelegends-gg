@@ -40,7 +40,7 @@ public class PositionComponent extends PooledComponent implements ITemplateable 
     }
 
     @Override
-    public Template getTemplate() {
+    public Template getDefaultTemplate() {
         return new PositionTemplate();
     }
 

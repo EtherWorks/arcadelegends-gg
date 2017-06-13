@@ -132,7 +132,7 @@ public class MainUtil {
                 continue;
             try {
                 ITemplateable instance = (ITemplateable) component.newInstance();
-                Template def = instance.getTemplate();
+                Template def = instance.getDefaultTemplate();
                 defs.put(instance.getClass().getSimpleName(), def);
             } catch (InstantiationException e) {
 

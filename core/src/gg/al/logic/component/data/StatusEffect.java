@@ -5,18 +5,37 @@ import gg.al.logic.component.StatComponent;
 
 /**
  * Created by Thomas Neumann on 26.04.2017.<br />
+ * Data class describing a status effect.
  */
 public class StatusEffect implements IStatAffect, ITickable {
 
+    /**
+     * The time this {@link StatusEffect} stays in effect.
+     */
     public float effectTime;
+    /**
+     * The remaining time this {@link StatusEffect} stays in effect.
+     */
     public float remainingTime = -1;
 
+    /**
+     * The flat stat changes.
+     */
     public ObjectMap<StatComponent.BaseStat, Float> flatStats = new ObjectMap<>();
 
+    /**
+     * The percent stat changes
+     */
     public ObjectMap<StatComponent.BaseStat, Float> percentageStats = new ObjectMap<>();
 
+    /**
+     * The percentage stat changes based on the base stats of an entity.
+     */
     public ObjectMap<StatComponent.BaseStat, Float> percentageBaseStats = new ObjectMap<>();
 
+    /**
+     * The {@link gg.al.logic.component.data.ITickable.TickHandler} of this {@link StatusEffect}.
+     */
     public TickHandler tickHandler;
 
     public StatusEffect(float effectTime, float remainingTime, ObjectMap<StatComponent.BaseStat, Float> flatStats, ObjectMap<StatComponent.BaseStat, Float> percentageStats, ObjectMap<StatComponent.BaseStat, Float> percentageBaseStats, TickHandler tickHandler) {

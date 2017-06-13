@@ -86,6 +86,14 @@ public class ArcadeWorld implements Disposable {
     @Getter
     private Assets.LevelAssets levelAssets;
 
+    /**
+     * Creates and configures the level by the given map.
+     *
+     * @param map               the map to load
+     * @param worldViewRotation the degree of tilt the render should have
+     * @param cam               the camera used for rendering
+     * @param assets            the {@link gg.al.util.Assets.LevelAssets} used by the level
+     */
     public ArcadeWorld(TiledMap map, float worldViewRotation, Camera cam, Assets.LevelAssets assets) {
         this.levelAssets = assets;
         this.tiledMap = map;
@@ -247,6 +255,10 @@ public class ArcadeWorld implements Disposable {
         });
     }
 
+    /**
+     * Steps the level simulation on step further.
+     * Accounts for slow and fast frame rate, and adjusts accordingly.
+     */
     public void step() {
         float accumulator = delta;
 
@@ -266,6 +278,9 @@ public class ArcadeWorld implements Disposable {
         deltaAccumulator += accumulator;
     }
 
+    /**
+     * Renders the level in it´s current stage.
+     */
     public void render() {
         mapBuffer.begin();
         AL.graphics.getGL20().glClearColor(0, 0, 0, 1);
@@ -298,6 +313,12 @@ public class ArcadeWorld implements Disposable {
         return logicMap.getTile(pos);
     }
 
+    /**
+     * Utility method for spawning an configuring an entity.
+     * @param entity the {@link Entities} to be spawned
+     * @param arguments the {@link EntityArguments} used for configuring
+     * @return the entity handle (id)
+     */
     public int spawn(Entities entity, EntityArguments arguments) {
         int entityID = entityWorld.create(entityWorld.getArchetype(entity.getArchetype()));
         for (Class<? extends Component> componentType : entity.getComponents()) {
@@ -360,6 +381,10 @@ public class ArcadeWorld implements Disposable {
         return entityID;
     }
 
+    /**
+     * Utility method for deleting an entity from the level.
+     * @param id of the entity to be deleted
+     */
     public void delete(int id) {
         PhysicComponent physicComponent = entityWorld.getMapper(PhysicComponent.class).get(id);
 
@@ -371,12 +396,22 @@ public class ArcadeWorld implements Disposable {
         entityWorld.delete(id);
     }
 
+    /**
+     * Loads and caches the {@link EntityArguments} from the given .json file.
+     * @param fileName the filename of the .json to load
+     * @return the cached or newly read {@link EntityArguments}
+     * @throws IOException
+     */
     public EntityArguments loadArguments(String fileName) throws IOException {
         EntityArguments arguments = EntityArguments.fromFile(fileName);
         loadedEntityArguments.put(fileName, arguments);
         return arguments;
     }
 
+    /**
+     * Extracts the spawn info from the {@link TiledMap}.
+     * @return the position to spawn the player
+     */
     public Vector2 getSpawnPosition() {
         return new Vector2(
                 tiledMap.getProperties().get("spawnX", Integer.class),
@@ -384,6 +419,12 @@ public class ArcadeWorld implements Disposable {
         );
     }
 
+    /**
+     * Extracts the enemy information form the {@link TiledMap}, and spawns them in.
+     * Also adds a {@link AIComponent} to the enemies, targeting the player.
+     * @param playerId the player to target
+     * @return an {@link IntArray} containing all the enemies
+     */
     public IntArray spawnEnemies(int playerId) {
         String enemies = (String) tiledMap.getProperties().get("enemies");
         IntArray array = new IntArray();
@@ -414,6 +455,10 @@ public class ArcadeWorld implements Disposable {
         return array;
     }
 
+    /**
+     * Spawns and configures the player.
+     * @return the entity handle (id) of the player
+     */
     public int spawnPlayer() {
         Vector2 mapCoord = getSpawnPosition();
 
@@ -438,6 +483,10 @@ public class ArcadeWorld implements Disposable {
         return playerEnt;
     }
 
+    /**
+     * Returns or loads and then returns the chached {@link EntityArguments}.
+     * @see #loadArguments(String)
+     */
     public EntityArguments getArguments(String fileName) {
         if (!loadedEntityArguments.containsKey(fileName))
             try {

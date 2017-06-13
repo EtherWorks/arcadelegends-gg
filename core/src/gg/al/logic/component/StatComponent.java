@@ -185,7 +185,7 @@ public class StatComponent extends PooledComponent implements ITemplateable {
     }
 
     @Override
-    public Template getTemplate() {
+    public Template getDefaultTemplate() {
         return new StatTemplate();
     }
 
@@ -343,6 +343,10 @@ public class StatComponent extends PooledComponent implements ITemplateable {
         dead, deleteOnDeath, invulnerable
     }
 
+    public interface StatEventHandler {
+        void onDeath(StatComponent statComponent, int entityId);
+    }
+
     public class StatTemplate extends Template {
         private LinkedHashMap<String, Float> values;
 
@@ -365,10 +369,5 @@ public class StatComponent extends PooledComponent implements ITemplateable {
         public Map<String, Float> getCustomValues() {
             return customValues;
         }
-    }
-
-    public interface StatEventHandler
-    {
-        void onDeath(StatComponent statComponent, int entityId);
     }
 }

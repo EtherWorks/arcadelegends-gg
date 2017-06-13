@@ -9,6 +9,7 @@ import lombok.Setter;
 
 /**
  * Created by Thomas Neumann on 30.03.2017.<br />
+ * Class describing exatly one tile of a {@link LogicMap}.
  */
 public class Tile {
 
@@ -31,10 +32,26 @@ public class Tile {
         entities = new IntSet();
     }
 
+    /**
+     * Creates a {@link Tile} from a {@link com.badlogic.gdx.maps.tiled.TiledMapTileLayer.Cell}.
+     *
+     * @param cell the cell from which to read from
+     * @param x    coordinate
+     * @param y    coordinate
+     * @return the created Tile
+     */
     public static Tile fromCell(TiledMapTileLayer.Cell cell, int x, int y) {
         return fromTileMapTile(cell.getTile(), x, y);
     }
 
+    /**
+     * Creates a {@link Tile} from a {@link TiledMapTile}.
+     *
+     * @param tiledMapTile the tiledMapTile from which to read from
+     * @param x            coordinate
+     * @param y            coordinate
+     * @return the created Tile
+     */
     public static Tile fromTileMapTile(TiledMapTile tiledMapTile, int x, int y) {
         MapProperties mapProperties = tiledMapTile.getProperties();
 

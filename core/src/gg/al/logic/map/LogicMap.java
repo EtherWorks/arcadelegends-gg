@@ -9,6 +9,7 @@ import java.util.Arrays;
 
 /**
  * Created by Thomas Neumann on 30.03.2017.<br />
+ * Container class for all {@link Tile}, and describing the complete map of a level.
  */
 public class LogicMap {
 
@@ -39,18 +40,30 @@ public class LogicMap {
         return map[(int) pos.x][(int) pos.y];
     }
 
+    /**
+     * @return whether x and y are within bounds
+     */
     public boolean inBounds(int x, int y) {
         return x >= 0 && y >= 0 && x <= width && y <= height;
     }
 
+    /**
+     * @return whether x and y are within bounds
+     */
     public boolean inBounds(Vector2 pos) {
         return inBounds((int) pos.x, (int) pos.y);
     }
 
+    /**
+     * @return whether x and y, when translated by tranxX and transY, are within bounds
+     */
     public boolean inBounds(int x, int y, int transX, int transY) {
         return (x + transX) >= 0 && (y + transY) >= 0 && (x + transX) <= width && (y + transY) <= height;
     }
 
+    /**
+     * @return whether x and y, when translated by tranxX and transY, are within bounds
+     */
     public boolean inBounds(Vector2 pos, Vector2 translate) {
         return inBounds((int) pos.x, (int) pos.y, (int) translate.x, (int) translate.y);
     }
