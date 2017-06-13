@@ -122,7 +122,7 @@ public class Assets {
         public Sound boom;
 
         @AssignmentAssetManager.Asset("assets/ui/stats2.png")
-        public Texture stats2;
+        public Texture uistats2;
 
         private BiMap<String, Object> assetMap;
 

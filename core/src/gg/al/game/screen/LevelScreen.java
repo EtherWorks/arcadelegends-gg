@@ -306,7 +306,7 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
             uiStage.addActor(cooldownReductionLabel);
 
             critchanceLabel = new Label("0 CRIT", uiLabelStyle);
-            critchanceLabel.setPosition(150, 950);
+            critchanceLabel.setPosition(170, 950);
             uiStage.addActor(critchanceLabel);
 
             // Fourth row
@@ -324,12 +324,12 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
 
 
             healthLabel = new Label("0/0 HP", uiLabelStyle);
-            healthLabel.setPosition(90, 250);
+            healthLabel.setPosition(110, 840);
             healthLabel.setAlignment(Align.center);
             uiStage.addActor(healthLabel);
 
             resourceLabel = new Label("0/0 RS", uiLabelStyle);
-            resourceLabel.setPosition(90, 187);
+            resourceLabel.setPosition(110, 770);
             resourceLabel.setAlignment(Align.center);
             uiStage.addActor(resourceLabel);
 
@@ -385,6 +385,7 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
         spriteBatch.begin();
         spriteBatch.draw(levelAssets.uioverlay, 10, 10, levelAssets.uioverlay.getWidth() / 2, levelAssets.uioverlay.getHeight() / 2);
         spriteBatch.draw(levelAssets.uistats, 1, 1080-levelAssets.uistats.getHeight() * 1.5f, levelAssets.uistats.getWidth() * 1.6f, levelAssets.uistats.getHeight() * 1.5f);
+        spriteBatch.draw(levelAssets.uistats2, 1, 1080-levelAssets.uistats.getHeight()*1.5f-levelAssets.uistats2.getHeight()+20, levelAssets.uistats2.getWidth(), levelAssets.uistats2.getHeight());
 
         if (playerEnt != -1) {
             StatComponent stats = arcadeWorld.getEntityWorld().getMapper(StatComponent.class).get(playerEnt);
