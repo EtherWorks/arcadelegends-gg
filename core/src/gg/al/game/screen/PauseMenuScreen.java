@@ -26,6 +26,7 @@ import java.util.List;
 
 /**
  * Created by Patrick Windegger on 02.06.2017.
+ * Class responsible for providing a screen when the game is paused.
  */
 @Slf4j
 public class PauseMenuScreen implements IAssetScreen, InputProcessor {
@@ -45,6 +46,10 @@ public class PauseMenuScreen implements IAssetScreen, InputProcessor {
     private Assets.MenuAssets menuAssets;
 
 
+    /**
+     * Method responsible for initializing the pause menu
+     * Called when the screen becomes the current screen of the game
+     */
     @Override
     public void show() {
         // Inits:
@@ -115,7 +120,7 @@ public class PauseMenuScreen implements IAssetScreen, InputProcessor {
         table.add(btSettings).width(600).pad(10);
         table.row();
         table.add(btExitGame).width(600).pad(10);
-        table.setPosition(AL.graphics.getWidth() / 2, AL.graphics.getHeight() / 2 +50);
+        table.setPosition(AL.graphics.getWidth() / 2, AL.graphics.getHeight() / 2 + 50);
 
 
         stage.addActor(table);
@@ -123,6 +128,12 @@ public class PauseMenuScreen implements IAssetScreen, InputProcessor {
         AL.input.setInputProcessor(new InputMultiplexer(stage, this));
     }
 
+    /**
+     * Method responsible for rendering components
+     * Called everytime when rendering need to be done
+     *
+     * @param delta
+     */
     @Override
     public void render(float delta) {
         AL.gl.glClearColor(0, 0, 0, 1);
@@ -138,6 +149,13 @@ public class PauseMenuScreen implements IAssetScreen, InputProcessor {
         stage.draw();
     }
 
+    /**
+     * Method responsible for resizing the application
+     * Called everytime when the screen is re-sized
+     *
+     * @param width  - width of the window
+     * @param height - height of the window
+     */
     @Override
     public void resize(int width, int height) {
         viewport.update(width, height, true);
@@ -153,6 +171,9 @@ public class PauseMenuScreen implements IAssetScreen, InputProcessor {
 
     }
 
+    /**
+     * Method responsible for hiding the screen
+     */
     @Override
     public void hide() {
         AL.input.setInputProcessor(null);
@@ -161,21 +182,40 @@ public class PauseMenuScreen implements IAssetScreen, InputProcessor {
         AL.getAssetManager().unloadAssetFields(menuAssets);
     }
 
+    /**
+     * Method responsible for disposing the Assets
+     * Called when the screen releases all resources
+     */
     @Override
     public void dispose() {
+        AL.getAssetManager().unloadAssetFields(menuAssets);
     }
 
+    /**
+     * Method responsible for returning {@link gg.al.util.Assets.MenuAssets}
+     *
+     * @return Object
+     */
     @Override
     public Object assets() {
         return menuAssets = new Assets.MenuAssets();
     }
 
+    /**
+     * Method responsible for setting a custom loading screen
+     *
+     * @return ILoadingScreen
+     */
     @Override
     public ILoadingScreen customLoadingScreen() {
         return null;
     }
 
 
+    /**
+     * @param keycode of the key
+     * @return java.lang.Boolean
+     */
     @Override
     public boolean keyDown(int keycode) {
         if (keycode == Input.Keys.ESCAPE) {
@@ -186,7 +226,6 @@ public class PauseMenuScreen implements IAssetScreen, InputProcessor {
 
     @Override
     public boolean keyUp(int keycode) {
-
         return false;
     }
 

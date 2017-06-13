@@ -19,6 +19,7 @@ import gg.al.util.Assets;
 
 /**
  * Created by Patrick Windegger on 12.06.2017.
+ * Class repsonsible for providing a Game over screen wether you win or loose the game.
  */
 public class GameOverScreen implements IAssetScreen {
 
@@ -35,16 +36,30 @@ public class GameOverScreen implements IAssetScreen {
     private Label endgameLabel;
     private TextButton btBackToMainMenu;
 
+    /**
+     * Method responsible for returning {@link gg.al.util.Assets.MenuAssets}
+     *
+     * @return
+     */
     @Override
     public Object assets() {
         return menuAssets = new Assets.MenuAssets();
     }
 
+    /**
+     * Method responsible for setting a custom loading screen
+     *
+     * @return
+     */
     @Override
     public ILoadingScreen customLoadingScreen() {
         return null;
     }
 
+    /**
+     * Method responsible for initializing the GameOverScreen
+     * Called when the screen becomes the current screen of the game
+     */
     @Override
     public void show() {
         cam = new OrthographicCamera();
@@ -70,7 +85,7 @@ public class GameOverScreen implements IAssetScreen {
                 AL.getGame().setScreen(AL.getScreenManager().get(MainMenuScreen.class));
             }
         });
-        btBackToMainMenu.setPosition(AL.graphics.getWidth() / 2 - 300, AL.graphics.getHeight() / 2 +40);
+        btBackToMainMenu.setPosition(AL.graphics.getWidth() / 2 - 300, AL.graphics.getHeight() / 2 + 40);
         stage.addActor(btBackToMainMenu);
 
         endgameLabel = new Label(endgameText, skin);
@@ -83,6 +98,12 @@ public class GameOverScreen implements IAssetScreen {
         AL.input.setInputProcessor(stage);
     }
 
+    /**
+     * Method responsible for rendering components
+     * Called everytime when rendering need to be done
+     *
+     * @param delta
+     */
     @Override
     public void render(float delta) {
         AL.gl.glClearColor(0, 0, 0, 1);
@@ -98,6 +119,13 @@ public class GameOverScreen implements IAssetScreen {
         stage.draw();
     }
 
+    /**
+     * Method responsible for resizing the application
+     * Called everytime when the screen is re-sized
+     *
+     * @param width  - width of the window
+     * @param height - height of the window
+     */
     @Override
     public void resize(int width, int height) {
         viewport.update(width, height, true);
@@ -113,6 +141,9 @@ public class GameOverScreen implements IAssetScreen {
 
     }
 
+    /**
+     * Method responsible for hiding the screen
+     */
     @Override
     public void hide() {
         AL.input.setInputProcessor(null);
@@ -120,6 +151,10 @@ public class GameOverScreen implements IAssetScreen {
         spriteBatch.dispose();
     }
 
+    /**
+     * Method responsible for disposing the Assets
+     * Called when the screen releases all resources
+     */
     @Override
     public void dispose() {
         AL.getAssetManager().unloadAssetFields(menuAssets);

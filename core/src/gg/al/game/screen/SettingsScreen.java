@@ -40,7 +40,6 @@ import java.util.HashMap;
 /**
  * Created by Patrick Windegger on 16.03.2017.
  * Class responsible for the different Settings (Video, Audio, Input) in the game
- * {@link IVideoConfig}, {@link IAudioConfig}, {@link gg.al.config.IInputConfig}
  */
 public class SettingsScreen implements IAssetScreen, InputProcessor {
 
@@ -76,6 +75,10 @@ public class SettingsScreen implements IAssetScreen, InputProcessor {
 
     private IAssetScreen previousScreen;
 
+    /**
+     * Method responsible for initializing the settings menu
+     * Called when the screen becomes the current screen of the game
+     */
     @Override
     public void show() {
         cam = new OrthographicCamera();
@@ -143,6 +146,9 @@ public class SettingsScreen implements IAssetScreen, InputProcessor {
 
     }
 
+    /**
+     * Method responsible for creating the Video Settings Table with the components
+     */
     private void createVideoTable() {
         String vsyncText = AL.getVideoConfig().vsyncEnabled() ? "Vsync on" : "Vsync off";
         btVsync = new TextButton(vsyncText, skin, "default");
@@ -204,6 +210,9 @@ public class SettingsScreen implements IAssetScreen, InputProcessor {
 
     }
 
+    /**
+     * Method responsible for creating the Audio Settings Table with the components
+     */
     private void createAudioTable() {
         Label lbMasterVolume = new Label("Master Volume", skin);
         lbMasterVolume.setAlignment(Align.center);
@@ -280,6 +289,12 @@ public class SettingsScreen implements IAssetScreen, InputProcessor {
     }
 
 
+    /**
+     * Method responsible for rendering components
+     * Called everytime when rendering need to be done
+     *
+     * @param delta
+     */
     @Override
     public void render(float delta) {
         AL.gl.glClearColor(0, 0, 0, 1);
@@ -294,6 +309,13 @@ public class SettingsScreen implements IAssetScreen, InputProcessor {
         stage.draw();
     }
 
+    /**
+     * Method responsible for resizing the application
+     * Called everytime when the screen is re-sized
+     *
+     * @param width  - width of the window
+     * @param height - height of the window
+     */
     @Override
     public void resize(int width, int height) {
         viewport.update(width, height, true);
@@ -390,11 +412,20 @@ public class SettingsScreen implements IAssetScreen, InputProcessor {
     }
 
 
+    /**
+     * Method responsible for returning {@link gg.al.util.Assets.MenuAssets}
+     *
+     * @return Object
+     */
     @Override
     public Object assets() {
         return settingsAssets = new Assets.SettingsAssets();
     }
 
+    /**
+     * @param keycode of the key
+     * @return true when key was pressed
+     */
     @Override
     public boolean keyDown(int keycode) {
         if (keycode == Input.Keys.ESCAPE && previousScreen != null)
@@ -437,6 +468,12 @@ public class SettingsScreen implements IAssetScreen, InputProcessor {
         return false;
     }
 
+
+    /**
+     * Method responsible for setting a custom loading screen
+     *
+     * @return the {@link ILoadingScreen}
+     */
     @Override
     public ILoadingScreen customLoadingScreen() {
         return null;

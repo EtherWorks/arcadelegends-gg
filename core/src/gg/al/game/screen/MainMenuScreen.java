@@ -144,7 +144,7 @@ public class MainMenuScreen implements IAssetScreen {
 
     /**
      * Method responsible for returning {@link gg.al.util.Assets.MenuAssets}
-     * @return
+     * @return Object
      */
     @Override
     public Object assets() {
@@ -153,7 +153,7 @@ public class MainMenuScreen implements IAssetScreen {
 
     /**
      * Method responsible for setting a custom loading screen
-     * @return
+     * @return ILoadingScreen
      */
     @Override
     public ILoadingScreen customLoadingScreen() {
@@ -161,7 +161,7 @@ public class MainMenuScreen implements IAssetScreen {
     }
 
     /**
-     * Method responsible for creating the Buttons for {@link MainMenuScreen}
+     * Method responsible for creating the Buttons for the Main Menu
      */
     private void initButtons()
     {

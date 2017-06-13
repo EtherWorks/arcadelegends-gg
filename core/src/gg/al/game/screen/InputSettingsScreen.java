@@ -54,6 +54,10 @@ public class InputSettingsScreen implements IAssetScreen, InputProcessor {
     private Assets.SettingsAssets settingsAssets;
 
 
+    /**
+     * Method responsible for initializing the main menu
+     * Called when the screen becomes the current screen of the game
+     */
     @Override
     public void show() {
         cam = new OrthographicCamera();
@@ -120,6 +124,14 @@ public class InputSettingsScreen implements IAssetScreen, InputProcessor {
 
     }
 
+    /**
+     * Method responsible for making the dialog visible
+     *
+     * @param font          {@link BitmapFont} font of the dialog
+     * @param textureRegion {@link TextureRegion} background texture for the dialog
+     * @param name          {@link String} name of the key
+     * @param button        {@link TextButton} button of the input key from the {@link InputSettingsScreen}
+     */
     private void showDialog(BitmapFont font, TextureRegion textureRegion, String name, TextButton button) {
         Drawable dlgBackground = new TextureRegionDrawable(new TextureRegion(settingsAssets.dlgbackground));
         dialog = new KeyInputDialog("", new Window.WindowStyle(font, Color.BLACK, new TextureRegionDrawable(new TextureRegion(textureRegion))), skin, stage, font,
@@ -127,6 +139,12 @@ public class InputSettingsScreen implements IAssetScreen, InputProcessor {
         dialog.initDialog(dlgBackground);
     }
 
+    /**
+     * Method responsible for rendering components
+     * Called everytime when rendering need to be done
+     *
+     * @param delta
+     */
     @Override
     public void render(float delta) {
         AL.gl.glClearColor(0, 0, 0, 1);
@@ -141,9 +159,16 @@ public class InputSettingsScreen implements IAssetScreen, InputProcessor {
         stage.draw();
     }
 
+    /**
+     * Method responsible for resizing the application
+     * Called everytime when the screen is re-sized
+     *
+     * @param width  - width of the window
+     * @param height - height of the window
+     */
     @Override
     public void resize(int width, int height) {
-
+        viewport.update(width, height);
     }
 
     @Override
@@ -156,6 +181,9 @@ public class InputSettingsScreen implements IAssetScreen, InputProcessor {
 
     }
 
+    /**
+     * Method responsible for hiding the screen
+     */
     @Override
     public void hide() {
         AL.input.setInputProcessor(null);
@@ -163,11 +191,19 @@ public class InputSettingsScreen implements IAssetScreen, InputProcessor {
         spriteBatch.dispose();
     }
 
+    /**
+     * Method responsible for disposing the Assets
+     * Called when the screen releases all resources
+     */
     @Override
     public void dispose() {
-       AL.getAssetManager().unloadAssetFields(settingsAssets);
+        AL.getAssetManager().unloadAssetFields(settingsAssets);
     }
 
+    /**
+     * @param keycode of the key
+     * @return java.lang.Boolean
+     */
     @Override
     public boolean keyDown(int keycode) {
         if (keycode == Input.Keys.ESCAPE)
@@ -210,11 +246,21 @@ public class InputSettingsScreen implements IAssetScreen, InputProcessor {
         return false;
     }
 
+    /**
+     * Method responsible for returning {@link gg.al.util.Assets.MenuAssets}
+     *
+     * @return Object
+     */
     @Override
     public Object assets() {
         return settingsAssets = new Assets.SettingsAssets();
     }
 
+    /**
+     * Method responsible for setting a custom loading screen
+     *
+     * @return ILoadingScreen
+     */
     @Override
     public ILoadingScreen customLoadingScreen() {
         return null;
