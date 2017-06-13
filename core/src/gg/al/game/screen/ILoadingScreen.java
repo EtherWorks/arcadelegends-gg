@@ -10,5 +10,11 @@ import com.badlogic.gdx.Screen;
  * the new {@link IAssetScreen}.
  */
 public interface ILoadingScreen extends Screen{
+    /**
+     * Returns a {@link Screen} which loads the denoted {@link gg.al.util.Assets} of the {@link IAssetScreen}.
+     *
+     * @param screen the {@link IAssetScreen} from which the assets should be loaded
+     * @return the {@link ILoadingScreen}
+     */
     Screen withAssetScreen(IAssetScreen screen);
 }

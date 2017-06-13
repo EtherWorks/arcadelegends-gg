@@ -22,12 +22,25 @@ public class ScreenManager implements Disposable {
         screenMap = new HashMap<>();
     }
 
+    /**
+     * Registers the given screen into the {@link ScreenManager}.
+     *
+     * @param screen instance to be registered
+     * @param type   type of the instance
+     * @return the old registered instance
+     */
     public synchronized <T extends Screen> T register(T screen, Class<T> type) {
         if (screenMap.containsKey(type))
             throw new IllegalArgumentException("Screen already registerd: " + ClassReflection.getSimpleName(type));
         return (T) screenMap.put(type, screen);
     }
 
+    /**
+     * Registers the given screen into the {@link ScreenManager}.
+     * Initializes the given {@link Screen} with a default constructor, if init is true.
+     * @param type type of the {@link Screen}
+     * @return the old registered instance
+     */
     public synchronized <T extends Screen> T register(Class<T> type) {
         if (screenMap.containsKey(type))
             throw new IllegalArgumentException("Screen already registerd: " + ClassReflection.getSimpleName(type));
@@ -72,6 +85,10 @@ public class ScreenManager implements Disposable {
         }
     }
 
+    /**
+     * @param type the type of the screen to be checked
+     * @return whether a {@link Screen} with this type has been registered
+     */
     public synchronized boolean isRegistered(Class<? extends Screen> type) {
         return screenMap.containsKey(type);
     }

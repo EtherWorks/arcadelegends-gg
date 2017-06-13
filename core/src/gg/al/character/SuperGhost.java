@@ -10,6 +10,7 @@ import gg.al.logic.entity.EntityArguments;
 
 /**
  * Created by Thomas Neumann on 09.06.2017.<br />
+ * First boss of the game.
  */
 public class SuperGhost extends Character {
 
@@ -75,6 +76,9 @@ public class SuperGhost extends Character {
     @Override
     protected void onCast(int abilityInd) {
         switch (abilityInd) {
+            /**
+             * Spawns a linear moving projectile.
+             */
             case ABILITY_1:
                 StatComponent stats = getComponent(entityID, StatComponent.class);
                 EntityArguments arguments = getArguments("ezreal_auto.json");
@@ -107,6 +111,9 @@ public class SuperGhost extends Character {
                     }
                 };
                 break;
+            /**
+             * Slams the ground around {@link SuperGhost}, dealing massive damage to all entities.
+             */
             case ABILITY_4:
                 IntArray entities = getEntitiesInArea(new Vector2(-2, -2), new Vector2(2, 2));
                 for (int i = 0; i < entities.size; i++) {

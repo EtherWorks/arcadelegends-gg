@@ -26,6 +26,7 @@ import java.util.Random;
 
 /**
  * Created by Thomas Neumann on 23.05.2017.<br />
+ * Main sandbox superclass for all characters.
  */
 public abstract class Character {
 
@@ -76,6 +77,13 @@ public abstract class Character {
         };
     }
 
+    /**
+     * Returns the current cooldown for the given ability from the given {@link StatComponent}
+     *
+     * @param ability
+     * @param stats
+     * @return the current cooldown
+     */
     public static float getCooldown(int ability, StatComponent stats) {
         switch (ability) {
             case TRAIT:
@@ -97,10 +105,17 @@ public abstract class Character {
         throw new IllegalArgumentException("No ability with index" + ability);
     }
 
+    /**
+     * @return whether the character is casting
+     */
     public boolean isCasting() {
         return casting[TRAIT] || casting[ABILITY_1] || casting[ABILITY_2] || casting[ABILITY_3] || casting[ABILITY_4];
     }
 
+    /**
+     * @param ability
+     * @return whether the character is casting the given ability
+     */
     public boolean isCasting(int ability) {
         return casting[ability];
     }
@@ -113,6 +128,12 @@ public abstract class Character {
         this.arcadeWorld = arcadeWorld;
     }
 
+    /**
+     * Method for starting the cast of an ability.
+     * Checks prerequisites like cooldown and cost before starting the cast.
+     *
+     * @param abilityInd the ability to be evoked
+     */
     public void cast(int abilityInd) {
         StatComponent statComponent = arcadeWorld.getEntityWorld().getMapper(StatComponent.class).get(entityID);
         if (cooldownTimer[abilityInd] == 0) {
@@ -164,6 +185,12 @@ public abstract class Character {
         return cooldownTimer[ability];
     }
 
+    /**
+     * Called every time the entity enginge updates.
+     * Updates the current cooldowns and cast times, and casts the abilities if ready.
+     *
+     * @param delta the time since last frame
+     */
     public void tick(float delta) {
         for (int i = 0; i < cooldownTimer.length; i++) {
             if (cooldownTimer[i] != 0)
@@ -207,6 +234,9 @@ public abstract class Character {
         onTick(delta);
     }
 
+    /**
+     * Starts one auto-attack.
+     */
     public void startAttack() {
         if (!preparingAttack && !attackAccomplished) {
             StatComponent stats = getComponent(entityID, StatComponent.class);
@@ -219,6 +249,9 @@ public abstract class Character {
         }
     }
 
+    /**
+     * Stops the current running auto-attack completely.
+     */
     public void stopAttack() {
         preparingAttack = false;
         attackTimer = 0;
@@ -228,18 +261,29 @@ public abstract class Character {
         prepTime = 0;
     }
 
+    /**
+     * Stops the auto-attack, and clears the target of the character.
+     */
     public void resetAttack() {
         stopAttack();
         getComponent(entityID, CharacterComponent.class).targetId = -1;
     }
 
+    /**
+     * Stops the running auto-attack only if it is not in the accomplished phase.
+     */
     public void cancelAttack() {
         if (preparingAttack) {
             resetAttack();
         }
     }
 
-    public void attack(int enemyId) {
+    /**
+     * Logic portion of the auto-attack. May be overridden by subclasses.
+     *
+     * @param enemyId the enemy to apply damage to
+     */
+    protected void attack(int enemyId) {
         StatComponent stats = getComponent(entityID, StatComponent.class);
         float amount = stats.getCurrentStat(StatComponent.BaseStat.attackDamage);
         if (random.nextFloat() <= stats.getCurrentStat(StatComponent.BaseStat.criticalStrikeChance))
@@ -250,22 +294,59 @@ public abstract class Character {
         getComponent(enemyId, StatComponent.class).damages.add(dmg);
     }
 
+    /**
+     * Called at the start of the cast of an ability.
+     * Useful for setting current animation.
+     *
+     * @param ability
+     */
     protected abstract void castBegin(int ability);
 
     public String[] getIconNames() {
         return ICON_NAMES;
     }
 
+    /**
+     * Called every time the engine steps.
+     *
+     * @param delta the time since last frame
+     */
     protected abstract void onTick(float delta);
 
+    /**
+     * Method for checking whether this ability can begin cast.
+     *
+     * @param abilityInd the ability to check
+     * @return whether this ability can be cast or not
+     */
     protected abstract boolean checkOnCast(int abilityInd);
 
+    /**
+     * Method for checking whether this ability can finish casting.
+     *
+     * @param abilityInd the ability to check
+     * @return whether this ability can finish casting or not
+     */
     protected abstract boolean checkOnTrigger(int abilityInd);
 
+    /**
+     * Called after successful cast of ability.
+     * Apply logic of abilities here.
+     *
+     * @param abilityInd the ability to be cast
+     */
     protected abstract void onCast(int abilityInd);
 
+    /**
+     * Called everytime the {@link StatComponent} updates, useful for buffs.
+     *
+     * @param statComponent the {@link StatComponent to be manipulated}
+     */
     public abstract void affectStats(StatComponent statComponent);
 
+    /**
+     * @return percent of auto-attack completion
+     */
     public float getAttackCompletionPercent() {
         return ((1 / castAttackSpeed) - attackTimer) / (1 / castAttackSpeed);
     }
@@ -274,14 +355,38 @@ public abstract class Character {
         return finishedAttack;
     }
 
+    /**
+     * Called right before calling {@link Character#checkOnCast(int)}.
+     * Should be overridden by subclasses if the cost should be modified.
+     *
+     * @param ability the ability for the cost
+     * @param cost    current cost of the ability
+     * @return new cost of the ability
+     */
     protected float modifyCost(int ability, float cost) {
         return cost;
     }
 
+    /**
+     * Sandbox method for getting a {@link Component}
+     *
+     * @param entityID id of entity
+     * @param type     type of component
+     * @param <T>      type of component
+     * @return the component, or null
+     */
     protected <T extends Component> T getComponent(int entityID, Class<T> type) {
         return arcadeWorld.getEntityWorld().getMapper(type).get(entityID);
     }
 
+    /**
+     * Sandbox method for checking the range between two entities.
+     *
+     * @param casterID entity A
+     * @param targetID entity B
+     * @param maxRange the maximum range to which to check
+     * @return if A is in range of B
+     */
     protected boolean checkRange(int casterID, int targetID, float maxRange) {
         Vector2 vector = vectorPool.obtain();
         PositionComponent caster = getComponent(casterID, PositionComponent.class);
@@ -291,22 +396,48 @@ public abstract class Character {
         return result;
     }
 
+    /**
+     * Sandbox method for applying {@link Damage} to an entity.
+     *
+     * @param entity target of the {@link Damage}
+     * @param damage {@link Damage} describing the amount
+     */
     protected void applyDamage(int entity, Damage damage) {
         StatComponent statComponent = getComponent(entity, StatComponent.class);
         if (statComponent != null)
             statComponent.damages.add(damage);
     }
 
+    /**
+     * Sandbox method for applying {@link StatusEffect} to an entity.
+     *
+     * @param entityID   target of the {@link StatusEffect}
+     * @param effect     {@link Damage} describing the amount
+     * @param effectName name of the {@link StatusEffect}
+     */
     protected void applyStatusEffect(int entityID, StatusEffect effect, String effectName) {
         StatComponent statComponent = getComponent(entityID, StatComponent.class);
         if (statComponent != null)
             statComponent.statusEffects.put(effectName, effect);
     }
 
+    /**
+     * Sandbox method to check if character is moving.
+     *
+     * @return whether the character is moving
+     */
     protected boolean isMoving() {
         return !getComponent(entityID, PhysicComponent.class).body.getLinearVelocity().equals(Vector2.Zero);
     }
 
+    /**
+     * Sandbox method for returning the entities in an area
+     *
+     * @param mid   center of the area to search
+     * @param start left upper corner relative to the center
+     * @param end   right lower corner relative to the center
+     * @return entities in area
+     */
     protected IntArray getEntitiesInArea(Vector2 mid, Vector2 start, Vector2 end) {
         IntArray array = new IntArray();
         for (float x = mid.x + Math.min(start.x, end.x); x <= mid.x + Math.max(start.x, end.x); x++) {
@@ -323,22 +454,52 @@ public abstract class Character {
         return array;
     }
 
+    /**
+     * Same as {@link Character#getEntitiesInArea(Vector2, Vector2, Vector2)}, only centered around the character.
+     *
+     * @param start left upper corner relative to the center
+     * @param end   right lower corner relative to the center
+     * @return entities in area
+     */
     protected IntArray getEntitiesInArea(Vector2 start, Vector2 end) {
         return getEntitiesInArea(getComponent(entityID, PositionComponent.class).position, start, end);
     }
 
+    /**
+     * Sandbox method for spawning an entity.
+     *
+     * @param entity
+     * @param arguments
+     * @return
+     */
     protected int spawn(Entities entity, EntityArguments arguments) {
         return arcadeWorld.spawn(entity, arguments);
     }
 
+    /**
+     * Sandbox method for loading {@link EntityArguments}.
+     *
+     * @param fileName name of the {@link EntityArguments} file
+     * @return the {@link EntityArguments} of this file
+     */
     public EntityArguments getArguments(String fileName) {
         return arcadeWorld.getArguments(fileName);
     }
 
+    /**
+     * Sandbox method for deleting an entity.
+     *
+     * @param id the entity to be deleted
+     */
     public void delete(int id) {
         arcadeWorld.delete(id);
     }
 
+    /**
+     * Sandbox method for getting the mouse-position.
+     *
+     * @return the mouse-position
+     */
     public Vector2 getMousePos() {
         Ray ray = arcadeWorld.getCam().getPickRay(AL.input.getX(), AL.input.getY());
         Vector3 vec = new Vector3();
@@ -346,6 +507,11 @@ public abstract class Character {
         return new Vector2(vec.x, vec.y);
     }
 
+    /**
+     * Same as {@link Character#getMousePos()}, only returning rounded coordinates.
+     *
+     * @return the rounded mouse-position
+     */
     public Vector2 getRoundMousePos() {
         Ray ray = arcadeWorld.getCam().getPickRay(AL.input.getX(), AL.input.getY());
         Vector3 vec = new Vector3();
@@ -353,6 +519,11 @@ public abstract class Character {
         return new Vector2(Math.round(vec.x), Math.round(vec.y));
     }
 
+    /**
+     * Sandbox method for getting the current character position.
+     *
+     * @return current character position
+     */
     public Vector2 getCharacterPosition() {
 
         PhysicComponent phys = getComponent(entityID, PhysicComponent.class);
@@ -363,6 +534,11 @@ public abstract class Character {
         return pos.position;
     }
 
+    /**
+     * Sandbox method for getting the entity under the mouse-pointer.
+     *
+     * @return entity under mousep-ointer
+     */
     public int getEntityAtMouse() {
         Vector2 mousePos = getMousePos();
         Tile t = getTile(Math.round(mousePos.x), Math.round(mousePos.y));
@@ -378,10 +554,23 @@ public abstract class Character {
         return -1;
     }
 
+    /**
+     * Sandbox method for getting a {@link Tile} from the map.
+     *
+     * @param vec coordinates of the {@link Tile}
+     * @return the found {@link Tile}
+     */
     public Tile getTile(Vector2 vec) {
         return arcadeWorld.getTile(vec);
     }
 
+    /**
+     * Same as {@link Character#getTile(Vector2)}, only with int coordinates
+     *
+     * @param x the x coordinate
+     * @param y the y coordinate
+     * @return the found tile
+     */
     public Tile getTile(int x, int y) {
         return arcadeWorld.getLogicMap().getTile(x, y);
     }
@@ -394,8 +583,12 @@ public abstract class Character {
         return null;
     }
 
+    /**
+     * Interface for AI control
+     */
     public interface AIExtension {
         float getRange(int ability);
+
         boolean disabled(int ability);
     }
 }

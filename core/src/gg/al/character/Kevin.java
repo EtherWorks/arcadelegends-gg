@@ -18,6 +18,7 @@ import java.util.Random;
 
 /**
  * Created by Thomas Neumann on 23.05.2017.<br />
+ * Main {@link Character} of the game.
  */
 @Slf4j
 public class Kevin extends Character {
@@ -103,6 +104,9 @@ public class Kevin extends Character {
 
         StatComponent casterStat = getComponent(entityID, StatComponent.class);
         switch (abilityInd) {
+            /**
+             * Targets the ground around {@link Kevin}, and damages all nearby enemies.
+             */
             case ABILITY_1:
                 RenderComponent renderComponent = getComponent(entityID, RenderComponent.class);
                 Vector2 start = vectorPool.obtain();
@@ -124,6 +128,9 @@ public class Kevin extends Character {
                 vectorPool.free(start);
                 vectorPool.free(end);
                 break;
+            /**
+             * Stabs the targeted entity, and applies a bleeding {@link StatusEffect}.
+             */
             case ABILITY_2:
                 int targetId = (int) extraData[ABILITY_2];
                 StatComponent statComponent = getComponent(targetId, StatComponent.class);
@@ -150,9 +157,15 @@ public class Kevin extends Character {
                         }
                 ).build());
                 break;
+            /**
+             * Grants a {@link StatusEffect} which strengths {@link Kevin}s offensive power, but decreases his defense.
+             */
             case ABILITY_3:
                 ability4_activate = true;
                 break;
+            /**
+             * Fires a big rocket towards the targeted enemy, which deals splash damage.
+             */
             case ABILITY_4:
                 statComponent = getComponent(entityID, StatComponent.class);
                 EntityArguments arguments = getArguments("bullet.json");
@@ -280,6 +293,9 @@ public class Kevin extends Character {
 
     @Override
     protected float modifyCost(int ability, float cost) {
+        /**
+         * If the boost is active, deactivating shouldn't cost anything.
+         */
         if (ability == ABILITY_3 && getComponent(entityID, StatComponent.class).statusEffects.containsKey(BOOST_NAME)) {
             cost = 0;
         }

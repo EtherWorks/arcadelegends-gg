@@ -18,7 +18,9 @@ import gg.al.util.Assets;
 import gg.al.util.Shaders;
 
 /**
- * Created by Thomas Neumann on 07.06.2017.
+ * Created by Thomas Neumann on 07.06.2017.<br>
+ * Helper class for exposing entity related variables to the UI-system.<br>
+ * Also contains {@link TextureRegion]s for current health, resource and cooldowns.
  */
 public class PlayerHelper implements Disposable {
 
@@ -100,10 +102,18 @@ public class PlayerHelper implements Disposable {
         }
     }
 
+    /**
+     * @return the position of the player
+     */
     public Vector2 getPosition() {
         return arcadeWorld.getEntityWorld().getMapper(PhysicComponent.class).get(entityId).body.getPosition();
     }
 
+    /**
+     * Called every frame. Updates cooldown, health and resource textures.
+     *
+     * @param delta
+     */
     public void step(float delta) {
         StatComponent stat = arcadeWorld.getEntityWorld().getMapper(StatComponent.class).get(entityId);
         CharacterComponent chara = arcadeWorld.getEntityWorld().getMapper(CharacterComponent.class).get(entityId);
@@ -123,6 +133,17 @@ public class PlayerHelper implements Disposable {
         }
     }
 
+    /**
+     * Draws the given gradient {@link Texture} to the given {@link FrameBuffer}, using the given {@link Color} with the given percent.
+     * <p>
+     * This is achieved via a gradient shader.
+     *
+     * @param buffer     the {@link FrameBuffer} to be drawn to
+     * @param color      the {@link Color} which should be drawn
+     * @param gradient   the gradient texture which should be drawn
+     * @param perc       the percent the gradient texture should be drawn
+     * @param projection projection matrix for pixel perfect rendering
+     */
     private void drawToBuffer(FrameBuffer buffer, Color color, TextureRegion gradient, float perc, Matrix4 projection) {
         buffer.begin();
         AL.graphics.getGL20().glClearColor(0, 0, 0, 0);
@@ -137,6 +158,9 @@ public class PlayerHelper implements Disposable {
         buffer.end();
     }
 
+    /**
+     * @return whether the player is dead.
+     */
     public boolean isDead() {
         return arcadeWorld.getEntityWorld().getMapper(StatComponent.class).get(entityId).getFlag(StatComponent.FlagStat.dead);
     }
@@ -153,6 +177,11 @@ public class PlayerHelper implements Disposable {
         return cooldownTextures;
     }
 
+    /**
+     * Returns a shaded sprite for coloring the ability icons. Controlled by the {@link Character} class.
+     * @param ability for the overlay sprite
+     * @return the overlay sprite
+     */
     public Sprite getAbilityOverlaySprite(int ability) {
         CharacterComponent characterComponent = arcadeWorld.getEntityWorld().getMapper(CharacterComponent.class).get(entityId);
         Color color;

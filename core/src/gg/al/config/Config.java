@@ -31,16 +31,12 @@ public class Config {
         this.miscellaneous = provider.bind(IMiscellaneousConfig.PREFIX, IMiscellaneousConfig.class);
     }
 
-    public Properties asProperties() {
-        return provider.allConfigurationAsProperties();
-    }
-
-    public void resetEditor() {
-        editor.setEditing(asProperties());
-    }
-
-    public static Properties defaultConfig()
-    {
+    /**
+     * Geerates a {@link Properties} object holding the default values of the config.
+     *
+     * @return
+     */
+    public static Properties defaultConfig() {
         Properties defaultConf = new Properties();
         for (IConfigKey key : IAudioConfig.AudioKeys.values()) {
             defaultConf.setProperty(key.getKey(), key.getDefaultValue());
@@ -58,6 +54,17 @@ public class Config {
             defaultConf.setProperty(key.getKey(), key.getDefaultValue());
         }
         return defaultConf;
+    }
+
+    public Properties asProperties() {
+        return provider.allConfigurationAsProperties();
+    }
+
+    /**
+     * Resets the {@link ConfigEditor} back to its previous settings.
+     */
+    public void resetEditor() {
+        editor.setEditing(asProperties());
     }
 
 }

@@ -14,6 +14,7 @@ import java.util.Map;
 
 /**
  * Created by Thomas Neumann on 31.05.2017.<br />
+ * Renderer for {@link gg.al.logic.entity.Entities#Bullet} entities.
  */
 @Slf4j
 public class BulletRenderer implements RenderComponent.RenderDelegate {
@@ -44,6 +45,12 @@ public class BulletRenderer implements RenderComponent.RenderDelegate {
         renderSystem.getDecalMap().put(entityId, decal);
     }
 
+    /**
+     * Sets the current position of the rendered {@link Decal}, and the rotation given by the bullet direction.
+     *
+     * @param entityId     the bullet id
+     * @param renderSystem the delegating {@link RenderSystem}
+     */
     @Override
     public void process(int entityId, RenderSystem renderSystem) {
         PhysicComponent physic = renderSystem.getMapperPhysic().get(entityId);

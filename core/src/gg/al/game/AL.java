@@ -8,7 +8,7 @@ import gg.al.util.ScreenManager;
 
 /**
  * Created by Thomas Neumann on 18.03.2017.<p>
- * Service locator class for most classes in project
+ * Service locator class for most classes in project.
  */
 public class AL extends Gdx {
 

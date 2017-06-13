@@ -32,6 +32,11 @@ public class DesktopConfigUtil {
         return System.getProperty("user.dir") + File.separator + CONFIGFILELOCATION;
     }
 
+    /**
+     * Builds the CFG4J {@link ConfigurationProvider} for the properties file.
+     *
+     * @return the {@link ConfigurationProvider}
+     */
     public static ConfigurationProvider buildConfigProvider() {
         File file = new File(getCurrentConfigPath());
         if (!file.exists()) {
@@ -49,10 +54,17 @@ public class DesktopConfigUtil {
         return p;
     }
 
+    /**
+     * Builds the {@link Config} object with links to CFG4J
+     * @return the linked {@link Config}
+     */
     public static Config buildConfig() {
         return buildConfig(new DesktopConfigEditor());
     }
 
+    /**
+     * @see #buildConfig()
+     */
     public static Config buildConfig(DesktopConfigEditor editor) {
         Config cfg = null;
         try {
@@ -68,6 +80,11 @@ public class DesktopConfigUtil {
         return cfg;
     }
 
+    /**
+     * Sets up the given {@link LwjglApplicationConfiguration} object.
+     * @param config the {@link LwjglApplicationConfiguration} to alter
+     * @param cfg the {@link Config} as presets
+     */
     public static void setupLwjglConfig(LwjglApplicationConfiguration config, Config cfg) {
         config.foregroundFPS = cfg.video.foregroundFPS();
         config.backgroundFPS = cfg.video.backgroundFPS();
@@ -78,6 +95,13 @@ public class DesktopConfigUtil {
         System.setProperty("org.lwjgl.opengl.Window.undecorated", cfg.video.screenmode().isBorderless() + "");
     }
 
+    /**
+     * Registers the standard listeners to {@link gg.al.config.IConfigKey} changed events, which are native only to desktop.
+     * @param editor the {@link gg.al.config.ConfigEditor} which is linked to the {@link Config} object
+     * @param cfg the {@link Config} object
+     * @param config the {@link LwjglApplicationConfiguration} object
+     * @param application the {@link LwjglApplication} to alter
+     */
     public static void registerStandardListeners(DesktopConfigEditor editor, Config cfg, LwjglApplicationConfiguration config, LwjglApplication application) {
         TypeParser parser = TypeParser.newBuilder().build();
         if (cfg.miscellaneous.logConfigEvents())

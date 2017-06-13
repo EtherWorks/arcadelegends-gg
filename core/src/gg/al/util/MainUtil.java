@@ -15,6 +15,7 @@ import java.util.Scanner;
 
 /**
  * Created by Thomas Neumann on 24.03.2017.<br />
+ * Util class used for creating .json templates of {@link Entities}
  */
 public class MainUtil {
 

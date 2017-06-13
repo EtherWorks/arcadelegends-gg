@@ -9,6 +9,7 @@ import gg.al.logic.entity.EntityArguments;
 
 /**
  * Created by Thomas Neumann on 09.06.2017.<br />
+ * Standard enemy of the game.
  */
 public class Ghost extends Character {
 
@@ -56,6 +57,9 @@ public class Ghost extends Character {
 
     @Override
     protected void onCast(int abilityInd) {
+        /**
+         * Spawns a linear moving projectile.
+         */
         if (abilityInd == ABILITY_1) {
             StatComponent stats = getComponent(entityID, StatComponent.class);
             EntityArguments arguments = getArguments("ezreal_auto.json");

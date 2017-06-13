@@ -21,6 +21,8 @@ import static gg.al.graphics.renderer.CharacterRenderer.PlayerRenderState.*;
 
 /**
  * Created by Thomas Neumann on 29.05.2017.<br />
+ * Renderer for {@link gg.al.character.Character} entities.<br>
+ * Also contains health bar and resource bar rendering for the {@link gg.al.character.Character}
  */
 public class CharacterRenderer implements RenderComponent.RenderDelegate {
 
@@ -43,6 +45,19 @@ public class CharacterRenderer implements RenderComponent.RenderDelegate {
         healthBuffers = new ObjectMap<>();
     }
 
+    /**
+     * Draws the given gradient {@link Texture} to the given {@link FrameBuffer}, using the given {@link Color} with the given percent.
+     * <p>
+     * This is achieved via a gradient shader.
+     *
+     * @param buffer      the {@link FrameBuffer} to be drawn to
+     * @param color       the {@link Color} which should be drawn
+     * @param gradient    the gradient texture which should be drawn
+     * @param perc        the percent the gradient texture should be drawn
+     * @param shaderBatch the {@link SpriteBatch} to use
+     * @param shader      the {@link ShaderProgram} to use
+     * @param projection  projection matrix for pixel perfect rendering
+     */
     private static void drawToBuffer(FrameBuffer buffer, Color color, Texture gradient, float perc, SpriteBatch shaderBatch, ShaderProgram shader, Matrix4 projection) {
         buffer.begin();
         AL.graphics.getGL20().glClearColor(0, 0, 0, 0);
@@ -115,6 +130,13 @@ public class CharacterRenderer implements RenderComponent.RenderDelegate {
         renderSystem.getUiMap().put(entityId, uiDecal);
     }
 
+    /**
+     * Updates the {@link gg.al.character.Character} {@link Decal}, and uses the currently set animation from the {@link RenderComponent}.<br>
+     * Also redraws the health and resource bars, and updates their position accordingly.
+     *
+     * @param entityId     the {@link gg.al.character.Character} entity id
+     * @param renderSystem the delegating {@link RenderSystem}
+     */
     @Override
     public void process(int entityId, RenderSystem renderSystem) {
         PhysicComponent physic = renderSystem.getMapperPhysic().get(entityId);
@@ -193,6 +215,9 @@ public class CharacterRenderer implements RenderComponent.RenderDelegate {
         return PlayerRenderState.IDLE.name();
     }
 
+    /**
+     * The mostly used render state names for {@link gg.al.character.Character}s.
+     */
     public enum PlayerRenderState {
         IDLE, MOVE_SIDE, ATTACK, MOVE_UP, MOVE_DOWN, TAUNT, ABILITY_1, ABILITY_2, ABILITY_3, ABILITY_4, TRAIT
     }

@@ -74,6 +74,11 @@ public abstract class ConfigEditor {
         removeConfigValueChangedListener(key, listener, false);
     }
 
+    /**
+     * Sets the current active set of properties to the given properties
+     *
+     * @param properties the {@link Properties} to set the active set to.
+     */
     public void setEditing(Properties properties) {
         this.properties.clear();
         this.properties.putAll(properties);
@@ -94,6 +99,12 @@ public abstract class ConfigEditor {
         properties.setProperty(key.getKey(), builder.toString());
     }
 
+    /**
+     * Notifies all listeners that a config value has been changed.
+     * This is called before updating all config instances.
+     * @param key the key of the changed value
+     * @param value the changed value
+     */
     protected void fireConfigValueChanged(String key, String value) {
         for (IConfigValueChangedListener listener : allValueListeners) {
             listener.valueChanged(key, value);
@@ -104,6 +115,13 @@ public abstract class ConfigEditor {
         }
     }
 
+
+    /**
+     * Notifies all listeners that a config value has been changed.
+     * This is called after updating all config instances.
+     * @param key the key of the changed value
+     * @param value the changed value
+     */
     protected void fireConfigValueChangedAfter(String key, String value) {
         for (IConfigValueChangedListener listener : allValueListenersAfter) {
             listener.valueChanged(key, value);
@@ -114,6 +132,9 @@ public abstract class ConfigEditor {
         }
     }
 
+    /**
+     * Flushes the current active set of {@link Properties} to the config instances.
+     */
     public void flush() {
         List<Map.Entry<Object, Object>> toFire = new LinkedList<>();
         for (Map.Entry<Object, Object> entry : properties.entrySet()) {
@@ -129,5 +150,8 @@ public abstract class ConfigEditor {
         }
     }
 
+    /**
+     * Abstract method for defining the saving of the properties.
+     */
     protected abstract void write();
 }

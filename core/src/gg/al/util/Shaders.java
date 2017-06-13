@@ -1,7 +1,8 @@
 package gg.al.util;
 
 /**
- * Created by Thomas Neumann on 07.06.2017.
+ * Created by Thomas Neumann on 07.06.2017.<br>
+ * Container class holding shader code.
  */
 public class Shaders {
     public interface GradientShader {

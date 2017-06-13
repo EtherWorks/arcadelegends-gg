@@ -1,7 +1,8 @@
 package gg.al.exception;
 
 /**
- * Created by Thomas Neumann on 31.03.2017.
+ * Created by Thomas Neumann on 31.03.2017.<br>
+ * Wrapping {@link RuntimeException} for when a entity related {@link Exception} occurs.
  */
 public class EntityException extends RuntimeException {
     public EntityException() {

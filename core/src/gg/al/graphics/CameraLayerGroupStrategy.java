@@ -7,8 +7,6 @@ import com.badlogic.gdx.graphics.g3d.decals.Decal;
 import com.badlogic.gdx.graphics.g3d.decals.DecalMaterial;
 import com.badlogic.gdx.graphics.g3d.decals.GroupStrategy;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
-import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.ObjectMap;
@@ -18,7 +16,10 @@ import java.util.Comparator;
 
 /**
  * Created by Thomas Neumann on 21.04.2017.<br />
+ * {@link GroupStrategy} which is the exact same as {@link com.badlogic.gdx.graphics.g3d.decals.CameraGroupStrategy}, only setting an additional OpenGL flag.<br>
+ * Additional flag is set since libGDX version 1.9.5, therefore technically @{@link Deprecated}
  */
+@Deprecated
 public class CameraLayerGroupStrategy implements GroupStrategy, Disposable {
     private static final int GROUP_OPAQUE = 0;
     private static final int GROUP_BLEND = 1;

@@ -12,6 +12,7 @@ import gg.al.logic.entity.EntityArguments;
 
 /**
  * Created by Thomas Neumann on 03.06.2017.
+ * Prototype character. NOT DOCUMENTED AND NOT FINISHED
  */
 public class Ezreal extends Character {
     public static final String[] ICON_NAMES = {"trait", "ability1", "ability2", "ability3", "ability4"};

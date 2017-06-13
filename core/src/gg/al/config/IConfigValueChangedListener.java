@@ -8,5 +8,11 @@ package gg.al.config;
  */
 @FunctionalInterface
 public interface IConfigValueChangedListener {
+    /**
+     * Listener method for a {@link IConfigValueChangedListener#valueChanged(String, String)} event.
+     *
+     * @param key   the key of the changed value
+     * @param value the changed value
+     */
     void valueChanged(String key, String value);
 }

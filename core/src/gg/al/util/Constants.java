@@ -2,6 +2,7 @@ package gg.al.util;
 
 /**
  * Created by Thomas Neumann on 26.04.2017.<br />
+ * Constants for the project.
  */
 public class Constants {
     public static final float MAX_ATTACKSPEED = 5f;

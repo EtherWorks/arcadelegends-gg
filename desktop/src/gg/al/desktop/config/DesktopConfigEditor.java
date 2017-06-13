@@ -13,6 +13,9 @@ import java.io.IOException;
  */
 public class DesktopConfigEditor extends ConfigEditor {
 
+    /**
+     * The desktop implementation of the {@link ConfigEditor#write()}.
+     */
     @Override
     protected void write() {
         try {
