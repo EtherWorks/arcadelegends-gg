@@ -49,7 +49,7 @@ public class Ezreal extends Character {
 
     @Override
     protected boolean checkOnTrigger(int abilityInd) {
-        return checkOnCast(abilityInd);
+        return checkOnCast(abiliqetyInd);e
     }
 
     @Override
