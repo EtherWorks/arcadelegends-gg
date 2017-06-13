@@ -121,6 +121,9 @@ public class Assets {
         @AssignmentAssetManager.Asset("assets/audio/boom.wav")
         public Sound boom;
 
+        @AssignmentAssetManager.Asset("assets/ui/stats2.png")
+        public Texture stats2;
+
         private BiMap<String, Object> assetMap;
 
         public <T> T get(String name) {
