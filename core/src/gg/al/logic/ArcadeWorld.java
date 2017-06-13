@@ -288,7 +288,9 @@ public class ArcadeWorld implements Disposable {
         mapRenderer.render();
         mapBuffer.end();
 
-        for (Decal decal : renderSystem.getDecals())
+        for (Decal decal : renderSystem.getUiMap().values())
+            decalBatch.add(decal);
+        for (Decal decal : renderSystem.getDecalMap().values())
             decalBatch.add(decal);
         decalBatch.add(mapDecal);
         decalBatch.flush();
@@ -315,7 +317,8 @@ public class ArcadeWorld implements Disposable {
 
     /**
      * Utility method for spawning an configuring an entity.
-     * @param entity the {@link Entities} to be spawned
+     *
+     * @param entity    the {@link Entities} to be spawned
      * @param arguments the {@link EntityArguments} used for configuring
      * @return the entity handle (id)
      */
@@ -383,6 +386,7 @@ public class ArcadeWorld implements Disposable {
 
     /**
      * Utility method for deleting an entity from the level.
+     *
      * @param id of the entity to be deleted
      */
     public void delete(int id) {
@@ -398,6 +402,7 @@ public class ArcadeWorld implements Disposable {
 
     /**
      * Loads and caches the {@link EntityArguments} from the given .json file.
+     *
      * @param fileName the filename of the .json to load
      * @return the cached or newly read {@link EntityArguments}
      * @throws IOException
@@ -410,6 +415,7 @@ public class ArcadeWorld implements Disposable {
 
     /**
      * Extracts the spawn info from the {@link TiledMap}.
+     *
      * @return the position to spawn the player
      */
     public Vector2 getSpawnPosition() {
@@ -422,6 +428,7 @@ public class ArcadeWorld implements Disposable {
     /**
      * Extracts the enemy information form the {@link TiledMap}, and spawns them in.
      * Also adds a {@link AIComponent} to the enemies, targeting the player.
+     *
      * @param playerId the player to target
      * @return an {@link IntArray} containing all the enemies
      */
@@ -457,6 +464,7 @@ public class ArcadeWorld implements Disposable {
 
     /**
      * Spawns and configures the player.
+     *
      * @return the entity handle (id) of the player
      */
     public int spawnPlayer() {
@@ -485,6 +493,7 @@ public class ArcadeWorld implements Disposable {
 
     /**
      * Returns or loads and then returns the chached {@link EntityArguments}.
+     *
      * @see #loadArguments(String)
      */
     public EntityArguments getArguments(String fileName) {

@@ -14,7 +14,6 @@ import com.badlogic.gdx.graphics.g3d.decals.Decal;
 import com.badlogic.gdx.graphics.g3d.decals.DecalBatch;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
-import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
@@ -26,15 +25,23 @@ import lombok.extern.slf4j.Slf4j;
 
 /**
  * Created by Thomas Neumann on 30.03.2017.<br />
+ * {@link BaseEntitySystem} containing all logic responsible for updating the render data for each entity.
+ * Most render work is delegated to the {@link RenderComponent.RenderDelegate}, but this class holds the references on most of the used resources.
+ * {@link RenderComponent.RenderDelegate} don´t own the resources, and only the {@link RenderSystem} can release them.
  */
 @Slf4j
 public class RenderSystem extends BaseEntitySystem {
 
+    /**
+     * Map containing the {@link Decal} used for rendering of the entity sprites.
+     */
     @Getter
     private final ObjectMap<Integer, Decal> decalMap;
     @Getter
+    /**
+     * Map containing the {@link Decal} used for rendering of the entity UI.
+     */
     private final ObjectMap<Integer, Decal> uiMap;
-    private final Array<Decal> tempDecals;
     @Getter
     private final DecalBatch decalBatch;
     @Getter
@@ -47,8 +54,14 @@ public class RenderSystem extends BaseEntitySystem {
     private BitmapFont font;
     @Getter
     private Camera uiCamera;
+    /**
+     * The current state time of the simulation.
+     */
     @Getter
     private float stateTime;
+    /**
+     * The tilt angle of the complete level.
+     */
     @Getter
     private float worldDegree;
     @Getter
@@ -72,7 +85,6 @@ public class RenderSystem extends BaseEntitySystem {
         super(Aspect.all(RenderComponent.class, PositionComponent.class));
         this.levelAssets = assets;
         decalMap = new ObjectMap<>();
-        tempDecals = new Array<>(100);
         uiMap = new ObjectMap<>();
         this.decalBatch = decalBatch;
         this.assetManager = assetManager;
@@ -111,6 +123,9 @@ public class RenderSystem extends BaseEntitySystem {
         mapperRender.get(entityId).renderDelegate.removed(entityId, this);
     }
 
+    /**
+     * Updates the {@link #stateTime}.
+     */
     @Override
     protected void processSystem() {
         if (stateTime == Float.MAX_VALUE)
@@ -132,15 +147,6 @@ public class RenderSystem extends BaseEntitySystem {
         font.dispose();
         shaderBatch.dispose();
         gradientShader.dispose();
-    }
-
-    public Array<Decal> getDecals() {
-        tempDecals.clear();
-        for (Decal decal : uiMap.values())
-            tempDecals.add(decal);
-        for (Decal decal : decalMap.values())
-            tempDecals.add(decal);
-        return tempDecals;
     }
 
     public float getDelta() {

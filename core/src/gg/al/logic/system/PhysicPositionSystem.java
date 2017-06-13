@@ -8,7 +8,8 @@ import gg.al.logic.component.PositionComponent;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * Created by Thomas Neumann on 31.03.2017.
+ * Created by Thomas Neumann on 31.03.2017.<br>
+ * {@link IteratingSystem} responsible for updating the {@link PositionComponent} to match the dynamic position of the {@link PhysicComponent}.
  */
 @Slf4j
 public class PhysicPositionSystem extends IteratingSystem {

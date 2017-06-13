@@ -12,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 
 /**
  * Created by Thomas Neumann on 29.05.2017.<br />
+ * {@link IteratingSystem} responsible for controlling all entities with a {@link BulletComponent}.
  */
 @Slf4j
 public class BulletSystem extends IteratingSystem {

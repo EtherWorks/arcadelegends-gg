@@ -7,6 +7,7 @@ import gg.al.logic.component.StatComponent;
 
 /**
  * Created by Thomas Neumann on 26.04.2017.<br />
+ * {@link IntervalIteratingSystem} responsible for calculating second based regeneration, like health regeneration.
  */
 public class RegenSystem extends IntervalIteratingSystem {
 
@@ -16,6 +17,15 @@ public class RegenSystem extends IntervalIteratingSystem {
         super(Aspect.all(StatComponent.class), interval);
     }
 
+    /**
+     * Calculates and sets the proper regen values for a {@link StatComponent}.
+     *
+     * @param stats    the {@link StatComponent} to be changed
+     * @param stat     the {@link gg.al.logic.component.StatComponent.RuntimeStat} to be regenerated
+     * @param regen    the {@link gg.al.logic.component.StatComponent.BaseStat} containing the regeneration value
+     * @param max      the {@link gg.al.logic.component.StatComponent.BaseStat} containing the maximal value of the {@link gg.al.logic.component.StatComponent.RuntimeStat}
+     * @param interval the passed time since the last interval
+     */
     private static void regen(StatComponent stats, StatComponent.RuntimeStat stat, StatComponent.BaseStat regen, StatComponent.BaseStat max, float interval) {
         if (stats.getRuntimeStat(stat) +
                 stats.getCurrentStat(regen) *

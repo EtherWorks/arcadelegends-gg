@@ -13,6 +13,7 @@ import static gg.al.graphics.renderer.CharacterRenderer.PlayerRenderState.*;
 
 /**
  * Created by Thomas Neumann on 30.03.2017.<br />
+ * {@link IteratingSystem} responsible for controlling {@link gg.al.character.Character}.
  */
 @Slf4j
 public class CharacterSystem extends IteratingSystem {
@@ -52,10 +53,12 @@ public class CharacterSystem extends IteratingSystem {
         RenderComponent renderComponent = mapperRenderComponent.get(entityId);
 
 
+        /**
+         * Movement code. Does not (as of yet) contain proper pathfinder logic.
+         */
         if (character.move.dst(pos.position) != 0 && physicComponent.body.getLinearVelocity().equals(Vector2.Zero) && !stats.getFlag(StatComponent.FlagStat.dead)) {
             if (stats.getRuntimeStat(StatComponent.RuntimeStat.actionPoints) >= 1 && (renderComponent == null || renderComponent.isInState(IDLE)
                     || renderComponent.isInState(ATTACK))) {
-                //anfangen sich zu bewegen
                 Vector2 dir = vectorPool.obtain();
                 Vector2 speed = vectorPool.obtain();
                 if (Math.abs(character.move.x - pos.position.x) > Math.abs(character.move.y - pos.position.y))
@@ -78,7 +81,6 @@ public class CharacterSystem extends IteratingSystem {
                 character.targetId = -1;
             }
         } else if (!physicComponent.body.getLinearVelocity().equals(Vector2.Zero)) {
-            //Testen ob an oder über stepmove, dann stoppen
             Vector2 curr = vectorPool.obtain();
 
             curr.set(physicComponent.body.getPosition()).sub(character.stepMove);
@@ -91,6 +93,9 @@ public class CharacterSystem extends IteratingSystem {
             vectorPool.free(curr);
         }
 
+        /**
+         * Auto-attack logic.
+         */
         if (character.targetId == entityId)
             character.targetId = -1;
         else if (character.targetId != -1) {

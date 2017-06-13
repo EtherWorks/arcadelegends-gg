@@ -11,6 +11,7 @@ import gg.al.logic.component.StatComponent;
 
 /**
  * Created by Thomas Neumann on 12.06.2017.<br />
+ * {@link IteratingSystem} responsible for controlling all entities with {@link AIComponent}.
  */
 public class AISystem extends IteratingSystem {
 

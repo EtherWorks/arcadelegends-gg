@@ -9,6 +9,7 @@ import gg.al.logic.map.Tile;
 
 /**
  * Created by Thomas Neumann on 30.03.2017.<br />
+ * {@link IteratingSystem} responsible for mapping the current {@link Tile} to the {@link PositionComponent}.
  */
 public class PositionTileSystem extends IteratingSystem{
 

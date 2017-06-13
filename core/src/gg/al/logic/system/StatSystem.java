@@ -15,6 +15,9 @@ import gg.al.logic.component.data.StatusEffect;
 
 /**
  * Created by Thomas Neumann on 24.04.2017.<br />
+ * {@link IteratingSystem} responsible for updating the current stats of the {@link StatComponent}.<br>
+ * Contains every necessary calculation from {@link Item} to {@link StatusEffect}.<br>
+ * Also controls the death of entities.
  */
 public class StatSystem extends IteratingSystem {
 
@@ -34,9 +37,11 @@ public class StatSystem extends IteratingSystem {
         StatComponent stats = mapperStatComponent.get(entityId);
         CharacterComponent characterComponent = mapperCharacterComponent.get(entityId);
 
+        /**
+         * Check for death.
+         */
         if (stats.getFlag(StatComponent.FlagStat.dead)) {
-            if(stats.statEventHandler != null)
-            {
+            if (stats.statEventHandler != null) {
                 stats.statEventHandler.onDeath(stats, entityId);
                 stats.statEventHandler = null;
             }
@@ -46,12 +51,18 @@ public class StatSystem extends IteratingSystem {
             return;
         }
 
+        /**
+         * Potentially level up
+         */
         if (stats.shouldLevel()) {
             stats.addRuntimeStat(StatComponent.RuntimeStat.experience, -stats.getNextLevelExperience());
             stats.addRuntimeStat(StatComponent.RuntimeStat.level, 1);
             stats.addRuntimeStat(StatComponent.RuntimeStat.skillPoints, 1);
         }
 
+        /**
+         * Tick the {@link StatusEffect} down.
+         */
         for (ObjectMap.Values<StatusEffect> values = stats.statusEffects.values();
              values.hasNext(); ) {
             StatusEffect effect = values.next();
@@ -72,8 +83,14 @@ public class StatSystem extends IteratingSystem {
             }
         }
 
+        /**
+         * Recalculate from base.
+         */
         stats.recalculateCurrent();
 
+        /**
+         * Apply {@link Item} changes.
+         */
         InventoryComponent inventoryComponent = mapperInventoryComponent.get(entityId);
         if (inventoryComponent != null) {
             for (int i = 0; i < inventoryComponent.items.length; i++) {
@@ -87,11 +104,20 @@ public class StatSystem extends IteratingSystem {
                     item.applyPercentage(stats);
             }
         }
+        /**
+         * Apply {@link StatusEffect} changes.
+         */
         stats.applyStatusEffects();
+        /**
+         * Apply {@link Character} changes.
+         */
         if (characterComponent != null) {
             characterComponent.character.affectStats(stats);
         }
 
+        /**
+         * Apply the queued {@link Heal}.
+         */
         for (Heal heal : stats.heals) {
             float amount = 0;
             switch (heal.healCalculationType) {
@@ -116,6 +142,9 @@ public class StatSystem extends IteratingSystem {
             stats.heals.removeValue(heal, true);
         }
 
+        /**
+         * Apply the queued {@link Damage}.
+         */
         if (!stats.getFlag(StatComponent.FlagStat.invulnerable)) {
             for (Damage damage : stats.damages) {
                 float amount = 0;
