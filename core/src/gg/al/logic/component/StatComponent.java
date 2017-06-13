@@ -11,6 +11,8 @@ import java.util.Map;
 
 /**
  * Created by Thomas Neumann on 08.05.2017.<br />
+ * {@link com.artemis.Component} containing all logical status values. <br>
+ * Additionally contains logic to updating the values, and queues for {@link Damage} and {@link Heal} objects.
  */
 public class StatComponent extends PooledComponent implements ITemplateable {
 
@@ -22,14 +24,42 @@ public class StatComponent extends PooledComponent implements ITemplateable {
     public final Array<Damage> damages;
     public final Array<Heal> heals;
     private final ObjectMap<FlagStat, Boolean> flags;
+    /**
+     * Contains all values that are frequently changed at runtime.
+     */
     private final ObjectMap<RuntimeStat, Float> runtimeStats;
+    /**
+     * Contains all stats that need to be manually updated.
+     */
     private final ObjectMap<BaseStat, Float> currentStats;
+    /**
+     * Contains all values of the initial stats.<br>
+     * These are the basis for the recalculation of {@link #currentStats}
+     */
     private final ObjectMap<BaseStat, Float> baseStats;
+    /**
+     * Contains all values important to flat level growth.<br>
+     * Every {@link BaseStat} has a equivalent {@link #growthStats} entry.
+     */
     private final ObjectMap<BaseStat, Float> growthStats;
+    /**
+     * Contains all values important to percent level growth.<br>
+     * Every {@link BaseStat} has a equivalent {@link #growthPercentageStats} entry.
+     */
     private final ObjectMap<BaseStat, Float> growthPercentageStats;
+
+    /**
+     * Contains custom stats chosen by the programmer.
+     */
     private final ObjectMap<String, Float> customStats;
+    /**
+     * Contains custom flags chosen by the programmer.
+     */
     private final ObjectMap<String, Boolean> customFlags;
 
+    /**
+     * The {@link StatEventHandler} for various stat related events.
+     */
     public StatEventHandler statEventHandler;
 
     public StatComponent() {
@@ -63,6 +93,9 @@ public class StatComponent extends PooledComponent implements ITemplateable {
         statEventHandler = null;
     }
 
+    /**
+     * Recalculates the {@link #currentStats} to their new values based on the current level.
+     */
     public void recalculateCurrent() {
         for (int i = 0; i < BaseStat.values().length; i++) {
             BaseStat stat = BaseStat.values()[i];
@@ -73,6 +106,9 @@ public class StatComponent extends PooledComponent implements ITemplateable {
         }
     }
 
+    /**
+     * Applies all stat changes from all currently active {@link StatusEffect}.
+     */
     public void applyStatusEffects() {
         for (StatusEffect effect : statusEffects.values()) {
             effect.applyValue(this);
@@ -253,14 +289,24 @@ public class StatComponent extends PooledComponent implements ITemplateable {
         return builder.toString();
     }
 
+    /**
+     * @return whether the entity should level up with the current amount of experience.
+     */
     public boolean shouldLevel() {
         return getRuntimeStat(RuntimeStat.experience) >= getNextLevelExperience();
     }
 
+    /**
+     * @return the amount of experience needed for the next level.
+     */
     public float getNextLevelExperience() {
         return (float) (100 + Math.pow(2, getRuntimeStat(RuntimeStat.level)));
     }
 
+    /**
+     * Enum containing all relevant stats.<br>
+     * Also contains minimal and maximal values vor each {@link BaseStat}.
+     */
     public enum BaseStat {
         maxHealth(0, Float.MAX_VALUE),
         healthRegen(0, Float.MAX_VALUE),
@@ -325,6 +371,9 @@ public class StatComponent extends PooledComponent implements ITemplateable {
         }
     }
 
+    /**
+     * Enum containing all relevant runtime stats.
+     */
     public enum RuntimeStat {
         health,
         actionPoints,
@@ -339,14 +388,29 @@ public class StatComponent extends PooledComponent implements ITemplateable {
         trait_points
     }
 
+    /**
+     * Enum containing all relevant flags.
+     */
     public enum FlagStat {
         dead, deleteOnDeath, invulnerable
     }
 
+    /**
+     * Event handler for various stat based events.
+     */
     public interface StatEventHandler {
+        /**
+         * Called as soon as the entity holding this {@link StatComponent} dies.
+         *
+         * @param statComponent the {@link StatComponent} of this entity
+         * @param entityId      the handle (id) of this entity
+         */
         void onDeath(StatComponent statComponent, int entityId);
     }
 
+    /**
+     * {@link Template} for {@link StatComponent}.
+     */
     public class StatTemplate extends Template {
         private LinkedHashMap<String, Float> values;
 

@@ -19,6 +19,8 @@ import java.util.Map;
 
 /**
  * Created by Thomas Neumann on 30.03.2017.<br />
+ * {@link com.artemis.Component} containing all data related to rendering.<br>
+ * Also contains static {@link RenderDelegate} variables for group rendering.
  */
 @Slf4j
 public class RenderComponent extends PooledComponent implements ITemplateable {
@@ -65,26 +67,46 @@ public class RenderComponent extends PooledComponent implements ITemplateable {
         renderState = "";
     }
 
+    /**
+     * @return whether the entity is currently facing right
+     */
     public boolean facingRight() {
         return !flipX;
     }
 
+    /**
+     * @return whether the entity is currently facing left
+     */
     public boolean facingLeft() {
         return flipX;
     }
 
+    /**
+     * Flips the sprite to face left.
+     */
     public void faceLeft() {
         flipX = true;
     }
 
+    /**
+     * Flips the sprite to face right.
+     */
     public void faceRight() {
         flipX = false;
     }
 
+    /**
+     * @param state the state to test for
+     * @return if the entity is in the given state
+     */
     public boolean isInState(String state) {
         return renderState.equals(state);
     }
 
+    /**
+     * @param states the states to test for
+     * @return whether the entity is in either state
+     */
     public boolean isInAnyState(String... states) {
         for (int i = 0; i < states.length; i++) {
             if (isInState(states[i]))
@@ -93,6 +115,9 @@ public class RenderComponent extends PooledComponent implements ITemplateable {
         return false;
     }
 
+    /**
+     * @see #isInAnyState(String...)
+     */
     public boolean isInAnyState(Enum... states) {
         for (int i = 0; i < states.length; i++) {
             if (isInState(states[i]))
@@ -105,17 +130,23 @@ public class RenderComponent extends PooledComponent implements ITemplateable {
         renderState = state.name();
     }
 
+    /**
+     * @see #isInState(String)
+     */
     public boolean isInState(Enum state) {
         return isInState(state.name());
     }
 
+    /**
+     * @param stateTime current state time
+     * @return the current texture according to the state time and state
+     */
     public TextureRegion getCurrentKeyFrame(float stateTime) {
         Animation<TextureRegion> anim = animations.get(renderState);
         return anim == null ? getNULL_FRAME() : anim.getKeyFrame(stateTime);
     }
 
-    public RenderTemplate.AnimationTemplate getCurrentAnimation()
-    {
+    public RenderTemplate.AnimationTemplate getCurrentAnimation() {
         return renderTemplate.animationTemplates.get(renderState);
     }
 
@@ -160,6 +191,9 @@ public class RenderComponent extends PooledComponent implements ITemplateable {
         this.renderState = renderDelegate.defaultRenderState();
     }
 
+    /**
+     * Interface used for delegating the rendering calls to a subsystem.
+     */
     public interface RenderDelegate {
         void inserted(int entity, RenderSystem renderSystem);
 
@@ -170,6 +204,9 @@ public class RenderComponent extends PooledComponent implements ITemplateable {
         String defaultRenderState();
     }
 
+    /**
+     * {@link Template} for the {@link RenderComponent}.
+     */
     public static class RenderTemplate extends Template {
         public float width;
         public float height;
@@ -187,6 +224,9 @@ public class RenderComponent extends PooledComponent implements ITemplateable {
                     '}';
         }
 
+        /**
+         * Template for a single animation inside the {@link RenderTemplate}.
+         */
         public static class AnimationTemplate {
             public int frameColumns;
             public int frameRows;

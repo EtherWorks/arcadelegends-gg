@@ -23,7 +23,7 @@ public class CharacterComponent extends PooledComponent implements ITemplateable
      */
     public Character character;
     /**
-     * Target id of
+     * Target id of the auto-attack
      */
     public int targetId;
 
@@ -43,6 +43,9 @@ public class CharacterComponent extends PooledComponent implements ITemplateable
         targetId = -1;
     }
 
+    /**
+     * @see Character#getAttackCompletionPercent()
+     */
     public float getRenderMultiplicator() {
         return character.getAttackCompletionPercent();
     }
@@ -57,6 +60,9 @@ public class CharacterComponent extends PooledComponent implements ITemplateable
 
     }
 
+    /**
+     * {@link Template} dor {@link CharacterComponent}.
+     */
     public static class CharacterTemplate extends Template {
         public String characterName = "";
     }

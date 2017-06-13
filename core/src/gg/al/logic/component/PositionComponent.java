@@ -8,12 +8,21 @@ import gg.al.logic.map.Tile;
 
 /**
  * Created by Thomas Neumann on 23.03.2017.<br />
+ * {@link com.artemis.Component} containing the positional data and a reference to the current {@link Tile}
  */
 public class PositionComponent extends PooledComponent implements ITemplateable {
 
-
+    /**
+     * Current position on the map.
+     */
     public final Vector2 position = new Vector2();
+    /**
+     * Current occupied {@link Tile}.
+     */
     public Tile tile;
+    /**
+     * Whether the position should be reset.
+     */
     public boolean resetPos;
 
     @Override
@@ -50,6 +59,9 @@ public class PositionComponent extends PooledComponent implements ITemplateable 
         position.set(positionTemplate.x, positionTemplate.y);
     }
 
+    /**
+     * {@link Template} for {@link PositionComponent}.
+     */
     public static class PositionTemplate extends Template {
         public float x;
         public float y;
