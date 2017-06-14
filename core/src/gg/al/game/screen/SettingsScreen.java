@@ -130,7 +130,7 @@ public class SettingsScreen implements IAssetScreen, InputProcessor {
 
         btBack = new TextButton("Back", skin);
         btBack.setSize(300, 50);
-        btBack.setPosition(AL.graphics.getWidth() / 2 - 150, AL.graphics.getWidth() / 22);
+        btBack.setPosition(1920 / 2 - 150, 1080 / 22);
         btBack.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
