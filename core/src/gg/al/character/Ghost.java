@@ -62,7 +62,7 @@ public class Ghost extends Character {
          */
         if (abilityInd == ABILITY_1) {
             StatComponent stats = getComponent(entityID, StatComponent.class);
-            EntityArguments arguments = getArguments("ezreal_auto.json");
+            EntityArguments arguments = getArguments("ghost_auto.json");
             PositionComponent.PositionTemplate pos = arguments.get(PositionComponent.class.getSimpleName(), PositionComponent.PositionTemplate.class);
             AIComponent aiComponent = getComponent(entityID, AIComponent.class);
 
@@ -74,7 +74,7 @@ public class Ghost extends Character {
             pos.y = charPos.y;
             int entity = spawn(Entities.Bullet, arguments);
             BulletComponent bCon = getComponent(entity, BulletComponent.class);
-            bCon.speed = 10;
+            bCon.speed = 5;
             bCon.move.set(dir);
             bCon.old.set(pos.x, pos.y);
             bCon.target = -1;

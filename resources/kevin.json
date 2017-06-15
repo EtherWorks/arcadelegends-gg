@@ -31,7 +31,7 @@
       "cooldownAbility4_Base": 4.0,
       "cooldownAbility4_Growth": 0.0,
       "cooldownAbility4_GrowthPercentage": 0.0,
-      "cooldownReduction_Base": 0.9,
+      "cooldownReduction_Base": 0.0,
       "cooldownReduction_Growth": 0.0,
       "cooldownReduction_GrowthPercentage": 0.0,
       "cooldownTrait_Base": 0.0,

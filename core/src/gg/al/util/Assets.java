@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.cyphercove.gdx.covetools.assets.AssignmentAssetManager;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
@@ -55,6 +56,23 @@ public class Assets {
         @AssignmentAssetManager.Asset("assets/characters/kevin/stabsprites.png")
         public Texture stabspritesTexture;
         public TextureRegion stabsprites;
+
+        @AssignmentAssetManager.Asset("assets/characters/ghost/Backfloatsprites.png")
+        public Texture ghostupTexture;
+        public TextureRegion ghostup;
+
+        @AssignmentAssetManager.Asset("assets/characters/ghost/Frontfloatsprites.png")
+        public Texture ghostdownTexture;
+        public TextureRegion ghostdown;
+
+        @AssignmentAssetManager.Asset("assets/characters/ghost/Sidefloatsprites.png")
+        public Texture ghostsideTexture;
+        public TextureRegion ghostside;
+
+
+        @AssignmentAssetManager.Asset("assets/characters/ghost/GhostBall.png")
+        public Texture ghostballTexture;
+        public TextureRegion ghostball;
 
 
         @AssignmentAssetManager.Asset("assets/map/tileMap.tmx")
@@ -175,6 +193,11 @@ public class Assets {
             smashsprites = new TextureRegion(smashspritesTexture);
             stabsprites = new TextureRegion(stabspritesTexture);
 
+            ghostup = new TextureRegion(ghostupTexture);
+            ghostdown = new TextureRegion(ghostdownTexture);
+            ghostside = new TextureRegion(ghostsideTexture);
+            ghostball = new TextureRegion(ghostballTexture);
+
             assetMap = getAssetMap();
 
             assetMap.put("attacksprites", attacksprites);
@@ -186,6 +209,10 @@ public class Assets {
             assetMap.put("stabsprites", stabsprites);
             assetMap.put("smashsprites", smashsprites);
             assetMap.put("ultsprites", ultsprites);
+            assetMap.put("ghostup", ghostup);
+            assetMap.put("ghostdown", ghostdown);
+            assetMap.put("ghostside", ghostside);
+            assetMap.put("ghostball", ghostball);
         }
     }
 

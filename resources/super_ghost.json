@@ -132,16 +132,16 @@
     "transparent": true,
     "animationTemplates": {
       "MOVE_UP": {
-        "frameColumns": 1,
-        "frameRows": 2,
-        "frameDuration": 1,
-        "texture": "ezreal"
+        "frameColumns": 8,
+        "frameRows": 5,
+        "frameDuration": 0.025,
+        "texture": "ghostup"
       },
       "IDLE": {
-        "frameColumns": 1,
-        "frameRows": 2,
-        "frameDuration": 1,
-        "texture": "ezreal"
+        "frameColumns": 8,
+        "frameRows": 5,
+        "frameDuration": 0.05,
+        "texture": "ghostdown"
       },
       "TAUNT": {
         "frameColumns": 1,
@@ -150,40 +150,40 @@
         "texture": "ezreal"
       },
       "MOVE_SIDE": {
-        "frameColumns": 1,
-        "frameRows": 2,
-        "frameDuration": 1,
-        "texture": "ezreal"
+        "frameColumns": 8,
+        "frameRows": 5,
+        "frameDuration": 0.025,
+        "texture": "ghostside"
       },
       "MOVE_DOWN": {
-        "frameColumns": 1,
-        "frameRows": 2,
-        "frameDuration": 1,
-        "texture": "ezreal"
+        "frameColumns": 8,
+        "frameRows": 5,
+        "frameDuration": 0.025,
+        "texture": "ghostdown"
       },
       "ATTACK": {
-        "frameColumns": 1,
-        "frameRows": 2,
-        "frameDuration": 1,
-        "texture": "ezreal"
+        "frameColumns": 8,
+        "frameRows": 5,
+        "frameDuration": 0.025,
+        "texture": "ghostdown"
       },
       "ABILITY_1": {
-        "frameColumns": 1,
-        "frameRows": 2,
-        "frameDuration": 1,
-        "texture": "ezreal"
+        "frameColumns": 8,
+        "frameRows": 5,
+        "frameDuration": 0.025,
+        "texture": "ghostdown"
       },
       "ABILITY_2": {
-        "frameColumns": 1,
-        "frameRows": 2,
-        "frameDuration": 1,
-        "texture": "ezreal"
+        "frameColumns": 8,
+        "frameRows": 5,
+        "frameDuration": 0.025,
+        "texture": "ghostdown"
       },
       "ABILITY_4": {
-        "frameColumns": 1,
-        "frameRows": 2,
-        "frameDuration": 1,
-        "texture": "ezreal"
+        "frameColumns": 8,
+        "frameRows": 5,
+        "frameDuration": 0.025,
+        "texture": "ghostdown"
       }
     },
     "renderType": "PLAYER",

@@ -1,7 +1,7 @@
 {
   "StatComponent": {
     "values": {
-      "actionPointsRegen_Base": 1.0,
+      "actionPointsRegen_Base": 5.0,
       "actionPointsRegen_Growth": 0.0,
       "actionPointsRegen_GrowthPercentage": 0.0,
       "armor_Base": 10.0,
@@ -132,16 +132,16 @@
     "transparent": true,
     "animationTemplates": {
       "MOVE_UP": {
-        "frameColumns": 1,
-        "frameRows": 2,
-        "frameDuration": 1,
-        "texture": "ezreal"
+        "frameColumns": 8,
+        "frameRows": 5,
+        "frameDuration": 0.025,
+        "texture": "ghostup"
       },
       "IDLE": {
-        "frameColumns": 1,
-        "frameRows": 2,
-        "frameDuration": 1,
-        "texture": "ezreal"
+        "frameColumns": 8,
+        "frameRows": 5,
+        "frameDuration": 0.05,
+        "texture": "ghostdown"
       },
       "TAUNT": {
         "frameColumns": 1,
@@ -150,39 +150,39 @@
         "texture": "ezreal"
       },
       "MOVE_SIDE": {
-        "frameColumns": 1,
-        "frameRows": 2,
-        "frameDuration": 1,
-        "texture": "ezreal"
+        "frameColumns": 8,
+        "frameRows": 5,
+        "frameDuration": 0.025,
+        "texture": "ghostside"
       },
       "MOVE_DOWN": {
-        "frameColumns": 1,
-        "frameRows": 2,
-        "frameDuration": 1,
-        "texture": "ezreal"
+        "frameColumns": 8,
+        "frameRows": 5,
+        "frameDuration": 0.025,
+        "texture": "ghostdown"
       },
       "ATTACK": {
-        "frameColumns": 1,
-        "frameRows": 2,
-        "frameDuration": 1,
-        "texture": "ezreal"
+        "frameColumns": 8,
+        "frameRows": 5,
+        "frameDuration": 0.025,
+        "texture": "ghostdown"
       },
       "ABILITY_1": {
         "frameColumns": 1,
-        "frameRows": 2,
-        "frameDuration": 1,
+        "frameRows": 1,
+        "frameDuration": 0.025,
         "texture": "ezreal"
       },
       "ABILITY_2": {
         "frameColumns": 1,
-        "frameRows": 2,
-        "frameDuration": 1,
+        "frameRows": 1,
+        "frameDuration": 0.025,
         "texture": "ezreal"
       },
       "ABILITY_3": {
         "frameColumns": 1,
-        "frameRows": 2,
-        "frameDuration": 1,
+        "frameRows": 1,
+        "frameDuration": 0.025,
         "texture": "ezreal"
       }
     },
