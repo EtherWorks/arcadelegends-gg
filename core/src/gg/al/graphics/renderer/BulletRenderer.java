@@ -13,7 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import java.util.Map;
 
 /**
- * Created by Thomas Neumann on 31.05.2017.<br>
+ * Created by Tobias Lubrano on 31.05.2017.<br>
  * Renderer for {@link gg.al.logic.entity.Entities#Bullet} entities.
  */
 @Slf4j

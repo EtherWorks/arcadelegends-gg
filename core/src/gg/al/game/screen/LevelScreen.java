@@ -417,7 +417,7 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
         if (playerHelper != null) {
             spriteBatch.draw(playerHelper.getHealthTexture(), 50, 142, 190, 95);
             spriteBatch.draw(playerHelper.getResourceTexture(), 68, 142, 150, 75);
-            spriteBatch.draw(playerHelper.getExperienceTexture(), 10, 10, 200, 25);
+            spriteBatch.draw(playerHelper.getExperienceTexture(), 270, 10, 200, 25);
 
             spriteBatch.draw(playerHelper.getIcon(Character.ABILITY_1), 275, 155, 50, 50);
             Sprite sprite = playerHelper.getAbilityOverlaySprite(Character.ABILITY_1);

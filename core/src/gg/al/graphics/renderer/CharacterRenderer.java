@@ -20,7 +20,7 @@ import java.util.Map;
 import static gg.al.graphics.renderer.CharacterRenderer.PlayerRenderState.*;
 
 /**
- * Created by Thomas Neumann on 29.05.2017.<br>
+ * Created by Tobias Lubrano on 29.05.2017.<br>
  * Renderer for {@link gg.al.character.Character} entities.<br>
  * Also contains health bar and resource bar rendering for the {@link gg.al.character.Character}
  */

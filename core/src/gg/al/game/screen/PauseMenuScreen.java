@@ -116,7 +116,7 @@ public class PauseMenuScreen implements IAssetScreen, InputProcessor {
         table.add(btSettings).width(600).pad(10);
         table.row();
         table.add(btExitGame).width(600).pad(10);
-        table.setPosition(AL.graphics.getWidth() / 2, AL.graphics.getHeight() / 2 + 50);
+        table.setPosition(1920 / 2, 1080 / 2 + 50);
 
 
         stage.addActor(table);
