@@ -104,6 +104,7 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
     private Label healthLabel;
     private Label resourceLabel;
 
+    private boolean center;
 
     public LevelScreen(String mapName) {
         this(mapName, 15);
@@ -186,6 +187,9 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
             case Input.Keys.M:
                 PhysicComponent physicComponent = arcadeWorld.getEntityWorld().getMapper(PhysicComponent.class).get(playerEnt);
                 physicComponent.body.setTransform(25, 40, physicComponent.body.getAngle());
+                break;
+            case Input.Keys.X:
+                center = !center;
                 break;
             default:
                 inputMapper.handleInput(keycode);
@@ -355,7 +359,7 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
         arcadeWorld.setDelta(AL.graphics.getDeltaTime());
         arcadeWorld.step();
 
-        if (AL.input.isKeyPressed(Input.Keys.SPACE)) {
+        if (center || AL.input.isKeyPressed(Input.Keys.SPACE)) {
             tempVec.set(camera.position).mul(invRotationMatrix);
             float z = tempVec.z;
             Vector2 pos = playerHelper.getPosition();

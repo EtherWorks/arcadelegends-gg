@@ -2,7 +2,7 @@
   "StatComponent": {
     "values": {
       "actionPointsRegen_Base": 1.0,
-      "actionPointsRegen_Growth": 0.25,
+      "actionPointsRegen_Growth": 0.0,
       "actionPointsRegen_GrowthPercentage": 0.0,
       "armor_Base": 10.0,
       "armor_Growth": 0.0,
@@ -18,7 +18,7 @@
       "attackRange_GrowthPercentage": 0.0,
       "attackSpeed_Base": 0.8,
       "attackSpeed_Growth": 0.0,
-      "attackSpeed_GrowthPercentage": 0.0,
+      "attackSpeed_GrowthPercentage": 0.2,
       "cooldownAbility1_Base": 5.0,
       "cooldownAbility1_Growth": 0.0,
       "cooldownAbility1_GrowthPercentage": 0.0,

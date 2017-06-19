@@ -96,27 +96,28 @@ public class CharacterSystem extends IteratingSystem {
         /**
          * Auto-attack logic.
          */
-        if (character.targetId == entityId)
-            character.targetId = -1;
-        else if (character.targetId != -1) {
-            Vector2 vector = vectorPool.obtain();
-            PositionComponent target = mapperPosition.get(character.targetId);
-            if (target == null)
+        if (!character.character.isCasting())
+            if (character.targetId == entityId)
                 character.targetId = -1;
-            else {
-                if (Math.abs(vector.set(pos.position).dst(target.position)) <= stats.getCurrentStat(StatComponent.BaseStat.attackRange)) {
-                    if (pos.position.x < target.position.x)
-                        renderComponent.faceRight();
-                    else if (pos.position.x > target.position.x)
-                        renderComponent.faceLeft();
-                    character.character.startAttack();
-                    renderComponent.setRenderState(ATTACK);
-                } else
+            else if (character.targetId != -1) {
+                Vector2 vector = vectorPool.obtain();
+                PositionComponent target = mapperPosition.get(character.targetId);
+                if (target == null)
                     character.targetId = -1;
-            }
-            vectorPool.free(vector);
-        } else if (character.targetId == -1 && renderComponent.isInState(ATTACK))
-            renderComponent.setRenderState(IDLE);
+                else {
+                    if (Math.abs(vector.set(pos.position).dst(target.position)) <= stats.getCurrentStat(StatComponent.BaseStat.attackRange)) {
+                        if (pos.position.x < target.position.x)
+                            renderComponent.faceRight();
+                        else if (pos.position.x > target.position.x)
+                            renderComponent.faceLeft();
+                        character.character.startAttack();
+                        renderComponent.setRenderState(ATTACK);
+                    } else
+                        character.targetId = -1;
+                }
+                vectorPool.free(vector);
+            } else if (character.targetId == -1 && renderComponent.isInState(ATTACK))
+                renderComponent.setRenderState(IDLE);
 
 
         character.character.tick(getWorld().getDelta());
