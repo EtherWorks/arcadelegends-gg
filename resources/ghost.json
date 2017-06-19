@@ -141,7 +141,8 @@
         "frameColumns": 8,
         "frameRows": 5,
         "frameDuration": 0.05,
-        "texture": "ghostdown"
+        "texture": "ghostdown",
+        "width": 0.8
       },
       "TAUNT": {
         "frameColumns": 1,
