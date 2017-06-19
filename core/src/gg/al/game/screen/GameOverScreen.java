@@ -85,14 +85,14 @@ public class GameOverScreen implements IAssetScreen {
                 AL.getGame().setScreen(AL.getScreenManager().get(MainMenuScreen.class));
             }
         });
-        btBackToMainMenu.setPosition(AL.graphics.getWidth() / 2 - 300, AL.graphics.getHeight() / 2 + 40);
+        btBackToMainMenu.setPosition(1920 / 2 - 300, 1080 / 2 + 40);
         stage.addActor(btBackToMainMenu);
 
         endgameLabel = new Label(endgameText, skin);
         endgameLabel.setWidth(600);
         endgameLabel.setHeight(80);
         endgameLabel.setAlignment(Align.center);
-        endgameLabel.setPosition(AL.graphics.getWidth() / 2 - 300, AL.graphics.getHeight() / 1.5f);
+        endgameLabel.setPosition(1920 / 2 - 300, 1080 / 1.5f);
         stage.addActor(endgameLabel);
 
         AL.input.setInputProcessor(stage);
