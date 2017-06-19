@@ -4,10 +4,8 @@ import com.artemis.Aspect;
 import com.artemis.ComponentMapper;
 import com.artemis.systems.IteratingSystem;
 import gg.al.character.Character;
-import gg.al.logic.component.AIComponent;
-import gg.al.logic.component.CharacterComponent;
-import gg.al.logic.component.PositionComponent;
-import gg.al.logic.component.StatComponent;
+import gg.al.graphics.renderer.CharacterRenderer;
+import gg.al.logic.component.*;
 
 /**
  * Created by Thomas Neumann on 12.06.2017.<br>
@@ -19,6 +17,7 @@ public class AISystem extends IteratingSystem {
     private ComponentMapper<AIComponent> mapperAIComponent;
     private ComponentMapper<StatComponent> mapperStatComponent;
     private ComponentMapper<PositionComponent> mapperPositionComponent;
+    private ComponentMapper<RenderComponent> mapperRenderComponent;
 
     public AISystem() {
         super(Aspect.all(AIComponent.class, CharacterComponent.class));
@@ -51,15 +50,15 @@ public class AISystem extends IteratingSystem {
                     }
                 }
             }
-
-            if (distance > statComponent.getCurrentStat(StatComponent.BaseStat.attackRange)) {
-                characterComponent.move.set(enemyPos.position);
-                characterComponent.targetId = -1;
-            } else {
-                characterComponent.move.set(pos.position);
-                if (!characterComponent.character.isCasting())
-                    characterComponent.targetId = aIComponent.target;
-            }
+            if (!characterComponent.character.isCasting())
+                if (distance > statComponent.getCurrentStat(StatComponent.BaseStat.attackRange)) {
+                    characterComponent.move.set(enemyPos.position);
+                    characterComponent.targetId = -1;
+                } else {
+                    characterComponent.move.set(pos.position);
+                    if (!characterComponent.character.isCasting())
+                        characterComponent.targetId = aIComponent.target;
+                }
 
 
         }

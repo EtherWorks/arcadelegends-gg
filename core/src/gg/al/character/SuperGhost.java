@@ -46,6 +46,7 @@ public class SuperGhost extends Character {
                 renderComponent.setRenderState(CharacterRenderer.PlayerRenderState.ABILITY_1);
                 break;
             case ABILITY_4:
+                resetAttack();
                 renderComponent.setRenderState(CharacterRenderer.PlayerRenderState.ABILITY_4);
                 break;
         }

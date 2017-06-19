@@ -30,6 +30,7 @@ import gg.al.game.AL;
 import gg.al.game.PlayerHelper;
 import gg.al.logic.ArcadeWorld;
 import gg.al.logic.component.CharacterComponent;
+import gg.al.logic.component.PhysicComponent;
 import gg.al.logic.component.PositionComponent;
 import gg.al.logic.component.StatComponent;
 import gg.al.logic.component.data.Damage;
@@ -181,6 +182,10 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
                 if (!AL.getScreenManager().isRegistered(PauseMenuScreen.class))
                     AL.getScreenManager().register(new PauseMenuScreen(), PauseMenuScreen.class);
                 AL.getGame().setScreen(AL.getScreenManager().get(PauseMenuScreen.class));
+                break;
+            case Input.Keys.M:
+                PhysicComponent physicComponent = arcadeWorld.getEntityWorld().getMapper(PhysicComponent.class).get(playerEnt);
+                physicComponent.body.setTransform(25, 40, physicComponent.body.getAngle());
                 break;
             default:
                 inputMapper.handleInput(keycode);

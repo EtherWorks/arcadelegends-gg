@@ -196,10 +196,10 @@
         "Width": 1.2
       },
       "ABILITY_4": {
-        "frameColumns": 8,
-        "frameRows": 5,
-        "frameDuration": 0.025,
-        "texture": "ghostbossdown",
+        "frameColumns": 1,
+        "frameRows": 2,
+        "frameDuration": 1,
+        "texture": "ezreal",
         "height": 1.5,
         "Width": 1.2
       }

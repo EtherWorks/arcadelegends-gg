@@ -10,6 +10,8 @@ import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap;
+import gg.al.character.Character;
+import gg.al.character.SuperGhost;
 import gg.al.game.AL;
 import gg.al.logic.component.*;
 import gg.al.logic.system.RenderSystem;
@@ -146,6 +148,7 @@ public class CharacterRenderer implements RenderComponent.RenderDelegate {
         CharacterComponent character = renderSystem.getMapperCharacterComponent().get(entityId);
         Decal decal = renderSystem.getDecalMap().get(entityId);
         float stateTime = renderSystem.getStateTime();
+
         if (character != null && render.isInState(ATTACK)) {
             stateTime = render.animations.get(PlayerRenderState.ATTACK.name()).getAnimationDuration() * character.getRenderMultiplicator();
         } else if (character != null && render.isInAnyState(
@@ -219,6 +222,23 @@ public class CharacterRenderer implements RenderComponent.RenderDelegate {
      * The mostly used render state names for {@link gg.al.character.Character}s.
      */
     public enum PlayerRenderState {
-        IDLE, MOVE_SIDE, ATTACK, MOVE_UP, MOVE_DOWN, TAUNT, ABILITY_1, ABILITY_2, ABILITY_3, ABILITY_4, TRAIT
+        IDLE, MOVE_SIDE, ATTACK, MOVE_UP, MOVE_DOWN, TAUNT, ABILITY_1, ABILITY_2, ABILITY_3, ABILITY_4, TRAIT;
+
+        public static int toAbility(String string) {
+            switch (string) {
+                case "ABILITY_4":
+                    return 4;
+                case "ABILITY_3":
+                    return 3;
+                case "ABILITY_2":
+                    return 2;
+                case "ABILITY_1":
+                    return 1;
+                case "TRAIT":
+                    return 0;
+                default:
+                    throw new IllegalArgumentException("No ability found for " + string);
+            }
+        }
     }
 }
