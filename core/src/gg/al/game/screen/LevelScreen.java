@@ -152,7 +152,7 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
                 break;
             case Input.Keys.K:
                 StatComponent statComponent = arcadeWorld.getEntityWorld().getMapper(StatComponent.class).get(playerEnt);
-                statComponent.damages.add(new Damage(Damage.DamageType.Physical, 10, 10));
+                statComponent.damages.add(new Damage(Damage.DamageType.Physical, 50, 10));
                 break;
             case Input.Keys.J:
                 statComponent = arcadeWorld.getEntityWorld().getMapper(StatComponent.class).get(playerEnt);
