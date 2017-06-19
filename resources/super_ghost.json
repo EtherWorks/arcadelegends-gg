@@ -135,13 +135,15 @@
         "frameColumns": 8,
         "frameRows": 5,
         "frameDuration": 0.025,
-        "texture": "ghostup"
+        "texture": "ghostbossup",
+        "height": 1.5,
+        "Width": 1.2
       },
       "IDLE": {
         "frameColumns": 8,
         "frameRows": 5,
         "frameDuration": 0.05,
-        "texture": "ghostdown",
+        "texture": "ghostbossdown",
         "height": 1.5,
         "Width": 1.2
       },
@@ -149,43 +151,57 @@
         "frameColumns": 1,
         "frameRows": 2,
         "frameDuration": 1,
-        "texture": "ezreal"
+        "texture": "ezreal",
+        "height": 1.5,
+        "Width": 1.2
       },
       "MOVE_SIDE": {
         "frameColumns": 8,
         "frameRows": 5,
         "frameDuration": 0.025,
-        "texture": "ghostside"
+        "texture": "ghostbossside",
+        "height": 1.5,
+        "Width": 1.2
       },
       "MOVE_DOWN": {
         "frameColumns": 8,
         "frameRows": 5,
         "frameDuration": 0.025,
-        "texture": "ghostdown"
+        "texture": "ghostbossdown",
+        "height": 1.5,
+        "Width": 1.2
       },
       "ATTACK": {
         "frameColumns": 8,
         "frameRows": 5,
         "frameDuration": 0.025,
-        "texture": "ghostdown"
+        "texture": "ghostbossdown",
+        "height": 1.5,
+        "Width": 1.2
       },
       "ABILITY_1": {
         "frameColumns": 8,
         "frameRows": 5,
         "frameDuration": 0.025,
-        "texture": "ghostdown"
+        "texture": "ghostbossdown",
+        "height": 1.5,
+        "Width": 1.2
       },
       "ABILITY_2": {
         "frameColumns": 8,
         "frameRows": 5,
         "frameDuration": 0.025,
-        "texture": "ghostdown"
+        "texture": "ghostbossdown",
+        "height": 1.5,
+        "Width": 1.2
       },
       "ABILITY_4": {
         "frameColumns": 8,
         "frameRows": 5,
         "frameDuration": 0.025,
-        "texture": "ghostdown"
+        "texture": "ghostbossdown",
+        "height": 1.5,
+        "Width": 1.2
       }
     },
     "renderType": "PLAYER",

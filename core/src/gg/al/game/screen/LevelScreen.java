@@ -218,7 +218,7 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
 
             camera = new PerspectiveCamera();
             camera.far = 1000;
-            camera.position.set(new Vector3(-.5f, -.5f, 50));
+            camera.position.set(new Vector3(-.5f, -.5f, 35));
             camera.rotateAround(new Vector3(-.5f, -.5f, 0), Vector3.X, rot);
             camera.fieldOfView = 15;
             camera.update();
@@ -538,7 +538,7 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
         playerEnt = arcadeWorld.spawnPlayer();
         playerHelper = new PlayerHelper(playerEnt, arcadeWorld, levelAssets);
         Vector2 pos = arcadeWorld.getSpawnPosition();
-        camera.position.set(pos.x, pos.y - 12, camera.position.z);
+        camera.position.set(pos.x, pos.y - 9, camera.position.z);
         return playerEnt;
     }
 

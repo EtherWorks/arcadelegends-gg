@@ -74,6 +74,21 @@ public class Assets {
         public Texture ghostballTexture;
         public TextureRegion ghostball;
 
+        @AssignmentAssetManager.Asset("assets/characters/ghostboss/ghostbossup.png")
+        public Texture ghostbossUpTexture;
+        public TextureRegion ghostbossUp;
+
+        @AssignmentAssetManager.Asset("assets/characters/ghostboss/ghostbossdown.png")
+        public Texture ghostbossDownTexture;
+        public TextureRegion ghostbossDown;
+
+        @AssignmentAssetManager.Asset("assets/characters/ghostboss/ghostbossside.png")
+        public Texture ghostbossSideTexture;
+        public TextureRegion ghostbossSide;
+
+        @AssignmentAssetManager.Asset("assets/characters/ghostboss/ghostbossball.png")
+        public Texture ghostbossBallTexture;
+        public TextureRegion ghostbossBall;
 
         @AssignmentAssetManager.Asset("assets/map/tileMap.tmx")
         public TiledMap tileMap;
@@ -198,6 +213,11 @@ public class Assets {
             ghostside = new TextureRegion(ghostsideTexture);
             ghostball = new TextureRegion(ghostballTexture);
 
+            ghostbossUp = new TextureRegion(ghostbossUpTexture);
+            ghostbossDown = new TextureRegion(ghostbossDownTexture);
+            ghostbossSide = new TextureRegion(ghostbossSideTexture);
+            ghostbossBall = new TextureRegion(ghostbossBallTexture);
+
             assetMap = getAssetMap();
 
             assetMap.put("attacksprites", attacksprites);
@@ -213,6 +233,11 @@ public class Assets {
             assetMap.put("ghostdown", ghostdown);
             assetMap.put("ghostside", ghostside);
             assetMap.put("ghostball", ghostball);
+            assetMap.put("ghostbossup", ghostbossUp);
+            assetMap.put("ghostbossdown", ghostbossDown);
+            assetMap.put("ghostbossside", ghostbossSide);
+            assetMap.put("ghostbossball", ghostbossBall);
+
         }
     }
 

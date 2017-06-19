@@ -81,7 +81,7 @@ public class SuperGhost extends Character {
              */
             case ABILITY_1:
                 StatComponent stats = getComponent(entityID, StatComponent.class);
-                EntityArguments arguments = getArguments("ghost_auto.json");
+                EntityArguments arguments = getArguments("superghost_auto.json");
                 PositionComponent.PositionTemplate pos = arguments.get(PositionComponent.class.getSimpleName(), PositionComponent.PositionTemplate.class);
                 AIComponent aiComponent = getComponent(entityID, AIComponent.class);
 
