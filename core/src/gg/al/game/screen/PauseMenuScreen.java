@@ -61,6 +61,13 @@ public class PauseMenuScreen implements IAssetScreen, InputProcessor {
         spriteBatch = new SpriteBatch();
         mainbackground = menuAssets.testmainscreen;
 
+        createComponents();
+
+        AL.input.setInputProcessor(new InputMultiplexer(stage, this));
+    }
+
+    private void createComponents()
+    {
         btBackToGame = new TextButton("Back to game", skin);
         btBackToGame.center();
         btBackToGame.setWidth(600);
@@ -120,8 +127,6 @@ public class PauseMenuScreen implements IAssetScreen, InputProcessor {
 
 
         stage.addActor(table);
-
-        AL.input.setInputProcessor(new InputMultiplexer(stage, this));
     }
 
     /**

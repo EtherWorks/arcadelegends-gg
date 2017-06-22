@@ -241,103 +241,7 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
 
             arcadeWorld = new ArcadeWorld(map, rot, camera, levelAssets);
 
-            uiFont = levelAssets.uifont;
-            uiLabelStyle = new Label.LabelStyle(uiFont, Color.BLACK);
-            actionPointsLabel = new Label("0", uiLabelStyle);
-            actionPointsLabel.setPosition(115, 75);
-            uiStage.addActor(actionPointsLabel);
-
-
-            uiFontSmall = levelAssets.uifontsmaller;
-            uiLabelStyle = new Label.LabelStyle(uiFontSmall, Color.WHITE);
-
-
-            skillPointLabel = new Label("0 Skillpoints", uiLabelStyle);
-            skillPointLabel.setPosition(130, 250);
-            uiStage.addActor(skillPointLabel);
-
-            abilityPointsLabels = new Label[5];
-            for (int i = 0; i < 5; i++) {
-                Label abilLabel = new Label(i + ": 0", uiLabelStyle);
-                abilLabel.setPosition(200 + i * 50, 100);
-                uiStage.addActor(abilLabel);
-                abilityPointsLabels[i] = abilLabel;
-            }
-            int val = 45;
-            int val2 = 5;
-            abilityPointsLabels[0].setPosition(290 + val, 50 + val2);
-            abilityPointsLabels[1].setPosition(290 + val, 115 + val2);
-            abilityPointsLabels[2].setPosition(375 + val, 115 + val2);
-            abilityPointsLabels[3].setPosition(460 + val, 115 + val2);
-            abilityPointsLabels[4].setPosition(375 + val, 50 + val2);
-
-            xpLabel = new Label("", uiLabelStyle);
-            xpLabel.setPosition(90, 60);
-            uiStage.addActor(xpLabel);
-
-            levelLabel = new Label("Level 0", uiLabelStyle);
-            levelLabel.setPosition(100, 70);
-            uiStage.addActor(levelLabel);
-
-
-            // First row
-            attackDamageLabel = new Label("0 AD", uiLabelStyle);
-            attackDamageLabel.setPosition(35, 1010);
-            uiStage.addActor(attackDamageLabel);
-
-            movespeedLabel = new Label("0 MS", uiLabelStyle);
-            movespeedLabel.setPosition(150, 1010);
-            uiStage.addActor(movespeedLabel);
-
-            armorLabel = new Label("0 AR", uiLabelStyle);
-            armorLabel.setPosition(250, 1010);
-            uiStage.addActor(armorLabel);
-
-            // Second row
-            spellPowerLabel = new Label("0 SP", uiLabelStyle);
-            spellPowerLabel.setPosition(35, 980);
-            uiStage.addActor(spellPowerLabel);
-
-            attackspeedLabel = new Label("0 AS", uiLabelStyle);
-            attackspeedLabel.setPosition(150, 980);
-            uiStage.addActor(attackspeedLabel);
-
-            magicResistLabel = new Label("0 MR", uiLabelStyle);
-            magicResistLabel.setPosition(250, 980);
-            uiStage.addActor(magicResistLabel);
-
-            // Third row
-            cooldownReductionLabel = new Label("0 CDR", uiLabelStyle);
-            cooldownReductionLabel.setPosition(35, 950);
-            uiStage.addActor(cooldownReductionLabel);
-
-            critchanceLabel = new Label("0 CRIT", uiLabelStyle);
-            critchanceLabel.setPosition(170, 950);
-            uiStage.addActor(critchanceLabel);
-
-            // Fourth row
-            actionPointRegenLabel = new Label("0 AP/S", uiLabelStyle);
-            actionPointRegenLabel.setPosition(35, 920);
-            uiStage.addActor(actionPointRegenLabel);
-
-            healthRegenLabel = new Label("0 HP/S", uiLabelStyle);
-            healthRegenLabel.setPosition(150, 920);
-            uiStage.addActor(healthRegenLabel);
-
-            resourceRegenLabel = new Label("0 RS/S", uiLabelStyle);
-            resourceRegenLabel.setPosition(250, 920);
-            uiStage.addActor(resourceRegenLabel);
-
-
-            healthLabel = new Label("0/0 HP", uiLabelStyle);
-            healthLabel.setPosition(110, 840);
-            healthLabel.setAlignment(Align.center);
-            uiStage.addActor(healthLabel);
-
-            resourceLabel = new Label("0/0 RS", uiLabelStyle);
-            resourceLabel.setPosition(110, 770);
-            resourceLabel.setAlignment(Align.center);
-            uiStage.addActor(resourceLabel);
+            initUI();
 
             reInit = false;
             playerEnt = -1;
@@ -348,6 +252,107 @@ public class LevelScreen implements IAssetScreen, InputProcessor {
         }
 
         Gdx.input.setInputProcessor(this);
+    }
+
+    private void initUI()
+    {
+        uiFont = levelAssets.uifont;
+        uiLabelStyle = new Label.LabelStyle(uiFont, Color.BLACK);
+        actionPointsLabel = new Label("0", uiLabelStyle);
+        actionPointsLabel.setPosition(115, 75);
+        uiStage.addActor(actionPointsLabel);
+
+
+        uiFontSmall = levelAssets.uifontsmaller;
+        uiLabelStyle = new Label.LabelStyle(uiFontSmall, Color.WHITE);
+
+
+        skillPointLabel = new Label("0 Skillpoints", uiLabelStyle);
+        skillPointLabel.setPosition(130, 250);
+        uiStage.addActor(skillPointLabel);
+
+        abilityPointsLabels = new Label[5];
+        for (int i = 0; i < 5; i++) {
+            Label abilLabel = new Label(i + ": 0", uiLabelStyle);
+            abilLabel.setPosition(200 + i * 50, 100);
+            uiStage.addActor(abilLabel);
+            abilityPointsLabels[i] = abilLabel;
+        }
+        int val = 45;
+        int val2 = 5;
+        abilityPointsLabels[0].setPosition(290 + val, 50 + val2);
+        abilityPointsLabels[1].setPosition(290 + val, 115 + val2);
+        abilityPointsLabels[2].setPosition(375 + val, 115 + val2);
+        abilityPointsLabels[3].setPosition(460 + val, 115 + val2);
+        abilityPointsLabels[4].setPosition(375 + val, 50 + val2);
+
+        xpLabel = new Label("", uiLabelStyle);
+        xpLabel.setPosition(90, 60);
+        uiStage.addActor(xpLabel);
+
+        levelLabel = new Label("Level 0", uiLabelStyle);
+        levelLabel.setPosition(100, 70);
+        uiStage.addActor(levelLabel);
+
+
+        // First row
+        attackDamageLabel = new Label("0 AD", uiLabelStyle);
+        attackDamageLabel.setPosition(35, 1010);
+        uiStage.addActor(attackDamageLabel);
+
+        movespeedLabel = new Label("0 MS", uiLabelStyle);
+        movespeedLabel.setPosition(150, 1010);
+        uiStage.addActor(movespeedLabel);
+
+        armorLabel = new Label("0 AR", uiLabelStyle);
+        armorLabel.setPosition(250, 1010);
+        uiStage.addActor(armorLabel);
+
+        // Second row
+        spellPowerLabel = new Label("0 SP", uiLabelStyle);
+        spellPowerLabel.setPosition(35, 980);
+        uiStage.addActor(spellPowerLabel);
+
+        attackspeedLabel = new Label("0 AS", uiLabelStyle);
+        attackspeedLabel.setPosition(150, 980);
+        uiStage.addActor(attackspeedLabel);
+
+        magicResistLabel = new Label("0 MR", uiLabelStyle);
+        magicResistLabel.setPosition(250, 980);
+        uiStage.addActor(magicResistLabel);
+
+        // Third row
+        cooldownReductionLabel = new Label("0 CDR", uiLabelStyle);
+        cooldownReductionLabel.setPosition(35, 950);
+        uiStage.addActor(cooldownReductionLabel);
+
+        critchanceLabel = new Label("0 CRIT", uiLabelStyle);
+        critchanceLabel.setPosition(170, 950);
+        uiStage.addActor(critchanceLabel);
+
+        // Fourth row
+        actionPointRegenLabel = new Label("0 AP/S", uiLabelStyle);
+        actionPointRegenLabel.setPosition(35, 920);
+        uiStage.addActor(actionPointRegenLabel);
+
+        healthRegenLabel = new Label("0 HP/S", uiLabelStyle);
+        healthRegenLabel.setPosition(150, 920);
+        uiStage.addActor(healthRegenLabel);
+
+        resourceRegenLabel = new Label("0 RS/S", uiLabelStyle);
+        resourceRegenLabel.setPosition(250, 920);
+        uiStage.addActor(resourceRegenLabel);
+
+
+        healthLabel = new Label("0/0 HP", uiLabelStyle);
+        healthLabel.setPosition(110, 840);
+        healthLabel.setAlignment(Align.center);
+        uiStage.addActor(healthLabel);
+
+        resourceLabel = new Label("0/0 RS", uiLabelStyle);
+        resourceLabel.setPosition(110, 770);
+        resourceLabel.setAlignment(Align.center);
+        uiStage.addActor(resourceLabel);
     }
 
     @Override

@@ -74,7 +74,15 @@ public class GameOverScreen implements IAssetScreen {
         spriteBatch = new SpriteBatch();
         mainbackground = menuAssets.testmainscreen;
 
+        createComponents();
 
+
+
+        AL.input.setInputProcessor(stage);
+    }
+
+    private void createComponents()
+    {
         btBackToMainMenu = new TextButton("Back to Main Menu", skin);
         btBackToMainMenu.center();
         btBackToMainMenu.setWidth(600);
@@ -94,8 +102,6 @@ public class GameOverScreen implements IAssetScreen {
         endgameLabel.setAlignment(Align.center);
         endgameLabel.setPosition(1920 / 2 - 300, 1080 / 1.5f);
         stage.addActor(endgameLabel);
-
-        AL.input.setInputProcessor(stage);
     }
 
     /**

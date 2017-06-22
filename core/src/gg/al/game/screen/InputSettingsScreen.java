@@ -77,6 +77,28 @@ public class InputSettingsScreen implements IAssetScreen, InputProcessor {
         keys = IInputConfig.InputKeys.values();
         keyMap = new HashMap<>();
 
+        initInputRows(font, backgroundTexture);
+        createBackButton();
+        AL.input.setInputProcessor(new InputMultiplexer(stage, this));
+    }
+
+    /**
+     * Method responsible for making the dialog visible
+     *
+     * @param font          {@link BitmapFont} font of the dialog
+     * @param textureRegion {@link TextureRegion} background texture for the dialog
+     * @param name          {@link String} name of the key
+     * @param button        {@link TextButton} button of the input key from the {@link InputSettingsScreen}
+     */
+    private void showDialog(BitmapFont font, TextureRegion textureRegion, String name, TextButton button) {
+        Drawable dlgBackground = new TextureRegionDrawable(new TextureRegion(settingsAssets.dlgbackground));
+        dialog = new KeyInputDialog("", new Window.WindowStyle(font, Color.BLACK, new TextureRegionDrawable(new TextureRegion(textureRegion))), skin, stage, font,
+                Input.Keys.toString(IInputConfig.InputKeys.getFromKey(keys[keyMap.get(name)], AL.getInputConfig())), keys[keyMap.get(name)].getKeyName(), button);
+        dialog.initDialog(dlgBackground);
+    }
+
+    private void initInputRows(BitmapFont font, TextureRegion backgroundTexture)
+    {
         for (int i = 0; i < keys.length; i++) {
             Label lbKey = new Label(keys[i].getKeyName().substring(0, 1).toUpperCase() + keys[i].getKeyName().substring(1), skin);
             lbKey.setAlignment(Align.center);
@@ -104,10 +126,12 @@ public class InputSettingsScreen implements IAssetScreen, InputProcessor {
 
         scrollPane = new ScrollPane(inputTable, skin);
         scrollPane.setSize(500, 900);
-        scrollPane.setPosition(x / 2 - 250, y / 2 - 400);
-
+        scrollPane.setPosition(1920 / 2 - 250, 1080 / 2 - 400);
         stage.addActor(scrollPane);
+    }
 
+    private void createBackButton()
+    {
         btBack = new TextButton("Back", skin);
         btBack.setSize(300, 50);
         btBack.setPosition(1920 / 2 - 150, 1080 / 22);
@@ -118,25 +142,6 @@ public class InputSettingsScreen implements IAssetScreen, InputProcessor {
             }
         });
         stage.addActor(btBack);
-
-
-        AL.input.setInputProcessor(new InputMultiplexer(stage, this));
-
-    }
-
-    /**
-     * Method responsible for making the dialog visible
-     *
-     * @param font          {@link BitmapFont} font of the dialog
-     * @param textureRegion {@link TextureRegion} background texture for the dialog
-     * @param name          {@link String} name of the key
-     * @param button        {@link TextButton} button of the input key from the {@link InputSettingsScreen}
-     */
-    private void showDialog(BitmapFont font, TextureRegion textureRegion, String name, TextButton button) {
-        Drawable dlgBackground = new TextureRegionDrawable(new TextureRegion(settingsAssets.dlgbackground));
-        dialog = new KeyInputDialog("", new Window.WindowStyle(font, Color.BLACK, new TextureRegionDrawable(new TextureRegion(textureRegion))), skin, stage, font,
-                Input.Keys.toString(IInputConfig.InputKeys.getFromKey(keys[keyMap.get(name)], AL.getInputConfig())), keys[keyMap.get(name)].getKeyName(), button);
-        dialog.initDialog(dlgBackground);
     }
 
     /**

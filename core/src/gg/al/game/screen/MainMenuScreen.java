@@ -60,17 +60,6 @@ public class MainMenuScreen implements IAssetScreen {
         mainbackground = menuAssets.testmainscreen;
 
         initButtons();
-
-        Table table = new Table();
-        table.add(btPlay).width(400).pad(10);
-        table.row();
-        table.add(btSettings).width(400).pad(10);
-        table.row();
-        table.add(btExit).width(400).pad(10);
-        table.setPosition(x / 2, y / 2 + 50);
-
-        stage.addActor(table);
-
         AL.input.setInputProcessor(stage);
     }
 
@@ -198,6 +187,16 @@ public class MainMenuScreen implements IAssetScreen {
                 AL.app.exit();
             }
         });
+
+        Table table = new Table();
+        table.add(btPlay).width(400).pad(10);
+        table.row();
+        table.add(btSettings).width(400).pad(10);
+        table.row();
+        table.add(btExit).width(400).pad(10);
+        table.setPosition(1920 / 2, 1080 / 2 + 50);
+
+        stage.addActor(table);
     }
 
 

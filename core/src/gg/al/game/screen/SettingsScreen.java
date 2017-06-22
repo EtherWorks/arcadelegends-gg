@@ -96,29 +96,9 @@ public class SettingsScreen implements IAssetScreen, InputProcessor {
         Sprite sprite = new Sprite(selectionTexture);
         selection = new SpriteDrawable(sprite);
 
-
         tabbedPane = new SettingsTabbedPane(skin, x, y, componentMap);
 
-        // Init Tabs:
-        btTabVideo = new TextButton("Video", skin);
-        btTabVideo.setSize(300, 50);
-        tabbedPane.addTab(btTabVideo);
-
-        btTabAudio = new TextButton("Audio", skin);
-        btTabAudio.setSize(300, 50);
-        tabbedPane.addTab(btTabAudio);
-
-        btTabInput = new TextButton("Input", skin);
-        btTabInput.setSize(300, 50);
-        btTabInput.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                if (!AL.getScreenManager().isRegistered(InputSettingsScreen.class))
-                    AL.getScreenManager().register(new InputSettingsScreen(), InputSettingsScreen.class);
-                AL.getGame().setScreen(AL.getScreenManager().get(InputSettingsScreen.class));
-            }
-        });
-        tabbedPane.addTab(btTabInput);
+        initTabs();
 
         createVideoTable();
         createAudioTable();
@@ -128,19 +108,7 @@ public class SettingsScreen implements IAssetScreen, InputProcessor {
         tabbedPane.setCurrentTab(btTabVideo);
         stage.addActor(tabbedPane);
 
-        btBack = new TextButton("Back", skin);
-        btBack.setSize(300, 50);
-        btBack.setPosition(1920 / 2 - 150, 1080 / 22);
-        btBack.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                if (previousScreen != null) {
-                    AL.getGame().setScreen(previousScreen);
-                }
-
-            }
-        });
-        stage.addActor(btBack);
+        createBackButton();
 
         AL.input.setInputProcessor(new InputMultiplexer(stage, this));
 
@@ -286,6 +254,48 @@ public class SettingsScreen implements IAssetScreen, InputProcessor {
         tableAudio.add(effectSlider).pad(10).fill();
 
 
+    }
+
+
+    private void initTabs()
+    {
+        // Init Tabs:
+        btTabVideo = new TextButton("Video", skin);
+        btTabVideo.setSize(300, 50);
+        tabbedPane.addTab(btTabVideo);
+
+        btTabAudio = new TextButton("Audio", skin);
+        btTabAudio.setSize(300, 50);
+        tabbedPane.addTab(btTabAudio);
+
+        btTabInput = new TextButton("Input", skin);
+        btTabInput.setSize(300, 50);
+        btTabInput.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                if (!AL.getScreenManager().isRegistered(InputSettingsScreen.class))
+                    AL.getScreenManager().register(new InputSettingsScreen(), InputSettingsScreen.class);
+                AL.getGame().setScreen(AL.getScreenManager().get(InputSettingsScreen.class));
+            }
+        });
+        tabbedPane.addTab(btTabInput);
+    }
+
+    private void createBackButton()
+    {
+        btBack = new TextButton("Back", skin);
+        btBack.setSize(300, 50);
+        btBack.setPosition(1920 / 2 - 150, 1080 / 22);
+        btBack.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                if (previousScreen != null) {
+                    AL.getGame().setScreen(previousScreen);
+                }
+
+            }
+        });
+        stage.addActor(btBack);
     }
 
 
