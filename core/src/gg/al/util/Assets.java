@@ -253,6 +253,15 @@ public class Assets {
         public Music bitrush;
     }
 
+    public static class LoadingScreenAssets
+    {
+        @AssignmentAssetManager.Asset("assets/sprites/testmainscreen.jpg")
+        public Texture testmainscreen;
+
+        @AssignmentAssetManager.Asset("assets/styles/styles/styles.json")
+        public Skin styles_json;
+    }
+
     public static class SettingsAssets {
         @AssignmentAssetManager.Asset("assets/styles/styles/styles.json")
         public Skin styles_json;

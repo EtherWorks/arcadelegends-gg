@@ -1,10 +1,20 @@
 package gg.al.game.screen;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
 import gg.al.game.AL;
+import gg.al.util.Assets;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -19,6 +29,14 @@ public class DefaultLoadingScreen implements ILoadingScreen {
     private boolean init;
     private BitmapFont font;
     private SpriteBatch batch;
+
+    private Stage stage;
+    private Skin skin;
+    private Viewport viewport;
+    private OrthographicCamera cam;
+    private Assets.LoadingScreenAssets loadingScreenAssets;
+
+    private ProgressBar loadingScreenBar;
 
     @Getter
     @Setter
@@ -42,8 +60,24 @@ public class DefaultLoadingScreen implements ILoadingScreen {
 
     public void show() {
         if (!init) {
+            loadingScreenAssets = new Assets.LoadingScreenAssets();
+            AL.getAssetManager().loadAssetFields(loadingScreenAssets);
+            AL.getAssetManager().finishLoading();
             font = new BitmapFont();
             batch = new SpriteBatch();
+
+            cam = new OrthographicCamera();
+            viewport = new FitViewport(1920, 1080);
+            viewport.setCamera(cam);
+            stage = new Stage(viewport);
+            stage.setViewport(viewport);
+            skin = loadingScreenAssets.styles_json;
+
+            loadingScreenBar = new ProgressBar(0, 100, 1, false, skin);
+            loadingScreenBar.setPosition(25, -10);
+            loadingScreenBar.setSize(1890, 50);
+
+            stage.addActor(loadingScreenBar);
         }
         init = true;
     }
@@ -57,12 +91,16 @@ public class DefaultLoadingScreen implements ILoadingScreen {
 
         batch.begin();
         font.draw(batch, String.format("%1.0f%%", AL.getAssetManager().getProgress() * 100), 0, 15);
+        loadingScreenBar.setValue(AL.getAssetManager().getProgress() * 100);
         batch.end();
+
+        stage.act(Gdx.graphics.getDeltaTime());
+        stage.draw();
     }
 
     @Override
     public void resize(int width, int height) {
-
+        viewport.update(width, height, true);
     }
 
     @Override
@@ -77,11 +115,15 @@ public class DefaultLoadingScreen implements ILoadingScreen {
 
     @Override
     public void hide() {
+
+
     }
 
     @Override
     public void dispose() {
-        font.dispose();
+        AL.getAssetManager().unloadAssetFields(loadingScreenAssets);
+        stage.dispose();
         batch.dispose();
     }
+
 }
